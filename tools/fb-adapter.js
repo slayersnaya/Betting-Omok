@@ -23,7 +23,7 @@ try{
  // 모든 쓰기에 서버 시각 at을 붙임(부재승 판정용)
  const isP=path=>/^g\/[^/]+\/p\/[^/]+$/.test(path);
  const flat=(o,pre,out)=>{for(const [k,v] of Object.entries(o)){if(v===undefined)continue;const key=pre+'_'+k;if(plain(v))flat(v,key,out);else out[key]=v}return out};
- const pEnc=d=>{const o={};for(const [k,v] of Object.entries(d)){if(k==='t'&&plain(v))flat(v,'t',o);else o[k]=v}o.at=serverTimestamp();return o};
+ const pEnc=d=>{const o={};for(const [k,v] of Object.entries(d)){if(k==='t'&&plain(v))flat(v,'t',o);else o[k]=v}o.lk=Object.keys(o).slice(0,6);o.at=serverTimestamp();return o};
  const pDec=d=>{const o={},t={};for(const [k,v] of Object.entries(d)){const m=/^t_(\d+)_(.+)$/.exec(k);if(!m){o[k]=v;continue}let cur=(t[m[1]]=t[m[1]]||{});const ps=m[2].split('_');ps.slice(0,-1).forEach(p=>{cur=(cur[p]=cur[p]&&typeof cur[p]==='object'?cur[p]:{})});cur[ps[ps.length-1]]=v}if(Object.keys(t).length){const T=o.t&&typeof o.t==='object'?o.t:{};for(const n in t)T[n]=Object.assign(T[n]&&typeof T[n]==='object'?T[n]:{},t[n]);o.t=T}return o};
  const wEnc=(path,d)=>enc(isP(path)?pEnc(d):d);
  const safe=f=>{try{return f()}catch(e){return Promise.reject(e)}};

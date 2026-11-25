@@ -17,6 +17,16 @@ service cloud.firestore {
     function recs(a) { return a is map && a.keys().hasOnly(['beginner','mid','pro','ultimate'])
       && (!('beginner' in a) || rec(a.beginner)) && (!('mid' in a) || rec(a.mid))
       && (!('pro' in a) || rec(a.pro)) && (!('ultimate' in a) || rec(a.ultimate)); }
+    // 대국 기록 값 하나가 작은지: 짧은 글자·숫자·참거짓, 또는 숫자 3개 이하 목록(칸 좌표는 {__a:[행,열]})
+    function cellv(l, i) { return l.size() <= i || l[i] is number
+      || (l[i] is map && l[i].keys().hasOnly(['__a']) && l[i].__a is list && l[i].__a.size() <= 2
+          && (l[i].__a.size() < 1 || l[i].__a[0] is number) && (l[i].__a.size() < 2 || l[i].__a[1] is number)); }
+    function small(v) { return v == null || v is bool || v is number || (v is string && v.size() <= 128)
+      || (v is list && v.size() <= 3 && cellv(v, 0) && cellv(v, 1) && cellv(v, 2)); }
+    // 이번 쓰기에서 추가·변경하는 키 목록 lk(최대 6개)와 실제로 바뀐 키가 같고, 값이 모두 작은지
+    function lkOk(d, changed) { return d.lk is list && d.lk.size() <= 6 && changed.hasOnly(d.lk.concat(['at','lk']))
+      && (d.lk.size() < 1 || small(d[d.lk[0]])) && (d.lk.size() < 2 || small(d[d.lk[1]])) && (d.lk.size() < 3 || small(d[d.lk[2]]))
+      && (d.lk.size() < 4 || small(d[d.lk[3]])) && (d.lk.size() < 5 || small(d[d.lk[4]])) && (d.lk.size() < 6 || small(d[d.lk[5]])); }
     function gid8(v) { return v is string && v.matches('^g[0-9a-f]{8}$'); }
     function gdoc(gid) { return get(/databases/$(database)/documents/g/$(gid)).data; }
     function pPath(gid, s) { return /databases/$(database)/documents/g/$(gid)/p/$(s); }
@@ -113,21 +123,23 @@ service cloud.firestore {
           && request.resource.data.at == request.time
           && request.resource.data.size() < 3000
           && request.resource.data.get('joined', 0) is int
+          && lkOk(request.resource.data, request.resource.data.keys().toSet())
           // 열린 방의 참가 신청은 자리·닉네임·시각만
-          && ((gdoc(gid).status == 'open' && request.resource.data.keys().hasOnly(['seat','nick','joined','at']))
+          && ((gdoc(gid).status == 'open' && request.resource.data.keys().hasOnly(['seat','nick','joined','at','lk']))
               || (gdoc(gid).status == 'playing' && (gdoc(gid).host == me() || gdoc(gid).get('guest', null) == me())));
         // 이미 있는 값은 닉네임·참가 시각·서버 시각만 바뀔 수 있음. 지우기 금지. 부재승 신청 뒤에는 대국 기록 추가 금지
         allow update: if signedIn() && seat == me()
           && request.resource.data.diff(resource.data).removedKeys().size() == 0
-          && request.resource.data.diff(resource.data).changedKeys().hasOnly(['nick','joined','at'])
+          && request.resource.data.diff(resource.data).changedKeys().hasOnly(['nick','joined','at','lk'])
+          && lkOk(request.resource.data, request.resource.data.diff(resource.data).affectedKeys())
           && nick(request.resource.data.get('nick', ''))
           && request.resource.data.at == request.time
           && request.resource.data.size() < 3000
           && request.resource.data.get('joined', 0) is int
           // 대국 기록은 그 방의 두 사람만, 부재승 신청 뒤에는 추가 금지
-          && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['at','nick','joined'])
+          && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['at','nick','joined','lk'])
               || ((gdoc(gid).host == me() || gdoc(gid).get('guest', null) == me())
-                  && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['at','again','nick','joined'])
+                  && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['at','again','nick','joined','lk'])
                       || !('ab' in gdoc(gid)))));
         // 시작 전(열린 방)에는 본인·방장(참가 신청 정리), 방이 없어진 뒤(정리), 손님이 들어오지 않은 방의 본인 문서
         allow delete: if signedIn() && (
