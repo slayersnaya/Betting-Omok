@@ -681,7 +681,7 @@ input,select,textarea{font-size:16px}
    <label class="sw">효과음<input type="checkbox" id="setSnd"></label>
    <label class="sw">힌트 표시<input type="checkbox" id="setHint"></label>
   </div>
-  <div class="acct hide" id="acct"></div><button class="btn ghost wide hide" id="admDl" data-act="admdl" style="margin-top:8px">모든 AI 대국 기록 받기</button>
+  <div class="acct hide" id="acct"></div><button class="btn ghost wide hide" id="admDl" data-act="admdl" style="margin-top:8px">관리자 · 모든 AI 대국 기록 받기</button>
   <div class="setfoot"><a href="privacy.html" target="_blank" rel="noopener" id="privLink">개인정보처리방침</a><button class="linkbtn" data-act="delacct">계정·기록 삭제</button><span id="appVer"></span></div>
  </div>
  <div class="lsheet hide" id="sh-friend" role="dialog" aria-label="친구 대국">
@@ -701,7 +701,7 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.0636';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.0752';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -1856,8 +1856,10 @@ function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.re
  const mb=$('#mebar');if(mb){mb.classList.remove('turnpulse');void mb.offsetWidth;mb.classList.add('turnpulse')}
  try{if(navigator.vibrate)navigator.vibrate(25)}catch(e){}}
 // Firebase 모드 계정: 게스트(익명)로 시작, 원하면 구글 계정 연결(기록 그대로 유지)
-const IS_ADMIN=(()=>{try{if(location.hash==='#admin')sessionStorage.setItem('bo-admin','1');return sessionStorage.getItem('bo-admin')==='1'}catch(e){return false}})();
-function renderAcct(){const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!(IS_ADMIN&&user&&user.firebase));const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
+// 관리자: 연결된 구글 계정이 관리자 이메일일 때만 관리자 버튼이 보임(실제 권한은 서버 규칙이 다시 확인)
+const ADMIN_EMAILS=['slayersnaya@gmail.com'];
+const isAdmin=()=>{try{const g=user&&user.firebase&&user.google&&user.google();return !!g&&ADMIN_EMAILS.includes(String(g).toLowerCase())}catch(e){return false}};
+function renderAcct(){const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!isAdmin());const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
  const g=user.google&&user.google();a.innerHTML=g?`<div class="at"><b>구글 계정 연결됨</b><span>${esc(g)}</span></div>`:`<div class="at"><b>게스트로 플레이 중</b><span>기록을 지키려면 구글 연결</span></div><button class="btn small" data-act="glink">구글 연결</button>`}
 // ===== 웹(Firebase): 앱을 지웠다 다시 깔아도 구글 계정으로 기록 복원. 닉네임·AI 전적은 본인만 읽는 prof/{uid}, 학습 집계는 ailearn/{uid} =====
 let profT=0;
@@ -2301,7 +2303,7 @@ function subMine(){if(!db||!(user&&user.firebase))return;const want=new Set(myGa
  for(const [g,u] of LOBBY.subs)if(!want.has(g)){u();LOBBY.subs.delete(g);LOBBY.mine.delete(g)}
  for(const g of want)if(!LOBBY.subs.has(g))LOBBY.subs.set(g,db.doc('g/'+g).onSnapshot(s=>{const m=s.exists?normMeta(s.data()):null;LOBBY.mine.set(g,m?{id:g,...m}:null);lobbyRooms=lobbyMerge();renderRooms();renderRank()},()=>{}))}
 const DIAG={n:-1,ok:0,cache:false,at:0,err:''};let lobbyState='loading';
-function renderDiag(){if(!IS_ADMIN)return;const e=$('#onlineNote');if(!e)return;const now=Date.now(),open=lobbyRooms.filter(r=>r.status==='open').map(r=>r.id+(r.private?'(숨김)':'')+' '+Math.round((now-r.created)/60e3)+'분').slice(0,3).join(', ');
+function renderDiag(){if(!isAdmin())return;const e=$('#onlineNote');if(!e)return;const now=Date.now(),open=lobbyRooms.filter(r=>r.status==='open').map(r=>r.id+(r.private?'(숨김)':'')+' '+Math.round((now-r.created)/60e3)+'분').slice(0,3).join(', ');
  e.textContent=`진단 · 내ID ${String(SEAT||'').slice(0,6)} · 방문서 ${DIAG.n}개(유효 ${DIAG.ok}) · ${DIAG.cache?'캐시':'서버'} · ${DIAG.at?Math.round((now-DIAG.at)/1e3)+'초 전':'수신 없음'}${DIAG.err?' · 오류 '+DIAG.err:''}${open?' · '+open:''}`}
 function renderRooms(){try{renderDiag()}catch(e){}
  const box=$('#rooms');if(!db){box.innerHTML='<p class="sub nw">오프라인 · 한 폰 대국만 가능</p>';return}
