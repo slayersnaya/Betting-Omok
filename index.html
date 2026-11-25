@@ -61,6 +61,8 @@ input[type=text]:focus{border-color:var(--jade);outline:0}
 .seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;background:var(--soft);border-radius:13px;padding:4px}
 .seg button{border:0;background:transparent;border-radius:10px;min-height:44px;font-weight:800;font-size:14px;color:var(--mute);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;white-space:nowrap;padding:0 4px}
 .seg button[aria-pressed=true]{background:var(--sel);color:var(--ink);box-shadow:inset 0 0 0 2px var(--jade)}
+.seg button.lock{color:var(--faint);opacity:.75;letter-spacing:-.2px}.seg button.lock .lvn{gap:2px}.seg .lvn{display:inline-flex;align-items:center;gap:3px}.seg .lk{width:10px;height:10px;flex:none;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round}
+#mmBtn.rlock{background:var(--raise);color:var(--mute)}
 .seg button svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .seg .pw{display:flex;gap:2px}.seg .pw i{width:4px;height:4px;border-radius:50%;background:var(--faint)}.seg .pw i.on{background:var(--jadeink)}
 .seg.row button{flex-direction:row;gap:6px}
@@ -1722,7 +1724,7 @@ async function profLoad(){if(!(user&&user.firebase&&db&&SEAT&&user.google&&user.
  if(typeof d.nick==='string'&&d.nick.trim()&&!lget('bo-nick')){const n=d.nick.trim().slice(0,8);lset('bo-nick',n);$('#nick').value=n;syncNick();got=true}
  if(d.airec&&typeof d.airec==='object'&&!Array.isArray(d.airec)){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}if(!r||typeof r!=='object'||Array.isArray(r))r={};
   for(const k of Object.keys(AI_LEVELS)){const x=d.airec[k];if(!x||typeof x!=='object')continue;const y=r[k]&&typeof r[k]==='object'?r[k]:(r[k]={w:0,l:0,d:0});for(const f of ['w','l','d']){const v=Math.min(1e5,int(x[f]));if(v>int(y[f])){y[f]=v;got=true}}}
-  lset('bo-airec',JSON.stringify(r));renderAiRec()}
+  lset('bo-airec',JSON.stringify(r));renderLevels()}
  if(!lrnLocal()&&aiLearnClean(d,0,0)){lset('bo-ailearn',JSON.stringify({v:1,h:d.h.map(x=>Math.max(0,int(x))),g:int(d.g)}));lrnApply();got=true}
  if(got){lset('bo-tut-done','1');const w=$('#welcome');if(w)w.classList.add('hide');toast('구글 계정 기록을 불러왔어요')}}
 async function googleLink(){if(!(user&&user.firebase))return;try{const r=await user.linkGoogle();if(r==='switched'){toast('이미 쓰던 구글 기록으로 전환');setTimeout(()=>location.reload(),800);return}toast('구글 계정 연결됨');renderAcct();profLoad().then(profSave)}catch(e){toast(e&&e.code==='popup-blocked'?'팝업이 막힘 · 크롬에서 열어 주세요':'연결 실패 · 크롬에서 다시 시도')}}
@@ -1967,7 +1969,7 @@ function renderAiRec(){
  let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}
  const x=r[UI.aiLevel];$('#aiRec').textContent=x&&typeof x==='object'?`${int(x.w)}승 ${int(x.l)}패${int(x.d)?` ${int(x.d)}무`:''}`:'';
 }
-function addAiRec(level,res){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}if(!r||typeof r!=='object'||Array.isArray(r))r={};if(!Object.prototype.hasOwnProperty.call(AI_LEVELS,level))return;const x=r[level]&&typeof r[level]==='object'?r[level]:(r[level]={w:0,l:0,d:0});x[res]=int(x[res])+1;lset('bo-airec',JSON.stringify(r));renderAiRec();profSave()}
+function addAiRec(level,res){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}if(!r||typeof r!=='object'||Array.isArray(r))r={};if(!Object.prototype.hasOwnProperty.call(AI_LEVELS,level))return;const x=r[level]&&typeof r[level]==='object'?r[level]:(r[level]={w:0,l:0,d:0});const t0=aiTopWin();x[res]=int(x[res])+1;lset('bo-airec',JSON.stringify(r));renderAiRec();profSave();const t1=aiTopWin();if(t1>t0){const msg=[];if(t1+1<LEVELS.length&&t1+1>t0+1)msg.push(`${LEVELS[t1+1][1]} 단계가 열렸어요`);if(t0<2&&t1>=2)msg.push('랭크전이 열렸어요');setTimeout(()=>{if(msg.length)toast(msg.join(' · '))},2600);renderLevels()}}
 
 // ===== 랭크 매칭: 대기 중인 사람끼리 점수가 비슷한 상대와 자동으로 짝지음 =====
 // 서버가 없어서 모든 폰이 같은 규칙으로 짝을 계산하고, 자리 id가 작은 쪽이 방을 열어 상대 알림함에 알려줌
@@ -1990,6 +1992,7 @@ function mmPairs(list,now){
  return out;
 }
 function mmStart(){
+ if(!rankOpen()){dialog('랭크전은 AI 고수를 이기면 열려요.','고수 도전',()=>{const i=LEVELS.findIndex(([k])=>k==='pro');if(lvOpen(i)){UI.aiLevel='pro';lset('bo-ai','pro');renderLevels()}else toast(`지금 열린 단계부터 차례로 깨 주세요`);const c=$('#aiCard');if(c)c.scrollIntoView({behavior:'smooth',block:'center'})});return}
  if(!UI.ready){toast('연결 확인 중');return}
  if(!db||!room){toast('랭크전 이용 불가');return}
  if(canWrite===false){toast('관전 전용 · 랭크전 불가');return}
@@ -2035,7 +2038,7 @@ function renderMM(){
  if(MM.on){const w=Date.now()-MM.since,win=mmWin(w),s=Math.floor(w/1000);
   lb.textContent='매칭 취소';b.classList.add('ghost');
   st.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · ${win===Infinity?'점수 무관':`±${win}점`} · 대기 ${n}`}
- else{lb.textContent='랭크전';b.classList.remove('ghost');st.textContent=!UI.ready?'연결 중':off?'':n?`대기 ${n}`:''}
+ else{const ro=rankOpen();lb.textContent='랭크전';b.classList.remove('ghost');b.classList.toggle('rlock',!ro);st.textContent=!ro?'AI 고수를 이기면 열려요':!UI.ready?'연결 중':off?'':n?`대기 ${n}`:''}
 }
 function loadCode(){
  const v=($('#codeIn').value||'').trim();let seat=null,sec=null;
@@ -2070,9 +2073,14 @@ function syncNick(){const t=$('#nickTxt');if(t)t.textContent=($('#nick').value||
 function setTheme(v){v=v==='light'?'light':'dark';document.documentElement.dataset.theme=v;lset('bo-theme',v);document.querySelectorAll('#themeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)))}
 // ===== 로비 =====
 const LEVELS=[['beginner','초보'],['mid','중수'],['pro','고수'],['ultimate','Ultimate']];
+// 단계 열기: 앞 단계(또는 그 위 단계)를 한 번이라도 이기면 다음 단계가 열림. 랭크전은 고수 이상을 이겨야 열림
+function aiWinsMap(){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}return r&&typeof r==='object'&&!Array.isArray(r)?r:{}}
+function aiTopWin(){const r=aiWinsMap();let top=-1;LEVELS.forEach(([k],i)=>{const x=r[k];if(x&&typeof x==='object'&&int(x.w)>0)top=i});return top}
+const lvOpen=i=>i<=aiTopWin()+1,rankOpen=()=>aiTopWin()>=2;
+function lvFix(){const i=LEVELS.findIndex(([k])=>k===UI.aiLevel);if(i<0||!lvOpen(i)){let j=0;LEVELS.forEach((_,x)=>{if(lvOpen(x))j=x});UI.aiLevel=LEVELS[j][0]}}
 function renderAiTime(){const on=lget('bo-aitime')==='1';$('#aitime').innerHTML=`<button data-act="aitime" data-v="0" aria-pressed="${!on}"><svg viewBox="0 0 24 24"><path d="M12 12c-2-2.6-3.6-4-5.5-4a4 4 0 0 0 0 8c1.9 0 3.5-1.4 5.5-4zm0 0c2 2.6 3.6 4 5.5 4a4 4 0 0 0 0-8c-1.9 0-3.5 1.4-5.5 4z"/></svg>무제한</button><button data-act="aitime" data-v="1" aria-pressed="${on}"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>20·30초</button>`}
 function renderFirst(){}
-function renderLevels(){$('#levels').innerHTML=LEVELS.map(([k,n],i)=>`<button data-act="level" data-k="${k}" aria-pressed="${UI.aiLevel===k}">${n}<span class="pw" aria-hidden="true">${[0,1,2,3].map(j=>`<i class="${j<=i?'on':''}"></i>`).join('')}</span></button>`).join('');renderAiRec()}
+function renderLevels(){lvFix();$('#levels').innerHTML=LEVELS.map(([k,n],i)=>{const op=lvOpen(i);return `<button data-act="level" data-k="${k}" aria-pressed="${UI.aiLevel===k}"${op?'':` class="lock" aria-disabled="true" aria-label="${n} 잠김"`}><span class="lvn">${op?'':'<svg class="lk" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'}${n}</span><span class="pw" aria-hidden="true">${[0,1,2,3].map(j=>`<i class="${j<=i?'on':''}"></i>`).join('')}</span></button>`}).join('');renderAiRec();try{renderMM()}catch(e){}}
 function renderPresets(){$('#presets').innerHTML=PRESETS.map((p,i)=>`<button class="chip" data-act="preset" data-i="${i}" aria-pressed="${UI.preset===i}"><b>${p.l}</b><span>${p.d?`${p.d}·${p.b}초`:'∞'}</span></button>`).join('')}
 let lobbyRooms=[];
 const DIAG={n:-1,ok:0,cache:false,at:0,err:''};let lobbyState='loading';
@@ -2270,8 +2278,8 @@ document.addEventListener('click',e=>{
  else if(a==='lresume')L.resume();
  else if(a==='again'){wmine('again',{again:true});UI.panelKey='';renderAll()}
  else if(a==='full'){UI.full=!UI.full;renderBoard()}
- else if(a==='local'||a==='solo'){closeSheet();leaveGame();UI.mode='local';L.start(null,a==='solo'?UI.aiLevel:null);show('game');$('#cover').classList.add('hide');renderAll()}
- else if(a==='level'){UI.aiLevel=b.dataset.k;lset('bo-ai',UI.aiLevel);renderLevels()}
+ else if(a==='local'||a==='solo'){if(a==='solo'){lvFix()}closeSheet();leaveGame();UI.mode='local';L.start(null,a==='solo'?UI.aiLevel:null);show('game');$('#cover').classList.add('hide');renderAll()}
+ else if(a==='level'){const i=LEVELS.findIndex(([k])=>k===b.dataset.k);if(i>0&&!lvOpen(i)){toast(`${LEVELS[i-1][1]} AI를 이기면 열려요`);return}UI.aiLevel=b.dataset.k;lset('bo-ai',UI.aiLevel);renderLevels()}
  else if(a==='join'){lset('bo-nick',myNick());wmine('join',{nick:myNick(),joined:Date.now()})}
  else if(a==='zin'){UI.zoom=Math.min(2.2,+(UI.zoom+.4).toFixed(1));renderBoard()}
  else if(a==='zout'){UI.zoom=Math.max(1,+(UI.zoom-.4).toFixed(1));renderBoard()}
