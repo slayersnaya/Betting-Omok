@@ -4,7 +4,7 @@
 
 - 바로 하기: https://slayersnaya.github.io/Betting-Omok/
 - 개인정보처리방침: https://slayersnaya.github.io/Betting-Omok/privacy.html
-- 문의: [Issues](https://github.com/slayersnaya/Betting-Omok/issues)
+- 문의: slayersnaya@gmail.com · [Issues](https://github.com/slayersnaya/Betting-Omok/issues)
 
 ## 구성
 
