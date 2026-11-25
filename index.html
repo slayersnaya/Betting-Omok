@@ -70,7 +70,7 @@ input[type=text]:focus{border-color:var(--jade);outline:0}
 details.rules summary{cursor:pointer;font-weight:800;min-height:46px;display:flex;align-items:center;gap:8px;list-style:none;font-size:14px}details.rules summary::-webkit-details-marker{display:none}
 details.rules summary::after{content:'';width:8px;height:8px;margin-left:auto;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);transition:transform .2s}details.rules[open] summary::after{transform:rotate(225deg)}
 .acct{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:var(--soft)}.acct .at{flex:1;min-width:0}.acct .at b{display:block;font-size:15px}.acct .at span{font-size:13px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
-body.fbmode .xfer{display:none}
+body.fbmode .xfer{display:none}body:not(.fbmode) .wgl{display:none}
 .codebox{display:flex;gap:8px;margin:8px 0}.codebox code{flex:1;min-width:0;overflow-wrap:anywhere;font-size:12px;padding:10px;border-radius:10px;background:var(--soft)}.codebox input{flex:1}
 .rcode{font-family:ui-monospace,monospace;font-size:20px;letter-spacing:.08em}
 /* 스위치 */
@@ -632,7 +632,7 @@ body.big .rline{font-size:15px}body.big h1{font-size:21px}body.big h2{font-size:
 </div>
 <div id="coin" class="hide" role="dialog" aria-label="선 정하기"><div class="cstage"><div class="coin" id="coinEl"><div class="face f1"><span class="cst st k"></span><b id="cn1"></b></div><div class="face f2"><span class="cst st w"></span><b id="cn2"></b></div></div><p class="ctext" id="ctext"></p><p class="csub" id="csub"></p></div></div>
 <div id="cover" class="hide"></div>
-<div id="welcome" class="hide" role="dialog" aria-modal="true" aria-labelledby="wlT"><div class="wcard"><svg class="wart" id="wart" viewBox="0 0 240 132" aria-hidden="true"></svg><div><h2 id="wlT">처음 오셨네요</h2><p><span>몰래 건 점수로 돌을 놓는 오목</span><br><span>1분이면 배워요</span></p><button class="btn wide" data-act="wtut">배우고 시작</button><button class="btn ghost wide" data-act="wskip">바로 둘래요</button></div></div></div>
+<div id="welcome" class="hide" role="dialog" aria-modal="true" aria-labelledby="wlT"><div class="wcard"><svg class="wart" id="wart" viewBox="0 0 240 132" aria-hidden="true"></svg><div><h2 id="wlT">처음 오셨네요</h2><p><span>몰래 건 점수로 돌을 놓는 오목</span><br><span>1분이면 배워요</span></p><button class="btn wide" data-act="wtut">배우고 시작</button><button class="btn ghost wide" data-act="wskip">바로 둘래요</button><button class="btn ghost wide wgl" data-act="wglink">구글로 기록 불러오기</button></div></div></div>
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
@@ -1647,7 +1647,19 @@ function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.re
 // Firebase 모드 계정: 게스트(익명)로 시작, 원하면 구글 계정 연결(기록 그대로 유지)
 function renderAcct(){const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
  const g=user.google&&user.google();a.innerHTML=g?`<div class="at"><b>구글 계정 연결됨</b><span>${esc(g)}</span></div>`:`<div class="at"><b>게스트로 플레이 중</b><span>기록을 지키려면 구글 연결</span></div><button class="btn small" data-act="glink">구글 연결</button>`}
-async function googleLink(){if(!(user&&user.firebase))return;try{const r=await user.linkGoogle();if(r==='switched'){toast('이미 쓰던 구글 기록으로 전환');setTimeout(()=>location.reload(),800);return}toast('구글 계정 연결됨');renderAcct()}catch(e){toast(e&&e.code==='popup-blocked'?'팝업이 막힘 · 크롬에서 열어 주세요':'연결 실패 · 크롬에서 다시 시도')}}
+// ===== 웹(Firebase): 앱을 지웠다 다시 깔아도 구글 계정으로 기록 복원 (닉네임·AI 전적·학습 집계를 ailearn/{uid}에 함께 보관) =====
+let profT=0;
+function profSave(){if(!(user&&user.firebase&&db&&SEAT))return;clearTimeout(profT);profT=setTimeout(()=>{let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}
+ db.doc('ailearn/'+SEAT).update({nick:myNick().slice(0,8),airec:r,pts:Date.now()}).catch(()=>{})},1500)}
+async function profLoad(){if(!(user&&user.firebase&&db&&SEAT&&user.google&&user.google()))return;
+ let d=null;try{d=(await db.doc('ailearn/'+SEAT).get()).data()}catch(e){}if(!d||typeof d!=='object')return;let got=false;
+ if(typeof d.nick==='string'&&d.nick.trim()&&!lget('bo-nick')){const n=d.nick.trim().slice(0,8);lset('bo-nick',n);$('#nick').value=n;syncNick();got=true}
+ if(d.airec&&typeof d.airec==='object'&&!Array.isArray(d.airec)){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}if(!r||typeof r!=='object'||Array.isArray(r))r={};
+  for(const k of Object.keys(AI_LEVELS)){const x=d.airec[k];if(!x||typeof x!=='object')continue;const y=r[k]&&typeof r[k]==='object'?r[k]:(r[k]={w:0,l:0,d:0});for(const f of ['w','l','d']){const v=Math.min(1e5,int(x[f]));if(v>int(y[f])){y[f]=v;got=true}}}
+  lset('bo-airec',JSON.stringify(r));renderAiRec()}
+ if(!lrnLocal()&&aiLearnClean(d,0,0)){lset('bo-ailearn',JSON.stringify({v:1,h:d.h.map(x=>Math.max(0,int(x))),g:int(d.g)}));lrnApply();got=true}
+ if(got){lset('bo-tut-done','1');const w=$('#welcome');if(w)w.classList.add('hide');toast('구글 계정 기록을 불러왔어요')}}
+async function googleLink(){if(!(user&&user.firebase))return;try{const r=await user.linkGoogle();if(r==='switched'){toast('이미 쓰던 구글 기록으로 전환');setTimeout(()=>location.reload(),800);return}toast('구글 계정 연결됨');renderAcct();profLoad().then(profSave)}catch(e){toast(e&&e.code==='popup-blocked'?'팝업이 막힘 · 크롬에서 열어 주세요':'연결 실패 · 크롬에서 다시 시도')}}
 function say(m){const e=$('#srlive');if(!e||!m)return;e.textContent='';setTimeout(()=>{e.textContent=m},60)}
 function announce(){
  const vs=vstate();if(!vs||!vs.A||UI.review||UI.view!=='game'){UI.srKey='';return}
@@ -1885,7 +1897,7 @@ function renderAiRec(){
  let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}
  const x=r[UI.aiLevel];$('#aiRec').textContent=x&&typeof x==='object'?`${int(x.w)}승 ${int(x.l)}패${int(x.d)?` ${int(x.d)}무`:''}`:'';
 }
-function addAiRec(level,res){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}if(!r||typeof r!=='object'||Array.isArray(r))r={};if(!Object.prototype.hasOwnProperty.call(AI_LEVELS,level))return;const x=r[level]&&typeof r[level]==='object'?r[level]:(r[level]={w:0,l:0,d:0});x[res]=int(x[res])+1;lset('bo-airec',JSON.stringify(r));renderAiRec()}
+function addAiRec(level,res){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}if(!r||typeof r!=='object'||Array.isArray(r))r={};if(!Object.prototype.hasOwnProperty.call(AI_LEVELS,level))return;const x=r[level]&&typeof r[level]==='object'?r[level]:(r[level]={w:0,l:0,d:0});x[res]=int(x[res])+1;lset('bo-airec',JSON.stringify(r));renderAiRec();profSave()}
 
 // ===== 랭크 매칭: 대기 중인 사람끼리 점수가 비슷한 상대와 자동으로 짝지음 =====
 // 서버가 없어서 모든 폰이 같은 규칙으로 짝을 계산하고, 자리 id가 작은 쪽이 방을 열어 상대 알림함에 알려줌
@@ -1984,7 +1996,7 @@ function openSheet(k){closeSheet(true);const el=$('#sh-'+k);if(!el)return;shOpen
  if(k==='friend')renderRooms();if(k==='set')syncSettings();
  const f=el.querySelector('input[type=text]');if(f&&k==='nick')setTimeout(()=>f.focus(),60)}
 function closeSheet(silent){if(UI.showCode){UI.showCode=false;try{renderTiers()}catch(e){}}if(!shOpen)return;$('#sh-'+shOpen).classList.add('hide');$('#shbg').classList.add('hide');if(shOpen==='nick'){lset('bo-nick',myNick());syncNick()}shOpen=null}
-function syncNick(){const t=$('#nickTxt');if(t)t.textContent=($('#nick').value||'').trim()||'닉네임'}
+function syncNick(){const t=$('#nickTxt');if(t)t.textContent=($('#nick').value||'').trim()||'닉네임';profSave()}
 function setTheme(v){v=v==='light'?'light':'dark';document.documentElement.dataset.theme=v;lset('bo-theme',v);document.querySelectorAll('#themeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)))}
 // ===== 로비 =====
 const LEVELS=[['beginner','초보'],['mid','중수'],['pro','고수'],['ultimate','Ultimate']];
@@ -2078,7 +2090,7 @@ function aiLearnAfter(d,key){try{
  let agg=lrnLocal();const seats=d.ai?['A']:[d.A,d.B];
  for(const hum of seats){if(!hum)continue;const hc=hum===d.A?1:2;agg=aiLearnGame(agg,d.hist,hum,hc,3-hc)}
  lset('bo-ailearn',JSON.stringify(agg));done.push(key);lset('bo-ailearn-k',JSON.stringify(done.slice(-200)));lrnApply();
- clearTimeout(lrnT);lrnT=setTimeout(()=>{const doc=aiLearnDoc(agg);if(doc&&db&&SEAT)db.doc('ailearn/'+SEAT).set(doc).catch(()=>{})},1500)
+ clearTimeout(lrnT);lrnT=setTimeout(()=>{const doc=aiLearnDoc(agg);if(doc&&db&&SEAT)db.doc('ailearn/'+SEAT).update(doc).catch(()=>{})},1500)
 }catch(e){}}
 // AI 봉인: 사람이 입력하기 전에 AI 베팅을 해시로 고정해 보여주고, 복기에서 같은 값인지 다시 계산해 확인
 function aiSealOf(s,b,salt){return sha256(`ai|${s.id}|${s.t}|${cellsKey(s.cells)}|${b.join(',')}|${salt}`)}
@@ -2235,6 +2247,7 @@ document.addEventListener('click',e=>{
  else if(a==='copyvfy'){(navigator.clipboard?navigator.clipboard.writeText(b.dataset.v):Promise.reject()).then(()=>toast('복사됨'),()=>toast('길게 눌러 복사'))}
  else if(a==='tut'){closeSheet();T.start()}
  else if(a==='wtut'){$('#welcome').classList.add('hide');T.start()}
+ else if(a==='wglink'){$('#welcome').classList.add('hide');googleLink()}
  else if(a==='wskip'){lset('bo-tut-done','1');$('#welcome').classList.add('hide');toast('규칙 탭에서 언제든 배울 수 있어요')}
  else if(a==='sheet')openSheet(b.dataset.k);
  else if(a==='peek'){UI.peek=!UI.peek;renderPlayers()}
@@ -2349,7 +2362,7 @@ const use=n=>window.claude&&typeof window.claude.use==='function'?Promise.resolv
  const [d,u,r]=await Promise.all([use('db'),use('user'),use('room')]);
  db=d;user=u;room=r;
  // Firebase(웹·어플) 모드: 자리 id는 로그인 id(uid). 규칙으로 '본인 문서만 쓰기'가 보장됨
- if(user&&user.firebase){try{const id=await user.id();if(id){SEAT=id;SECRET=null}}catch(e){}document.body.classList.add('fbmode');try{renderAcct()}catch(e){}}
+ if(user&&user.firebase){try{const id=await user.id();if(id){SEAT=id;SECRET=null}}catch(e){}document.body.classList.add('fbmode');try{renderAcct()}catch(e){}profLoad().catch(()=>{})}
  // 프로필 이름(실명일 수 있음)은 공유 DB에 남지 않게 닉네임으로 자동 입력하지 않음
  if(user){try{canWrite=await user.can('data.write')}catch(e){}}
  const note=$('#onlineNote');
