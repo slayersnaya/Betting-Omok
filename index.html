@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="color-scheme" content="dark light">
 <title>베팅 오목</title>
 <style>
@@ -19,6 +19,7 @@
 --r:14px;--sheetsh:0 -12px 30px rgba(0,0,0,.4);--pri:#0a9e9c;--sel:rgba(0,153,153,.12)}
 :root[data-theme=light]{color-scheme:light;--pri:#009999;--bg:#f1eee7;--card:#fffdf9;--soft:#f6f3ec;--raise:#ebe6db;--ink:#17211f;--mute:#5d6c69;--faint:#8b9692;--line:#dfd9cd;--jadeink:#007a7a;--warn:#b3261e;--sheetsh:0 -10px 26px rgba(60,40,10,.14)}
 *{box-sizing:border-box;min-width:0}
+html,body,*{touch-action:manipulation}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 NS,"NanumSquare","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;overflow-x:clip;word-break:keep-all;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 button,input{font:inherit;color:inherit}
 .wrap{max-width:1180px;margin:0 auto;padding:10px max(4vw,12px) 32px}
@@ -644,9 +645,9 @@ body.big .rline{font-size:15px}body.big h1{font-size:21px}body.big h2{font-size:
 const V='https://www.gstatic.com/firebasejs/10.12.2/';
 const cfg=window.BO_FIREBASE_CONFIG,FB=window.__BO_FB;
 try{
- const [{initializeApp},{getAuth,signInAnonymously,onAuthStateChanged,GoogleAuthProvider,linkWithPopup,signInWithCredential},{getFirestore,doc,collection,getDoc,getDocs,setDoc,deleteDoc,onSnapshot,query,orderBy,limit,where}]=
+ const [{initializeApp},{getAuth,signInAnonymously,onAuthStateChanged,GoogleAuthProvider,linkWithPopup,signInWithCredential},{initializeFirestore,doc,collection,getDoc,getDocs,setDoc,deleteDoc,onSnapshot,query,orderBy,limit,where}]=
   await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-auth.js'),import(V+'firebase-firestore.js')]);
- const app=initializeApp(cfg),auth=getAuth(app),fs=getFirestore(app);
+ const app=initializeApp(cfg),auth=getAuth(app),fs=initializeFirestore(app,{experimentalForceLongPolling:true,ignoreUndefinedProperties:true});
  // 로그인: 처음이면 익명(게스트)으로 바로 시작
  const uid=await new Promise((res,rej)=>{const off=onAuthStateChanged(auth,u=>{if(u){off();res(u.uid)}else signInAnonymously(auth).catch(rej)})});
 
@@ -654,12 +655,16 @@ try{
  const MAP={'permission-denied':'invalid_argument','resource-exhausted':'quota_exceeded','unauthenticated':'invalid_argument'};
  const wrapErr=p=>p.catch(e=>{const x=new Error(e&&e.message||'error');x.code=MAP[e&&e.code]||(e&&e.code)||'unknown';throw x});
  const MD={includeMetadataChanges:true};
- const snapDoc=s=>({id:s.id,exists:s.exists(),data:()=>s.data(),metadata:{fromCache:s.metadata.fromCache,hasPendingWrites:s.metadata.hasPendingWrites}});
+ // Firestore는 '배열 안의 배열'을 저장하지 못함 → 저장할 때 안쪽 배열을 {__a:[...]}로 감싸고, 읽을 때 되돌림
+ const enc=v=>Array.isArray(v)?v.map(x=>Array.isArray(x)?{__a:enc(x)}:x===undefined?null:enc(x)):v&&typeof v==='object'?Object.fromEntries(Object.entries(v).filter(([,x])=>x!==undefined).map(([k,x])=>[k,enc(x)])):v;
+ const dec=v=>Array.isArray(v)?v.map(dec):v&&typeof v==='object'?(Array.isArray(v.__a)&&Object.keys(v).length===1?dec(v.__a):Object.fromEntries(Object.entries(v).map(([k,x])=>[k,dec(x)]))):v;
+ const safe=f=>{try{return f()}catch(e){return Promise.reject(e)}};
+ const snapDoc=s=>({id:s.id,exists:s.exists(),data:()=>{const d=s.data();return d==null?d:dec(d)},metadata:{fromCache:s.metadata.fromCache,hasPendingWrites:s.metadata.hasPendingWrites}});
  const D=path=>{const ref=doc(fs,path);return{
   get:()=>wrapErr(getDoc(ref)).then(snapDoc),
-  set:d=>wrapErr(setDoc(ref,d)),
+  set:d=>wrapErr(safe(()=>setDoc(ref,enc(d)))),
   // 게임 코드는 update로 중첩 객체를 깊게 합치므로 merge 저장으로 맞춤
-  update:d=>wrapErr(setDoc(ref,d,{merge:true})),
+  update:d=>wrapErr(safe(()=>setDoc(ref,enc(d),{merge:true}))),
   delete:()=>wrapErr(deleteDoc(ref)),
   // 메타데이터 변화(캐시 → 서버 확인)도 받아야 '서버에서 확인됨' 신호를 놓치지 않음
   onSnapshot:(cb,err)=>onSnapshot(ref,MD,s=>cb(snapDoc(s)),e=>err&&err(e))}};
