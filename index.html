@@ -653,6 +653,7 @@ try{
  // 오류 코드를 게임 코드가 아는 이름으로
  const MAP={'permission-denied':'invalid_argument','resource-exhausted':'quota_exceeded','unauthenticated':'invalid_argument'};
  const wrapErr=p=>p.catch(e=>{const x=new Error(e&&e.message||'error');x.code=MAP[e&&e.code]||(e&&e.code)||'unknown';throw x});
+ const MD={includeMetadataChanges:true};
  const snapDoc=s=>({id:s.id,exists:s.exists(),data:()=>s.data(),metadata:{fromCache:s.metadata.fromCache,hasPendingWrites:s.metadata.hasPendingWrites}});
  const D=path=>{const ref=doc(fs,path);return{
   get:()=>wrapErr(getDoc(ref)).then(snapDoc),
@@ -660,14 +661,15 @@ try{
   // 게임 코드는 update로 중첩 객체를 깊게 합치므로 merge 저장으로 맞춤
   update:d=>wrapErr(setDoc(ref,d,{merge:true})),
   delete:()=>wrapErr(deleteDoc(ref)),
-  onSnapshot:(cb,err)=>onSnapshot(ref,s=>cb(snapDoc(s)),e=>err&&err(e))}};
+  // 메타데이터 변화(캐시 → 서버 확인)도 받아야 '서버에서 확인됨' 신호를 놓치지 않음
+  onSnapshot:(cb,err)=>onSnapshot(ref,MD,s=>cb(snapDoc(s)),e=>err&&err(e))}};
  const C=(path,cons=[])=>{const q=()=>query(collection(fs,path),...cons);return{
   orderBy:(f,dir)=>C(path,[...cons,orderBy(f,dir||'asc')]),
   limit:n=>C(path,[...cons,limit(n)]),
   where:(a,o,b)=>C(path,[...cons,where(a,o,b)]),
   doc:id=>D(path+'/'+id),
   get:()=>wrapErr(getDocs(q())).then(qs=>({docs:qs.docs.map(snapDoc),metadata:{fromCache:qs.metadata.fromCache}})),
-  onSnapshot:(cb,err)=>onSnapshot(q(),qs=>cb({docs:qs.docs.map(snapDoc),metadata:{fromCache:qs.metadata.fromCache}}),e=>err&&err(e))}};
+  onSnapshot:(cb,err)=>onSnapshot(q(),MD,qs=>cb({docs:qs.docs.map(snapDoc),metadata:{fromCache:qs.metadata.fromCache}}),e=>err&&err(e))}};
  const db={doc:D,collection:C};
 
  // 접속 표시(presence): rt/{방}/p/{uid}에 20초마다 '살아 있음'을 쓰고, 60초 안에 쓴 사람만 접속 중으로 봄
@@ -676,8 +678,11 @@ try{
   const beat=()=>setDoc(ref,{presence:pres,at:Date.now()}).catch(()=>{});
   const r={
    presence(p){pres=Object.assign({},pres,p);for(const k in pres)if(pres[k]==null)delete pres[k];beat();if(!hb)hb=setInterval(beat,20000);rooms.add(r);return Promise.resolve()},
-   onPeers(cb){const emit=()=>{const now=Date.now();cb({peers:last.filter(p=>now-p.at<60000)})};
-    un=onSnapshot(collection(fs,`rt/${name}/p`),qs=>{last=qs.docs.map(d=>{const v=d.data()||{};return{id:d.id,presence:v.presence||{},at:+v.at||0,you:d.id===uid}});emit()},()=>{});
+   // 접속 판정은 '내 폰이 그 사람의 갱신을 받은 시각' 기준(폰마다 시계가 달라도 됨)
+   onPeers(cb){const seen={};const emit=()=>{const now=Date.now();cb({peers:last.filter(p=>p.you||now-(seen[p.id]?seen[p.id].t:0)<60000)})};
+    un=onSnapshot(collection(fs,`rt/${name}/p`),qs=>{const now=Date.now();last=qs.docs.map(d=>{const v=d.data()||{},at=+v.at||0,o=seen[d.id];
+      if(!o)seen[d.id]={at,t:Math.abs(now-at)<120000?now:now-3600e3};else if(o.at!==at)seen[d.id]={at,t:now};
+      return{id:d.id,presence:v.presence||{},at,you:d.id===uid}});emit()},()=>{});
     tick=setInterval(emit,15000);return()=>{un&&un();clearInterval(tick)}},
    leave(){clearInterval(hb);hb=null;clearInterval(tick);un&&un();rooms.delete(r);return deleteDoc(ref).catch(()=>{})}};
   return r};
@@ -1284,8 +1289,8 @@ const GIDRE=/^g[0-9a-f]{8}$/,SEATRE=/^[A-Za-z0-9-]{4,40}$/,okSeat=x=>typeof x===
 const str12=x=>typeof x==='string'?x.slice(0,12):'';
 const okPreset=(d,b)=>PRESETS.some(p=>p.d===d&&p.b===b);
 function normMeta(m){if(!m||typeof m!=='object')return null;const now=Date.now(),num=x=>typeof x==='number'&&isFinite(x)?x:0;
- const ranked=m.ranked===true,td=ranked?20:num(m.td),tb=ranked?30:num(m.tb),pr=okPreset(td,tb),created=num(m.created);
- if(!okSeat(m.host)||created>now+300e3)return null;
+ const ranked=m.ranked===true,td=ranked?20:num(m.td),tb=ranked?30:num(m.tb),pr=okPreset(td,tb),created=Math.min(num(m.created),now);
+ if(!okSeat(m.host))return null;
  const o={host:m.host,hostNick:str12(m.hostNick),guest:okSeat(m.guest)&&m.guest!==m.host?m.guest:null,guestNick:str12(m.guestNick),created,td:pr?td:0,tb:pr?tb:0,
   status:['open','playing','done'].includes(m.status)?m.status:'open',ranked,private:m.private===true};
  if(typeof m.prev==='string'&&GIDRE.test(m.prev))o.prev=m.prev;if(typeof m.next==='string'&&GIDRE.test(m.next))o.next=m.next;
@@ -1855,6 +1860,10 @@ function enterGame(gid){
  const slow=setTimeout(()=>{const s=$('#slow');if(s)s.textContent='연결 지연 · 새로고침 필요'},10000);
  G.unsubs.push(db.doc('g/'+gid).onSnapshot(s=>{clearTimeout(slow);const fresh=!(s.metadata&&s.metadata.fromCache);if(fresh)G.ready.m=true;G.meta=s.exists?normMeta(s.data()):null;if(G.meta)G.hadMeta=true;G.missing=!G.meta&&fresh;if(!G.meta)G.st=null;recompute()},()=>{G.missing=true;renderAll()}));
  G.unsubs.push(db.collection(`g/${gid}/p`).onSnapshot(qs=>{if(!(qs.metadata&&qs.metadata.fromCache))G.ready.p=true;const d=Object.create(null);qs.docs.forEach(x=>{const v=x.data();if(okSeat(x.id)&&v&&typeof v==='object'&&!Array.isArray(v))d[x.id]=v});G.docs=d;if(d[SEAT])G.created=true;recompute()},()=>{}));
+ (function chk(n){setTimeout(()=>{if(G.gid!==gid||(G.ready.m&&G.ready.p)||n>6)return;
+  if(!G.ready.m)db.doc('g/'+gid).get().then(s=>{if(G.gid!==gid||(s.metadata&&s.metadata.fromCache))return;G.ready.m=true;G.meta=s.exists?normMeta(s.data()):null;if(G.meta)G.hadMeta=true;G.missing=!G.meta;recompute()}).catch(()=>{});
+  if(!G.ready.p)db.collection(`g/${gid}/p`).get().then(qs=>{if(G.gid!==gid||(qs.metadata&&qs.metadata.fromCache))return;G.ready.p=true;const d=Object.create(null);qs.docs.forEach(x=>{const v=x.data();if(okSeat(x.id)&&v&&typeof v==='object'&&!Array.isArray(v))d[x.id]=v});if(!Object.keys(G.docs).length)G.docs=d;if(d[SEAT])G.created=true;recompute()}).catch(()=>{});
+  chk(n+1)},4000)})(0);
  if(room)room.join('g-'+gid).then(r=>{if(G.gid!==gid){r.leave();return}G.room=r;r.presence({seat:SEAT}).catch(()=>{});G.unsubs.push(r.onPeers(c=>{G.online=new Set(c.peers.map(p=>p.presence&&p.presence.seat).filter(x=>typeof x==='string'));renderPlayers()}))}).catch(()=>{});
  renderAll();
 }
@@ -2061,14 +2070,14 @@ function renderFirst(){}
 function renderLevels(){$('#levels').innerHTML=LEVELS.map(([k,n],i)=>`<button data-act="level" data-k="${k}" aria-pressed="${UI.aiLevel===k}">${n}<span class="pw" aria-hidden="true">${[0,1,2,3].map(j=>`<i class="${j<=i?'on':''}"></i>`).join('')}</span></button>`).join('');renderAiRec()}
 function renderPresets(){$('#presets').innerHTML=PRESETS.map((p,i)=>`<button class="chip" data-act="preset" data-i="${i}" aria-pressed="${UI.preset===i}"><b>${p.l}</b><span>${p.d?`${p.d}·${p.b}초`:'∞'}</span></button>`).join('')}
 let lobbyRooms=[];
-const DIAG={n:-1,ok:0,cache:false,at:0,err:''};
+const DIAG={n:-1,ok:0,cache:false,at:0,err:''};let lobbyState='loading';
 function renderDiag(){if(!IS_ADMIN)return;const e=$('#onlineNote');if(!e)return;const now=Date.now(),open=lobbyRooms.filter(r=>r.status==='open').map(r=>r.id+(r.private?'(숨김)':'')+' '+Math.round((now-r.created)/60e3)+'분').slice(0,3).join(', ');
  e.textContent=`진단 · 내ID ${String(SEAT||'').slice(0,6)} · 방문서 ${DIAG.n}개(유효 ${DIAG.ok}) · ${DIAG.cache?'캐시':'서버'} · ${DIAG.at?Math.round((now-DIAG.at)/1e3)+'초 전':'수신 없음'}${DIAG.err?' · 오류 '+DIAG.err:''}${open?' · '+open:''}`}
 function renderRooms(){try{renderDiag()}catch(e){}
  const box=$('#rooms');if(!db){box.innerHTML='<p class="sub nw">오프라인 · 한 폰 대국만 가능</p>';return}
  const now=Date.now();
  const list=lobbyRooms.filter(r=>!r.ranked&&(!r.private||r.host===SEAT||r.guest===SEAT)&&r.created&&r.status!=='done'&&now-r.created<(r.status==='open'?6:24)*3600e3).slice(0,20);
- renderPips();if(!list.length){box.innerHTML='<p class="sub">열린 방 없음</p>';return}
+ renderPips();if(!list.length){const msg={loading:'불러오는 중',cache:'서버 확인 중 · 방 코드로 입장 가능',timeout:'서버 응답 없음 · 네트워크 확인',err:'방 목록 불러오기 실패'+(DIAG.err?' · '+esc(DIAG.err):'')}[lobbyState]||'열린 방 없음';box.innerHTML='<p class="sub">'+msg+'</p>';return}
  box.innerHTML=list.map(r=>{const mineR=r.host===SEAT||r.guest===SEAT;
   const lbl=r.status==='done'?'끝남':r.guest?(mineR?'대국 중':'관전 가능'):'참가 가능';
   const btn=mineR?'이어하기':r.guest?'관전':'입장';
@@ -2437,8 +2446,8 @@ const use=n=>window.claude&&typeof window.claude.use==='function'?Promise.resolv
  if(!db){$('#createBtn').disabled=true}
  note.textContent=db&&canWrite===false?'관전 전용':'';
  if(db){
-  const t=setTimeout(()=>{if(!lobbyRooms.length)$('#rooms').innerHTML='<p class="sub">방 목록 불러오기 실패</p>'},10000);
-  db.collection('g').orderBy('created','desc').limit(40).onSnapshot(qs=>{clearTimeout(t);lobbyRooms=qs.docs.map(x=>{if(!GIDRE.test(x.id))return null;const m=normMeta(x.data());return m?{id:x.id,...m}:null}).filter(Boolean);DIAG.n=qs.docs.length;DIAG.ok=lobbyRooms.length;DIAG.cache=!!(qs.metadata&&qs.metadata.fromCache);DIAG.at=Date.now();DIAG.err='';renderRooms();renderRank()},e=>{clearTimeout(t);const c=(e&&e.code)||'';DIAG.err=c||'err';$('#rooms').innerHTML='<p class="sub">'+(c.includes('permission')?'서버 규칙 확인 필요 (권한 거부)':'방 목록 불러오기 실패'+(c?' · '+esc(c):''))+'</p>'});
+  const t=setTimeout(()=>{if(lobbyState==='loading'||lobbyState==='cache')lobbyState='timeout';if(!lobbyRooms.length)renderRooms()},10000);
+  db.collection('g').orderBy('created','desc').limit(40).onSnapshot(qs=>{clearTimeout(t);lobbyRooms=qs.docs.map(x=>{if(!GIDRE.test(x.id))return null;const m=normMeta(x.data());return m?{id:x.id,...m}:null}).filter(Boolean);lobbyState=qs.metadata&&qs.metadata.fromCache?'cache':'ok';DIAG.n=qs.docs.length;DIAG.ok=lobbyRooms.length;DIAG.cache=!!(qs.metadata&&qs.metadata.fromCache);DIAG.at=Date.now();DIAG.err='';renderRooms();renderRank()},e=>{clearTimeout(t);const c=(e&&e.code)||'';DIAG.err=c||'err';lobbyState='err';$('#rooms').innerHTML='<p class="sub">'+(c.includes('permission')?'서버 규칙 확인 필요 (권한 거부)':'방 목록 불러오기 실패'+(c?' · '+esc(c):''))+'</p>'});
   // 랭크 결과(최근 2000건 = 약 1000판)로 모든 폰이 같은 방식으로 점수를 계산
   db.collection('res').orderBy('ended','desc').limit(user&&user.firebase?300:2000).onSnapshot(qs=>{RK.docs=qs.docs.map(x=>{const v=x.data();return v&&typeof v==='object'?{...v,id:x.id}:null}).filter(Boolean).reverse();clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)},()=>{RK.loaded=true;renderRank()});
   mmSub();
