@@ -8,7 +8,7 @@ service cloud.firestore {
     function me() { return request.auth.uid; }
     function google() { return signedIn() && 'google.com' in request.auth.token.firebase.identities; }
     // 관리자(AI 대국 기록 전체 보기): 관리자 구글 이메일을 아래 목록에 넣으면 됨
-    function isAdmin() { return google() && request.auth.token.email_verified == true && request.auth.token.email in []; }
+    function isAdmin() { return google() && request.auth.token.email_verified == true && request.auth.token.email in ['slayersnaya@gmail.com']; }
     function nowMs() { return request.time.toMillis(); }
     function nearNow(ms, back, ahead) { return ms is int && ms > nowMs() - back && ms < nowMs() + ahead; }
     function nick(v) { return v is string && v.size() <= 12; }
