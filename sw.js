@@ -1,7 +1,8 @@
-// 베팅 오목: 설치용 최소 서비스 워커 (저장해 두지 않음 → 업데이트는 항상 바로 반영)
-self.addEventListener('install',()=>self.skipWaiting());
-self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
-self.addEventListener('fetch',e=>{
- if(e.request.mode!=='navigate')return;
- e.respondWith(fetch(e.request).catch(()=>new Response('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><body style="margin:0;height:100vh;display:grid;place-items:center;background:#0f1716;color:#e9f0ee;font-family:sans-serif">인터넷에 연결되면 다시 열어 주세요</body>',{headers:{'Content-Type':'text/html; charset=utf-8'}})));
-});
+// 베팅 오목 서비스 워커 (버전 261126.0408)
+const C='bo-261126.0408';
+self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(['./','index.html','manifest.json','icons/icon-192.png']).catch(()=>{})))});
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{const u=new URL(e.request.url);
+ if(e.request.method!=='GET'||u.origin!==location.origin||u.pathname.endsWith('version.json'))return;
+ e.respondWith(fetch(e.request).then(r=>{if(r.ok&&(e.request.mode==='navigate'||/\.(png|jpg|json|html)$/.test(u.pathname))){const cp=r.clone();caches.open(C).then(c=>c.put(e.request.mode==='navigate'?'index.html':e.request,cp))}return r})
+  .catch(()=>caches.match(e.request.mode==='navigate'?'index.html':e.request).then(r=>r||new Response('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><body style="margin:0;height:100vh;display:grid;place-items:center;background:#0f1716;color:#e9f0ee;font-family:sans-serif"><div style="text-align:center">인터넷에 연결되면 다시 열어 주세요<br><br><button onclick="location.reload()" style="font:inherit;padding:10px 18px;border-radius:12px;border:0;background:#009999;color:#fff">다시 시도</button></div></body>',{headers:{'Content-Type':'text/html; charset=utf-8'}}))))});

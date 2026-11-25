@@ -1,0 +1,182 @@
+rules_version = '2';
+// 베팅 오목 — Firestore 보안 규칙 (2026-11 강화판)
+// 핵심: ① 대국 기록은 '추가만'(이미 쓴 값 수정·삭제 금지) ② 시각은 서버 시각으로 검사
+//       ③ 랭크 결과는 실제 랭크 방·구글 계정에만 묶음 ④ 키·크기·시각 범위 제한
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function me() { return request.auth.uid; }
+    function google() { return signedIn() && 'google.com' in request.auth.token.firebase.identities; }
+    // 관리자(AI 대국 기록 전체 보기): 관리자 구글 이메일을 아래 목록에 넣으면 됨
+    function isAdmin() { return google() && request.auth.token.email_verified == true && request.auth.token.email in []; }
+    function nowMs() { return request.time.toMillis(); }
+    function nearNow(ms, back, ahead) { return ms is int && ms > nowMs() - back && ms < nowMs() + ahead; }
+    function nick(v) { return v is string && v.size() <= 12; }
+    function seatId(v) { return v is string && v.matches('^[A-Za-z0-9-]{4,40}$'); }
+    function gdoc(gid) { return get(/databases/$(database)/documents/g/$(gid)).data; }
+    function pPath(gid, s) { return /databases/$(database)/documents/g/$(gid)/p/$(s); }
+    function rtPath(gid, s) { return /databases/$(database)/documents/rt/$('g-' + gid)/p/$(s); }
+    function stale(ts) { return ts < request.time - duration.value(180, 's'); }
+    // 상대가 3분 넘게 아무것도 쓰지 않았고, 접속 표시도 3분 넘게 끊김
+    function oppAbsent(gid, g, opp) {
+      return ((exists(pPath(gid, opp)) && (!('at' in get(pPath(gid, opp)).data) || stale(get(pPath(gid, opp)).data.at)))
+              || (!exists(pPath(gid, opp)) && g.created < nowMs() - 180000))
+        && (!exists(rtPath(gid, opp)) || stale(get(rtPath(gid, opp)).data.at));
+    }
+
+    // ===== 대국방 =====
+    match /g/{gid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && gid.matches('^g[0-9a-f]{8}$')
+        && request.resource.data.keys().hasOnly(['host','hostNick','guest','guestNick','created','td','tb','status','private','ranked','prev','first','rv'])
+        && request.resource.data.host == me()
+        && nick(request.resource.data.hostNick)
+        && (!('guestNick' in request.resource.data) || nick(request.resource.data.guestNick))
+        && (!('guest' in request.resource.data) || request.resource.data.guest == null || (seatId(request.resource.data.guest) && request.resource.data.guest != me()))
+        && nearNow(request.resource.data.created, 600000, 600000)
+        && request.resource.data.td is int && request.resource.data.td >= 0 && request.resource.data.td <= 600
+        && request.resource.data.tb is int && request.resource.data.tb >= 0 && request.resource.data.tb <= 600
+        && request.resource.data.status in ['open', 'playing']
+        && (!('ranked' in request.resource.data) || request.resource.data.ranked == false || google());
+
+      // 방장: 손님 지정(한 번)·상태·다음 판 주소 / 손님: 상태 / 둘 다: 부재승 신청(한 번)
+      allow update: if signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['guest','guestNick','status','next','ab'])
+        && (resource.data.host == me()
+            || (resource.data.get('guest', null) == me()
+                && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','ab'])))
+        // 손님은 비어 있을 때 한 번만, 그 사람이 실제로 참가 신청(p 문서)을 했어야 함
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['guest'])
+            || (resource.data.get('guest', null) == null && seatId(request.resource.data.guest)
+                && request.resource.data.guest != resource.data.host
+                && exists(pPath(gid, request.resource.data.guest))))
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['guestNick']) || nick(request.resource.data.guestNick))
+        // 상태는 open→playing, playing→done 만
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['status'])
+            || (resource.data.status == 'open' && request.resource.data.status == 'playing')
+            || (resource.data.status == 'playing' && request.resource.data.status == 'done'))
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['next'])
+            || (!('next' in resource.data) && request.resource.data.next is string && request.resource.data.next.matches('^g[0-9a-f]{8}$')))
+        // 부재승 신청: 한 번만, 본인 이름·서버 시각, 상대가 3분 넘게 없음
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['ab'])
+            || (!('ab' in resource.data) && resource.data.get('guest', null) != null
+                && resource.data.get('rv', 0) == 2
+                && request.resource.data.ab.keys().hasOnly(['by','t','at'])
+                && request.resource.data.ab.by == me()
+                && request.resource.data.ab.t is int
+                && request.resource.data.ab.at == request.time
+                && ((resource.data.host == me() && oppAbsent(gid, resource.data, resource.data.guest))
+                    || (resource.data.guest == me() && oppAbsent(gid, resource.data, resource.data.host)))));
+
+      // 방장만. 시작 전 방, 끝난 친구 대국, 손님이 들어오지 않은 방, 하루 지난 방만 지울 수 있음
+      // (랭크 방은 결과 확인에 쓰이므로 끝나도 남김 — 지는 쪽이 방을 지워 결과를 없애지 못하게)
+      allow delete: if signedIn() && resource.data.host == me()
+        && (resource.data.status == 'open'
+            || (resource.data.status == 'done' && resource.data.get('ranked', false) != true)
+            || resource.data.get('guest', null) == null
+            || !exists(pPath(gid, resource.data.guest))
+            || resource.data.created < nowMs() - 86400000);
+
+      // 각자 자리 문서: 누구나 읽기(관전). 쓰기는 본인 것만, 기록은 '추가만'
+      match /p/{seat} {
+        allow read: if signedIn();
+        // 열린 방이면 참가 신청, 진행 중인 방이면 그 방의 두 사람만
+        allow create: if signedIn() && seat == me()
+          && request.resource.data.seat == me()
+          && nick(request.resource.data.get('nick', ''))
+          && request.resource.data.at == request.time
+          && request.resource.data.size() < 3000
+          && (gdoc(gid).status == 'open'
+              || (gdoc(gid).status == 'playing' && (gdoc(gid).host == me() || gdoc(gid).get('guest', null) == me())));
+        // 이미 있는 값은 닉네임·참가 시각·서버 시각만 바뀔 수 있음. 지우기 금지. 부재승 신청 뒤에는 대국 기록 추가 금지
+        allow update: if signedIn() && seat == me()
+          && request.resource.data.diff(resource.data).removedKeys().size() == 0
+          && request.resource.data.diff(resource.data).changedKeys().hasOnly(['nick','joined','at'])
+          && nick(request.resource.data.get('nick', ''))
+          && request.resource.data.at == request.time
+          && request.resource.data.size() < 3000
+          && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['at','again','nick','joined'])
+              || !('ab' in gdoc(gid)));
+        // 시작 전(열린 방)에는 본인·방장(참가 신청 정리). 그 밖에는 본인 것만: 끝난 친구 대국, 손님이 들어오지 않은 방, 방이 없어진 뒤
+        allow delete: if signedIn() && (
+          !exists(/databases/$(database)/documents/g/$(gid))
+          || (gdoc(gid).status == 'open' && (seat == me() || gdoc(gid).host == me()))
+          || (seat == me() && gdoc(gid).status == 'done' && gdoc(gid).get('ranked', false) != true)
+          || (seat == me() && gdoc(gid).status == 'playing'
+              && (gdoc(gid).get('guest', null) == null || !exists(pPath(gid, gdoc(gid).guest)))));
+      }
+    }
+
+    // ===== 랭크 결과: 구글 계정, 실제 랭크 방의 두 사람, 본인 이름으로 한 번, 수정·삭제 불가 =====
+    match /res/{id} {
+      allow read: if signedIn();
+      allow create: if google()
+        && request.resource.data.keys().hasOnly(['gid','A','B','na','nb','ended','w','by','why','turns'])
+        && request.resource.data.by == me()
+        && request.resource.data.gid is string && request.resource.data.gid.matches('^g[0-9a-f]{8}$')
+        && id == request.resource.data.gid + '-' + me()
+        && nick(request.resource.data.na) && nick(request.resource.data.nb)
+        && request.resource.data.why is string && request.resource.data.why.size() <= 20
+        && request.resource.data.turns is int
+        && nearNow(request.resource.data.ended, 600000, 120000)
+        && gdoc(request.resource.data.gid).get('ranked', false) == true
+        && gdoc(request.resource.data.gid).host == request.resource.data.A
+        && gdoc(request.resource.data.gid).get('guest', null) == request.resource.data.B
+        && (me() == request.resource.data.A || me() == request.resource.data.B)
+        && request.resource.data.w in [request.resource.data.A, request.resource.data.B, 'draw', 'void']
+        && exists(pPath(request.resource.data.gid, request.resource.data.A))
+        && exists(pPath(request.resource.data.gid, request.resource.data.B))
+        && (request.resource.data.why != '상대 부재' || 'ab' in gdoc(request.resource.data.gid));
+    }
+
+    // ===== 랭크전 매칭 초대함 =====
+    match /mm/{seat} {
+      allow read: if signedIn() && seat == me();
+      allow create, update: if signedIn()
+        && request.resource.data.keys().hasOnly(['gid','from','nick','at'])
+        && request.resource.data.from == me()
+        && request.resource.data.gid is string && request.resource.data.gid.matches('^g[0-9a-f]{8}$')
+        && nick(request.resource.data.nick)
+        && nearNow(request.resource.data.at, 600000, 600000);
+      allow delete: if signedIn() && (seat == me() || resource.data.from == me());
+    }
+
+    // ===== 접속 중 표시: 본인 것만, 서버 시각 =====
+    match /rt/{room}/p/{uid} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && uid == me()
+        && room.matches('^(lobby|g-g[0-9a-f]{8})$')
+        && request.resource.data.keys().hasOnly(['presence','at'])
+        && request.resource.data.presence is map && request.resource.data.presence.size() <= 3
+        && request.resource.data.at == request.time;
+      allow delete: if signedIn() && uid == me();
+    }
+
+    // ===== AI 대국 기록(닉네임 없음): 본인·관리자만 읽기, 본인 것만 한 번 저장, 본인만 삭제 =====
+    match /aigames/{id} {
+      allow read: if signedIn() && (resource.data.by == me() || isAdmin());
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['by','at','level','winner','reason','first','timed','v','hist'])
+        && request.resource.data.by == me()
+        && id.matches(me() + '_[A-Za-z0-9]{1,40}')
+        && nearNow(request.resource.data.at, 86400000, 300000)
+        && request.resource.data.hist is list && request.resource.data.hist.size() <= 300
+        && request.resource.data.level is string && request.resource.data.level.size() <= 12
+        && request.resource.data.reason is string && request.resource.data.reason.size() <= 12;
+      allow delete: if signedIn() && resource.data.by == me();
+    }
+
+    // ===== AI 학습 집계 + 프로필(닉네임·AI 전적) =====
+    match /ailearn/{uid} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && uid == me()
+        && request.resource.data.keys().hasOnly(['v','h','g','ts','airec','pts','nick'])
+        && (!('h' in request.resource.data) || (request.resource.data.h is list && request.resource.data.h.size() <= 1440))
+        && (!('ts' in request.resource.data) || nearNow(request.resource.data.ts, 31536000000, 300000))
+        && (!('pts' in request.resource.data) || nearNow(request.resource.data.pts, 31536000000, 300000))
+        && (!('nick' in request.resource.data) || nick(request.resource.data.nick))
+        && (!('airec' in request.resource.data) || (request.resource.data.airec is map && request.resource.data.airec.size() <= 8));
+      allow delete: if signedIn() && uid == me();
+    }
+  }
+}
