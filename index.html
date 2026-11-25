@@ -2132,11 +2132,11 @@ const L={
  save(){const s=this.s;if(!s)return;if(s.phase==='over'&&!s.arch){s.arch=1;const v=this.vs();archiveGame({hist:s.hist,A:'A',B:'B',names:v.names,me:v.me,winner:s.winner,reason:s.reason,ai:!!s.ai},'L'+s.id,s.ai?(s.ai==='ultimate'?'Ultimate':AI_LEVELS[s.ai].name+' AI'):'한 폰 대국')}if(!s.ai)return;if(s.phase==='over'){try{localStorage.removeItem('bo-local')}catch(e){}delete mem['bo-local']}else{const k=s.phase+'|'+s.t;if(this.savedK===k)return;this.savedK=k;
   // AI의 봉인된 베팅은 저장하지 않음(이어 둘 때 새로 봉인)
   const c=Object.assign({},s);delete c.aiBet;delete c.aiSalt;delete c.aiSeal;lset('bo-local',JSON.stringify(c))}},
- resume(){const s=loadLocal();if(!s||!s.ai){toast('이어 둘 판 없음');renderAiResume();return}
+ resume(){const s=loadLocal();if(!s||!s.ai){toast('이어 둘 판 없음');renderAiResume();return}if(s.td&&s.phase!=='over'){s.ph0=Date.now();s.toThis=false}
   leaveGame();UI.mode='local';UI.review=false;this.s=s;UI.sel=null;UI.panelKey='';UI.animT=s.last?s.last.t:-1;show('game');$('#cover').classList.add('hide');coinDone.add('bo-coin-L'+s.id);
   this.savedK='';if(s.phase==='designate'&&s.sun==='B')this.aiTurn();else if(s.phase==='bet')this.startBet();renderAll()},
  // 랭크 연습: 시간 초과 처리(세 칸 무작위 / 칸마다 1점, 3턴 연속이면 기권패)
- tick(){const s=this.s;if(!s||!s.ai||!s.td||s.phase==='over'||UI.review||UI.view!=='game'||UI.mode!=='local')return;
+ tick(){const s=this.s;if(!s||!s.ai||!s.td||s.phase==='over'||UI.review||UI.view!=='game'||UI.mode!=='local'||document.hidden||hiddenAt)return;
   const ck=phaseClock(this.vs());if(!ck||ck.el<ck.dur)return;s.toThis=true;
   if(s.phase==='designate'){const L2=legalTriples(s.bd);s.cells=L2[Math.floor(Math.random()*L2.length)];UI.sel=null;toast('시간 초과 · 세 칸 자동');this.startBet();renderAll()}
   else if(s.phase==='bet'){UI.bet=[1,1,1];toast('시간 초과 · 칸마다 1점');this.submit()}},
@@ -2423,7 +2423,12 @@ async function keepAwake(){const need=UI.view==='game'&&UI.mode==='online'&&G.st
  try{if(need&&!wakeLock&&navigator.wakeLock&&document.visibilityState==='visible'){wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null})}
   else if(!need&&wakeLock){await wakeLock.release();wakeLock=null}}catch(e){wakeLock=null}}
 setInterval(keepAwake,3000);
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wakeLock=null;keepAwake();if(UI.view==='game'&&UI.mode==='online'&&G.st){effects();renderAll()}}});
+let hiddenAt=0;
+function aiClockPause(){if(UI.mode==='local'&&L.s&&L.s.ai&&L.s.td&&L.s.phase!=='over'&&!hiddenAt)hiddenAt=Date.now()}
+function aiClockResume(){if(!hiddenAt)return;const away=Date.now()-hiddenAt;hiddenAt=0;const s=L.s;if(!(UI.mode==='local'&&s&&s.ai&&s.td&&s.phase!=='over'))return;
+ s.ph0+=away;const ck=phaseClock(L.vs());if(ck&&ck.dur-ck.el<10)s.ph0=Date.now()-(ck.dur-10)*1000;try{L.save&&L.save()}catch(e){}if(away>3000)toast('돌아왔어요 · 시간은 멈춰 있었어요');renderTimer()}
+addEventListener('pagehide',aiClockPause);addEventListener('blur',()=>{if(document.visibilityState==='hidden')aiClockPause()});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){aiClockPause();return}aiClockResume();if(document.visibilityState==='visible'){wakeLock=null;keepAwake();if(UI.view==='game'&&UI.mode==='online'&&G.st){effects();renderAll()}}});
 setInterval(()=>{if(RK.docs.length){rankCompute();if(UI.view==='lobby')renderRank()}},30e3);
 
 // ===== 시작 =====
