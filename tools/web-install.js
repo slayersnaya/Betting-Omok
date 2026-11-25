@@ -14,6 +14,7 @@
  .instcard .it b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
  .instcard .it span{font-size:12.5px;color:var(--mute);text-wrap:pretty;word-break:keep-all}
  .instcard .btn{flex:none}
+ @media (max-width:340px){.instcard img{display:none}.instcard .it span{white-space:nowrap}}
  .instcard .ibtn{width:44px;height:44px;margin-left:-6px;margin-right:-4px}
  .instcard .ibtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}`;
  document.head.appendChild(css);

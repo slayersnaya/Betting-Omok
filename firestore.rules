@@ -33,7 +33,7 @@ service cloud.firestore {
     match /g/{gid} {
       allow read: if signedIn();
       allow create: if signedIn() && gid.matches('^g[0-9a-f]{8}$')
-        && request.resource.data.keys().hasOnly(['host','hostNick','guest','guestNick','created','td','tb','status','private','ranked','prev','first','rv'])
+        && request.resource.data.keys().hasOnly(['host','hostNick','guest','guestNick','created','td','tb','status','private','ranked','prev','first','rv','lob'])
         && request.resource.data.host == me()
         && nick(request.resource.data.hostNick)
         && (!('guestNick' in request.resource.data) || nick(request.resource.data.guestNick))
@@ -47,6 +47,10 @@ service cloud.firestore {
         && (!('rv' in request.resource.data) || request.resource.data.rv == 2)
         && (!('first' in request.resource.data) || request.resource.data.first == me() || request.resource.data.first == request.resource.data.get('guest', null))
         && (!('ranked' in request.resource.data) || request.resource.data.ranked is bool)
+        // 로비 표시용: 공개된 열린 방만 lob = created (시작하면 0으로)
+        && (!('lob' in request.resource.data) || request.resource.data.lob == 0
+            || (request.resource.data.lob == request.resource.data.created && request.resource.data.status == 'open'
+                && request.resource.data.get('private', false) == false))
         // 랭크 방: 구글 계정, 진행 중 + 손님 지정 + 엄격 판정(rv 2) + 20·30초, 선 지정 없음
         && (request.resource.data.get('ranked', false) == false
             || (google() && request.resource.data.status == 'playing' && request.resource.data.get('rv', 0) == 2
@@ -57,7 +61,7 @@ service cloud.firestore {
 
       // 방장: 손님 지정(한 번)·상태·다음 판 주소 / 손님: 상태 / 둘 다: 부재승 신청(한 번)
       allow update: if signedIn()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['guest','guestNick','status','next','ab'])
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['guest','guestNick','status','next','ab','lob'])
         && (resource.data.host == me()
             || (resource.data.get('guest', null) == me()
                 && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','ab'])))
@@ -68,6 +72,7 @@ service cloud.firestore {
                 && request.resource.data.guest != resource.data.host
                 && exists(pPath(gid, request.resource.data.guest))))
         && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['guestNick']) || nick(request.resource.data.guestNick))
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['lob']) || (resource.data.host == me() && request.resource.data.lob == 0))
         // 상태는 open→playing, playing→done 만
         && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['status'])
             || (resource.data.status == 'open' && request.resource.data.status == 'playing')
@@ -89,7 +94,9 @@ service cloud.firestore {
       // (랭크 방은 결과 확인에 쓰이므로 끝나도 남김 — 지는 쪽이 방을 지워 결과를 없애지 못하게)
       allow delete: if signedIn() && resource.data.host == me()
         && (resource.data.status == 'open'
-            || (resource.data.status == 'done' && resource.data.get('ranked', false) != true)
+            // 끝난 친구 대국: 손님이 '한 판 더'를 눌렀을 때만(대국 중 done으로 바꾸고 지우는 것 방지). 나머지는 하루 뒤
+            || (resource.data.status == 'done' && resource.data.get('ranked', false) != true
+                && exists(pPath(gid, resource.data.guest)) && get(pPath(gid, resource.data.guest)).data.get('again', false) == true)
             || resource.data.get('guest', null) == null
             || !exists(pPath(gid, resource.data.guest))
             || (resource.data.get('ranked', false) != true && resource.data.created < nowMs() - 86400000));

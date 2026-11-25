@@ -467,20 +467,20 @@ body.big .rline{font-size:15px}body.big h1{font-size:21px}body.big h2{font-size:
 .setfoot{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line,rgba(127,127,127,.18));font-size:13px;color:var(--mute)}
 .setfoot a,.linkbtn{color:var(--mute);text-decoration:underline;text-underline-offset:3px;background:none;border:0;font:inherit;padding:0;min-height:44px;cursor:pointer;display:inline-flex;align-items:center}
 body.shopen .tabbar{visibility:hidden}
+@media (max-width:340px){.rcard p{font-size:12px;letter-spacing:-.02em;white-space:normal;text-wrap:balance;word-break:keep-all}}
 .tips{margin:10px 0 4px;padding:10px 12px;border-radius:12px;background:var(--soft,var(--raise));font-size:14px}.tips b{display:block;margin-bottom:4px}.tips ul{margin:0;padding-left:18px;line-height:1.6}.tips li{text-wrap:pretty}
 .hint.warn{color:#f0a35e;background:color-mix(in srgb,#CC6600 18%,transparent)}
 :root[data-theme=light] .hint{color:#006666}:root[data-theme=light] .hint.warn{color:#8f4700;background:color-mix(in srgb,#CC6600 14%,transparent)}
-@media (orientation:landscape) and (max-height:520px){.bbtn button{min-height:36px}}
+@media (orientation:landscape) and (max-height:520px){#panel .bbtn button{min-height:36px}}
 /* 작은 누름 영역을 보이는 크기는 그대로 두고 44px 가까이 넓힘 */
 .pp.q,[data-act=peek]{position:relative}.pp.q::after,[data-act=peek]::after{content:'';position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
 .tmove{display:flex;align-items:center;justify-content:center;gap:10px;margin:2px 0 4px;font-size:15px}.tmove.up b{color:var(--pri)}
 .tmove.up .emb{animation:tmpop .7s cubic-bezier(.2,1.4,.4,1) both}@keyframes tmpop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.tmove.up .emb{animation:none}}
 #appVer{margin-left:auto;font-size:12px;color:var(--faint)}
-.absbar{position:fixed;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 24px));top:calc(60px + env(safe-area-inset-top));z-index:30;box-shadow:0 6px 22px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0;padding:8px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:13px;color:var(--mute)}
+.absbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px;flex:none;padding:8px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:13px;color:var(--mute)}
 .absbar span{min-width:0;text-wrap:pretty}.absbar .btn{flex:none;min-height:40px}
-@media (orientation:landscape) and (max-height:520px){.absbar{top:calc(8px + env(safe-area-inset-top));left:auto;right:12px;transform:none;width:min(44vw,420px)}}
-#updBar{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top));z-index:39;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 16px;border-radius:14px;background:#17211f;color:#fff;font-size:14px;font-weight:800;box-shadow:0 6px 24px rgba(0,0,0,.35);white-space:nowrap}
+#updBar{position:fixed;left:50%;transform:translateX(-50%);top:calc(68px + env(safe-area-inset-top));z-index:39;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 16px;border-radius:14px;background:#17211f;color:#fff;font-size:14px;font-weight:800;box-shadow:0 6px 24px rgba(0,0,0,.35);white-space:nowrap}
 #updBar .btn{min-height:40px}#updBar .ibtn{color:#fff;margin-left:-4px}#updBar .ibtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
 #mmBtn.mmon svg{display:none}
 .rank.rlocked #rkMe{display:none}.rank.rlocked{padding-top:12px;padding-bottom:12px}.rank.rlocked #mmBtn{background:var(--raise);color:var(--mute);min-height:44px}.rank.rlocked #mmSt{margin-top:6px}
@@ -701,7 +701,7 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.0509';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.0611';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -1763,7 +1763,7 @@ function fitBoard(){
  const gg=$('.ggrid'),pad0=parseFloat(gg.style.paddingTop)||0,mb=($('#mebar')||{}).offsetHeight||0,p=$('#panel');let top=w.getBoundingClientRect().top+window.scrollY-pad0,size;gg.style.paddingTop='';
  if(isLand()){size=Math.floor(Math.max(200,window.innerHeight-top-14));p.style.minHeight='';gg.style.height=size+'px';if(p.dataset.k!==UI.panelKey){p.dataset.k=UI.panelKey;p.scrollTop=0}}
  else{gg.style.height='';// 패널 높이와 상관없이 판 크기는 고정(긴 시트는 판 아래쪽을 살짝 덮음), 남는 높이는 시트가 채움
-  const hn=hintOn()&&UI.mode!=='tut';let R=(document.body.classList.contains('big')?240:222)+(hn?42:0)+(UI.mode==='tut'?44:0);if(UI.review){UI.rvR=Math.max(UI.rvR||0,R,p.scrollHeight+8);R=UI.rvR}
+  const hn=hintOn()&&UI.mode!=='tut';let R=(document.body.classList.contains('big')?226:202)+(hn?42:0)+(UI.mode==='tut'?44:0);if(UI.review){UI.rvR=Math.max(UI.rvR||0,R,p.scrollHeight+8);R=UI.rvR}
   size=Math.floor(Math.max(180,Math.min(w.parentElement.clientWidth,window.innerHeight-top-R-mb-18)));
   const pad=Math.min(24,Math.max(0,Math.floor((window.innerHeight-top-size-mb-18-R)/2)));if(pad>4){gg.style.paddingTop=pad+'px';top+=pad}
   if(p.classList.contains('sheet')){const mh=Math.max(0,Math.floor(window.innerHeight-(top+size+6+mb)-8));p.style.minHeight=mh+'px';document.body.style.setProperty('--sheetH',(Math.max(mh,p.offsetHeight))+'px')}else p.style.minHeight=''}
@@ -1786,10 +1786,13 @@ function absLeft(vs){
  if(G.online.has(op))return null;
  const since=Math.max(G.chg[op]||0,(G.offSince||{})[op]||0,G.enterAt||0);if(!since)return null;
  return ABS_S-(Date.now()-since)/1000}
-function renderAbs(vs){const el=$('#absBar');if(!el)return;const L2=absLeft(vs);
+// 안내 줄은 아래 패널(시트) 맨 위에 붙임: 상대 막대·판을 가리지 않고, 패널 내용이 바뀌어도 다시 붙음
+let ABS_EL=null;
+function renderAbs(vs){const el=ABS_EL||(ABS_EL=$('#absBar'));if(!el)return;const L2=absLeft(vs),pn=$('#panel');
  let k='',h='';
  if(L2!=null&&L2<=ABS_S-60){if(L2>0){const s2=Math.ceil(L2);k='w'+s2;h=`<span>상대 응답 없음 · ${Math.floor(s2/60)}:${String(s2%60).padStart(2,'0')} 뒤 부재승 신청 가능</span>`}
   else{k='b';h=`<span>상대가 3분 넘게 응답 없음</span><button class="btn small" data-act="abclaim">부재승 신청</button>`}}
+ if(k&&pn&&el.parentElement!==pn)pn.prepend(el);else if(!k&&el.isConnected)el.remove();
  if(el.dataset.k===k)return;el.dataset.k=k;el.innerHTML=h;el.classList.toggle('hide',!k)}
 function claimAbs(){if(!db||!G.gid||!G.st)return;const gid=G.gid;
  db.doc('g/'+gid).update({ab:{by:SEAT,t:G.st.t,at:SRV_TS}}).then(()=>toast('부재승 신청 완료')).catch(e=>toast(e&&e.code==='invalid_argument'?'아직 신청할 수 없어요 · 잠시 뒤 다시':'신청 실패 · 다시 시도해 주세요'))}
@@ -1936,7 +1939,7 @@ function effects(){
   (async()=>{try{let all=ids;try{const q=await db.collection(`g/${pg}/p`).get();all=[...new Set([...ids,...q.docs.map(d=>d.id)])]}catch(e){}const pm=normMeta((await db.doc('g/'+pg).get()).data());if(!pm||pm.host!==me||pm.next!==G.gid||pm.status!=='done')return;await db.doc('g/'+pg).delete();for(const id of all)if(okSeat(id))await db.doc(`g/${pg}/p/${id}`).delete().catch(()=>{})}catch(e){}})()}
  if(m.host===me&&!m.guest&&!G.inflight.has('guest')){
   const c=Object.entries(G.docs).filter(([id,d])=>d.seat===id&&id!==me&&typeof d.joined==='number').map(([,d])=>d).sort((x,y)=>x.joined-y.joined)[0];
-  if(c){G.inflight.add('guest');db.doc('g/'+G.gid).update({guest:c.seat,guestNick:String(c.nick||'').slice(0,12),status:'playing'}).catch(()=>G.inflight.delete('guest'))}
+  if(c){G.inflight.add('guest');db.doc('g/'+G.gid).update({guest:c.seat,guestNick:String(c.nick||'').slice(0,12),status:'playing',...(user&&user.firebase?{lob:0}:{})}).catch(()=>G.inflight.delete('guest'))}
  }
  // 랭크전: 매칭된 상대가 20초 안에 안 들어오면 방을 지우고 다시 찾기
  if(m.ranked&&m.host===me&&m.guest&&!G.docs[m.guest]&&st.phase!=='over'&&m.status!=='done'&&Date.now()-(m.created||0)>20e3&&!G.inflight.has('mmto')){G.inflight.add('mmto');const gid=G.gid,gs=m.guest;
@@ -2022,7 +2025,7 @@ function enterGame(gid){
  try{G.sec=JSON.parse(lget('bo-sec-'+gid)||'{}')}catch(e){G.sec={}}if(!G.sec.t)G.sec.t={};
  try{G.open=JSON.parse(lget('bo-open-'+gid)||'{}')||{}}catch(e){G.open={}}
  UI.sel=null;UI.panelKey='';UI.animT=-1;
- if(location.hash!=='#g-'+gid)location.hash='g-'+gid;
+ if(location.hash!=='#g-'+gid)location.hash='g-'+gid;try{rememberGame(gid)}catch(e){}
  show('game');
  const slow=setTimeout(()=>{const s=$('#slow');if(s)s.textContent='연결 지연 · 새로고침 필요'},10000);
  G.unsubs.push(db.doc('g/'+gid).onSnapshot(s=>{clearTimeout(slow);const fresh=!(s.metadata&&s.metadata.fromCache);if(fresh)G.ready.m=true;G.meta=s.exists?normMeta(s.data()):null;if(G.meta)G.hadMeta=true;G.missing=!G.meta&&fresh;if(!G.meta)G.st=null;recompute()},()=>{G.missing=true;renderAll()}));
@@ -2049,7 +2052,8 @@ async function createRoomInner(){
  const nick=myNick();lset('bo-nick',nick);
  const gid='g'+rhex(4),pr=PRESETS[UI.preset];
  try{
-  await db.doc('g/'+gid).set({host:SEAT,hostNick:nick,created:Date.now(),td:pr.d,tb:pr.b,status:'open',guest:null,private:!!($('#privRoom')||{}).checked,...RV2()});
+  const now=Date.now(),priv=!!($('#privRoom')||{}).checked;
+  await db.doc('g/'+gid).set({host:SEAT,hostNick:nick,created:now,td:pr.d,tb:pr.b,status:'open',guest:null,private:priv,...RV2(),...(user&&user.firebase&&!priv?{lob:now}:{})});
   await db.doc(`g/${gid}/p/${SEAT}`).set({seat:SEAT,nick,joined:Date.now()});
   enterGame(gid);
  }catch(e){const c=e&&e.code;console.warn('createRoom',c);toast(c==='invalid_argument'?'방 만들기 권한 없음':c==='quota_exceeded'?'저장 공간 가득 참':'방 만들기 실패')}
@@ -2281,6 +2285,14 @@ function renderFirst(){}
 function renderLevels(){lvFix();$('#levels').innerHTML=LEVELS.map(([k,n],i)=>{const op=lvOpen(i);return `<button data-act="level" data-k="${k}" aria-pressed="${UI.aiLevel===k}"${op?'':` class="lock" aria-disabled="true" aria-label="${n} 잠김"`}><span class="lvn">${op?'':'<svg class="lk" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'}${n}</span><span class="pw" aria-hidden="true">${[0,1,2,3].map(j=>`<i class="${j<=i?'on':''}"></i>`).join('')}</span></button>`}).join('');renderAiRec();try{renderMM()}catch(e){}}
 function renderPresets(){$('#presets').innerHTML=PRESETS.map((p,i)=>`<button class="chip" data-act="preset" data-i="${i}" aria-pressed="${UI.preset===i}"><b>${p.l}</b><span>${p.d?`${p.d}·${p.b}초`:'∞'}</span></button>`).join('')}
 let lobbyRooms=[];
+// 내가 들어갔던 방(이어하기·진행 중 표시용): 이 기기에 최근 8개 기억 → 문서별 구독
+const LOBBY={open:[],mine:new Map(),subs:new Map()};
+function myGames(){try{const a=JSON.parse(lget('bo-mygames')||'[]');return Array.isArray(a)?a.filter(x=>x&&GIDRE.test(x.g)&&Date.now()-x.at<864e5):[]}catch(e){return[]}}
+function rememberGame(gid){const a=myGames().filter(x=>x.g!==gid);a.unshift({g:gid,at:Date.now()});lset('bo-mygames',JSON.stringify(a.slice(0,8)));subMine()}
+function lobbyMerge(){const m=new Map();for(const r of LOBBY.open)m.set(r.id,r);for(const [id,r] of LOBBY.mine)if(r)m.set(id,r);return [...m.values()].sort((a,b)=>(b.created||0)-(a.created||0))}
+function subMine(){if(!db||!(user&&user.firebase))return;const want=new Set(myGames().map(x=>x.g));
+ for(const [g,u] of LOBBY.subs)if(!want.has(g)){u();LOBBY.subs.delete(g);LOBBY.mine.delete(g)}
+ for(const g of want)if(!LOBBY.subs.has(g))LOBBY.subs.set(g,db.doc('g/'+g).onSnapshot(s=>{const m=s.exists?normMeta(s.data()):null;LOBBY.mine.set(g,m?{id:g,...m}:null);lobbyRooms=lobbyMerge();renderRooms();renderRank()},()=>{}))}
 const DIAG={n:-1,ok:0,cache:false,at:0,err:''};let lobbyState='loading';
 function renderDiag(){if(!IS_ADMIN)return;const e=$('#onlineNote');if(!e)return;const now=Date.now(),open=lobbyRooms.filter(r=>r.status==='open').map(r=>r.id+(r.private?'(숨김)':'')+' '+Math.round((now-r.created)/60e3)+'분').slice(0,3).join(', ');
  e.textContent=`진단 · 내ID ${String(SEAT||'').slice(0,6)} · 방문서 ${DIAG.n}개(유효 ${DIAG.ok}) · ${DIAG.cache?'캐시':'서버'} · ${DIAG.at?Math.round((now-DIAG.at)/1e3)+'초 전':'수신 없음'}${DIAG.err?' · 오류 '+DIAG.err:''}${open?' · '+open:''}`}
@@ -2706,7 +2718,9 @@ const use=n=>window.claude&&typeof window.claude.use==='function'?Promise.resolv
  note.textContent=db&&canWrite===false?'관전 전용':'';
  if(db){
   const t=setTimeout(()=>{if(lobbyState==='loading'||lobbyState==='cache')lobbyState='timeout';if(!lobbyRooms.length)renderRooms()},10000);
-  (user&&user.firebase?db.collection('g').where('created','>',Date.now()-6*3600e3).orderBy('created','desc').limit(40):db.collection('g').orderBy('created','desc').limit(40)).onSnapshot(qs=>{clearTimeout(t);lobbyRooms=qs.docs.map(x=>{if(!GIDRE.test(x.id))return null;const m=normMeta(x.data());return m?{id:x.id,...m}:null}).filter(Boolean);{const seen=new Set();lobbyRooms=lobbyRooms.filter(r=>r.status!=='open'||r.host===SEAT||(!seen.has(r.host)&&!!seen.add(r.host)))}lobbyState=qs.metadata&&qs.metadata.fromCache?'cache':'ok';DIAG.n=qs.docs.length;DIAG.ok=lobbyRooms.length;DIAG.cache=!!(qs.metadata&&qs.metadata.fromCache);DIAG.at=Date.now();DIAG.err='';renderRooms();renderRank()},e=>{clearTimeout(t);const c=(e&&e.code)||'';DIAG.err=c||'err';lobbyState='err';$('#rooms').innerHTML='<p class="sub">'+(c.includes('permission')?'서버 규칙 확인 필요 (권한 거부)':'방 목록 불러오기 실패'+(c?' · '+esc(c):''))+'</p>'});
+  // 웹: 로비는 '공개된 열린 방'만(lob = 열린 동안 만든 시각, 시작하면 0) + 내가 들어갔던 방은 따로 문서별로 구독
+  (user&&user.firebase?db.collection('g').where('lob','>',Date.now()-6*3600e3).orderBy('lob','desc').limit(40):db.collection('g').orderBy('created','desc').limit(40)).onSnapshot(qs=>{clearTimeout(t);LOBBY.open=qs.docs.map(x=>{if(!GIDRE.test(x.id))return null;const m=normMeta(x.data());return m?{id:x.id,...m}:null}).filter(Boolean);lobbyRooms=lobbyMerge();{const seen=new Set();lobbyRooms=lobbyRooms.filter(r=>r.status!=='open'||r.host===SEAT||(!seen.has(r.host)&&!!seen.add(r.host)))}lobbyState=qs.metadata&&qs.metadata.fromCache?'cache':'ok';DIAG.n=qs.docs.length;DIAG.ok=lobbyRooms.length;DIAG.cache=!!(qs.metadata&&qs.metadata.fromCache);DIAG.at=Date.now();DIAG.err='';renderRooms();renderRank()},e=>{clearTimeout(t);const c=(e&&e.code)||'';DIAG.err=c||'err';lobbyState='err';$('#rooms').innerHTML='<p class="sub">'+(c.includes('permission')?'서버 규칙 확인 필요 (권한 거부)':'방 목록 불러오기 실패'+(c?' · '+esc(c):''))+'</p>'});
+  try{subMine()}catch(e){}
   // 랭크 결과(최근 2000건 = 약 1000판)로 모든 폰이 같은 방식으로 점수를 계산
   if(user&&user.firebase){let cache=[];try{cache=JSON.parse(lget('bo-res')||'[]')}catch(e){}if(!Array.isArray(cache))cache=[];cache=cache.filter(x=>x&&typeof x==='object'&&typeof x.id==='string'&&typeof x.ended==='number');
    const since=cache.length?Math.max(...cache.map(x=>x.ended))-120e3:0,map=new Map(cache.map(x=>[x.id,x]));RK.docs=[...map.values()].sort((a,b)=>a.ended-b.ended);if(RK.docs.length){rankCompute();renderRank()}
@@ -2739,6 +2753,7 @@ const use=n=>window.claude&&typeof window.claude.use==='function'?Promise.resolv
  .instcard .it b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
  .instcard .it span{font-size:12.5px;color:var(--mute);text-wrap:pretty;word-break:keep-all}
  .instcard .btn{flex:none}
+ @media (max-width:340px){.instcard img{display:none}.instcard .it span{white-space:nowrap}}
  .instcard .ibtn{width:44px;height:44px;margin-left:-6px;margin-right:-4px}
  .instcard .ibtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}`;
  document.head.appendChild(css);
