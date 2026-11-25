@@ -587,7 +587,7 @@ body.big .rline{font-size:15px}body.big h1{font-size:21px}body.big h2{font-size:
    <label class="sw">효과음<input type="checkbox" id="setSnd"></label>
    <label class="sw">도움말<input type="checkbox" id="setHint"></label>
   </div>
-  <div class="acct hide" id="acct"></div>
+  <div class="acct hide" id="acct"></div><button class="btn ghost wide hide" id="admDl" data-act="admdl" style="margin-top:8px">모든 AI 대국 기록 받기</button>
  </div>
  <div class="lsheet hide" id="sh-friend" role="dialog" aria-label="친구 대국">
   <div class="shh"><h2>친구 대국</h2><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -1699,7 +1699,8 @@ function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.re
  const mb=$('#mebar');if(mb){mb.classList.remove('turnpulse');void mb.offsetWidth;mb.classList.add('turnpulse')}
  try{if(navigator.vibrate)navigator.vibrate(25)}catch(e){}}
 // Firebase 모드 계정: 게스트(익명)로 시작, 원하면 구글 계정 연결(기록 그대로 유지)
-function renderAcct(){const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
+const IS_ADMIN=(()=>{try{if(location.hash==='#admin')sessionStorage.setItem('bo-admin','1');return sessionStorage.getItem('bo-admin')==='1'}catch(e){return false}})();
+function renderAcct(){const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!(IS_ADMIN&&user&&user.firebase));const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
  const g=user.google&&user.google();a.innerHTML=g?`<div class="at"><b>구글 계정 연결됨</b><span>${esc(g)}</span></div>`:`<div class="at"><b>게스트로 플레이 중</b><span>기록을 지키려면 구글 연결</span></div><button class="btn small" data-act="glink">구글 연결</button>`}
 // ===== 웹(Firebase): 앱을 지웠다 다시 깔아도 구글 계정으로 기록 복원 (닉네임·AI 전적·학습 집계를 ailearn/{uid}에 함께 보관) =====
 let profT=0;
@@ -2124,8 +2125,8 @@ const L={
   if(s.ai)aiObserve(s.mem,s.t,s.sun==='B',s.aiBet,win.map(w=>w==='B'));
   const fA=fiveLines(s.bd,1).length,fB=fiveLines(s.bd,2).length;
   if(s.td){s.warn.A=s.toThis?s.warn.A+1:0}
-  if(fA||fB){s.phase='over';s.winner=fA>fB?'A':fB>fA?'B':s.hu;s.reason=fA&&fB?'동시 오목':'오목';UI.panelKey='';if(s.ai)addAiRec(s.ai,s.winner==='A'?'w':'l');if(s.ai)aiLearnAfter({hist:s.hist,A:'A',B:'B',ai:true},'L'+s.id)}
-  else if(s.td&&s.warn.A>=3){s.phase='over';s.winner='B';s.reason='시간 초과 3회';UI.panelKey='';addAiRec(s.ai,'l');aiLearnAfter({hist:s.hist,A:'A',B:'B',ai:true},'L'+s.id)}
+  if(fA||fB){s.phase='over';s.winner=fA>fB?'A':fB>fA?'B':s.hu;s.reason=fA&&fB?'동시 오목':'오목';UI.panelKey='';if(s.ai)addAiRec(s.ai,s.winner==='A'?'w':'l');if(s.ai){aiLearnAfter({hist:s.hist,A:'A',B:'B',ai:true},'L'+s.id);aiGameUpload(s)}}
+  else if(s.td&&s.warn.A>=3){s.phase='over';s.winner='B';s.reason='시간 초과 3회';UI.panelKey='';addAiRec(s.ai,'l');aiLearnAfter({hist:s.hist,A:'A',B:'B',ai:true},'L'+s.id);aiGameUpload(s)}
   else this.next();
   renderAll();
  }
@@ -2146,6 +2147,12 @@ function aiLearnAfter(d,key){try{
  lset('bo-ailearn',JSON.stringify(agg));done.push(key);lset('bo-ailearn-k',JSON.stringify(done.slice(-200)));lrnApply();
  clearTimeout(lrnT);lrnT=setTimeout(()=>{const doc=aiLearnDoc(agg);if(doc&&db&&SEAT)db.doc('ailearn/'+SEAT).update(doc).catch(()=>{})},1500)
 }catch(e){}}
+// ===== AI 대국 기록 모으기: 끝난 판(공개된 베팅)을 닉네임 없이 서버에 저장 → Ultimate 개선 자료 =====
+function aiGameUpload(s){try{if(!(db&&SEAT&&user&&user.firebase)||!s||!s.ai||!Array.isArray(s.hist)||!s.hist.length)return;
+ const hist=s.hist.slice(0,300).map(x=>({t:x.t|0,sun:x.sun,cells:x.cells,bA:x.bets.A,bB:x.bets.B,win:x.win}));
+ db.doc('aigames/'+SEAT+'_'+s.id).set({by:SEAT,at:Date.now(),level:s.ai,winner:s.winner||null,reason:String(s.reason||'').slice(0,12),first:s.first,timed:!!s.td,v:1,hist}).catch(()=>{})}catch(e){}}
+async function aiGameDownload(){if(!db){toast('오프라인');return}toast('불러오는 중');try{const qs=await db.collection('aigames').orderBy('at','desc').limit(2000).get();const games=qs.docs.map(x=>x.data());
+ const blob=new Blob([JSON.stringify({v:1,app:'betting-omok',kind:'aigames',at:Date.now(),games})],{type:'application/json'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='betting-omok-aigames.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);toast(games.length+'판 저장됨')}catch(e){toast('받기 실패 · '+((e&&e.code)||''))}}
 // AI 봉인: 사람이 입력하기 전에 AI 베팅을 해시로 고정해 보여주고, 복기에서 같은 값인지 다시 계산해 확인
 function aiSealOf(s,b,salt){return sha256(`ai|${s.id}|${s.t}|${cellsKey(s.cells)}|${b.join(',')}|${salt}`)}
 // ===== 복기: 대국이 끝난 뒤에만 두 사람의 베팅을 모두 보여줌 =====
@@ -2303,6 +2310,7 @@ document.addEventListener('click',e=>{
  else if(a==='wtut'){$('#welcome').classList.add('hide');T.start()}
  else if(a==='wglink'){$('#welcome').classList.add('hide');googleLink()}
  else if(a==='archexp'){const a2=archList();if(!a2.length){toast('저장할 대국 없음');return}try{const blob=new Blob([JSON.stringify({v:1,app:'betting-omok',at:Date.now(),games:a2})],{type:'application/json'}),u=URL.createObjectURL(blob),x=document.createElement('a');x.href=u;x.download='betting-omok-games.json';document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);toast('대국 기록 파일 저장됨')}catch(e){toast('저장 실패')}}
+ else if(a==='admdl'){aiGameDownload()}
  else if(a==='wskip'){lset('bo-tut-done','1');$('#welcome').classList.add('hide');toast('규칙 탭에서 언제든 배울 수 있어요')}
  else if(a==='sheet')openSheet(b.dataset.k);
  else if(a==='peek'){UI.peek=!UI.peek;renderPlayers()}
