@@ -701,7 +701,7 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.0626';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.0636';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2010,7 +2010,7 @@ async function leaveRoom(){
  // 끝난 판은 지우지 않음(상대가 아직 결과·복기를 보고 있을 수 있음). 방장이 다음 방을 만들 때 정리됨
  if(st&&st.phase==='over'){
   // 끝난 친구 대국은 방장이 나갈 때 방을 지움(로비 목록에 끝난 방이 쌓이지 않게). 상대 화면에는 '상대 나감'과 복기가 남음
-  if(m&&!m.ranked&&m.host===me&&!m.next){const ids=Object.keys(G.docs);goLobby();(async()=>{try{await db.doc('g/'+gid).delete();for(const id of ids)if(okSeat(id))await db.doc(`g/${gid}/p/${id}`).delete().catch(()=>{})}catch(e){}})();return}
+  if(m&&!m.ranked&&m.host===me&&!m.next&&(G.docs[m.guest]||{}).again){const ids=Object.keys(G.docs);goLobby();(async()=>{try{await db.doc('g/'+gid).delete();for(const id of ids)if(okSeat(id))await db.doc(`g/${gid}/p/${id}`).delete().catch(()=>{})}catch(e){}})();return}
   goLobby();return}
  if(m&&st&&(m.host===me||m.guest===me)&&(st.phase==='wait'||(m.ranked&&m.host===me&&!G.docs[m.guest]))){
   if(m.host===me&&user&&user.firebase)await db.doc('lob/'+me).delete().catch(()=>{});
