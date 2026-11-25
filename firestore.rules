@@ -160,6 +160,21 @@ service cloud.firestore {
         && (request.resource.data.why != '상대 부재' || 'ab' in gdoc(request.resource.data.gid));
     }
 
+    // ===== 로비 목록: 계정마다 한 칸(문서 id = 내 uid). 내가 방장인 공개된 열린 방만 =====
+    match /lob/{uid} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && uid == me()
+        && request.resource.data.keys().hasOnly(['gid','nick','td','tb','created'])
+        && gid8(request.resource.data.gid) && nick(request.resource.data.nick)
+        && request.resource.data.td is int && request.resource.data.td >= 0 && request.resource.data.td <= 600
+        && request.resource.data.tb is int && request.resource.data.tb >= 0 && request.resource.data.tb <= 600
+        && nearNow(request.resource.data.created, 60000, 60000)
+        && gdoc(request.resource.data.gid).host == me()
+        && gdoc(request.resource.data.gid).status == 'open'
+        && gdoc(request.resource.data.gid).get('private', false) == false;
+      allow delete: if signedIn() && uid == me();
+    }
+
     // ===== 랭크전 매칭 초대함 =====
     match /mm/{seat} {
       allow read: if signedIn() && seat == me();
