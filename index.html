@@ -701,7 +701,7 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.0831';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.0837';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2170,7 +2170,7 @@ function renderAiRec(){
  let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}
  const x=r[UI.aiLevel],ln=(LEVELS.find(([k])=>k===UI.aiLevel)||[0,''])[1];$('#aiRec').textContent=x&&typeof x==='object'?`${ln} ${int(x.w)}승 ${int(x.l)}패${int(x.d)?` ${int(x.d)}무`:''}`:'';
 }
-function addAiRec(level,res){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}if(!r||typeof r!=='object'||Array.isArray(r))r={};if(!Object.prototype.hasOwnProperty.call(AI_LEVELS,level))return;const x=r[level]&&typeof r[level]==='object'?r[level]:(r[level]={w:0,l:0,d:0});const t0=aiTopWin();x[res]=int(x[res])+1;lset('bo-airec',JSON.stringify(r));renderAiRec();profSave();const t1=aiTopWin();if(t1>t0){renderLevels();return{next:t1+1<LEVELS.length&&t1+1>t0+1?LEVELS[t1+1][0]:null,rank:t0<2&&t1>=2}}return null}
+function addAiRec(level,res){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}if(!r||typeof r!=='object'||Array.isArray(r))r={};if(!Object.prototype.hasOwnProperty.call(AI_LEVELS,level))return;const x=r[level]&&typeof r[level]==='object'?r[level]:(r[level]={w:0,l:0,d:0});const t0=aiTopWin();x[res]=int(x[res])+1;lset('bo-airec',JSON.stringify(r));renderAiRec();profSave();const t1=aiTopWin();if(t1>t0){renderLevels();return{next:t1+1<LEVELS.length&&t1+1>t0+1?LEVELS[t1+1][0]:null,rank:t0<1&&t1>=1}}return null}
 
 // ===== 랭크 매칭: 대기 중인 사람끼리 점수가 비슷한 상대와 자동으로 짝지음 =====
 // 서버가 없어서 모든 폰이 같은 규칙으로 짝을 계산하고, 자리 id가 작은 쪽이 방을 열어 상대 알림함에 알려줌
@@ -2193,8 +2193,8 @@ function mmPairs(list,now){
  return out;
 }
 function mmStart(){
- if(!rankOpen()){let top=0;LEVELS.forEach((_,x)=>{if(lvOpen(x)&&x<=2)top=x});const lv=LEVELS[top];
-  dialog('랭크전은 AI 고수를 이기면 열려요.<br>차례로 도전해 보세요.',`${lv[1]} 도전`,()=>{UI.aiLevel=lv[0];lset('bo-ai',lv[0]);renderLevels();closeSheet();leaveGame();UI.mode='local';L.start(null,lv[0]);show('game');$('#cover').classList.add('hide');renderAll()});return}
+ if(!rankOpen()){let top=0;LEVELS.forEach((_,x)=>{if(lvOpen(x)&&x<=1)top=x});const lv=LEVELS[top];
+  dialog('랭크전은 AI 중수를 이기면 열려요.<br>차례로 도전해 보세요.',`${lv[1]} 도전`,()=>{UI.aiLevel=lv[0];lset('bo-ai',lv[0]);renderLevels();closeSheet();leaveGame();UI.mode='local';L.start(null,lv[0]);show('game');$('#cover').classList.add('hide');renderAll()});return}
  if(!needNick(mmStart))return;
  if(!UI.ready){toast('연결 확인 중');return}
  if(!db||!room){toast('랭크전 이용 불가');return}
@@ -2251,7 +2251,7 @@ function renderMM(){
   const few=s>=30&&!n,k=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · ${win===Infinity?'점수 무관':`±${win}점`} · 대기 ${n}`;
   // 상대가 없으면 기다리는 동안 할 수 있는 일을 버튼으로(누르면 매칭은 취소)
   if(st.dataset.k!==k+few){st.dataset.k=k+few;st.innerHTML=esc(k)+(few?'<br>기다리는 사람이 적어요 <button class="linkbtn" data-act="solo">AI와 두기</button>':'')}}
- else{const ro=rankOpen();lb.textContent='랭크전';b.classList.remove('ghost');b.classList.remove('mmon');b.classList.toggle('rlock',!ro);st.dataset.k='';st.textContent=!ro?'AI 고수를 이기면 열려요':!UI.ready?'연결 중':off?'':n?`대기 ${n}`:''}
+ else{const ro=rankOpen();lb.textContent='랭크전';b.classList.remove('ghost');b.classList.remove('mmon');b.classList.toggle('rlock',!ro);st.dataset.k='';st.textContent=!ro?'AI 중수를 이기면 열려요':!UI.ready?'연결 중':off?'':n?`대기 ${n}`:''}
 }
 function loadCode(){
  const v=($('#codeIn').value||'').trim();let seat=null,sec=null;
@@ -2289,7 +2289,7 @@ const LEVELS=[['beginner','초보'],['mid','중수'],['pro','고수'],['ultimate
 // 단계 열기: 앞 단계(또는 그 위 단계)를 한 번이라도 이기면 다음 단계가 열림. 랭크전은 고수 이상을 이겨야 열림
 function aiWinsMap(){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}return r&&typeof r==='object'&&!Array.isArray(r)?r:{}}
 function aiTopWin(){const r=aiWinsMap();let top=-1;LEVELS.forEach(([k],i)=>{const x=r[k];if(x&&typeof x==='object'&&int(x.w)>0)top=i});return top}
-const lvOpen=i=>i<=aiTopWin()+1,rankOpen=()=>aiTopWin()>=2;
+const lvOpen=i=>i<=aiTopWin()+1,rankOpen=()=>aiTopWin()>=1; // 랭크전: AI 중수를 이기면 열림
 function lvFix(){const i=LEVELS.findIndex(([k])=>k===UI.aiLevel);if(i<0||!lvOpen(i)){let j=0;LEVELS.forEach((_,x)=>{if(lvOpen(x))j=x});UI.aiLevel=LEVELS[j][0]}}
 function renderAiTime(){const on=lget('bo-aitime')==='1';$('#aitime').innerHTML=`<button data-act="aitime" data-v="0" aria-pressed="${!on}"><svg viewBox="0 0 24 24"><path d="M12 12c-2-2.6-3.6-4-5.5-4a4 4 0 0 0 0 8c1.9 0 3.5-1.4 5.5-4zm0 0c2 2.6 3.6 4 5.5 4a4 4 0 0 0 0-8c-1.9 0-3.5 1.4-5.5 4z"/></svg>무제한</button><button data-act="aitime" data-v="1" aria-pressed="${on}"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>20·30초</button>`}
 function renderFirst(){}
