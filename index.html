@@ -701,7 +701,7 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.0623';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.0625';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -1495,6 +1495,7 @@ function actorOf(vs,id){
 function oppStatus(vs,id){
  if(vs.phase!=='bet')return '';
  if(UI.mode==='online')return (vs.pending||[]).includes(id)?['','고민 중']:['j',IC.wax+'봉인'];
+ if(UI.mode==='local'&&L.s&&L.s.ai&&!L.s.aiSeal)return ['','생각 중'];
  if(UI.mode==='local'&&L.s&&L.s.ai)return ['j sealtag',IC.wax+(UI.peek&&L.s.aiSeal?`<span class="code">${L.s.aiSeal.slice(0,8)}</span>`:'봉인<span class="more" aria-hidden="true">›</span>')];
  return ''}
 // 상대 연결 끊김: 8초 넘게 안 보일 때만 표시(잠깐 끊기는 건 무시)
@@ -2365,7 +2366,7 @@ const L={
   const c=Object.assign({},s);delete c.aiBet;delete c.aiSalt;delete c.aiSeal;delete c.aiTok;lset('bo-local',JSON.stringify(c))}},
  resume(){const s=loadLocal();if(!s||!s.ai){toast('이어 둘 판 없음');renderAiResume();return}if(s.td&&s.phase!=='over'){s.ph0=Date.now();s.toThis=false}
   leaveGame();UI.mode='local';UI.review=false;this.s=s;UI.sel=null;UI.panelKey='';UI.animT=s.last?s.last.t:-1;show('game');$('#cover').classList.add('hide');coinDone.add('bo-coin-L'+s.id);
-  this.savedK='';if(s.phase==='designate'&&s.sun==='B')this.aiTurn();else if(s.phase==='bet')this.startBet();renderAll()},
+  this.savedK='';if(s.ai==='ultimate'){try{lrnApply();lrnLoadShared()}catch(e){}}if(s.phase==='designate'&&s.sun==='B')this.aiTurn();else if(s.phase==='bet')this.startBet();renderAll()},
  // 랭크 연습: 시간 초과 처리(세 칸 무작위 / 칸마다 1점, 3턴 연속이면 기권패)
  tick(){const s=this.s;if(!s||!s.ai||!s.td||s.phase==='over'||UI.review||UI.view!=='game'||UI.mode!=='local'||document.hidden||hiddenAt)return;
   const ck=phaseClock(this.vs());if(!ck||ck.el<ck.dur)return;s.toThis=true;
@@ -2400,7 +2401,7 @@ function lrnApply(){try{const a=[lrnLocal(),LRN.shared||[],SEAT];aiLearnSet(...a
 // 일꾼을 못 쓰는 환경이면 지금처럼 바로 계산. 결과(AI 기억 mem 포함)는 그대로 돌려받아 같은 판이 됨
 const AIWK={w:null,ok:null,id:0,cb:new Map(),learn:null,
  init(){if(this.ok!==null)return this.ok;try{const sc=[...document.scripts].find(x=>x.textContent.includes('// ===== ENGINE START'));const t=sc.textContent,a=t.indexOf('// ===== ENGINE START'),b=t.indexOf('// ===== AI END');
-   const src=t.slice(a,b)+"\nonmessage=e=>{const {id,op,args}=e.data;try{let r=null;if(op==='learn')aiLearnSet(...args);else if(op==='des')r=aiDesignate(args[0]);else if(op==='bid')r=aiBid(args[0]);postMessage({id,r,mem:args[0]&&args[0].mem})}catch(x){postMessage({id,err:String(x)})}}";
+   const src='"use strict";\n'+t.slice(a,b)+"\nonmessage=e=>{const {id,op,args}=e.data;try{let r=null;if(op==='learn')aiLearnSet(...args);else if(op==='des')r=aiDesignate(args[0]);else if(op==='bid')r=aiBid(args[0]);postMessage({id,r,mem:args[0]&&args[0].mem})}catch(x){postMessage({id,err:String(x)})}}";
    this.w=new Worker(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));this.w.onmessage=e=>{const f=this.cb.get(e.data.id);if(f){this.cb.delete(e.data.id);f(e.data)}};this.w.onerror=()=>{this.ok=false;for(const f of this.cb.values())f({err:'w'});this.cb.clear()};
    this.ok=true;if(this.learn)this.post('learn',this.learn)}catch(e){this.ok=false}return this.ok},
  post(op,args){if(!this.w)return;try{this.w.postMessage({id:0,op,args})}catch(e){}},
