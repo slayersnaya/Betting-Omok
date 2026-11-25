@@ -820,7 +820,9 @@ const AI_LEVELS={
   // 2세대: 상대 점수 추적(입자 필터) + 최선 대응 + 질 수 있는 판의 보험·비축 + 비슷한 수 섞기
   br:true,desp:.5,ins:1.25,insAdd:3,insSmooth:true,resv:.6,insMax:true,mixT:3,
   // 4세대: 지정할 때 내 줄을 키우는 칸을 더 높이 치고(tempo), 다음 턴 상대의 한 턴 오목 위험을 줄이는 칸을 고름(dThreat)
-  tempo:.45,dThreat:.3}
+  tempo:.45,dThreat:.3,
+  // 내 한 칸 오목 자리를 지정에 넣어 상대가 막느라 점수를 쓰게 함(눈에 보이는 오목 기회를 그냥 넘기지 않음)
+  force:1}
 };
 const AIW=[0,1,8,60,600],AI_WIN=1e6;
 function aiRun(bd,r,c,dr,dc,col){let L=1,y=r+dr,x=c+dc;while(inB(y,x)&&bd[y][x]===col){L++;y+=dr;x+=dc}y=r-dr;x=c-dc;while(inB(y,x)&&bd[y][x]===col){L++;y-=dr;x-=dc}return L}
@@ -956,14 +958,15 @@ function aiLam(v,lv,om,V){
 function aiThrWin(bd,r,c,dr,dc,col){const oc=3-col;let s=0,lo=9,hi=-1;for(let j=0;j<5;j++){const v=bd[r+j*dr][c+j*dc];if(v===oc)return 9;if(v===col)s++;else{lo=Math.min(lo,j);hi=Math.max(hi,j)}}
  if(s===5)return 9;const y0=r-dr,x0=c-dc,y1=r+5*dr,x1=c+5*dc;if((inB(y0,x0)&&bd[y0][x0]===col)||(inB(y1,x1)&&bd[y1][x1]===col))return 9;const e=5-s;return e<=3&&hi-lo<=2?e:9}
 function aiThrBase(bd,col){const out=[];for(const [dr,dc] of DIRS)for(let r=0;r<N;r++)for(let c=0;c<N;c++){if(!inB(r+4*dr,c+4*dc))continue;const e=aiThrWin(bd,r,c,dr,dc,col);if(e<=3)out.push([r,c,dr,dc])}return out}
-function aiDesThreat(bd,cells,V,v,lv,om,base){
- const oc=3-v.aiCol,W=aiWindows(cells),out=V.slice(),A=v.aiPts+10-3,O=om.oppEst+10-3;
+function aiDesThreat(bd,cells,V,v,lv,om,base,spend){
+ const oc=3-v.aiCol,W=aiWindows(cells),out=V.slice(),A=v.aiPts+10-(spend||3),O=om.oppEst+10-3;
  for(let m=0;m<8;m++){if(Math.abs(V[m])>=AI_WIN)continue;
   for(let i=0;i<3;i++){const [r,c]=cells[i];bd[r][c]=(m>>i)&1?v.aiCol:oc}
   let th=9;for(const w of base){const e=aiThrWin(bd,w[0],w[1],w[2],w[3],oc);if(e<th)th=e}
   for(const w of W){const e=aiThrWin(bd,w[0],w[1],w[2],w[3],oc);if(e<th)th=e}
   for(const [r,c] of cells)bd[r][c]=0;
-  if(th<=3){const need=th===1?O-2:Math.ceil((O-(3-th))/th),risk=1/(1+Math.exp(((A-2)-need)/(lv.dtS||3)));out[m]=V[m]-AI_WIN*(lv.dThreat||.3)*risk}}
+  if(th<=3){const need=th===1?O-2:Math.ceil((O-(3-th))/th),risk=1/(1+Math.exp(((A-2)-need)/(lv.dtS||3)));out[m]=V[m]-AI_WIN*(lv.dThreat||.3)*risk}
+  if(lv.dOwn&&m===7){for(let i=0;i<3;i++){const [r,c]=cells[i];bd[r][c]=v.aiCol}let to=9;for(const w of W){const e=aiThrWin(bd,w[0],w[1],w[2],w[3],v.aiCol);if(e<to)to=e}for(const [r,c] of cells)bd[r][c]=0;if(to<=2)out[7]+=lv.dOwn*(3-to)*1000}}
  return out}
 // AI가 선일 때 세 칸 고르기
 function aiDesignate(v){
@@ -975,9 +978,11 @@ function aiDesignate(v){
  const useL=lv.learn&&AI_LRN.on,trust=useL?aiLrTrust(v.mem):0;AI_LRN.t=v.t;
  let dPts=v.aiPts;if(lv.resvD){const th=aiThreat(bd,3-v.aiCol);if(th<=3)dPts=Math.max(3,v.aiPts-aiReserve(th,om,aiPFom(v.mem,lv),lv))}
  const tbase=lv.dThreat?aiThrBase(bd,3-v.aiCol):null;
- const scored=cand.map(t=>{let V=lv.eval2?aiOutcomes2(bd,t,v.aiCol,true,false,lv):aiOutcomes(bd,t,v.aiCol,false,lv.see5,rnd);if(tbase)V=aiDesThreat(bd,t,V,v,lv,om,tbase);const lam=aiLam(v,lv,om,V);
+ // 내 '한 칸 오목' 자리: 지정에 넣으면 상대는 그 칸을 막느라 큰 점수를 써야 함(상대 점수 소모를 가치로 침)
+ const myF=new Set();if(lv.force){for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(!bd[r][c]){bd[r][c]=v.aiCol;if(aiIsFive(bd,r,c,v.aiCol))myF.add(r*N+c);bd[r][c]=0}}
+ const scored=cand.map(t=>{let V=lv.eval2?aiOutcomes2(bd,t,v.aiCol,true,false,lv):aiOutcomes(bd,t,v.aiCol,false,lv.see5,rnd);if(tbase){let sp=3;if(lv.dtReal){const l0=aiLam(v,lv,om,V),b0=aiOptimize(V,dPts,true,om,l0,null,0,lv).b;sp=b0[0]+b0[1]+b0[2]}V=aiDesThreat(bd,t,V,v,lv,om,tbase,sp)}const lam=aiLam(v,lv,om,V);
    if(useL){const f=aiLrFeat(V),ph=aiLrPhase(v.t),pb=aiLrPB(om.oppEst);AI_LRN.ctx={trust,q:[0,1,2].map(i=>aiLrHist(f.rank[i],0,f.crit[i],ph,pb))}}
-   let sc=aiOptimize(V,dPts,true,om,lam,null,0,lv).e;AI_LRN.ctx=null;if(lv.tempo&&Math.abs(V[7])<AI_WIN)sc+=lv.tempo*Math.max(0,V[7]);if(lv.noise)sc+=Math.abs(sc)*(rnd()-.5)*lv.noise;return{t,sc}}).sort((a,b)=>b.sc-a.sc);
+   let sc=aiOptimize(V,dPts,true,om,lam,null,0,lv).e;AI_LRN.ctx=null;if(lv.tempo&&Math.abs(V[7])<AI_WIN)sc+=lv.tempo*Math.max(0,V[7]);if(myF.size&&t.some(([r,c])=>myF.has(r*N+c)))sc+=lv.force*lam*Math.min(om.oppEst,v.aiPts);if(lv.noise)sc+=Math.abs(sc)*(rnd()-.5)*lv.noise;return{t,sc}}).sort((a,b)=>b.sc-a.sc);
  if(lv.br&&lv.dk){AI_JOINT=!!lv.joint;const top=scored.slice(0,lv.dk),om2=aiPFom(v.mem,lv);
   for(const x of top){const V=aiOutcomes2(bd,x.t,v.aiCol,true,false,lv),lam=aiLam(v,lv,om2,V),smp=aiOppSamples(v.mem,lv,V,true,v.aiPts,lv.dS||10,rnd);x.sc2=(lv.smooth?aiBRsmooth(V,smp,v.aiPts,true,lam,rnd,Object.assign({},lv,{temp:0})):aiBRsamples(V,smp,v.aiPts,true,lam,rnd,0)).e}
   top.sort((a,b)=>b.sc2-a.sc2);const best=top[0].sc2,near=top.filter(x=>x.sc2>=best-Math.abs(best)*(lv.jitter||0)-1).slice(0,3);return near[Math.floor(rnd()*near.length)].t}
