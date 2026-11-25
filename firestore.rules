@@ -24,7 +24,9 @@ service cloud.firestore {
     function small(v) { return v == null || v is bool || v is number || (v is string && v.size() <= 128)
       || (v is list && v.size() <= 3 && cellv(v, 0) && cellv(v, 1) && cellv(v, 2)); }
     // 이번 쓰기에서 추가·변경하는 키 목록 lk(최대 6개)와 실제로 바뀐 키가 같고, 값이 모두 작은지
+    function lkName(l, i) { return l.size() <= i || (l[i] is string && l[i].matches('^[A-Za-z0-9_]{1,24}$')); }
     function lkOk(d, changed) { return d.lk is list && d.lk.size() <= 6 && changed.hasOnly(d.lk.concat(['at','lk']))
+      && lkName(d.lk, 0) && lkName(d.lk, 1) && lkName(d.lk, 2) && lkName(d.lk, 3) && lkName(d.lk, 4) && lkName(d.lk, 5)
       && (d.lk.size() < 1 || small(d[d.lk[0]])) && (d.lk.size() < 2 || small(d[d.lk[1]])) && (d.lk.size() < 3 || small(d[d.lk[2]]))
       && (d.lk.size() < 4 || small(d[d.lk[3]])) && (d.lk.size() < 5 || small(d[d.lk[4]])) && (d.lk.size() < 6 || small(d[d.lk[5]])); }
     function gid8(v) { return v is string && v.matches('^g[0-9a-f]{8}$'); }
