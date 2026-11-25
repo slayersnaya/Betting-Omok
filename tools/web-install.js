@@ -29,8 +29,8 @@
  window.addEventListener('appinstalled',hide);
  const ready=f=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',f):f();
  ready(()=>{
-  if(inApp&&isAnd){const u=location.href;card('크롬에서 열어야 설치돼요','크롬으로',()=>{location.href=isKakao?'kakaotalk://web/openExternal?url='+encodeURIComponent(u):'intent://'+u.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;end'})}
-  else if(inApp&&isIOS)card('Safari에서 열어야 설치돼요');
+  if(inApp&&isAnd){const u=location.href;card('크롬에서 열어 설치','크롬으로',()=>{location.href=isKakao?'kakaotalk://web/openExternal?url='+encodeURIComponent(u):'intent://'+u.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;end'})}
+  else if(inApp&&isIOS)card('Safari에서 열어 설치');
   else if(isIOS)card('공유 버튼 → 홈 화면에 추가');
  });
 })();

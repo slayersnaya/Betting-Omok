@@ -12,17 +12,31 @@
  "screenshots": [
   {
    "src": "shots/s1.png",
-   "sizes": "720x1480",
-   "type": "image/png",
-   "form_factor": "narrow",
-   "label": "베팅 단계"
-  },
-  {
-   "src": "shots/s2.png",
-   "sizes": "720x1480",
+   "sizes": "1080x1920",
    "type": "image/png",
    "form_factor": "narrow",
    "label": "홈"
+  },
+  {
+   "src": "shots/s2.png",
+   "sizes": "1080x1920",
+   "type": "image/png",
+   "form_factor": "narrow",
+   "label": "베팅"
+  },
+  {
+   "src": "shots/s3.png",
+   "sizes": "1080x1920",
+   "type": "image/png",
+   "form_factor": "narrow",
+   "label": "개봉"
+  },
+  {
+   "src": "shots/s4.png",
+   "sizes": "1080x1920",
+   "type": "image/png",
+   "form_factor": "narrow",
+   "label": "결과"
   }
  ],
  "categories": [

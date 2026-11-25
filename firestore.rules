@@ -122,11 +122,10 @@ service cloud.firestore {
               || ((gdoc(gid).host == me() || gdoc(gid).get('guest', null) == me())
                   && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['at','again','nick','joined'])
                       || !('ab' in gdoc(gid)))));
-        // 시작 전(열린 방)에는 본인·방장(참가 신청 정리). 그 밖에는 본인 것만: 끝난 친구 대국, 손님이 들어오지 않은 방, 방이 없어진 뒤
+        // 시작 전(열린 방)에는 본인·방장(참가 신청 정리), 방이 없어진 뒤(정리), 손님이 들어오지 않은 방의 본인 문서
         allow delete: if signedIn() && (
           !exists(/databases/$(database)/documents/g/$(gid))
           || (gdoc(gid).status == 'open' && (seat == me() || gdoc(gid).host == me()))
-          || (seat == me() && gdoc(gid).status == 'done' && gdoc(gid).get('ranked', false) != true)
           || (seat == me() && gdoc(gid).status == 'playing'
               && (gdoc(gid).get('guest', null) == null || !exists(pPath(gid, gdoc(gid).guest)))));
       }
