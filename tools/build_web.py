@@ -31,8 +31,9 @@ inst=open('/home/claude/firebase/web-install.js').read()
 k=out.rindex('</body>');out=out[:k]+'<script>'+inst+'</script>\n'+out[k:]
 os.makedirs('/home/claude/web',exist_ok=True)
 open('/home/claude/web/index.html','w').write(out)
-man={"id":"./","name":"베팅 오목","short_name":"베팅 오목","description":"점수를 걸고 두는 2인 오목","lang":"ko","start_url":"./","scope":"./","display":"standalone","background_color":"#0f1716","theme_color":"#0f1716",
- "icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icons/maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
+man={"id":"./","name":"베팅 오목","short_name":"베팅 오목","description":"세 칸을 고르고 점수를 몰래 걸어 돌을 놓는 2인 전략 오목","lang":"ko","start_url":"./","scope":"./","display":"standalone","background_color":"#0f1716","theme_color":"#0f1716",
+ "screenshots":[{"src":"shots/s1.png","sizes":"720x1480","type":"image/png","form_factor":"narrow","label":"베팅 단계"},{"src":"shots/s2.png","sizes":"720x1480","type":"image/png","form_factor":"narrow","label":"홈"}],
+ "categories":["games"],"icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icons/maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
 open('/home/claude/web/manifest.json','w').write(json.dumps(man,ensure_ascii=False,indent=1))
 json.dump({'v':VER},open('/home/claude/web/version.json','w'))
 # 서비스 워커: 화면 파일은 '인터넷 먼저, 안 되면 저장해 둔 것' → 업데이트는 바로, 오프라인에서도 열림
@@ -42,8 +43,8 @@ self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);
  if(e.request.method!=='GET'||u.origin!==location.origin||u.pathname.endsWith('version.json'))return;
- e.respondWith(fetch(e.request).then(r=>{if(r.ok&&(e.request.mode==='navigate'||/\\.(png|jpg|json|html)$/.test(u.pathname))){const cp=r.clone();caches.open(C).then(c=>c.put(e.request.mode==='navigate'?'index.html':e.request,cp))}return r})
-  .catch(()=>caches.match(e.request.mode==='navigate'?'index.html':e.request).then(r=>r||new Response('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><body style="margin:0;height:100vh;display:grid;place-items:center;background:#0f1716;color:#e9f0ee;font-family:sans-serif"><div style="text-align:center">인터넷에 연결되면 다시 열어 주세요<br><br><button onclick="location.reload()" style="font:inherit;padding:10px 18px;border-radius:12px;border:0;background:#009999;color:#fff">다시 시도</button></div></body>',{headers:{'Content-Type':'text/html; charset=utf-8'}}))))});
+ e.respondWith(fetch(e.request).then(r=>{if(r.ok&&(e.request.mode==='navigate'||/\\.(png|jpg|json|html)$/.test(u.pathname))){const cp=r.clone();caches.open(C).then(c=>c.put(e.request,cp))}return r})
+  .catch(()=>caches.match(e.request,{ignoreSearch:true}).then(r=>r||(e.request.mode==='navigate'&&!/privacy\\.html$/.test(u.pathname)?caches.match('index.html'):null)).then(r=>r||new Response('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><body style="margin:0;height:100vh;display:grid;place-items:center;background:#0f1716;color:#e9f0ee;font-family:sans-serif"><div style="text-align:center">인터넷에 연결되면 다시 열어 주세요<br><br><button onclick="location.reload()" style="font:inherit;padding:10px 18px;border-radius:12px;border:0;background:#009999;color:#fff">다시 시도</button></div></body>',{headers:{'Content-Type':'text/html; charset=utf-8'}}))))});
 '''
 open('/home/claude/web/sw.js','w').write(sw)
 print('built',len(out),'ver',VER)

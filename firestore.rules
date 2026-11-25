@@ -166,7 +166,17 @@ service cloud.firestore {
       allow delete: if signedIn() && resource.data.by == me();
     }
 
-    // ===== AI 학습 집계 + 프로필(닉네임·AI 전적) =====
+    // ===== 내 프로필(닉네임·AI 전적): 본인만 읽고 씀 — 구글 계정으로 다른 기기에서 복원할 때 씀 =====
+    match /prof/{uid} {
+      allow read, delete: if signedIn() && uid == me();
+      allow create, update: if signedIn() && uid == me()
+        && request.resource.data.keys().hasOnly(['nick','airec','pts'])
+        && (!('nick' in request.resource.data) || nick(request.resource.data.nick))
+        && (!('airec' in request.resource.data) || (request.resource.data.airec is map && request.resource.data.airec.size() <= 8))
+        && (!('pts' in request.resource.data) || nearNow(request.resource.data.pts, 31536000000, 300000));
+    }
+
+    // ===== AI 학습 집계(모두가 읽어 AI가 배움. 닉네임 없음). 예전 문서의 nick·airec 키는 옮길 때까지 허용 =====
     match /ailearn/{uid} {
       allow read: if signedIn();
       allow create, update: if signedIn() && uid == me()

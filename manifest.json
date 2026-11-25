@@ -2,13 +2,32 @@
  "id": "./",
  "name": "베팅 오목",
  "short_name": "베팅 오목",
- "description": "점수를 걸고 두는 2인 오목",
+ "description": "세 칸을 고르고 점수를 몰래 걸어 돌을 놓는 2인 전략 오목",
  "lang": "ko",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
  "background_color": "#0f1716",
  "theme_color": "#0f1716",
+ "screenshots": [
+  {
+   "src": "shots/s1.png",
+   "sizes": "720x1480",
+   "type": "image/png",
+   "form_factor": "narrow",
+   "label": "베팅 단계"
+  },
+  {
+   "src": "shots/s2.png",
+   "sizes": "720x1480",
+   "type": "image/png",
+   "form_factor": "narrow",
+   "label": "홈"
+  }
+ ],
+ "categories": [
+  "games"
+ ],
  "icons": [
   {
    "src": "icons/icon-192.png",

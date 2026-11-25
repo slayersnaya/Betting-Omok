@@ -684,7 +684,7 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.0408';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.0415';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -1821,12 +1821,19 @@ function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.re
 const IS_ADMIN=(()=>{try{if(location.hash==='#admin')sessionStorage.setItem('bo-admin','1');return sessionStorage.getItem('bo-admin')==='1'}catch(e){return false}})();
 function renderAcct(){const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!(IS_ADMIN&&user&&user.firebase));const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
  const g=user.google&&user.google();a.innerHTML=g?`<div class="at"><b>구글 계정 연결됨</b><span>${esc(g)}</span></div>`:`<div class="at"><b>게스트로 플레이 중</b><span>기록을 지키려면 구글 연결</span></div><button class="btn small" data-act="glink">구글 연결</button>`}
-// ===== 웹(Firebase): 앱을 지웠다 다시 깔아도 구글 계정으로 기록 복원 (닉네임·AI 전적·학습 집계를 ailearn/{uid}에 함께 보관) =====
+// ===== 웹(Firebase): 앱을 지웠다 다시 깔아도 구글 계정으로 기록 복원. 닉네임·AI 전적은 본인만 읽는 prof/{uid}, 학습 집계는 ailearn/{uid} =====
 let profT=0;
 function profSave(){if(!(user&&user.firebase&&db&&SEAT))return;clearTimeout(profT);profT=setTimeout(()=>{let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}
- const nk=(($('#nick')||{}).value||'').trim().slice(0,12),pt={airec:r,pts:Date.now()};if(nk)pt.nick=nk;db.doc('ailearn/'+SEAT).update(pt).catch(()=>{})},1500)}
+ const nk=(($('#nick')||{}).value||'').trim().slice(0,12),pt={airec:r,pts:Date.now()};if(nk)pt.nick=nk;db.doc('prof/'+SEAT).update(pt).catch(()=>{})},1500)}
 async function profLoad(){if(!(user&&user.firebase&&db&&SEAT&&user.google&&user.google()))return;
- let d=null;try{d=(await db.doc('ailearn/'+SEAT).get()).data()}catch(e){}if(!d||typeof d!=='object')return;let got=false;
+ let d=null,old=null;try{d=(await db.doc('prof/'+SEAT).get()).data()}catch(e){}try{old=(await db.doc('ailearn/'+SEAT).get()).data()}catch(e){}
+ // 예전에는 닉네임·AI 전적을 모두가 읽는 ailearn에 함께 두었음 → 읽어 온 뒤 ailearn에서는 빼고 prof로 옮김
+ if(old&&typeof old==='object'&&('nick' in old||'airec' in old)){d=Object.assign({},old,d||{});const ld=aiLearnDoc(old);
+  {const pp={pts:Date.now()};if(typeof d.nick==='string'&&d.nick.trim())pp.nick=d.nick.trim().slice(0,12);if(d.airec&&typeof d.airec==='object'&&!Array.isArray(d.airec))pp.airec=d.airec;db.doc('prof/'+SEAT).update(pp).catch(()=>{})}
+  if(ld&&typeof old.ts==='number')ld.ts=old.ts;
+  (ld?db.doc('ailearn/'+SEAT).set(ld):db.doc('ailearn/'+SEAT).delete()).catch(()=>{})}
+ else if(old&&typeof old==='object')d=Object.assign({},old,d||{});
+ if(!d||typeof d!=='object')return;let got=false;
  if(typeof d.nick==='string'&&d.nick.trim()&&!lget('bo-nick')){const n=d.nick.trim().slice(0,12);lset('bo-nick',n);$('#nick').value=n;syncNick();got=true}
  if(d.airec&&typeof d.airec==='object'&&!Array.isArray(d.airec)){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}if(!r||typeof r!=='object'||Array.isArray(r))r={};
   for(const k of Object.keys(AI_LEVELS)){const x=d.airec[k];if(!x||typeof x!=='object')continue;const y=r[k]&&typeof r[k]==='object'?r[k]:(r[k]={w:0,l:0,d:0});for(const f of ['w','l','d']){const v=Math.min(1e5,int(x[f]));if(v>int(y[f])){y[f]=v;got=true}}}
@@ -1836,7 +1843,7 @@ async function profLoad(){if(!(user&&user.firebase&&db&&SEAT&&user.google&&user.
 // ===== 계정·기록 삭제 (설정) =====
 async function deleteMyData(){toast('지우는 중');try{
  if(db&&SEAT&&user&&user.firebase){
-  await db.doc('ailearn/'+SEAT).delete().catch(()=>{});
+  await db.doc('ailearn/'+SEAT).delete().catch(()=>{});await db.doc('prof/'+SEAT).delete().catch(()=>{});
   try{const qs=await db.collection('aigames').where('by','==',SEAT).limit(500).get();for(const d of qs.docs)await db.doc('aigames/'+d.id).delete().catch(()=>{})}catch(e){}
   try{if(room)await room.leave()}catch(e){}
   if(user.deleteAccount)await user.deleteAccount()}
@@ -2506,7 +2513,7 @@ document.addEventListener('click',e=>{
  else if(a==='archexp'){const a2=archList();if(!a2.length){toast('저장할 대국 없음');return}try{const blob=new Blob([JSON.stringify({v:1,app:'betting-omok',at:Date.now(),games:a2})],{type:'application/json'}),u=URL.createObjectURL(blob),x=document.createElement('a');x.href=u;x.download='betting-omok-games.json';document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);toast('대국 기록 파일 저장됨')}catch(e){toast('저장 실패')}}
  else if(a==='admdl'){aiGameDownload()}
  else if(a==='reload'){location.reload()}
- else if(a==='delacct'){closeSheet();dialog('내 계정과 기록(닉네임, AI 전적, 학습 통계, AI 대국 기록, 이 기기 기록)을 모두 지워요.<br>랭크 대국 결과는 상대 점수 때문에 남아요.<br>되돌릴 수 없어요.','삭제',()=>deleteMyData(),'취소')}
+ else if(a==='delacct'){closeSheet();dialog('내 계정과 기록을 모두 지워요.<br>닉네임 · AI 전적 · 학습 통계<br>AI 대국 기록 · 이 기기 기록<br>랭크 대국 결과는 상대 점수 때문에 남아요.<br>되돌릴 수 없어요.','삭제',()=>deleteMyData(),'취소')}
  else if(a==='wskip'){lset('bo-tut-done','1');$('#welcome').classList.add('hide');toast('규칙 탭에서 언제든 배울 수 있어요')}
  else if(a==='sheet')openSheet(b.dataset.k);
  else if(a==='peek'){UI.peek=!UI.peek;renderPlayers()}

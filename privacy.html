@@ -11,7 +11,8 @@
 :root{--bg:#0f1716;--card:#17211f;--ink:#e9f0ee;--mute:#a7b6b2;--line:#2a3634;--pri:#00a3a3}
 @media (prefers-color-scheme:light){:root{--bg:#f4f7f6;--card:#fff;--ink:#17211f;--mute:#56625f;--line:#dbe3e1;--pri:#008282}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "NanumSquare","Apple SD Gothic Neo","Malgun Gothic",sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "NanumSquare","Apple SD Gothic Neo","Malgun Gothic",sans-serif;word-break:keep-all;overflow-wrap:break-word}
+.nw{white-space:nowrap}
 main{max-width:720px;margin:0 auto;padding:28px 18px 60px}
 h1{font-size:22px;margin:0 0 4px}
 .date{color:var(--mute);font-size:13px;margin:0 0 20px}
@@ -37,14 +38,16 @@ a{color:var(--pri)}
 <table>
 <tr><th>정보</th><th>언제</th><th>쓰는 곳</th></tr>
 <tr><td>임의 사용자 번호(익명 계정)</td><td>앱을 처음 열 때 자동</td><td>내 기록과 대국을 구분</td></tr>
-<tr><td>닉네임</td><td>직접 입력할 때</td><td>대국 상대·랭킹에 표시</td></tr>
-<tr><td>구글 계정 이메일</td><td>‘구글 연결’을 누를 때만</td><td>기기를 바꿔도 기록을 이어 쓰기, 랭크전 참가 확인</td></tr>
+<tr><td>닉네임</td><td>직접 입력할 때</td><td>대국 상대·랭킹에 표시. 본인만 읽는 공간에도 저장(기기를 바꿨을 때 복원)</td></tr>
+<tr><td>AI 단계별 전적</td><td>AI와 둔 판이 끝날 때</td><td>본인만 읽는 공간에 저장(기기를 바꿨을 때 복원)</td></tr>
+<tr><td>AI 학습 집계(숫자 묶음 — 닉네임 없음)</td><td>판이 끝날 때</td><td>모든 사용자의 AI가 함께 배움</td></tr>
+<tr><td>구글 계정 이메일</td><td><span class="nw">‘구글 연결’을</span> 누를 때만</td><td>기기를 바꿔도 기록을 이어 쓰기, 랭크전 참가 확인</td></tr>
 <tr><td>대국 기록(고른 칸, 끝난 뒤 공개되는 베팅, 승패)</td><td>대국할 때</td><td>대국 진행·결과 확인·복기</td></tr>
 <tr><td>랭크전 결과(승패, 닉네임)</td><td>랭크전이 끝날 때</td><td>랭크 점수 계산</td></tr>
 <tr><td>AI 대국 기록(수 순서, 승패 — 닉네임 없음)</td><td>AI와 둔 판이 끝날 때</td><td>AI 실력 개선</td></tr>
 <tr><td>접속 중 표시</td><td>대국·랭크 매칭 중</td><td>상대가 접속해 있는지 표시</td></tr>
 </table>
-<p>위치, 연락처, 사진, 광고 식별자는 수집하지 않습니다. 기기 안(브라우저 저장소)에는 설정, AI 전적, 진행 중인 판이 저장되며 서버로 보내지 않습니다.</p>
+<p>위치, 연락처, 사진, 광고 식별자는 수집하지 않습니다. 기기 안(브라우저 저장소)에는 설정과 진행 중인 판이 저장되며, 이것은 서버로 보내지 않습니다.</p>
 
 <h2>2. 보관 기간</h2>
 <ul>
@@ -62,7 +65,7 @@ a{color:var(--pri)}
 <h2>4. 맡기는 곳(처리 위탁·국외 이전)</h2>
 <table>
 <tr><th>업체</th><th>하는 일</th><th>위치</th></tr>
-<tr><td>Google (Firebase)</td><td>로그인, 게임 데이터 저장</td><td>서울(asia-northeast3) 서버, 로그인은 Google 서버</td></tr>
+<tr><td>Google (Firebase)</td><td>로그인, 게임 데이터 저장</td><td>서울 서버<br><span class="nw">(asia-northeast3)</span>, 로그인은 Google 서버</td></tr>
 <tr><td>GitHub (GitHub Pages)</td><td>앱 화면 파일 제공</td><td>미국 등</td></tr>
 <tr><td>jsDelivr</td><td>글꼴 파일 제공</td><td>전 세계 서버</td></tr>
 </table>
