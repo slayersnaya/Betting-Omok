@@ -2371,7 +2371,7 @@ const use=n=>window.claude&&typeof window.claude.use==='function'?Promise.resolv
  note.textContent=db&&canWrite===false?'관전 전용':'';
  if(db){
   const t=setTimeout(()=>{if(!lobbyRooms.length)$('#rooms').innerHTML='<p class="sub">방 목록 불러오기 실패</p>'},10000);
-  db.collection('g').orderBy('created','desc').limit(40).onSnapshot(qs=>{clearTimeout(t);lobbyRooms=qs.docs.map(x=>{if(!GIDRE.test(x.id))return null;const m=normMeta(x.data());return m?{id:x.id,...m}:null}).filter(Boolean);renderRooms();renderRank()},()=>{});
+  db.collection('g').orderBy('created','desc').limit(40).onSnapshot(qs=>{clearTimeout(t);lobbyRooms=qs.docs.map(x=>{if(!GIDRE.test(x.id))return null;const m=normMeta(x.data());return m?{id:x.id,...m}:null}).filter(Boolean);renderRooms();renderRank()},e=>{clearTimeout(t);const c=(e&&e.code)||'';$('#rooms').innerHTML='<p class="sub">'+(c.includes('permission')?'서버 규칙 확인 필요 (권한 거부)':'방 목록 불러오기 실패'+(c?' · '+esc(c):''))+'</p>'});
   // 랭크 결과(최근 2000건 = 약 1000판)로 모든 폰이 같은 방식으로 점수를 계산
   db.collection('res').orderBy('ended','desc').limit(user&&user.firebase?300:2000).onSnapshot(qs=>{RK.docs=qs.docs.map(x=>{const v=x.data();return v&&typeof v==='object'?{...v,id:x.id}:null}).filter(Boolean).reverse();clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)},()=>{RK.loaded=true;renderRank()});
   mmSub();
