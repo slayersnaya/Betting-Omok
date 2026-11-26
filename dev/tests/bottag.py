@@ -38,8 +38,11 @@ async def main():
     async with async_playwright() as pw:
         b=await pw.chromium.launch(executable_path='/usr/bin/google-chrome',args=['--no-sandbox'])
         a=await adminpage(b,errs);await asyncio.sleep(2);await ev(a,"mmBot()");await asyncio.sleep(1)
-        t=await a.evaluate("()=>document.querySelector('#gttl').textContent");chk('관리자: 제목에 모델',any(k in t for k in ['초보','중수','고수','Ultimate']),t)
+        t=await a.evaluate("()=>document.querySelector('#gttl').textContent");chk('관리자: 제목에 모델',any(k in t for k in ['Easy','Normal','Hard','Godlike']),t)
+        await a.set_viewport_size({'width':1920,'height':1080});await ev(a,"renderAll()");await asyncio.sleep(0.5)
+        m=await a.evaluate("()=>{const e=document.querySelector('#admModel');return e?[e.textContent,e.getBoundingClientRect().width>0]:null}");chk('관리자 PC: 상대 이름 옆 모델',m and m[1],m)
+        await a.screenshot(path='/tmp/bt/admmodel.png')
         p=await newpage(b,errs,'일반');await asyncio.sleep(3);await ev(p,"mmBot()");await asyncio.sleep(1)
-        t=await p.evaluate("()=>document.querySelector('#gttl').textContent");chk('일반: 모델 안 보임',t=='랭크전',t)
+        t=await p.evaluate("()=>document.querySelector('#gttl').textContent");chk('일반: 모델 안 보임',t=='랭크전' and not await p.evaluate("()=>!!document.querySelector('#admModel')"),t)
         print('errors',[e for e in errs if 'ERR_' not in e]);print('RESULT',sum(1 for _,o in RES if o),'/',len(RES));await b.close()
 asyncio.run(main())

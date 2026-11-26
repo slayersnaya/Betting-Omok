@@ -42,7 +42,7 @@ async def main():
         d=await dlg(p);chk('처음 열면 달력 자동 · +10','출석체크' in d and '+10' in d,d);await p.screenshot(path='/tmp/bt/cal1.png')
         w=await wal(u);chk('지갑: 이번 달 · 오늘 도장',w.get('am')==M and w.get('ad')==[D] and w.get('g')==10,json.dumps(w)[:200])
         await p.evaluate("()=>document.querySelector('#dlg [data-act=dlgok]').click()");await asyncio.sleep(0.3)
-        t=await p.evaluate("()=>document.querySelector('#ecoCard .att')?.innerText.replace(/\\s+/g,' ')");chk('카드 줄: 1일 · 오늘 완료','1일' in t and '오늘 완료' in t,t)
+        t=await p.evaluate("()=>document.querySelector('.eqline.att')?.textContent.replace(/\\s+/g,' ')");chk('카드 줄: 1일 · 오늘 완료','1일' in t and '오늘 완료' in t,t)
         await p.reload();await asyncio.sleep(5);d=await dlg(p);chk('다시 열면 안 뜸',d=='',d)
         r=await forge(p,"n.ad=n.ad.concat([n.ad[0]%28+1]);n.g+=10;n.k='att'");chk('같은 날 두 번 거부',r=='denied',r)
         r=await forge(p,"n.ad=[1,2,3];n.k='equip'");chk('다른 쓰기로 도장 바꾸기 거부',r=='denied',r)

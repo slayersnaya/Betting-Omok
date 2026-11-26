@@ -551,7 +551,7 @@ body.shopen .tabbar{visibility:hidden}
 .lab{background:var(--k);background:color-mix(in srgb,var(--k) 80%,#000)}
 .rgrid button{min-width:0;overflow:hidden}.rgrid span,.rgrid b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pbar .pn{min-width:0;flex:1}.pbar .tag{flex:none;white-space:nowrap}
-@media (max-width:340px){.tag .tl{display:none}}
+@media (max-width:340px){.tag{font-size:10px;padding-left:5px;padding-right:5px}}
 .rules li,.gloss dd,#dlgMsg,.rlines li{text-wrap:pretty}
 .chead h2,.ltop h1{white-space:nowrap}.chead span{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .nickchip{max-width:clamp(112px,34vw,150px)}.nickchip b,.nickchip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
@@ -1060,7 +1060,7 @@ p.sub.empty,p.empty{display:block;padding:16px 8px}
 .pzb .ibtn{height:44px}
 #rkBoard .rkrow{min-height:44px}
 
-/* ----- 받을 보상 띠(홈 맨 위) ----- */
+/* ----- 받을 보상 띠(보상 탭 맨 위) ----- */
 .htop{display:grid;gap:12px}.htop:not(:has(>:not(.hide))){display:none}
 .rwbar{padding:12px 12px 12px 14px;background:linear-gradient(90deg,color-mix(in srgb,var(--jade) 15%,var(--card)),var(--card) 75%);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--jade) 30%,transparent)}
 .rwh{display:flex;align-items:center;gap:12px}
@@ -1196,8 +1196,6 @@ ul.rknote li{text-wrap:balance}
 .gdot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none;background:radial-gradient(circle at 35% 30%,#bff3ee,#2bbdb5 42%,#007a7a 100%);box-shadow:inset 0 -1px 1px rgba(0,0,0,.25)}
 .gemchip{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:17px;border:0;background:var(--soft);color:var(--ink);font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap;flex:none}
 .gemchip:focus-visible,.eqline:focus-visible,.etile:focus-visible,.echip:focus-visible{outline:3px solid var(--jadeink);outline-offset:2px}
-#ecoCard .chead{margin-bottom:8px}
-#ecoCard .chead h2 svg{fill:none}
 .eqline{display:flex;align-items:center;gap:8px;width:100%;min-height:46px;padding:0 12px;border-radius:12px;border:0;background:var(--soft);color:var(--ink);cursor:pointer;text-align:left;font-size:14px;white-space:nowrap}
 .eqline .lbl{font-size:12px;font-weight:800;color:var(--mute);flex:none}
 .eqline .pips{display:flex;gap:3px;flex:none}.eqline .pips i{width:12px;height:5px;border-radius:3px;background:var(--raise)}.eqline .pips i.on{background:var(--jade)}
@@ -1246,6 +1244,7 @@ ul.rknote li{text-wrap:balance}
 .nkcost b{color:var(--ink)}.nkcost .nkb{margin-left:6px;font-size:12px;color:var(--faint)}
 .ovtag{animation:ovFade 2.5s ease-out forwards}@keyframes ovFade{0%{opacity:0;transform:scale(.7)}10%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.ovtag{animation:ovFade 2.5s steps(1,end) forwards}}
+.lvline{margin:8px 2px 0;font-size:12.5px;font-weight:700;color:var(--mute);text-align:center;white-space:nowrap;min-height:1.3em}.lvline.god{color:#e0a82e;letter-spacing:.01em}
 /* 출석체크 달력 */
 .attd{text-align:center}.attd h3{margin:0 0 10px;font-size:17px;white-space:nowrap}.attd h3 .num{color:var(--jadeink);margin-left:4px}
 .acal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;max-width:330px;margin:0 auto}
@@ -1262,12 +1261,8 @@ ul.rknote li{text-wrap:balance}
 .atms>span{display:flex;align-items:center;justify-content:center;gap:3px;padding:5px 0;border-radius:8px;background:var(--soft);font-size:12px;font-weight:800;color:var(--mute);white-space:nowrap}
 .atms>span.ok{background:color-mix(in srgb,var(--jade) 18%,transparent);color:var(--jadeink)}.atms .gdot{width:8px;height:8px}
 .atm{margin:12px 0 0;font-size:15px;font-weight:800;white-space:nowrap}
-/* 교환소 시트 */
-.shopsh{display:flex;flex-direction:column;height:86vh;height:86dvh;overflow:hidden}
-.shopsh>*{flex:none}.shopsh>*+*:not(.shh){margin-top:10px}
-.shopsh .shh{margin-bottom:6px}.shopsh .shh .sht{display:flex;align-items:center;gap:10px;min-width:0}
-.shopsh .gemchip{cursor:default;background:var(--sel)}
-#shopBody{flex:1 1 auto;min-height:0;overflow:auto;margin:10px calc(-1*max(4vw,16px)) 0;padding:0 max(4vw,16px) 6px;overscroll-behavior:contain}
+/* 상점 탭 */
+.shopc .chead{margin-bottom:10px}.shopc .gemchip{cursor:default;background:var(--sel)}
 .shprev{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:var(--soft)}
 .shprev .pvemb{display:grid;place-items:center;width:56px;height:56px}
 .shprev .pvt{display:flex;flex-direction:column;min-width:0;white-space:nowrap}.shprev .pvt b{font-size:17px;overflow:hidden;text-overflow:ellipsis}
@@ -1312,6 +1307,96 @@ ul.rknote li{text-wrap:balance}
 #board.bt-b2 #wTop stop:nth-child(1){stop-color:#f8ebcb}#board.bt-b2 #wTop stop:nth-child(2){stop-color:#f0dcae}#board.bt-b2 #wTop stop:nth-child(3){stop-color:#e3c793}
 #board.bt-b2 rect[fill="#8a5a22"]{opacity:.025}
 @media (max-width:370px){.egrid{gap:6px}.etile>b{font-size:12px}.eqline .lbl{display:none}}
+/* ===== 디자인팀 3차: 보상·상점 탭 · 머리줄 규칙(?) ===== */
+.ltop .ibtn{width:44px;height:44px}
+.ltop .hrule[aria-current=page]{background:var(--sel);color:var(--jadeink)}
+.hgem{height:38px;min-width:52px;justify-content:center;padding:0 11px 0 10px;gap:6px;background:var(--card)}.hgem .gdot{width:11px;height:11px}
+@media (max-width:1023px){.ltop.tight h1{font-size:0;min-width:0}.ltop.tight .nickchip{max-width:none;min-width:0;flex:0 1 auto}}
+@media (min-width:1024px){
+ .ltop h1{flex:none}.ltop .tabbar.tbw{margin-right:auto}.ltop .nickchip{max-width:240px}
+ .tabbar.tbw{position:static;transform:none;margin-left:20px;flex:none}
+}
+@media (max-width:440px){.ltop.tight{gap:4px}.ltop.tight .nickchip>svg,.ltop.tight .nickchip>.st{display:none}.ltop.tight .nickchip{padding:0 12px}.ltop.tight .hgem{padding:0 9px 0 8px;gap:5px}.ltop.tight .ibtn{width:40px}}
+@media (max-width:380px){.ltop.tight .nickchip{font-size:13px;letter-spacing:-.02em}}
+#tab-home #recent{display:none}
+/* 머리줄 고정(옥돌·닉네임·규칙·설정이 늘 보임). 낮은 가로 화면은 고정 안 함 */
+#lobby>.ltop{position:sticky;top:0;z-index:12;background:var(--bg);margin-top:0;padding:4px 0;box-shadow:0 0 0 16px var(--bg);clip-path:inset(-16px -16px -2px -16px)}
+html{scroll-padding-top:64px}
+#shopSeg{top:58px}
+@media (max-height:500px){#lobby>.ltop{position:relative;box-shadow:none;clip-path:none}#shopSeg{top:0}html{scroll-padding-top:0}}
+/* 확대(zoom)된 큰 화면: vh도 함께 커지므로 시트 높이를 확대 배율로 나눔 → 제목·닫기가 화면 밖으로 안 나감 */
+:root{--lz:1;--sz:1}
+@media (min-width:1600px) and (min-height:900px){:root{--lz:1.1;--sz:1.1}}
+@media (min-width:1880px) and (min-height:1000px){:root{--lz:1.32;--sz:1.2}}
+@media (min-width:2400px) and (min-height:1300px){:root{--lz:1.75;--sz:1.55}}
+.lsheet{max-height:calc(86vh / var(--sz))}
+@media (min-width:600px){.lsheet{max-height:calc((100vh - 48px) / var(--sz))}}
+.rhead{display:flex;align-items:center;gap:4px;margin:-4px 0 0 -8px}.rhead h2{margin:0;font-size:18px}
+.rwc .chead{margin-bottom:8px}
+.rwc .eqline{margin-bottom:12px}
+.rwqh{margin-top:2px}.rwqh span{font-weight:700}.rwqh span b{color:var(--ink)}
+.rwtoday .ebar{margin:0 2px 10px}.rwtoday .rwqh{margin-bottom:8px}
+.eqr.rdy{box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--jade) 55%,transparent)}.eqr.rdy .ck{background:transparent;box-shadow:inset 0 0 0 2px var(--jade)}.eqr.rdy .num{color:var(--jadeink)}
+.rwinfo{padding-top:4px;padding-bottom:4px}.rwinfo .eh{margin-top:12px}.rwinfo .etab+.note{margin:8px 2px 10px}
+.rwinfo details>.eh:first-of-type{margin-top:4px}
+#tab-rwd .enote{margin-top:4px}
+#rwdBody>*+*{margin-top:12px}
+#shopSeg{position:sticky;top:0;z-index:4;box-shadow:0 0 0 6px var(--bg)}
+#shopBody{margin-top:14px}
+.tabbar button[data-k=rwd] .tbn{left:calc(50% + 6px)}
+@media (max-width:370px){#rwdBody .eqline .lbl{display:inline}#rwdBody .eqline .pips i{width:9px}#rwdBody .eqline{gap:7px;padding:0 10px}}
+@media (max-width:380px){.nickchip{max-width:clamp(96px,30vw,150px)}}
+@media (max-width:480px){body.big .nickchip{max-width:clamp(88px,calc(100vw - 268px),150px)}}
+@media (max-width:340px){.ltop .logo{display:none}}
+@media (min-width:700px) and (max-width:1023px){#rwdBody>*+*{margin-top:12px}}
+@media (min-width:1024px){
+ #rwdBody>*+*{margin-top:0}
+ #rwdBody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+ #rwdBody>.rwtoday{grid-row:span 2}#rwdBody>.enote{grid-column:1/-1}
+ #tab-shop:not(.hide){display:grid;grid-template-columns:320px minmax(0,1fr);grid-template-rows:auto auto 1fr;column-gap:16px;align-items:start}
+ #tab-shop>*+*{margin-top:0}
+ #tab-shop>.shopc{grid-column:1;grid-row:1}
+ #tab-shop>#shopSeg{grid-column:1;grid-row:2;position:static;margin-top:12px;box-shadow:none}
+ #tab-shop>#shopBody{grid-column:2;grid-row:1/span 3;margin-top:0;display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start;max-height:calc(100vh / var(--lz) - 120px);overflow:auto;overscroll-behavior:contain;padding:0 6px 8px 0;scrollbar-gutter:stable}
+ #shopBody>.esec+.esec{margin-top:0}
+ .shopc .shprev{grid-template-columns:auto minmax(0,1fr);row-gap:10px}.shopc .shprev .pvb{grid-column:1/-1;justify-self:start}
+ #tab-rule .rhead{margin-left:-6px}
+}
+@media (min-width:1280px){#tab-shop>#shopBody{grid-template-columns:repeat(2,minmax(0,1fr))}#shopBody>.enote{grid-column:1/-1}}
+@media (min-width:1024px) and (max-width:1279px){.tabbar.tbw button{padding:0 13px;gap:6px}.tabbar.tbw{gap:2px;margin-left:14px}.tabbar.tbw button>svg:not(.tlk){display:none}.tabbar.tbw .pip{top:6px;left:auto;right:3px}}
+@media (min-width:1280px){.tabbar.tbw button{padding:0 14px}}
+.rwn{background:#c0392b}
+@media (max-width:1023px){.shopc{padding-top:12px;padding-bottom:12px}.shopc .chead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0}}
+/* 상점 분류 버튼 · 분류 안 목록 */
+.ecats{display:grid;gap:8px}
+.ecat{display:flex;align-items:center;gap:12px;width:100%;min-height:68px;padding:8px 10px 8px 8px;border:0;border-radius:14px;background:var(--soft);color:var(--ink);text-align:left;cursor:pointer}
+.ecat:focus-visible,.ecath .ibtn:focus-visible{outline:3px solid var(--jadeink);outline-offset:2px}
+.ecart{flex:none;width:76px;height:52px;display:grid;place-items:center;border-radius:10px;background:var(--card);overflow:hidden}
+.ecart .art{height:52px;width:76px}.ecart .art svg{width:62px;height:34px}.ecart .art.af .cfr{--z:32px!important}.ecart .art.as .sl{width:32px;height:32px}
+.ecart .art.at,.ecart .art.an{font-size:12px}.ecart .art.an .cn{font-size:13px;padding-bottom:3px}.ecart .ctt{font-size:10.5px}
+.ect{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;white-space:nowrap}.ect>b{font-size:15px}
+.ecs{display:flex;gap:8px;font-size:12px;font-weight:700;color:var(--mute);min-width:0}.ecs b{color:var(--ink)}.ecs .ecq{color:var(--jadeink);overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ecv{flex:none;width:18px;height:18px;fill:none;stroke:var(--faint);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.ecath{display:flex;align-items:center;gap:6px;margin:0 0 2px -6px;white-space:nowrap}.ecath h3{margin:0;font-size:17px}.ecath .ecn{margin-left:auto;font-size:12px;font-weight:800;color:var(--mute)}
+.ecath .ibtn{width:44px;height:44px;color:var(--ink)}.ecath .ibtn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.ecsee{margin:0 2px 10px;font-size:12.5px;font-weight:700;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.art.adef{display:grid;place-items:center}.art.adef i{width:30px;height:30px;border-radius:50%;border:2px dashed var(--faint)}
+.ecempty{text-align:center;margin-top:12px}
+@media (min-width:480px){#shopBody .egrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (min-width:1024px){#tab-shop>#shopBody{display:block}.ecats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#shopBody .egrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}}
+/* 분석 카드: '선 플레이어로 시작' 이름 칸 넓힘(잘림 방지) */
+.arow{grid-template-columns:minmax(0,8.6em) minmax(36px,1fr) 4.2em 4.6em}body.big .arow{grid-template-columns:minmax(0,9.2em) minmax(30px,1fr) 4.4em 5em}
+/* 동전 던지기: 넓은 화면에서 128px 동전이 너무 작아 안 보이던 문제 → 화면 크기에 맞춰 무대째 키움(튀어 오르는 높이도 같이) */
+@media (min-width:1024px){#coin .cstage{zoom:1.45}}
+@media (min-width:1600px) and (min-height:900px){#coin .cstage{zoom:1.8}}
+@media (min-width:2400px) and (min-height:1300px){#coin .cstage{zoom:2.3}}
+@media (max-height:620px){#coin .cstage{zoom:1}}
+/* 베팅 칸 강조: 입력 중인 줄과 같은 색 고리 */
+#bov .bchip{transition:opacity .2s}#bov .bchip.boff{opacity:.5}
+#bov .bchip .bring{opacity:0;transform-box:fill-box;transform-origin:center}
+#bov .bchip.bon .bring{opacity:1;animation:bring 1.1s ease-in-out infinite}
+@keyframes bring{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.28);opacity:.35}}
+@media (prefers-reduced-motion:reduce){#bov .bchip.bon .bring{animation:none;stroke-width:4.5}}
 </style>
 </head>
 <body>
@@ -1319,13 +1404,13 @@ ul.rknote li{text-wrap:balance}
 <div class="wrap">
 
 <section id="lobby">
- <header class="ltop"><svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#123432"/><circle cx="19" cy="19" r="14" fill="#009999"/><circle cx="19" cy="19" r="12.4" fill="none" stroke="#F3EBDD" stroke-width="3.2" stroke-dasharray="3.6 9.4"/><circle cx="19" cy="19" r="9.6" fill="#DDB06A"/><path d="M9.4 19h19.2M19 9.4v19.2" stroke="#5a3a14" stroke-opacity=".6"/><circle cx="19" cy="19" r="5.6" fill="url(#kB)"/><ellipse cx="17.2" cy="16.8" rx="1.6" ry=".9" fill="#fff" opacity=".45" transform="rotate(-32 17.2 16.8)"/><circle cx="29.5" cy="29.5" r="6" fill="#F6F3EC" stroke="#bdb5a5" stroke-width=".6"/></svg><h1>베팅 오목</h1><button class="nickchip" data-act="sheet" data-k="nick" aria-label="닉네임 바꾸기"><span class="st k"></span><span id="nickTxt">닉네임</span><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></button><button class="ibtn" data-act="sheet" data-k="set" aria-label="설정"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></header>
+ <header class="ltop"><svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#123432"/><circle cx="19" cy="19" r="14" fill="#009999"/><circle cx="19" cy="19" r="12.4" fill="none" stroke="#F3EBDD" stroke-width="3.2" stroke-dasharray="3.6 9.4"/><circle cx="19" cy="19" r="9.6" fill="#DDB06A"/><path d="M9.4 19h19.2M19 9.4v19.2" stroke="#5a3a14" stroke-opacity=".6"/><circle cx="19" cy="19" r="5.6" fill="url(#kB)"/><ellipse cx="17.2" cy="16.8" rx="1.6" ry=".9" fill="#fff" opacity=".45" transform="rotate(-32 17.2 16.8)"/><circle cx="29.5" cy="29.5" r="6" fill="#F6F3EC" stroke="#bdb5a5" stroke-width=".6"/></svg><h1>베팅 오목</h1><button class="gemchip hgem hide" id="hGem" data-act="ecoopen" data-v="shop" aria-label="옥돌 · 상점 열기"><span class="gdot" aria-hidden="true"></span><b class="num" id="hGemN">0</b></button><button class="nickchip" data-act="sheet" data-k="nick" aria-label="닉네임 바꾸기"><span class="st k"></span><span id="nickTxt">닉네임</span><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></button><button class="ibtn hrule" data-act="tab" data-k="rule" aria-label="규칙" title="규칙"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01"/></svg></button><button class="ibtn" data-act="sheet" data-k="set" aria-label="설정"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></header>
 
  <div class="tab" id="tab-home">
-  <div class="htop" id="hTop"><div id="aiResume" class="hide"></div><div class="card rwbar hide" id="rwBar" role="region" aria-label="오늘 받을 것"></div></div>
+  <div class="htop" id="hTop"><div id="aiResume" class="hide"></div></div>
   <div class="card" id="aiCard">
    <div class="chead"><h2><svg viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9.5 13h.01M14.5 13h.01"/></svg>AI 대국</h2><span id="aiRec"></span></div>
-   <div class="seg" id="levels"></div>
+   <div class="seg" id="levels"></div><p class="lvline" id="lvLine"></p>
    <div class="seg row" id="aitime" style="margin-top:8px"></div><button class="btn wide" id="soloBtn" data-act="solo" style="margin-top:10px"><svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><path d="M7 5v14l12-7z"/></svg>시작</button>
   </div>
   <div class="card" id="gameCard">
@@ -1337,9 +1422,7 @@ ul.rknote li{text-wrap:balance}
    <button class="tile" data-act="sheet" data-k="local"><span class="ic" style="background:color-mix(in srgb,var(--c) 18%,transparent);color:#ee8b33"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></span><span>한 폰 대국<small class="tsub">한 기기로 둘이서</small></span></button>
    <button class="tile" id="pzTile" data-act="fxpuz"><span class="ic" style="background:color-mix(in srgb,var(--jade) 18%,transparent);color:var(--jadeink)"><svg viewBox="0 0 24 24"><path d="M10 3h4v2.2a1.8 1.8 0 1 0 3 0V3h4v7h-2.2a1.8 1.8 0 1 0 0 3H21v8h-7v-2.2a1.8 1.8 0 1 0-3 0V21H3v-8h2.2a1.8 1.8 0 1 0 0-3H3V3h7"/></svg></span><span>오늘의 묘수 풀이<small class="tsub"></small></span></button>
   </div>
-  <div class="card" id="ecoCard"></div>
   <div class="card" id="rkTop"><div class="chead"><h2>랭킹</h2><span class="sznm">시즌 1 · 상위 10명</span><button class="btn ghost small" data-act="tab" data-k="rank">전체</button></div><div id="rkTopL"></div></div>
-  <div class="recent" id="recent"></div>
   <div class="card" id="ruleMini"><div class="chead"><h2>규칙 한눈에</h2><button class="btn ghost small" data-act="tut">튜토리얼</button><button class="btn ghost small" data-act="tab" data-k="rule">전체 규칙</button></div></div>
  </div>
 
@@ -1389,33 +1472,34 @@ ul.rknote li{text-wrap:balance}
  </div>
 
  <div class="tab hide" id="tab-rule">
+  <div class="rhead"><button class="ibtn" data-act="tabback" aria-label="뒤로"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><h2>규칙</h2></div>
   <button class="btn wide" data-act="tut"><svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><path d="M7 5v14l12-7z"/></svg>튜토리얼</button>
   <div class="rcards">
    <div class="rcard"><svg viewBox="0 0 160 112" aria-hidden="true"><use href="#rcWood"/><path d="M0 28H160M0 56H160M0 84H160M16 0V112M38 0V112M60 0V112M82 0V112M104 0V112M126 0V112M148 0V112" stroke="#3A2510" stroke-opacity=".72" stroke-width="1"/><use href="#sB" transform="translate(16 56) scale(0.62)"/><use href="#sB" transform="translate(38 56) scale(0.62)"/><use href="#sB" transform="translate(60 56) scale(0.62)"/><use href="#sB" transform="translate(82 56) scale(0.62)"/><use href="#sB" transform="translate(104 56) scale(0.62)"/><path d="M16 56H104" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".9"/><path d="M16 56H104" stroke="#009999" stroke-width="2.6" stroke-linecap="round"/><use href="#sW" transform="translate(60 28) scale(0.62)"/><use href="#sW" transform="translate(82 84) scale(0.62)"/><circle cx="126" cy="56" r="8.5" fill="none" stroke="#3A2510" stroke-width="1.3" stroke-dasharray="3 2.4" opacity=".8"/><path d="M121.5 51.5l9 9M130.5 51.5l-9 9" stroke="#CC6600" stroke-width="2.6" stroke-linecap="round"/></svg><p><i>1</i>정확히 5개</p></div>
    <div class="rcard"><svg viewBox="0 0 160 112" aria-hidden="true"><use href="#rcWood"/><path d="M0 14H160M0 42H160M0 70H160M0 98H160M24 0V112M52 0V112M80 0V112M108 0V112M136 0V112" stroke="#3A2510" stroke-opacity=".72" stroke-width="1"/><path d="M52 98L108 42" stroke="#fff" stroke-opacity=".35" stroke-width="16" stroke-linecap="round"/><use href="#sB" transform="translate(52 42) scale(0.62)"/><use href="#sW" transform="translate(136 70) scale(0.62)"/><use href="#sB" transform="translate(108 98) scale(0.62)"/><use href="#cA" x="52" y="98"/><use href="#cB" x="80" y="70"/><use href="#cC" x="108" y="42"/></svg><p><i>2</i>이어진 세 칸</p></div>
    <div class="rcard"><svg viewBox="0 0 160 112" aria-hidden="true"><use href="#rcWood"/><ellipse cx="40" cy="93" rx="15" ry="5.5" fill="#006B6B"/><ellipse cx="40" cy="90" rx="15" ry="5.5" fill="#009999"/><ellipse cx="40" cy="90" rx="11.5" ry="3.6" fill="none" stroke="#F3EBDD" stroke-width="1.6" stroke-dasharray="2.4 4"/><ellipse cx="40" cy="83" rx="15" ry="5.5" fill="#006B6B"/><ellipse cx="40" cy="80" rx="15" ry="5.5" fill="#009999"/><ellipse cx="40" cy="80" rx="11.5" ry="3.6" fill="none" stroke="#F3EBDD" stroke-width="1.6" stroke-dasharray="2.4 4"/><ellipse cx="40" cy="73" rx="15" ry="5.5" fill="#006B6B"/><ellipse cx="40" cy="70" rx="15" ry="5.5" fill="#009999"/><ellipse cx="40" cy="70" rx="11.5" ry="3.6" fill="none" stroke="#F3EBDD" stroke-width="1.6" stroke-dasharray="2.4 4"/><ellipse cx="40" cy="63" rx="15" ry="5.5" fill="#006B6B"/><ellipse cx="40" cy="60" rx="15" ry="5.5" fill="#009999"/><ellipse cx="40" cy="60" rx="11.5" ry="3.6" fill="none" stroke="#F3EBDD" stroke-width="1.6" stroke-dasharray="2.4 4"/><ellipse cx="80" cy="93" rx="15" ry="5.5" fill="#244F9E"/><ellipse cx="80" cy="90" rx="15" ry="5.5" fill="#3366CC"/><ellipse cx="80" cy="90" rx="11.5" ry="3.6" fill="none" stroke="#F3EBDD" stroke-width="1.6" stroke-dasharray="2.4 4"/><ellipse cx="80" cy="83" rx="15" ry="5.5" fill="#244F9E"/><ellipse cx="80" cy="80" rx="15" ry="5.5" fill="#3366CC"/><ellipse cx="80" cy="80" rx="11.5" ry="3.6" fill="none" stroke="#F3EBDD" stroke-width="1.6" stroke-dasharray="2.4 4"/><ellipse cx="80" cy="73" rx="15" ry="5.5" fill="#244F9E"/><ellipse cx="80" cy="70" rx="15" ry="5.5" fill="#3366CC"/><ellipse cx="80" cy="70" rx="11.5" ry="3.6" fill="none" stroke="#F3EBDD" stroke-width="1.6" stroke-dasharray="2.4 4"/><ellipse cx="120" cy="93" rx="15" ry="5.5" fill="#8F4700"/><ellipse cx="120" cy="90" rx="15" ry="5.5" fill="#CC6600"/><ellipse cx="120" cy="90" rx="11.5" ry="3.6" fill="none" stroke="#F3EBDD" stroke-width="1.6" stroke-dasharray="2.4 4"/><ellipse cx="120" cy="83" rx="15" ry="5.5" fill="#8F4700"/><ellipse cx="120" cy="80" rx="15" ry="5.5" fill="#CC6600"/><ellipse cx="120" cy="80" rx="11.5" ry="3.6" fill="none" stroke="#F3EBDD" stroke-width="1.6" stroke-dasharray="2.4 4"/><ellipse cx="120" cy="73" rx="15" ry="5.5" fill="#8F4700"/><ellipse cx="120" cy="70" rx="15" ry="5.5" fill="#CC6600"/><ellipse cx="120" cy="70" rx="11.5" ry="3.6" fill="none" stroke="#F3EBDD" stroke-width="1.6" stroke-dasharray="2.4 4"/><g font-family="NS,sans-serif" font-weight="800" font-size="13" text-anchor="middle" fill="#2a1806"><text x="40" y="52">4</text><text x="80" y="62">3</text><text x="120" y="62">3</text></g><g transform="translate(144 20)" style="color:#A35200"><use href="#wax" x="-11" y="-11" width="22" height="22"/></g></svg><p><i>3</i>몰래 나눠 걸기</p></div>
-   <div class="rcard"><svg viewBox="0 0 160 112" aria-hidden="true"><use href="#rcWood"/><path d="M8 56H152" stroke="#3A2510" stroke-opacity=".25"/><use href="#sB" transform="translate(16 32) scale(0.55)"/><text x="34" y="37" font-family="NS,sans-serif" font-weight="800" font-size="14" fill="#2a1806" text-anchor="middle">4</text><text x="52" y="36" font-family="NS,sans-serif" font-weight="800" font-size="13" fill="#2a1806" opacity=".5" text-anchor="middle">:</text><use href="#sW" transform="translate(70 32) scale(0.55)"/><text x="88" y="37" font-family="NS,sans-serif" font-weight="800" font-size="14" fill="#2a1806" text-anchor="middle">3</text><path d="M102 32h18M115 28l5 4-5 4" stroke="#2a1806" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/><use href="#sB" transform="translate(138 32) scale(0.68)"/><use href="#sB" transform="translate(16 82) scale(0.55)"/><text x="34" y="87" font-family="NS,sans-serif" font-weight="800" font-size="14" fill="#2a1806" text-anchor="middle">3</text><text x="52" y="86" font-family="NS,sans-serif" font-weight="800" font-size="13" fill="#2a1806" opacity=".5" text-anchor="middle">:</text><use href="#sW" transform="translate(70 82) scale(0.55)"/><text x="88" y="87" font-family="NS,sans-serif" font-weight="800" font-size="14" fill="#2a1806" text-anchor="middle">3</text><path d="M102 82h18M115 78l5 4-5 4" stroke="#2a1806" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/><use href="#sW" transform="translate(138 82) scale(0.68)"/><rect x="140" y="59" width="16" height="16" rx="4" fill="#009999"/><text x="148" y="71" font-family="NS,sans-serif" font-weight="800" font-size="11" fill="#fff" text-anchor="middle">후</text></svg><p><i>4</i>동점이면 <span class="nw">후 플레이어</span></p></div>
+   <div class="rcard"><svg viewBox="0 0 160 112" aria-hidden="true"><use href="#rcWood"/><path d="M8 56H152" stroke="#3A2510" stroke-opacity=".25"/><use href="#sB" transform="translate(16 32) scale(0.55)"/><text x="34" y="37" font-family="NS,sans-serif" font-weight="800" font-size="14" fill="#2a1806" text-anchor="middle">4</text><text x="52" y="36" font-family="NS,sans-serif" font-weight="800" font-size="13" fill="#2a1806" opacity=".5" text-anchor="middle">:</text><use href="#sW" transform="translate(70 32) scale(0.55)"/><text x="88" y="37" font-family="NS,sans-serif" font-weight="800" font-size="14" fill="#2a1806" text-anchor="middle">3</text><path d="M102 32h18M115 28l5 4-5 4" stroke="#2a1806" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/><use href="#sB" transform="translate(138 32) scale(0.68)"/><use href="#sB" transform="translate(16 82) scale(0.55)"/><text x="34" y="87" font-family="NS,sans-serif" font-weight="800" font-size="14" fill="#2a1806" text-anchor="middle">3</text><text x="52" y="86" font-family="NS,sans-serif" font-weight="800" font-size="13" fill="#2a1806" opacity=".5" text-anchor="middle">:</text><use href="#sW" transform="translate(70 82) scale(0.55)"/><text x="88" y="87" font-family="NS,sans-serif" font-weight="800" font-size="14" fill="#2a1806" text-anchor="middle">3</text><path d="M102 82h18M115 78l5 4-5 4" stroke="#2a1806" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/><use href="#sW" transform="translate(138 82) scale(0.68)"/><rect x="100" y="55" width="56" height="15" rx="4" fill="#009999"/><text x="128" y="66" font-family="NS,sans-serif" font-weight="800" font-size="9.5" fill="#fff" text-anchor="middle">후 플레이어</text></svg><p><i>4</i>동점이면 <span class="nw">후 플레이어</span></p></div>
   </div>
   <div class="card rlines">
-   <div class="rline"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>매 턴 +10 · 남은 점수 이월</div>
-   <div class="rline"><svg viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A9.8 9.8 0 0 1 12 5c5 0 9 4.5 10 7a12 12 0 0 1-2.6 3.6M6.3 6.3A12 12 0 0 0 2 12c1 2.5 5 7 10 7a9.6 9.6 0 0 0 4.2-1"/></svg>상대 점수·베팅 비공개</div>
+   <div class="rline"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span data-ptu>매 턴 +10{P} · 남은 {P} 이월</span></div>
+   <div class="rline"><svg viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A9.8 9.8 0 0 1 12 5c5 0 9 4.5 10 7a12 12 0 0 1-2.6 3.6M6.3 6.3A12 12 0 0 0 2 12c1 2.5 5 7 10 7a9.6 9.6 0 0 0 4.2-1"/></svg><span data-ptu>상대 {P}·베팅 비공개</span></div>
    <div class="tips" id="betTips"><b>베팅 요령</b><ul>
     <li>상대가 두 칸만 더 가지면 오목이면, <span class="nw">두 칸 다</span> 막아야 해요</li>
-    <li>승부가 걸린 칸에 몰아 걸고, 나머지는 1점씩</li>
+    <li data-ptu>승부가 걸린 칸에 몰아 걸고, 나머지는 1{P}씩</li>
     <li>후 플레이어는 <span class="nw">같기만 해도</span> 내 돌</li>
    </ul></div>
    <details class="rules rfull"><summary><svg viewBox="0 0 24 24"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5zM5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/></svg>규칙 전문 · 용어</summary>
     <ol>
      <li>19줄 판에서 둘이 둬요. 첫 선 플레이어는 동전으로 정하고, 매 턴 바뀌어요.</li>
-     <li>매 턴 둘 다 10점을 받아요. 안 쓴 점수는 다음 턴으로 이월돼요.</li>
+     <li data-ptu>매 턴 둘 다 10{P을} 받아요. 안 쓴 {P은} 다음 턴으로 이월돼요.</li>
      <li>선 플레이어가 일자로 이어진 빈칸 세 개를 골라요(가로·세로·대각선).</li>
-     <li>둘이 A·B·C에 몰래 걸어요. 칸마다 1점 이상, 합계는 가진 점수까지.</li>
+     <li data-ptu>둘이 A·B·C에 몰래 걸어요. 칸마다 1{P} 이상, 합계는 가진 {P}까지.</li>
      <li>칸마다 더 많이 건 쪽 돌이 놓여요. 같으면 그 턴의 후 플레이어.</li>
-     <li>건 점수는 이기든 지든 사라져요.</li>
-     <li>대국 중엔 상대 점수와 베팅이 안 보여요. 끝난 뒤 복기에서 모두 공개돼요.</li>
+     <li data-ptu>건 {P은} 이기든 지든 사라져요.</li>
+     <li data-ptu>대국 중엔 상대 {P과} 베팅이 안 보여요. 끝난 뒤 복기에서 모두 공개돼요.</li>
      <li>정확히 5개면 승리. 6개 이상은 무효예요. 3·3,&nbsp;4·4는 괜찮아요.</li>
      <li>한 턴에 둘 다 오목이면 줄이 많은 쪽, 같으면 그 턴의 후 플레이어가 이겨요.</li>
-     <li>시간을 넘기면 세 칸은 자동, 베팅은 칸마다 1점. <span class="nw">3턴 연속이면</span> 기권패.</li>
+     <li data-ptu>시간을 넘기면 세 칸은 자동, 베팅은 칸마다 1{P}. <span class="nw">3턴 연속이면</span> 기권패.</li>
      <li>랭크전은 점수 차 150점 안에서 짝지어요. 20초쯤 기다려도 짝이 없으면 AI가 대신 들어와요.</li>
      <li>랭크 점수는 티어가 낮을수록 많이 오르고 덜 깎여요. 높을수록 덜 오르고 더 깎여요. 2연승·2연패부터는 더 오르고 더 내려가요.</li>
      <li>시즌은 3달마다 새로 시작해요(시즌 1은 모두 1000점). 지난 시즌 티어의 한 단계 아래 최저점에서 배치 5판부터 다시 해요. 골드 이하와 기록이 없으면 900점이에요.</li>
@@ -1444,12 +1528,24 @@ ul.rknote li{text-wrap:balance}
   </defs></svg>
  </div>
 
+ <div class="tab hide" id="tab-rwd">
+  <div class="card rwbar hide" id="rwBar" role="region" aria-label="받을 보상"></div>
+  <div id="rwdBody"></div>
+ </div>
+
+ <div class="tab hide" id="tab-shop">
+  <div class="card shopc"><div class="chead"><h2 id="shopT">상점</h2></div><div id="shopPrev"></div></div>
+  <div class="seg row" id="shopSeg" role="group" aria-label="상점 보기"><button data-act="ecotab" data-v="shop">상품</button><button data-act="ecotab" data-v="inv">보관함</button></div>
+  <div id="shopBody"></div>
+ </div>
+
  <nav class="tabbar" aria-label="메뉴">
   <button data-act="tab" data-k="home"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M3.5 9.2h17M3.5 14.8h17M9.2 3.5v17M14.8 3.5v17"/></svg><span>대국</span><i class="pip rwpip" aria-hidden="true"></i></button>
   <button data-act="tab" data-k="rank" class="tbrank"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg><span>랭크</span><i class="pip" id="pipRank"></i><svg class="tlk" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
   <button data-act="tab" data-k="pal"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="8" r="3.5"/><path d="M3 20a6.5 6.5 0 0 1 13 0"/><path d="M19 8v6M16 11h6"/></svg><span>친구</span><b class="tbn" aria-hidden="true"></b></button>
   <button data-act="tab" data-k="rec"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-8"/><path d="M15 7h5v5"/><path d="M3 21h18"/></svg><span>전적</span></button>
-  <button data-act="tab" data-k="rule"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h7"/></svg><span>규칙</span></button>
+  <button data-act="tab" data-k="rwd" aria-label="보상"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8.5" width="17" height="4" rx="1"/><path d="M5 12.5V20h14v-7.5M12 8.5V20M12 8.5C10.5 5 7 4.5 7 6.6 7 8 9.5 8.5 12 8.5zM12 8.5c1.5-3.5 5-4 5-1.9 0 1.4-2.5 1.9-5 1.9z"/></svg><span>보상</span><b class="tbn" aria-hidden="true"></b></button>
+  <button data-act="tab" data-k="shop"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8h13l-1 12.5h-11z"/><path d="M9 10.5V7a3 3 0 0 1 6 0v3.5"/></svg><span>상점</span></button>
  </nav>
 
  <!-- 시트 -->
@@ -1484,7 +1580,7 @@ ul.rknote li{text-wrap:balance}
 </div>
 <div id="coin" class="hide" role="dialog" aria-label="선 플레이어 정하기"><div class="cstage"><div class="coin" id="coinEl"><div class="face f1"><span class="cst st k"></span><b id="cn1"></b></div><div class="face f2"><span class="cst st w"></span><b id="cn2"></b></div></div><p class="ctext" id="ctext"></p><p class="csub" id="csub"></p></div></div>
 <div id="cover" class="hide"></div>
-<div id="welcome" class="hide" role="dialog" aria-modal="true" aria-labelledby="wlT"><div class="wcard"><svg class="wart" id="wart" viewBox="0 0 240 132" aria-hidden="true"></svg><div><h2 id="wlT">처음 오셨네요</h2><p><span>몰래 건 점수로 돌을 놓는 오목</span><br><span>1분이면 배워요</span></p><button class="btn wide" data-act="wtut">튜토리얼 시작</button><button class="btn ghost wide" data-act="wskip">바로 둘래요</button><button class="btn ghost wide wgl" data-act="wglink">구글로 기록 불러오기</button><button class="linkbtn wgl" data-act="wemail" style="display:block;margin:2px auto 0">이메일로 불러오기</button></div></div></div>
+<div id="welcome" class="hide" role="dialog" aria-modal="true" aria-labelledby="wlT"><div class="wcard"><svg class="wart" id="wart" viewBox="0 0 240 132" aria-hidden="true"></svg><div><h2 id="wlT">처음 오셨네요</h2><p><span data-ptu>몰래 건 {P으로} 돌을 놓는 오목</span><br><span>1분이면 배워요</span></p><button class="btn wide" data-act="wtut">튜토리얼 시작</button><button class="btn ghost wide" data-act="wskip">바로 둘래요</button><button class="btn ghost wide wgl" data-act="wglink">구글로 기록 불러오기</button><button class="linkbtn wgl" data-act="wemail" style="display:block;margin:2px auto 0">이메일로 불러오기</button></div></div></div>
 <!-- 시트는 화면(로비·대국) 밖에 둠: 대국 화면에서도 닉네임 등을 열 수 있게 -->
  <div class="shbg hide" data-act="shclose" id="shbg"></div>
  <div class="lsheet hide" id="sh-acc" role="dialog" aria-label="계정 연결">
@@ -1572,12 +1668,6 @@ ul.rknote li{text-wrap:balance}
   <div class="shh"><h2>프로필</h2><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div id="pfBody"></div>
  </div>
- <div class="lsheet hide shopsh" id="sh-shop" role="dialog" aria-labelledby="shopT">
-  <div class="shh"><div class="sht"><h2 id="shopT">꾸미기</h2><span class="gemchip" id="shopGem"></span></div><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-  <div id="shopPrev"></div>
-  <div class="seg row" id="shopSeg"><button data-act="ecotab" data-v="shop">교환소</button><button data-act="ecotab" data-v="inv">보관함</button><button data-act="ecotab" data-v="quest">과제</button></div>
-  <div id="shopBody"></div>
- </div>
  <div class="lsheet hide chatsh" id="sh-chat" role="dialog" aria-labelledby="chNick">
   <div class="shh chh"><button class="chwho" data-act="frchprof"><span id="chEmb"></span><span class="cht"><b id="chNick">친구</b><span id="chSt"></span></span></button><button class="ibtn" data-act="frchinv" aria-label="대국 신청" title="대국 신청"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M3.5 12h17M12 3.5v17"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg></button><button class="ibtn" data-act="frchmenu" aria-label="더 보기" title="더 보기"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg></button><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div class="chlog" id="chLog" role="log" aria-live="polite" tabindex="0" aria-label="대화 내용"></div>
@@ -1590,6 +1680,13 @@ ul.rknote li{text-wrap:balance}
 <script>
 "use strict";
 {
+// ===== 베팅 단위 이름(디자인팀 3차): 화면 문구는 이 상수 하나로 그림. 'Pt'·'칩' 등으로 바꾸면 조사(을/를·이/가·은/는·과/와·으로/로)까지 자동 =====
+// 문구 안 표시: {P} 단위 · {P을} {P이} {P은} {P과} {P으로} 조사 붙은 단위. HTML 고정 문구는 data-ptu 표시가 붙은 요소를 시작할 때 채움
+const PTU='칩';
+function jo(w,p){const ch=String(w).slice(-1),c=ch.charCodeAt(0);let bat=false,rl=false;
+ if(c>=0xAC00&&c<=0xD7A3){const k=(c-0xAC00)%28;bat=k>0;rl=k===8}else if(/[0-9]/.test(ch)){bat='0136780'.includes(ch);rl='178'.includes(ch)}else{const l=ch.toLowerCase();bat='lmnr'.includes(l);rl='lr'.includes(l)}
+ const M={'을':['을','를'],'이':['이','가'],'은':['은','는'],'과':['과','와']};if(p==='으로')return w+(bat&&!rl?'으로':'로');const m=M[p];return m?w+(bat?m[0]:m[1]):w+p}
+const ptT=t=>String(t).replace(/\{P(을|이|은|과|으로)?\}/g,(_,j)=>j?jo(PTU,j):PTU);
 // ===== ENGINE START =====
 const N=19,DIRS=[[0,1],[1,0],[1,1],[1,-1]];
 const K256=(()=>{const k=[],h=[];let n=2;const isP=x=>{for(let i=2;i*i<=x;i++)if(x%i===0)return false;return true};while(k.length<64){if(isP(n)){if(h.length<8)h.push((Math.pow(n,.5)%1*4294967296)|0);k.push((Math.pow(n,1/3)%1*4294967296)|0)}n++}return{k,h}})();
@@ -1713,22 +1810,30 @@ function replay(gid,meta,docs){
 // 받지 않는 것: 사람의 입찰액, 사람의 남은 점수. 입찰은 사람이 입력하기 전에 AI가 먼저 봉인함.
 const AI_LEVELS={
  // 난이도 회의(11/26, 실사용 '너무 쉽다' 반영): 한 단계씩 올림. AI끼리 다음 단계가 이기는 비율 초보→중수 약 88%, 중수→고수 약 85%, 고수→Ultimate 90%+
- beginner:{name:'초보',rand:.15,noise:.25,infer:false,lamK:.06,top:2,see5:1},
- mid:{name:'중수',rand:.05,noise:.15,infer:false,eval2:true,lamK:.13,top:1,see5:1},
+ beginner:{name:'Easy',rand:.15,noise:.25,infer:false,lamK:.06,top:2,see5:1},
+ mid:{name:'Normal',rand:.05,noise:.15,infer:false,eval2:true,lamK:.13,top:1,see5:1},
  // 고수: Ultimate 엔진을 약하게(표본·입자 적게, 흔들기, 보험·비축 끔, 점수 더 아낌, 최선 대응 베팅은 80%만)
- pro:{name:'고수',rand:0,noise:1,jitter:.5,bidNoise:.3,res:.3,infer:true,eval2:true,lamK:.8,top:1,see5:1,crit3:1,types:[-2,-3],aib:[0,3000,1000,500],nsK:2,br:true,desp:.5,S:6,np:14,mixT:6,tempo:.45,force:1,brP:.8},
- ultimate:{name:'Ultimate',rand:0,noise:0,jitter:.03,bidNoise:.15,res:.3,infer:true,eval2:true,lamK:.45,top:1,see5:1,crit3:1,types:[-2,-3,-4],aib:[0,3000,1000,500],nsK:2,learn:true,
+ pro:{name:'Hard',rand:0,noise:1,jitter:.5,bidNoise:.3,res:.3,infer:true,eval2:true,lamK:.8,top:1,see5:1,crit3:1,types:[-2,-3],aib:[0,3000,1000,500],nsK:2,br:true,desp:.5,S:6,np:14,mixT:6,tempo:.45,force:1,brP:.7,
+  // 막아야 하는 턴(지면 상대 오목)은 항상 최선 대응(초보에게 점수가 더 많은데도 1,1,1로 지던 약점 보완), 대신 평소 최선 대응 비율 0.8→0.7로 낮춰 중수 상대 세기는 유지
+  brCrit:1},
+ ultimate:{name:'Godlike',rand:0,noise:0,jitter:.03,bidNoise:.15,res:.3,infer:true,eval2:true,lamK:.45,top:1,see5:1,crit3:1,types:[-2,-3,-4],aib:[0,3000,1000,500],nsK:2,learn:true,
   // 2세대: 상대 점수 추적(입자 필터) + 최선 대응 + 질 수 있는 판의 보험·비축 + 비슷한 수 섞기
-  br:true,desp:.5,ins:1.25,insAdd:3,insSmooth:true,resv:.6,insMax:true,mixT:3,
+  br:true,desp:.5,ins:1.1,insAdd:0,insSmooth:true,resv:.6,insMax:true,mixT:3,
   // 4세대: 지정할 때 내 줄을 키우는 칸을 더 높이 치고(tempo), 다음 턴 상대의 한 턴 오목 위험을 줄이는 칸을 고름(dThreat)
-  tempo:.45,dThreat:.3,
+  tempo:.45,dThreat:.6,
   // 내 한 칸 오목 자리를 지정에 넣어 상대가 막느라 점수를 쓰게 함(눈에 보이는 오목 기회를 그냥 넘기지 않음)
   force:1,
   // 지정 후보를 '판돈이 큰 세 칸' 상위 30개로 좁힘(AI 평가: 강한 상대 승률↑, 더 빠름)
   dPre:30,
   // 5세대(11/26 r2): 입자 필터에 '모으기형(-4)' 성향 추가 + 상대가 선일 때 '더 가져가도 오목'인 공격만 확실한 공격으로 봄(pfF),
   // 상대 입찰 표본 40개·입자 60개로 늘림(고수 상대 승률↑, 계산 시간은 서버 기준 여유 있음)
-  pfF:1,S:40,np:60}
+  pfF:1,S:40,np:60,
+  // 6세대(11/26 r3): 새 고수(막아야 하는 턴은 항상 최선 대응) 상대로 진 판은 대부분 '상대 선 턴에 상대가 4목을 만든 뒤 점수가 모자라 못 막음'
+  // → 지정할 때 상대 한 턴 오목 위험을 더 크게 깎고(dThreat .3→.6), 입찰할 때 상대 줄(위협)의 가치를 조금 더 높게 봄(opK 1.1→1.3)
+  opK:1.3,
+  // 7세대(11/26 r5): 초보·중수에게 진 판은 '막을 때 보험을 상대 점수 최대 추정의 1.25배+3으로 크게 걸어 점수를 다 쓰고, 다음 위협을 못 막음'
+  // → 보험 1.25배+3 → 1.1배(위 ins·insAdd), 그리고 보험 상한을 '상대 점수 평균 추정+12'로 묶음(초보 97.5→99.3%, 자기대국 65.8%)
+  insCap:12}
 };
 const AIW=[0,1,8,60,600],AI_WIN=1e6;
 function aiRun(bd,r,c,dr,dc,col){let L=1,y=r+dr,x=c+dc;while(inB(y,x)&&bd[y][x]===col){L++;y+=dr;x+=dc}y=r-dr;x=c-dc;while(inB(y,x)&&bd[y][x]===col){L++;y-=dr;x-=dc}return L}
@@ -2130,7 +2235,8 @@ function aiBid0(v){
  if(lv.rand>=.7||(lv.bidRand&&rnd()<lv.bidRand)){const b=[1,1,1];let left=Math.floor((v.aiPts-3)*(.2+rnd()*.5));const imp=[0,1,2].map(i=>V[7]-V[7^(1<<i)]);const hot=imp.indexOf(Math.max(...imp));
   while(left-->0)b[rnd()<.6?hot:Math.floor(rnd()*3)]++;return b}
  // brP: 최선 대응 베팅을 쓸 확률(고수를 Ultimate보다 한 단계 약하게)
- if(lv.br&&(lv.brP==null||rnd()<lv.brP)){AI_JOINT=!!lv.joint;AI_MIX=0;AI_PFF=!!lv.pfF;AI_LRN.t=v.t;AI_LRN.ctx=null;const om2=aiPFom(v.mem,lv),lam=aiLam(v,lv,om2,V);v.mem.cur={t:v.t,V,aiPts:v.aiPts,level:v.level};
+ // brCrit: 이번 턴에 지면 상대 오목이 되는 판(막아야 하는 턴)이면 brP와 상관없이 최선 대응 베팅을 씀
+ if(lv.br&&(lv.brP==null||rnd()<lv.brP||(lv.brCrit&&Math.min(...V)<=-AI_WIN))){AI_JOINT=!!lv.joint;AI_MIX=0;AI_PFF=!!lv.pfF;AI_LRN.t=v.t;AI_LRN.ctx=null;const om2=aiPFom(v.mem,lv),lam=aiLam(v,lv,om2,V);v.mem.cur={t:v.t,V,aiPts:v.aiPts,level:v.level};
   const smp=aiOppSamples(v.mem,lv,V,v.aiSun,v.aiPts,lv.S||20,rnd);
   // 내 오목 공격(선): 상대도 내 점수를 모르므로 '싸게 막는' 상대를 일부 섞어 봄(전부 막을 거라고만 보고 공격을 포기하지 않게)
   if(lv.cbF&&v.aiSun&&Math.max(...V)>=AI_WIN&&Math.min(...V)>-AI_WIN)for(let k=0;k<smp.length;k++)if(rnd()<lv.cbF)smp[k]=smp[k].map(x=>x>=6?Math.max(1,Math.round(x*(.15+.5*rnd()))):x);
@@ -2151,6 +2257,8 @@ function aiBid0(v){
   const crit=Math.min(...V)<=-AI_WIN||(lv.smoothWin&&Math.max(...V)>=AI_WIN);
   if(lv.ins&&Math.min(...V)<=-AI_WIN){const rb=(()=>{const r0=aiBRsamples(V,smp,v.aiPts,v.aiSun,lam,rnd,0);let B=Math.min(om.oppMax,Math.ceil(om2.oppMax*lv.ins+(lv.insAdd||0)));
    const iw=v.aiSun?(lv.insW||0):(lv.insWo!=null?lv.insWo:(lv.insW||0));if(iw>0)B=Math.max(B,Math.ceil(om2.oppEst+iw*Math.max(0,om.oppMax-om2.oppEst)));
+   // insCap: 입자 최대가 평균 추정보다 훨씬 높으면(내가 1,1,1로 져서 상대 지출을 거의 모를 때) 보험 상한을 '평균 추정+insCap'으로 묶음 → 과다 지출 방지
+   if(lv.insCap!=null)B=Math.min(B,Math.ceil(om2.oppEst+lv.insCap));
    const ri=aiInsure(V,smp,v.aiPts,v.aiSun,lam,B,r0);if(ri!==r0)return ri.b;
    // 완전히 막을 방법이 없으면: 예측이 틀릴 수 있다고 보고 막을 확률이 가장 높은 쪽으로
    if(lv.insMax&&!aiSafe(V,r0.b,v.aiSun,B)){const mm=aiMaximin(V,smp,v.aiPts,v.aiSun,lam);if(mm)return mm.b}
@@ -2237,7 +2345,7 @@ function toastPos(t){t.style.top='';t.style.bottom='';const sh=[...document.quer
  if(sh){const h=sh.getBoundingClientRect().height,top=sh.classList.contains('lsheet')&&window.innerWidth<600?window.innerHeight-h:(window.innerHeight-h)/2;t.style.bottom='auto';t.style.top=Math.max(8,top-(t.offsetHeight||40)-10)+'px';return}
  if(UI.view!=='game'){const tb=[...document.querySelectorAll('.tabbar')].find(e=>e.getClientRects().length&&getComputedStyle(e).position==='fixed'&&getComputedStyle(e).visibility!=='hidden');t.style.bottom=(tb?window.innerHeight-tb.getBoundingClientRect().top+10:24)+'px'}}
 let toastT,toastQ=0;function toast(m){if(UI.view==='game'&&typeof revealing==='function'&&revealing()){clearTimeout(toastQ);toastQ=setTimeout(()=>toast(m),Math.max(120,UI.rv.until-Date.now()+150));return}const t=$('#toast');t.textContent=m;t.classList.add('on');toastPos(t);clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2200)}
-const RULES_MINI=`<details class="rmini"><summary>처음이라면 · 규칙 요약</summary><ol><li>선 플레이어가 이어진 빈칸 세 개를 골라요</li><li>둘이 가진 점수를 세 칸에 몰래 나눠 걸어요</li><li>칸마다 더 건 쪽 돌, 같으면 후 플레이어 돌</li><li>정확히 5개를 먼저 이으면 승리</li><li>매 턴 +10점 · 안 쓴 점수는 이월</li></ol></details>`;
+const RULES_MINI=`<details class="rmini"><summary>처음이라면 · 규칙 요약</summary><ol><li>선 플레이어가 이어진 빈칸 세 개를 골라요</li><li>${ptT('둘이 가진 {P을} 세 칸에 몰래 나눠 걸어요')}</li><li>칸마다 더 건 쪽 돌, 같으면 후 플레이어 돌</li><li>정확히 5개를 먼저 이으면 승리</li><li>${ptT('매 턴 +10{P} · 안 쓴 {P은} 이월')}</li></ol></details>`;
 const iga=w=>{const c=String(w||'').trim(),ch=c.charCodeAt(c.length-1);return c+(ch>=0xAC00&&ch<=0xD7A3?((ch-0xAC00)%28?'이':'가'):'가')};
 const ago=ms=>{const s=Math.max(0,(Date.now()-ms)/1000);return s<60?'방금':s<3600?Math.floor(s/60)+'분 전':Math.floor(s/3600)+'시간 전'};
 const deepMerge=(t,s)=>{for(const k in s){if(k==='__proto__'||k==='constructor'||k==='prototype')continue;if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])){if(!t[k]||typeof t[k]!=='object')t[k]={};deepMerge(t[k],s[k])}else t[k]=s[k]}return t};
@@ -2266,14 +2374,14 @@ function boardSVG(bd,o){
  const lift=new Map();if(o.fives&&o.ldelay!=null)o.fives.forEach(([p0,p1])=>{const dr=Math.sign(p1[0]-p0[0]),dc=Math.sign(p1[1]-p0[1]);for(let k=0;k<5;k++)lift.set((p0[0]+dr*k)+','+(p0[1]+dc*k),k)});
  if(o.outCells)o.outCells.forEach(([r,c],i)=>{s+=`<g class="chipout" style="animation-delay:${(i*RS+RD-el).toFixed(3)}s">${chipSet(X(c),Y(r),i)}</g>`});
  for(let r=0;r<N;r++)for(let c=0;c<N;c++){const v=bd[r][c];if(!v)continue;const k=r+','+c,f=fresh.has(k);
-  const st=`<use href="#s${v===1?'B':'W'}${window.ECO_SK||''}" x="${X(c)}" y="${Y(r)}"/>`,lf=lift.has(k)?`<g transform="translate(${X(c)} ${Y(r)})"><g class="lift" style="animation-delay:${(o.ldelay+lift.get(k)*.09).toFixed(3)}s"><use href="#s${v===1?'B':'W'}${window.ECO_SK||''}"/></g></g>`:st;
+  const sk=v===1?(o.skB!=null?o.skB:window.ECO_SK||''):(o.skW!=null?o.skW:window.ECO_SK||''),st=`<use href="#s${v===1?'B':'W'}${sk}" x="${X(c)}" y="${Y(r)}"/>`,lf=lift.has(k)?`<g transform="translate(${X(c)} ${Y(r)})"><g class="lift" style="animation-delay:${(o.ldelay+lift.get(k)*.09).toFixed(3)}s"><use href="#s${v===1?'B':'W'}${sk}"/></g></g>`:st;
   s+=`<g${f?` class="drop" style="animation-delay:${(fresh.get(k)*RS+RD-el).toFixed(3)}s"`:''}>${lf}</g>`}
  // 지난 턴 세 칸: 칸 색 고리(개봉 중엔 착지할 때 생김)
  if(o.lastCells)o.lastCells.forEach(([r,c],i)=>{const d=(i*RS+RL-el).toFixed(3),f=fresh.size;
   s+=`<circle cx="${X(c)}" cy="${Y(r)}" r="15.6" fill="none" stroke="${HEX[i]}" stroke-width="2.4"${RDASH[i]}${f?` class="ringin" style="animation-delay:${d}s"`:''}/>`;
   if(f)s+=`<circle class="pulse1" style="animation-delay:${d}s" cx="${X(c)}" cy="${Y(r)}" r="15.6" fill="none" stroke="${HEX[i]}" stroke-width="2"/>`});
  if(o.tags)o.tags.forEach(([r,c],i)=>{s+=chipMini(X(c),Y(r),i)});
- if(o.cells)o.cells.forEach(([r,c],i)=>{s+=chipSet(X(c),Y(r),i)});
+ if(o.cells)o.cells.forEach(([r,c],i)=>{s+=`<g class="bchip" data-i="${i}"><circle class="bring" cx="${X(c)}" cy="${Y(r)}" r="19" fill="none" stroke="${HEX[i]}" style="stroke:${LCOL[i]}" stroke-width="3.4"/>${chipSet(X(c),Y(r),i)}</g>`});
  if(o.preview)o.preview.forEach(([r,c],i)=>{s+=chipPick(X(c),Y(r),i)});
  // 6목 이상: 빨간 줄(승리 아님) + '무효' 글씨는 그 줄이 처음 생겼을 때 한 번만(2.5초 뒤 사라짐). 다시 그려도 이어서 흐려지게 시작 시각을 기억
  if(o.overs)o.overs.forEach(([p0,p1])=>{const x1=X(p0[1]),y1=Y(p0[0]),x2=X(p1[1]),y2=Y(p1[0]);const L=Math.hypot(x2-x1,y2-y1)||1,ux=(x2-x1)/L,uy=(y2-y1)/L;let bx=x2+ux*36,by=y2+uy*36;if(bx<26||bx>SZ-26||by<18||by>SZ-18){bx=x1-ux*36;by=y1-uy*36}bx=Math.max(26,Math.min(SZ-26,bx));by=Math.max(18,Math.min(SZ-18,by));
@@ -2330,7 +2438,7 @@ function oppStatus(vs,id){
 // 상대 연결 끊김: 8초 넘게 안 보일 때만 표시(잠깐 끊기는 건 무시)
 function oppOff(id){if(UI.mode!=='online'||!G.room||!id)return false;G.offSince=G.offSince||{};if(G.online.has(id)){delete G.offSince[id];return false}if(!G.offSince[id])G.offSince[id]=Date.now();return Date.now()-G.offSince[id]>8000}
 // 관리자만: 랭크전 AI 상대의 실제 모델(연승으로 Ultimate가 붙은 경우 원래 모델도)
-const lvName=k=>k==='ultimate'?'Ultimate':(AI_LEVELS[k]&&AI_LEVELS[k].name)||k;
+const lvName=k=>(AI_LEVELS[k]&&AI_LEVELS[k].name)||k;
 function botModelTag(s){if(!s||!s.bot||!s.ai)return'';const base=(BOTMAP.get(s.bot.id)||{}).lv;return ' · '+lvName(s.ai)+(base&&base!==s.ai?` (원래 ${lvName(base)})`:'')}
 function renderPlayers(){
  const vs=vstate(),ob=$('#oppbar'),mb=$('#mebar'),gm=$('#gmid');if(!ob)return;
@@ -2342,6 +2450,8 @@ function renderPlayers(){
   const off=!mine&&!over&&oppOff(id);
   let tags=live&&!rv?`<span class="tag${isSun?' j':''}">${isSun?'선':'후'}<span class="tl"> 플레이어</span></span>`:'';
   if(!mine){const os=rv?'':oppStatus(vs,id);tags+=`<span class="tag${os&&os[0]?' '+os[0]:''}${os?'':' hide'}" id="oppTag"${os&&os[0].includes('sealtag')?' data-act="peek" role="button" aria-label="AI 봉인 코드"':''}>${os?os[1]:''}</span>`}
+  // 관리자만: 랭크전 AI 상대의 실제 모델 표시(연승·연패로 바뀐 경우 원래 모델도)
+  if(!mine&&UI.mode==='local'&&L.s&&L.s.bot&&L.s.ai&&isAdmin()){const base=(BOTMAP.get(L.s.bot.id)||{}).lv;tags=`<span class="tag j" id="admModel">${lvName(L.s.ai)}${base&&base!==L.s.ai?' · 원래 '+lvName(base):''}</span>`+tags}
   if(off)tags+='<span class="tag w">연결 끊김</span>';
   if(timed&&w)tags+=`<span class="tag w">시간 초과 ${w}/3</span>`;
   // 내 점수는 늘 보임, 상대 점수는 대국이 끝난 뒤에만
@@ -2357,7 +2467,7 @@ function renderPlayers(){
     if(rr){const el=(Date.now()-rr.at)/1000,{a,sp,gain}=rr;
      pp=`<div class="pp num">${sp?`<span class="dl m" style="animation-delay:${(-el).toFixed(3)}s">−${sp}</span>`:''}${gain?`<span class="dl ${gain>0?'p':'m'}" style="animation-delay:${((sp?.55:0)-el).toFixed(3)}s">${gain>0?'+':'−'}${Math.abs(gain)}</span>`:''}<span class="coin"></span><span class="ch" data-from="${a}" data-mid="${sp&&gain?a-sp:''}" data-to="${v}" data-at="${rr.at}">${a}</span></div>`}
     else pp=`<div class="pp num"><span class="coin"></span><span class="ch">${v}</span></div>`}}
-  else if(!over||rv||late)pp=`<div class="pp q" role="button" tabindex="0" data-act="qinfo" aria-label="상대 점수 비공개"><span class="coin"></span>?</div>`;
+  else if(!over||rv||late)pp=`<div class="pp q" role="button" tabindex="0" data-act="qinfo" aria-label="${ptT('상대 {P} 비공개')}"><span class="coin"></span>?</div>`;
   const ring=mine?`<div class="ring hide" id="ring"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" stroke="var(--raise)" stroke-width="5" fill="none"/><circle id="ringArc" cx="24" cy="24" r="20" stroke="var(--jadeink)" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="125.7" stroke-dashoffset="0"/></svg><b id="ringTxt"></b></div>`:'';
   return `<div class="pbar${!coining&&!rv&&actorOf(vs,id)?' turn':''}${tags?'':' notag'}">${ecoPbar(vs,id)}</div>${tags?`<div class="pt">${tags}</div>`:''}</div>${pp}${ring}</div>`};
  ob.innerHTML=bar(opId,false);mb.innerHTML=bar(meId,true);rollNums();
@@ -2401,7 +2511,8 @@ function renderBoard(){
  if(!rv&&!vs.demo){const ov=[...overLines(vs.board,1),...overLines(vs.board,2)];if(ov.length)o.overs=ov}
  if(vs.demo){o.fives=vs.demo;o.fdelay=.2}
  if(UI.mode==='tut'&&TUT[T.s.step].tap&&!UI.sel)o.tap=TUT[T.s.step].tap;
- $('#bov').innerHTML=boardSVG(vs.board,o);if(vs.phase==='review')try{rvaiGhost()}catch(e){}/* FEAT */$('#board').classList.toggle('selok',vs.phase==='designate'&&!!(UI.sel&&UI.sel.cells));
+ /* ECO */try{ecoBoardLook(o,vs)}catch(e){}
+ $('#bov').innerHTML=boardSVG(vs.board,o);try{betHi()}catch(e){}if(vs.phase==='review')try{rvaiGhost()}catch(e){}/* FEAT */$('#board').classList.toggle('selok',vs.phase==='designate'&&!!(UI.sel&&UI.sel.cells));
  // 폰: 베팅은 세 칸 주변 11줄, 고르기는 첫 탭 뒤 13줄로 크게. 개봉 중에는 보던 범위 그대로
  // 아주 작은 판(폭 300px 미만)은 내가 고를 차례에 처음부터 돌 주변을 크게 보여 줌(첫 탭에 갑자기 확대되지 않게)
  const small=window.innerWidth<900&&(UI.boardSize||0)<420,tiny=small&&(UI.boardSize||0)<300;
@@ -2444,7 +2555,7 @@ function revealCards(vs){WAXD=document.documentElement.dataset.theme==='light'?W
  const h=vs.last,me=vs.me,mine=me&&h.bets[me];
  const six=h.cells.some(([r,c])=>{const v=vs.board[r][c];return v&&DIRS.some(([dr,dc])=>aiRun(vs.board,r,c,dr,dc,v)>=6)});
  const who=u=>u===me?'나':(vs.names&&vs.names[u])||'상대';
- return `<div class="rvcards">${h.cells.map((c,i)=>`<div class="rv${me&&h.win[i]===me?' me':''}" style="--i:${i};--k:${HEX[i]};color:${WAXD[i]}"><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span><span class="seal"><b class="sh" style="--dx:-16px;--dy:-9px;width:4px;height:5px"></b><b class="sh" style="--dx:15px;--dy:-11px;width:5px;height:3px;rotate:40deg"></b><b class="sh" style="--dx:3px;--dy:17px;width:3px;height:4px;rotate:-25deg"></b><span class="st ${h.win[i]===vs.A?'k':'w'}" role="img" aria-label="${LBL[i]} 칸 ${esc(who(h.win[i]))} 돌"></span><svg class="wx l" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg><svg class="wx r" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg></span><small>${mine?`내 <b>${h.bets[me][i]}</b>`:'&nbsp;'}</small></div>`).join('')}</div>${six?'<p class="note" style="text-align:center;margin:6px 0 0">6목 무효</p>':''}${me&&h.auto&&h.auto[me]?'<p class="note" style="text-align:center;margin:6px 0 0">시간 초과 · 칸마다 1점으로 걸림</p>':''}`;
+ return `<div class="rvcards">${h.cells.map((c,i)=>`<div class="rv${me&&h.win[i]===me?' me':''}" style="--i:${i};--k:${HEX[i]};color:${WAXD[i]}"><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span><span class="seal"><b class="sh" style="--dx:-16px;--dy:-9px;width:4px;height:5px"></b><b class="sh" style="--dx:15px;--dy:-11px;width:5px;height:3px;rotate:40deg"></b><b class="sh" style="--dx:3px;--dy:17px;width:3px;height:4px;rotate:-25deg"></b><span class="st ${h.win[i]===vs.A?'k':'w'}" role="img" aria-label="${LBL[i]} 칸 ${esc(who(h.win[i]))} 돌"></span><svg class="wx l" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg><svg class="wx r" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg></span><small>${mine?`내 <b>${h.bets[me][i]}</b>`:'&nbsp;'}</small></div>`).join('')}</div>${six?'<p class="note" style="text-align:center;margin:6px 0 0">6목 무효</p>':''}${me&&h.auto&&h.auto[me]?`<p class="note" style="text-align:center;margin:6px 0 0">${ptT('시간 초과 · 칸마다 1{P}씩 걸림')}</p>`:''}`;
 }
 function renderLast(){
  const vs=vstate(),box=$('#last');box.classList.toggle('hide',UI.mode==='tut'||!!UI.review||!vs||!vs.last||revealing());$('#logcard').classList.toggle('hide',UI.mode==='tut'||!vs||!vs.hist.length);
@@ -2467,7 +2578,7 @@ const betTip=(t,bd,cells,col)=>{if(bd&&cells&&col){const b=bd.map(r=>r.slice());
   const pair=c0=>{for(let i=0;i<3;i++)for(let j=i+1;j<3;j++){b0:{const [r1,c1]=cells[i],[r2,c2]=cells[j];
     if(bd[r1][c1]||bd[r2][c2])break b0;const t=bd.map(r=>r.slice());t[r1][c1]=c0;t[r2][c2]=c0;if(aiIsFive(t,r1,c1,c0)||aiIsFive(t,r2,c2,c0))return LBL[i]+'·'+LBL[j]}}return null};
   const po=pair(3-col);if(po)return `${po} 둘 다 내주면 상대 오목`;const pm=pair(col);if(pm)return `${pm} 둘 다 가져가면 내 오목`}
- return t%2?'안 쓴 점수는 다음 턴으로':'숫자를 눌러 입력 · 길게 누르면 빠르게'};
+ return t%2?ptT('안 쓴 {P은} 다음 턴으로'):'숫자를 눌러 입력 · 길게 누르면 빠르게'};
 // 힌트: 처음 3판은 자동, 설정에서 직접 켜면 계속. '오목' 위협 힌트는 AI 초보·중수 대국에서 판 수와 상관없이(설정을 끄지 않았으면)
 const hintOn=()=>{const v=lget('bo-hint');return v==='1'||(v!=='0'&&gamesPlayed()<3)};
 function hint(t){if(UI.mode==='tut'||UI.review)return'';const warn=/오목$/.test(t);
@@ -2478,16 +2589,19 @@ function betRows(cells,pts){
  UI.betPts=pts;
  return `<div class="brole" id="brole"></div><div class="bcols">`+cells.map((c,i)=>`<div class="bcol${i===(UI.bcol||0)?' sel':''}" data-act="bcol" data-i="${i}" style="--k:${LCOL[i]}"><div class="bhd"><span class="lab">${LBL[i]}</span><input type="number" inputmode="numeric" min="1" id="bi${i}" value="${UI.bet[i]}" aria-label="${LBL[i]} 칸(${coord(c[0],c[1])}) 베팅" class="num"></div><div class="bbtn"><button data-act="bm" data-i="${i}" tabindex="-1" aria-label="${LBL[i]} 빼기"><svg viewBox="0 0 24 24"><path d="M6 12h12"/></svg></button><button data-act="bp" data-i="${i}" tabindex="-1" aria-label="${LBL[i]} 더하기"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></button></div></div>`).join('')+`</div><p class="bwhy" id="bwhy" aria-live="polite"></p>`;
 }
-const betFoot=(act,label)=>`<div class="bfoot"><button class="ibtn" data-act="breset" aria-label="1점씩으로 되돌리기">${IC.reset}</button><button class="ibtn qchip" data-act="bq" data-v="5" aria-label="고른 칸에 5점 더하기">+5</button><button class="ibtn qchip" data-act="bq" data-v="10" aria-label="고른 칸에 10점 더하기">+10</button><button class="btn" id="bsub" data-act="${act}" data-t0="${Date.now()}">${IC.lock}${label}</button></div>`;
+const betFoot=(act,label)=>`<div class="bfoot"><button class="ibtn" data-act="breset" aria-label="${ptT('1{P}씩으로 되돌리기')}">${IC.reset}</button><button class="ibtn qchip" data-act="bq" data-v="5" aria-label="${ptT('고른 칸에 5{P} 더하기')}">+5</button><button class="ibtn qchip" data-act="bq" data-v="10" aria-label="${ptT('고른 칸에 10{P} 더하기')}">+10</button><button class="btn" id="bsub" data-act="${act}" data-t0="${Date.now()}">${IC.lock}${label}</button></div>`;
 function myRole(){const vs=vstate(),me=UI.mode==='online'?SEAT:UI.mode==='local'?(L.s&&!L.s.ai?L.actor():'A'):'A';return vs&&vs.sun?(vs.sun===me?'sun':'hu'):''}
+// 지금 입력 중인 줄(A·B·C)과 같은 판 위 칸에 같은 색 고리(반짝) · 다른 칸은 흐리게. 베팅 입력 줄이 보일 때만(봉인 뒤·상대 화면은 그대로)
+function betHi(){const on=!!document.querySelector('#panel .bcol'),j=UI.bcol||0;document.querySelectorAll('#bov .bchip').forEach(g=>{const i=+g.dataset.i;g.classList.toggle('bon',on&&i===j);g.classList.toggle('boff',on&&i!==j)})}
 function updateBetSum(pts){
  const s=UI.bet[0]+UI.bet[1]+UI.bet[2],tg=UI.mode==='tut'&&T.s&&TUT[T.s.step].need,ok=validBets(UI.bet,pts)&&(!tg||UI.bet[tg[0]]===tg[1]),left=pts-s;
  const ro=$('#brole'),btn=$('#bsub');if(!ro)return;if(btn)btn.disabled=!ok;
  const r=myRole();
- ro.innerHTML=`${r?`<span class="tag${r==='sun'?' j':''}">${r==='sun'?'선':'후'}<span class="tl"> 플레이어</span></span>${r==='sun'?'더 걸어야 내 돌':'같아도 내 돌'}`:''}<span class="grow"></span><span class="left">남음 <b id="bleft" class="num${left<0?' bad':''}">${left}</b> / ${pts}</span>`;
+ ro.innerHTML=`${r?`<span class="tag${r==='sun'?' j':''}">${r==='sun'?'선':'후'}<span class="tl"> 플레이어</span></span>${r==='sun'?'더 걸어야 내 돌':'같아도 내 돌'}`:''}<span class="grow"></span><span class="left">남은 ${PTU} <b id="bleft" class="num${left<0?' bad':''}">${left}</b> / ${pts}</span>`;
+ betHi();
  {const j=UI.bcol||0;document.querySelectorAll('.qchip').forEach(b=>b.style.setProperty('--k',LCOL[j]));document.querySelectorAll('.bcol').forEach((x,i)=>x.classList.toggle('sel',i===j));document.querySelectorAll('.qchip').forEach(b=>{b.disabled=left<=0})}
  {const c=document.querySelector('.bcol');if(c&&tg)c.classList.toggle('tgo',UI.bet[tg[0]]!==tg[1]);if(btn&&tg){const t=UI.bet[tg[0]]===tg[1]?'봉인':UI.bet[tg[0]]>tg[1]?'A는 정확히 3':'A에 3 걸기';if(btn.dataset.t!==t){btn.dataset.t=t;btn.innerHTML=(t==='봉인'?IC.lock:'')+t}}}
- const w=$('#bwhy');if(w)w.textContent=ok?'':tg&&validBets(UI.bet,pts)?'':s>pts?`${s-pts}점 초과`:'칸마다 1점 이상';
+ const w=$('#bwhy');if(w)w.textContent=ok?'':tg&&validBets(UI.bet,pts)?'':s>pts?ptT(`${s-pts}{P} 초과`):ptT('칸마다 1{P} 이상');
 }
 function lastLine(vs){const h=vs&&vs.last;if(!h)return'';const me=vs.me,bt=me&&h.bets[me];
  return `<div class="strip"><span class="tn">${h.t}턴</span>${h.cells.map((c,i)=>`<span><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span><span class="mini st ${h.win[i]===vs.A?'k':'w'}"></span>${bt?`<small>내 ${bt[i]}</small>`:me?'':`<small>${esc(vs.names[h.win[i]]||'')}</small>`}</span>`).join('')}</div>`}
@@ -2528,7 +2642,7 @@ function overSheet(vs,o){
  const title=o.title||(vs.winner==null?'무승부':me?(won?'승':'패'):`${esc(vs.names[vs.winner])} 승`);
  const stone=me?(me===vs.A?'k':'w'):vs.winner==null?'k':(vs.winner===vs.A?'k':'w');
  const spent=me?vs.hist.reduce((a,h)=>a+((h.bets[me]||[]).reduce((x,y)=>x+y,0)),0):0;
- const stats=o.stats||(me?[[took,'가져간 칸'],[cells-took,'내준 칸'],[spent,'쓴 점수']]:[[took,esc(vs.names[vs.A])+' 칸'],[cells-took,esc(vs.names[vs.B])+' 칸'],[vs.t,'턴']]);
+ const stats=o.stats||(me?[[took,'가져간 칸'],[cells-took,'내준 칸'],[spent,'쓴 '+PTU]]:[[took,esc(vs.names[vs.A])+' 칸'],[cells-took,esc(vs.names[vs.B])+' 칸'],[vs.t,'턴']]);
  return `<div class="result"><div class="rhead"><span class="st ${stone}"></span><div><div class="big${won?' w':lost?' l':''}">${title}</div><div class="rs">${o.vs?`<span class="tag">${o.vs}</span>`:''}<span class="tag">${esc(vs.reason||'')}</span></div></div></div>
  <div class="rstats">${stats.map(([v,l,c])=>`<div><b class="num${c?' '+c:''}">${v}</b><span>${l}</span></div>`).join('')}</div>${ecoResLine(vs)}${o.note||''}${o.primary||''}
  <div class="rbtns"${o.extra?` style="grid-template-columns:repeat(${(o.extraN||1)+(vs.hist.length?2:1)},minmax(0,1fr))"`:''}>${o.extra||''}${vs.hist.length?`<button class="btn ghost" data-act="review">${IC.replay}복기</button>`:''}<button class="btn ghost" data-act="${o.home||'lobby'}"${vs.hist.length||o.extra?'':' style="grid-column:1/-1"'}>${IC.home}나가기</button></div>${o.status?`<p class="status">${o.status}</p>`:''}</div>`;
@@ -2575,7 +2689,7 @@ function renderPanel2(){
    h=`${hint(betTip(vs.t,vs.board,vs.cells,me===vs.A?1:2))}${betRows(vs.cells,vs.pts[me])}${betFoot('bsubmit','봉인')}`;
   }else{
    const sec=(G.sec.t||{})[vs.t+'|'+vs.key];
-   h=vs.auto[me]?waitBox('시간 초과 · 칸마다 1점'):waitBox('상대 기다리는 중',sec?`<div class="sealed">${ecoMySeal()}${sec.b.map((v,i)=>`<span class="drop2" style="animation-delay:${i*.06}s"><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span>${int(v)}</span>`).join('')}</div>`:'');
+   h=vs.auto[me]?waitBox(ptT('시간 초과 · 칸마다 1{P}')):waitBox('상대 기다리는 중',sec?`<div class="sealed">${ecoMySeal()}${sec.b.map((v,i)=>`<span class="drop2" style="animation-delay:${i*.06}s"><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span>${int(v)}</span>`).join('')}</div>`:'');
   }
  }else if(vs.phase==='reveal'){
   h=waitBox('',G.lostSecret?'<p class="note">베팅한 기기에서만 개봉 가능</p>':'');
@@ -2683,7 +2797,7 @@ function renderRecent(){const box=$('#recent');if(!box)return;const a=archList()
  box.innerHTML=a.length?`<h2>최근</h2><div class="rgrid">${a.map((x,i)=>{const d=x.d,[r,c]=resOf(d);return `<button data-act="arc" data-i="${i}"><b class="${c}">${r}<small>${int(d.hist[d.hist.length-1].t)}턴</small></b><span>${esc(x.label)}</span></button>`}).join('')}</div>`:'<div class="rnone"><h2>최근</h2><p class="sub">아직 없음 · 끝난 대국은 여기서 바로 복기</p></div>'}
 function renderAiResume(){const c=$('#aiResume');if(!c)return;const s=loadLocal();
  if(!s||!s.ai||s.phase==='over'){c.classList.add('hide');return}c.classList.remove('hide');c.className='card resume';
- c.innerHTML=`<svg class="thumb" viewBox="0 0 44 44" aria-hidden="true"><rect width="44" height="44" rx="10" fill="#d9a95e"/><path d="M0 11H44M0 22H44M0 33H44M11 0V44M22 0V44M33 0V44" stroke="#5a3a14" stroke-opacity=".5"/><circle cx="11" cy="22" r="5" fill="#141617"/><circle cx="22" cy="22" r="5" fill="#f6f3ec"/><circle cx="22" cy="11" r="5" fill="#141617"/><circle cx="33" cy="33" r="5" fill="#f6f3ec"/></svg><div class="rt"><b>이어하기</b><span>vs ${esc(s.ai==='ultimate'?'Ultimate':AI_LEVELS[s.ai].name+' AI')} · ${s.t}턴</span></div><button class="go" data-act="lresume" aria-label="이어서 두기"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>`}
+ c.innerHTML=`<svg class="thumb" viewBox="0 0 44 44" aria-hidden="true"><rect width="44" height="44" rx="10" fill="#d9a95e"/><path d="M0 11H44M0 22H44M0 33H44M11 0V44M22 0V44M33 0V44" stroke="#5a3a14" stroke-opacity=".5"/><circle cx="11" cy="22" r="5" fill="#141617"/><circle cx="22" cy="22" r="5" fill="#f6f3ec"/><circle cx="22" cy="11" r="5" fill="#141617"/><circle cx="33" cy="33" r="5" fill="#f6f3ec"/></svg><div class="rt"><b>이어하기</b><span>vs ${esc(AI_LEVELS[s.ai].name+' AI')} · ${s.t}턴</span></div><button class="go" data-act="lresume" aria-label="이어서 두기"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>`}
 // 화면 읽기 프로그램용 진행 알림(보이지 않는 알림 영역). 대국 중 비공개 원칙대로 내 정보와 돌 결과만 읽음
 function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.review)return;if(!$('#coin').classList.contains('hide')){setTimeout(()=>showMyTurn(vs,what),500);return}const v=vstate();if(!v||v.phase!==vs.phase||v.t!==vs.t)return;
  e.querySelector('.st').className='st '+(vs.me===vs.A?'k':'w');e.querySelector('small').textContent=what;e.classList.remove('on');void e.offsetWidth;e.classList.add('on');clearTimeout(showMyTurn.t);showMyTurn.t=setTimeout(()=>e.classList.remove('on'),1550);
@@ -2786,7 +2900,7 @@ function renderAll(){document.body.classList.toggle('rvmode',!!UI.review);{const
  {const v=vstate();if(v&&v.first&&v.t===1&&!v.hist.length&&['designate','bet','reveal'].includes(v.phase))showCoin(v,'bo-coin-'+(UI.mode==='local'?'L'+L.s.id:G.gid))}
  const vs=vstate();if(vs&&vs.phase==='over'&&!revealing())$('#turnres').classList.add('hide');$('#resignBtn').classList.toggle('hide',!(vs&&vs.me&&['designate','bet','reveal','seed'].includes(vs.phase)&&(UI.mode==='online'||(UI.mode==='local'&&L.s&&L.s.bot))&&!UI.review));
  $('#skipBtn').classList.toggle('hide',UI.mode!=='tut'||!!(T.s&&TUT[T.s.step].end));
- $('#gttl').textContent=UI.review?'복기':G.meta&&G.meta.ranked&&UI.mode==='online'?'랭크전':UI.mode==='tut'?'튜토리얼':UI.mode==='local'?(L.s&&L.s.bot?'랭크전'+(isAdmin()?botModelTag(L.s):''):L.s&&L.s.ai?(L.s.ai==='ultimate'?'Ultimate':`${AI_LEVELS[L.s.ai].name} AI`):'한 폰 대국'):(G.meta?`${G.meta.hostNick||''}의 방`:'베팅 오목');
+ $('#gttl').textContent=UI.review?'복기':G.meta&&G.meta.ranked&&UI.mode==='online'?'랭크전':UI.mode==='tut'?'튜토리얼':UI.mode==='local'?(L.s&&L.s.bot?'랭크전'+(isAdmin()?botModelTag(L.s):''):L.s&&L.s.ai?(`${AI_LEVELS[L.s.ai].name} AI`):'한 폰 대국'):(G.meta?`${G.meta.hostNick||''}의 방`:'베팅 오목');
 }
 
 // ===== 온라인: 저장·자동 처리 =====
@@ -3504,7 +3618,7 @@ function mmStart(){
  room.presence({mm:mmMe()}).catch(()=>{});mmPeers(true);renderMM();
 }
 function rankLockDlg(){let top=0;LEVELS.forEach((_,x)=>{if(lvOpen(x)&&x<=1)top=x});const lv=LEVELS[top];
- dialog('랭크는 AI 중수를 이기면 열려요.<br>차례로 도전해 보세요.',`${lv[1]} 도전`,()=>{UI.aiLevel=lv[0];lset('bo-ai',lv[0]);renderLevels();closeSheet();leaveGame();UI.mode='local';L.start(null,lv[0]);show('game');$('#cover').classList.add('hide');renderAll()})}
+ dialog('랭크는 AI Normal을 이기면 열려요.<br>차례로 도전해 보세요.',`${lv[1]} 도전`,()=>{UI.aiLevel=lv[0];lset('bo-ai',lv[0]);renderLevels();closeSheet();leaveGame();UI.mode='local';L.start(null,lv[0]);show('game');$('#cover').classList.add('hide');renderAll()})}
 // 랭크가 처음 열리면 한 번: 열렸다는 안내 + 티어표 간단 설명
 function rankIntro(){if(!rankOpen())return;if(!(user&&user.firebase)&&window.__BO_FB!==false&&(rankIntro.n=(rankIntro.n||0)+1)<5){clearTimeout(rankIntro.t);rankIntro.t=setTimeout(rankIntro,2000);return}const seen=lget('bo-rkintro')==='1',fb=!!(user&&user.firebase),lk=!!(user&&user.google&&user.google()),needLg=fb&&!lk&&lget('bo-rklg')!=='1';
  if(seen&&!needLg)return;if(shOpen||!$('#dlg').classList.contains('hide')||!$('#welcome').classList.contains('hide')){clearTimeout(rankIntro.t);rankIntro.t=setTimeout(rankIntro,4000);return}lset('bo-rkintro','1');if(needLg)lset('bo-rklg','1');
@@ -3579,7 +3693,7 @@ function renderMM(){
   lb.textContent='매칭 취소';b.classList.add('ghost');b.classList.add('mmon');
   const k=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · ±${win}점`;
   if(st.dataset.k!==k){st.dataset.k=k;st.textContent=k}}
- else{const ro=rankOpen();lb.textContent=RANK_MAINT?'랭크전 점검 중':'랭크전';b.classList.toggle('rlock',RANK_MAINT);b.classList.remove('ghost');b.classList.remove('mmon');b.classList.toggle('rlock',RANK_MAINT||!ro);st.dataset.k='';st.textContent=RANK_MAINT?'':!ro?'AI 중수를 이기면 열려요':!UI.ready?'연결 중':off?'':n?`대기 ${n}`:''}
+ else{const ro=rankOpen();lb.textContent=RANK_MAINT?'랭크전 점검 중':'랭크전';b.classList.toggle('rlock',RANK_MAINT);b.classList.remove('ghost');b.classList.remove('mmon');b.classList.toggle('rlock',RANK_MAINT||!ro);st.dataset.k='';st.textContent=RANK_MAINT?'':!ro?'AI Normal을 이기면 열려요':!UI.ready?'연결 중':''}
 }
 function loadCode(){
  const v=($('#codeIn').value||'').trim();let seat=null,sec=null;
@@ -3592,13 +3706,14 @@ function loadCode(){
   lset('bo-seat',seat);lset('bo-secret',sec);location.reload()});
 }
 
-// ===== 로비 메뉴(아래 탭 3개 + 시트) =====
-const TABS=['home','rank','pal','rec','rule'];
+// ===== 로비 메뉴(아래 탭: 대국·랭크·친구·전적·보상·상점 + 시트. 규칙은 머리줄 ? 버튼) =====
+document.querySelectorAll('[data-ptu]').forEach(e=>{e.innerHTML=ptT(e.innerHTML)});
+const TABS=['home','rank','pal','rec','rwd','shop','rule'];
 function renderRankLock(){const ro=rankOpen();document.querySelectorAll('.tabbar [data-act=tab][data-k=rank]').forEach(b=>b.classList.toggle('lk',!ro));renderPips()}
-function setTab(k,quiet){if(!TABS.includes(k))k='home';if(k==='rank'&&!rankOpen()){if(!quiet){rankLockDlg();return}k='home'}if(UI.showCode){UI.showCode=false;try{renderTiers()}catch(e){}}UI.tab=k;lset('bo-tab',k);
+function setTab(k,quiet){if(!TABS.includes(k))k='home';if(k==='rank'&&!rankOpen()){if(!quiet){rankLockDlg();return}k='home'}if(UI.showCode){UI.showCode=false;try{renderTiers()}catch(e){}}if(k!=='rule')UI.backTab=k;if(k==='shop'&&UI.tab!=='shop')ECO.cat=null;UI.tab=k;lset('bo-tab',k);
  TABS.forEach(t=>$('#tab-'+t).classList.toggle('hide',t!==k));
- document.querySelectorAll('.tabbar [data-act=tab]').forEach(b=>{if(b.dataset.k===k)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
- window.scrollTo(0,0);renderPips();try{frRender()}catch(e){}try{rwPaint()}catch(e){}}
+ document.querySelectorAll('.tabbar [data-act=tab],.ltop .hrule').forEach(b=>{if(b.dataset.k===k)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+ window.scrollTo(0,0);renderPips();try{frRender()}catch(e){}try{rwPaint()}catch(e){}if(k==='shop'||k==='rwd')try{ecoPaint()}catch(e){}}
 function renderPips(){
  const now=Date.now(),act=r=>r.status!=='done'&&(r.host===SEAT||r.guest===SEAT)&&r.guest&&now-(r.created||0)<24*3600e3;
  const pr=$('#pipRank'),pf=$('#pipFriend');if(!pr)return;
@@ -3611,10 +3726,12 @@ function openSheet(k){closeSheet(true);const el=$('#sh-'+k);if(!el)return;shOpen
  if(k==='friend')renderRooms();if(k==='set')syncSettings();if(k==='fadd'||k==='fset'){try{frRender()}catch(e){}if(k==='fadd'&&UI.sheetV==='req')setTimeout(()=>{const r=$('#palReq');if(r&&!r.classList.contains('hide'))r.scrollIntoView({block:'start'})},60)}if(k==='friend'&&UI.sheetV==='code')setTimeout(()=>{const c=$('#roomCode');if(c)c.focus()},60);UI.sheetV=null;
  modalOpen(el,k==='nick'?'input[type=text]':null);if(k==='nick')try{nickCostPaint()}catch(e){}}
 function closeSheet(silent){if(UI.showCode){UI.showCode=false;try{renderTiers()}catch(e){}}if(!shOpen)return;$('#sh-'+shOpen).classList.add('hide');modalClose($('#sh-'+shOpen));$('#shbg').classList.add('hide');document.body.classList.remove('shopen');if(shOpen==='nick'){const ok=UI.nickOk;UI.nickOk=false;$('#nickErr').textContent='';if(!ok){$('#nick').value=lget('bo-nick')||''}syncNick();const f=UI.afterNick;UI.afterNick=null;if(ok&&f&&(lget('bo-nick')||'').trim())setTimeout(f,0)}shOpen=null}
-function syncNick(){const t=$('#nickTxt');if(t)t.textContent=(lget('bo-nick')||'').trim()||'닉네임';profSave();try{seenBeat.go&&seenBeat.go()}catch(e){}}
+function syncNick(){const t=$('#nickTxt');if(t)t.textContent=(lget('bo-nick')||'').trim()||'닉네임';try{hdrFit()}catch(e){}profSave();try{seenBeat.go&&seenBeat.go()}catch(e){}}
 function setTheme(v){v=v==='light'?'light':'dark';document.documentElement.dataset.theme=v;{const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',v==='light'?'#f1eee7':'#0f1716')}lset('bo-theme',v);document.querySelectorAll('#themeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)))}
 // ===== 로비 =====
-const LEVELS=[['beginner','초보'],['mid','중수'],['pro','고수'],['ultimate','Ultimate']];
+const LEVELS=[['beginner','Easy'],['mid','Normal'],['pro','Hard'],['ultimate','Godlike']];
+// 난이도 한 줄 소개(고른 난이도 아래)
+const LV_LINE={beginner:'처음이라면 여기서',mid:'기본기를 익히는 단계',pro:'본격적인 심리전',ultimate:'아직 이긴 사람이 거의 없는 AI'};
 // 단계 열기: 앞 단계(또는 그 위 단계)를 한 번이라도 이기면 다음 단계가 열림. 랭크전은 고수 이상을 이겨야 열림
 function aiWinsMap(){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}return r&&typeof r==='object'&&!Array.isArray(r)?r:{}}
 function aiTopWin(){const r=aiWinsMap();let top=-1;LEVELS.forEach(([k],i)=>{const x=r[k];if(x&&typeof x==='object'&&int(x.w)>0)top=i});return top}
@@ -3622,7 +3739,7 @@ const lvOpen=i=>i<=aiTopWin()+1,rankOpen=()=>aiTopWin()>=1; // 랭크전: AI 중
 function lvFix(){const i=LEVELS.findIndex(([k])=>k===UI.aiLevel);if(i<0||!lvOpen(i)){let j=0;LEVELS.forEach((_,x)=>{if(lvOpen(x))j=x});UI.aiLevel=LEVELS[j][0]}}
 function renderAiTime(){const on=lget('bo-aitime')==='1';$('#aitime').innerHTML=`<button data-act="aitime" data-v="0" aria-pressed="${!on}"><svg viewBox="0 0 24 24"><path d="M12 12c-2-2.6-3.6-4-5.5-4a4 4 0 0 0 0 8c1.9 0 3.5-1.4 5.5-4zm0 0c2 2.6 3.6 4 5.5 4a4 4 0 0 0 0-8c-1.9 0-3.5 1.4-5.5 4z"/></svg>무제한</button><button data-act="aitime" data-v="1" aria-pressed="${on}"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>20·30초</button>`}
 function renderFirst(){}
-function renderLevels(){lvFix();$('#levels').innerHTML=LEVELS.map(([k,n],i)=>{const op=lvOpen(i);return `<button data-act="level" data-k="${k}" aria-pressed="${UI.aiLevel===k}"${op?'':` class="lock" aria-disabled="true" aria-label="${n} 잠김"`}><span class="lvn">${op?'':'<svg class="lk" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'}${n}</span><span class="pw" aria-hidden="true">${[0,1,2,3].map(j=>`<i class="${j<=i?'on':''}"></i>`).join('')}</span></button>`}).join('');renderAiRec();try{renderMM()}catch(e){}}
+function renderLevels(){lvFix();{const e=$('#lvLine');if(e){e.textContent=LV_LINE[UI.aiLevel]||'';e.classList.toggle('god',UI.aiLevel==='ultimate')}}$('#levels').innerHTML=LEVELS.map(([k,n],i)=>{const op=lvOpen(i);return `<button data-act="level" data-k="${k}" aria-pressed="${UI.aiLevel===k}"${op?'':` class="lock" aria-disabled="true" aria-label="${n} 잠김"`}><span class="lvn">${op?'':'<svg class="lk" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'}${n}</span><span class="pw" aria-hidden="true">${[0,1,2,3].map(j=>`<i class="${j<=i?'on':''}"></i>`).join('')}</span></button>`}).join('');renderAiRec();try{renderMM()}catch(e){}}
 function renderPresets(){$('#presets').innerHTML=PRESETS.map((p,i)=>`<button class="chip" data-act="preset" data-i="${i}" aria-pressed="${UI.preset===i}"><b>${p.l}</b><span>${p.d?`${p.d}·${p.b}초`:'∞'}</span></button>`).join('')}
 let lobbyRooms=[];
 // 내가 들어갔던 방(이어하기·진행 중 표시용): 이 기기에 최근 8개 기억 → 문서별 구독
@@ -3679,7 +3796,7 @@ const L={
   if(s.aiTok)return;const tok=s.aiTok=Math.random(),t=s.t;
   AIWK.call('bid',this.aiView({cells:s.cells}),()=>aiBid(this.aiView({cells:s.cells}))).then(o=>{if(this.s!==s||s.aiTok!==tok||s.aiBet||s.t!==t)return;s.aiTok=0;if(o.mem)s.mem=o.mem;fin(o.r)})},
  vs(){const s=this.s;const hide=h=>h&&s.ai?Object.assign({},h,{bets:{A:h.bets.A}}):h;
-  return{first:s.first,firstBy:s.firstBy,phase:s.phase,t:s.t,sun:s.sun,hu:s.hu,board:s.bd,pts:s.ai&&s.phase!=='over'?{A:s.pts.A}:s.pts,warn:s.warn,hist:s.ai?s.hist.map(hide):s.hist,last:hide(s.last),cells:s.cells,A:'A',B:'B',me:s.ai?'A':null,names:s.bot?{A:'나',B:s.bot.nick}:s.ai?{A:'나',B:s.ai==='ultimate'?'Ultimate':AI_LEVELS[s.ai].name+' AI'}:{A:(s.names||{}).A||'흑',B:(s.names||{}).B||'백'},actor:!s.ai&&s.phase==='bet'?this.actor():null,winner:s.winner,reason:s.reason,timers:{d:s.td||0,b:s.tb||0},spect:false}},
+  return{first:s.first,firstBy:s.firstBy,phase:s.phase,t:s.t,sun:s.sun,hu:s.hu,board:s.bd,pts:s.ai&&s.phase!=='over'?{A:s.pts.A}:s.pts,warn:s.warn,hist:s.ai?s.hist.map(hide):s.hist,last:hide(s.last),cells:s.cells,A:'A',B:'B',me:s.ai?'A':null,names:s.bot?{A:'나',B:s.bot.nick}:s.ai?{A:'나',B:AI_LEVELS[s.ai].name+' AI'}:{A:(s.names||{}).A||'흑',B:(s.names||{}).B||'백'},actor:!s.ai&&s.phase==='bet'?this.actor():null,winner:s.winner,reason:s.reason,timers:{d:s.td||0,b:s.tb||0},spect:false}},
  panel(){const s=this.s,p=$('#panel'),nm=x=>esc((s.names||{})[x]||(x==='A'?'흑':'백'));
   if(s.ai){const key=['AI',s.phase,s.t,s.stage,JSON.stringify(UI.sel)].join('|');if(key===UI.panelKey){if(s.phase==='bet')updateBetSum(s.pts.A);return}UI.panelKey=key;
    const v=this.vs();
@@ -3693,7 +3810,7 @@ const L={
     // 열린 단계·랭크는 한 줄에 하나씩(가운데 점으로 이어 붙이면 좁은 화면에서 어색하게 끊김)
     const note=u?`<p class="unl">${IC.unlock}<span>${[nx?`${nx[1]} 단계가 열렸어요`:'',u.rank?'랭크전이 열렸어요':''].filter(Boolean).join('<br>')}</span></p>`:'';
     // 처음 판을 졌으면 다음에 할 일을 짧게
-    const first=!u&&s.winner==='B'&&s.ai==='beginner'&&gamesPlayed()<=2?'<p class="note" style="text-align:center;margin:0 0 8px">요령: 승부 칸에 몰아 걸고 나머지는 1점씩</p>':'';
+    const first=!u&&s.winner==='B'&&s.ai==='beginner'&&gamesPlayed()<=2?'<p class="note" style="text-align:center;margin:0 0 8px">'+ptT('요령: 승부 칸에 몰아 걸고 나머지는 1{P}씩')+'</p>':'';
     const ag='<button class="btn ghost" data-act="lagain">한 판 더</button>',rk='<button class="btn ghost" data-act="lrank">랭크전</button>';
     const o=nx?{primary:`<button class="btn wide" data-act="lnext" data-k="${nx[0]}">${nx[1]} 도전</button>`,extra:ag+(u.rank?rk:''),extraN:u.rank?2:1}
      :u&&u.rank?{primary:'<button class="btn wide" data-act="lrank">랭크전 하러 가기</button>',extra:ag,extraN:1}:{primary:'<button class="btn wide" data-act="lagain">한 판 더</button>'};
@@ -3710,7 +3827,7 @@ const L={
   else if(s.phase==='over')p.innerHTML=overSheet(v,{title:s.winner?nm(s.winner)+' 승':'무승부',primary:'<button class="btn wide" data-act="lagain">한 판 더</button>'});
   setSheet(s.phase==='designate'||(s.phase==='bet'&&(s.stage===1||s.stage===3)));
  },
- save(){const s=this.s;if(!s)return;if(s.phase==='over'&&!s.arch){s.arch=1;const v=this.vs();archiveGame({hist:s.hist,A:'A',B:'B',names:v.names,me:v.me,winner:s.winner,reason:s.reason,ai:!!s.ai&&!s.bot},'L'+s.id,s.bot?'랭크전 · '+s.bot.nick:s.ai?(s.ai==='ultimate'?'Ultimate':AI_LEVELS[s.ai].name+' AI'):'한 폰 대국')}if(!s.ai||s.bot)return;if(s.phase==='over'){try{localStorage.removeItem('bo-local')}catch(e){}delete mem['bo-local']}else{const k=s.phase+'|'+s.t;if(this.savedK===k)return;this.savedK=k;
+ save(){const s=this.s;if(!s)return;if(s.phase==='over'&&!s.arch){s.arch=1;const v=this.vs();archiveGame({hist:s.hist,A:'A',B:'B',names:v.names,me:v.me,winner:s.winner,reason:s.reason,ai:!!s.ai&&!s.bot},'L'+s.id,s.bot?'랭크전 · '+s.bot.nick:s.ai?(AI_LEVELS[s.ai].name+' AI'):'한 폰 대국')}if(!s.ai||s.bot)return;if(s.phase==='over'){try{localStorage.removeItem('bo-local')}catch(e){}delete mem['bo-local']}else{const k=s.phase+'|'+s.t;if(this.savedK===k)return;this.savedK=k;
   // AI의 봉인된 베팅은 저장하지 않음(이어 둘 때 새로 봉인)
   const c=Object.assign({},s);delete c.aiBet;delete c.aiSalt;delete c.aiSeal;delete c.aiTok;lset('bo-local',JSON.stringify(c))}},
  resume(){const s=loadLocal();if(!s||!s.ai){toast('이어 둘 판 없음');renderAiResume();return}if(s.td&&s.phase!=='over'){s.ph0=Date.now();s.toThis=false}
@@ -3836,9 +3953,9 @@ const RV={d:null,i:0,
 const TUT=[
  {k:'info',n:1,title:'정확히 5개면 승리',text:'가로·세로·대각선 어디든&nbsp;<b>5개</b> <span style="white-space:nowrap">· 6개 이상은 무효</span>',setup(s){for(let c=7;c<=11;c++)s.bd[9][c]=1;s.bd[8][9]=2;s.bd[10][8]=2;s.bd[8][11]=2;s.bd[10][12]=2;s.demo=[[[9,7],[9,11]]]}},
  {k:'designate',n:2,tap:[9,8],title:'이어진 빈칸 세 개 고르기',text:'세 칸을 고르는 사람이 <b>선 플레이어</b> · 이번엔 나',setup(s){s.bd=emptyBoard();s.bd[9][9]=1;s.bd[8][10]=2;s.bd[10][7]=1;s.bd[11][10]=2;s.last=null;s.hist=[];s.sun='A';s.hu='B'}},
- {k:'bet',n:3,title:'몰래 나눠 걸기',opp:[2,2,2],text:'합계는 내 점수까지<br>상대 베팅은 안 보여요'},
- {k:'result',n:3,title:'몰래 나눠 걸기',text:'건 점수는 사라짐 · 매 턴 <b>+10</b>점'},
- {k:'info',n:4,title:'다 안 걸어도 돼요',text:s=>`<span class="tcar" aria-label="예시: 10점 중 4점만 걸면 6점이 남고, 다음 턴에 6 더하기 10, 16점"><span><small>내 점수</small><b class="num">10</b></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span class="bt"><small>4만 걸기</small><b class="num">6 남음</b></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span class="kp"><small>다음 턴</small><b class="num">16</b></span></span>안 건 점수는 다음 턴으로 <b>이월</b><br>아꼈다가 승부처에 몰아 걸기 · 이게 <b>심리전</b>`},
+ {k:'bet',n:3,title:'몰래 나눠 걸기',opp:[2,2,2],text:ptT('합계는 내 {P}까지<br>상대 베팅은 안 보여요')},
+ {k:'result',n:3,title:'몰래 나눠 걸기',text:ptT('건 {P은} 사라짐 · 매 턴 <b>+10</b>{P}')},
+ {k:'info',n:4,title:'다 안 걸어도 돼요',text:s=>`<span class="tcar" aria-label="${ptT('예시: 10{P} 중 4{P}만 걸면 6{P이} 남고, 다음 턴에 6 더하기 10, 16{P}')}"><span><small>내 ${PTU}</small><b class="num">10</b></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span class="bt"><small>4만 걸기</small><b class="num">6 남음</b></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span class="kp"><small>다음 턴</small><b class="num">16</b></span></span>${ptT('안 건 {P은} 다음 턴으로')} <b>이월</b><br>아꼈다가 승부처에 몰아 걸기 · 이게 <b>심리전</b>`},
  {k:'bet',n:5,title:'동점이면 후 플레이어',opp:[3,3,3],oppPick:true,need:[0,3],text:'상대 3·3·3 공개 · A에 <b>3</b> 걸기'},
  {k:'result',n:5,title:'동점이면 후 플레이어',end:true}
 ];
@@ -3868,7 +3985,7 @@ const T={
   else if(st.k==='bet')h=`<div class="tstep sm"><i>${st.n}</i><div><b>${st.title}</b><small>${st.text}</small></div></div>${betRows(s.cells,s.pts.A)}${betFoot('tsubmit','봉인')}`;
   else if(st.k==='result'){const L=s.last,rows=L.cells.map((c,i)=>`<div class="trow"><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span><span class="vs">나 <b>${L.bets.A[i]}</b> : <b>${L.bets.B[i]}</b> 상대${L.bets.A[i]===L.bets.B[i]?' <span class="tie">동점→후 플레이어</span>':''}</span><span class="nw"><span class="mini st ${L.win[i]==='A'?'k':'w'}"></span> ${L.win[i]==='A'?'나':'상대'}</span></div>`).join('');
    let msg=st.text||'';
-   if(st.end)msg=L.bets.A[0]===L.bets.B[0]&&L.win[0]==='A'?'A 동점 · <b>후 플레이어</b>라서 내 돌':L.bets.A[0]>L.bets.B[0]?'A는 <b>후 플레이어</b>라 3점이면 충분':'A는 3점 미만 · <b>후 플레이어</b>는 같기만 하면 내 돌';
+   if(st.end)msg=L.bets.A[0]===L.bets.B[0]&&L.win[0]==='A'?'A 동점 · <b>후 플레이어</b>라서 내 돌':L.bets.A[0]>L.bets.B[0]?ptT('A는 <b>후 플레이어</b>라 3{P}이면 충분'):ptT('A는 3{P} 미만 · <b>후 플레이어</b>')+'는 같기만 하면 내 돌';
    h=`${head}${rows}<p class="tmsg" style="margin-top:8px">${msg}</p>`+(st.end?`<div class="rbtns" style="grid-template-columns:2fr 1fr"><button class="btn" data-act="tsolo">실전 한 판</button><button class="btn ghost" data-act="tdone">나가기</button></div>`:`<button class="btn wide" data-act="tnext">다음</button>`);
   }
   p.innerHTML=h;if(st.k==='bet')updateBetSum(s.pts.A);
@@ -4139,7 +4256,7 @@ function frRenderProf(){if(shOpen!=='prof'||!FR.prof)return;const u=FR.prof,me=u
   <div class="w2"><small>시즌 ${(RK.season||seasonOf(Date.now())).n} 랭크전</small><b class="num">${rec}</b></div><div><small>연속</small><b>${streak}</b></div></div>
   ${vs?`<div class="pfvs"><span class="lbl">나와의 전적</span><b class="num">${vs.n?`${vs.w}승 ${vs.l}패${vs.d?` ${vs.d}무`:''}`:'아직 없음'}</b><span>${vs.n?(vs.rk===vs.n?'랭크전':vs.rk?`랭크 ${vs.rk} · 일반 ${vs.n-vs.rk}`:'일반 게임'):''}</span></div>`:''}
   ${!P.g&&!t?`<p class="note pfnote">랭크전 ${PLACE}판을 마치면 티어가 정해져요</p>`:''}
-  ${acts?`<div class="pfa">${acts}</div>`:me?'<div class="pfa"><button class="btn" data-act="ecoopen" data-v="inv">내 꾸미기</button></div>':''}${links?`<div class="pfm">${links}</div>`:''}`}
+  ${acts?`<div class="pfa">${acts}</div>`:me&&UI.view==='lobby'?'<div class="pfa"><button class="btn" data-act="ecoopen" data-v="inv">내 보관함</button></div>':''}${links?`<div class="pfm">${links}</div>`:''}`}
 
 // ----- 1:1 대화 -----
 function frOpenChat(u){if(!frIsF(u)){frOpenProf(u);return}FR.chat=u;FR.rx=null;FR.readOpen=null;openSheet('chat');frRenderChat(true);frWatch();frMarkRead();
@@ -4366,6 +4483,7 @@ document.addEventListener('click',e=>{
  else if(a==='lsubmit')L.submit();
  else if(a==='mm'){if(MM.on)mmStop();else mmStart()}
  else if(a==='tab')setTab(b.dataset.k);
+ else if(a==='tabback')setTab(UI.backTab||'home');
  else if(a==='remm'){leaveRoom().then(()=>{setTab('rank',true);mmStart()})}
  else if(a==='showcode'){UI.showCode=!UI.showCode;renderTiers()}
  else if(a==='copycode'){const c=myCode();if(!c){toast('랭크전 1판 후 생성');return}(navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).then(()=>toast('복사됨'),()=>{UI.showCode=true;renderTiers();const r=document.createRange();r.selectNodeContents($('#myCode'));const se=getSelection();se.removeAllRanges();se.addRange(r);toast('길게 눌러 복사')})}
@@ -4401,7 +4519,7 @@ document.addEventListener('click',e=>{
  else if(a==='emlink')accRun('link');
  else if(a==='emlogin')accRun('login');
  else if(a==='emreset')accRun('reset');
- else if(a==='qinfo')toast('상대 점수는 대국이 끝나면 공개돼요');
+ else if(a==='qinfo')toast(ptT('상대 {P은} 대국이 끝나면 공개돼요'));
  else if(a==='hintx'){lset('bo-hint','0');b.closest('.hint').remove();syncSettings();toast('설정에서 다시 켤 수 있어요')}
  else if(a==='tskip')T.skip();
  else if(a==='tdone'){UI.mode='online';goLobby()}
@@ -4633,7 +4751,7 @@ function rvaiJob(i){const d=RV.d,me=d.me||d.A,col=me===d.A?1:2;if(FX.rv.dref!==d
  return{key:FX.rv.key,col,i,seed:parseInt(FX.rv.key.slice(0,8),16)>>>0,turns:d.hist.slice(0,i+1).map(h=>({t:h.t,sun:h.sun===me,cells:h.cells,bets:ok(h.bets[me])?h.bets[me]:[1,1,1],won:h.win.map(w=>w===me)}))}}
 function rvaiKick(i){if(!rvaiAllowed()||!rvaiOn())return;const job=rvaiJob(i),key=job.key;if(FX.rv.res[i]||FX.rv.busy.has(i))return;FX.rv.busy.add(i);
  FXWK.call(job).then(r=>{if(FX.rv.key!==key)return;FX.rv.busy.delete(i);if(r)FX.rv.res[i]=r;else FX.rv.err[i]=1;
-  if(rvaiAllowed()&&RV.i===i){const el=$('#rvai');if(el)el.outerHTML=rvaiBlock(RV.d,i,true);if(r&&r.des)renderBoard();if(r&&FX.rv.said!==key+i){FX.rv.said=key+i;setTimeout(()=>say('Ultimate라면 '+r.bid.map((x,j)=>LBL[j]+' '+x).join(', ')+(r.des?'. 판에 Ultimate가 골랐을 세 칸 표시':'')),900)}}
+  if(rvaiAllowed()&&RV.i===i){const el=$('#rvai');if(el)el.outerHTML=rvaiBlock(RV.d,i,true);if(r&&r.des)renderBoard();if(r&&FX.rv.said!==key+i){FX.rv.said=key+i;setTimeout(()=>say('Godlike라면 '+r.bid.map((x,j)=>LBL[j]+' '+x).join(', ')+(r.des?'. 판에 Ultimate가 골랐을 세 칸 표시':'')),900)}}
   // 다음 턴을 미리(한 턴씩만)
   if(rvaiAllowed()&&RV.i===i&&i+1<RV.d.hist.length&&!FX.rv.res[i+1])setTimeout(()=>{if(rvaiAllowed()&&RV.i===i)rvaiKick(i+1)},400)})}
 // 복기 패널 안 'AI라면?' 줄: 내 베팅 바로 아래에 같은 A·B·C 칩 색으로
@@ -4643,8 +4761,8 @@ function rvaiBlock(d,i,noKick){if(!rvaiAllowed())return '';const me=d.me||d.A,h=
  const mine=h.bets[me]||[];
  const body=r?`<div class="rvaic">${r.bid.map((x,j)=>`<span class="aic"><span class="lab" style="--k:${LCOL[j]}">${LBL[j]}</span><b class="num">${int(x)}</b>${Number.isInteger(mine[j])?`<small aria-hidden="true" class="${x>mine[j]?'up':x<mine[j]?'dn':''}">${x>mine[j]?'▲':x<mine[j]?'▼':'='}</small>`:''}</span>`).join('')}</div>`
   :err?'<p class="rvain">계산하지 못했어요</p>':'<div class="rvaic wait" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span></div>';
- const note=r?`<p class="rvain"><span class="nw">${who} 점수 ${int(r.pts)}점 기준</span>${r.des?' · <span class="nw">점선 = Ultimate의 세 칸</span>':''}</p>`:'';
- return `<div class="rvai" id="rvai" role="group" aria-label="Ultimate라면"><div class="rvaih"><span class="aib">${FX_IC.bulb}AI라면?</span><span class="aiw">Ultimate가 ${who.trim()==='내'?'내':who.trim()} 자리라면</span><button class="linkbtn" data-act="fxrvai" aria-pressed="true">숨기기</button></div>${body}${note}</div>`}
+ const note=r?`<p class="rvain"><span class="nw">${who} ${PTU} ${int(r.pts)} 기준</span>${r.des?' · <span class="nw">점선 = Godlike의 세 칸</span>':''}</p>`:'';
+ return `<div class="rvai" id="rvai" role="group" aria-label="Godlike라면"><div class="rvaih"><span class="aib">${FX_IC.bulb}AI라면?</span><span class="aiw">Ultimate가 ${who.trim()==='내'?'내':who.trim()} 자리라면</span><button class="linkbtn" data-act="fxrvai" aria-pressed="true">숨기기</button></div>${body}${note}</div>`}
 function rvaiGhost(){if(!rvaiAllowed()||!rvaiOn())return;const r=FX.rv.res[RV.i];if(!r||!r.des)return;
  $('#bov').insertAdjacentHTML('beforeend','<g class="aighost" aria-hidden="true" pointer-events="none">'+r.des.map(([y,x],j)=>`<circle cx="${X(x)}" cy="${Y(y)}" r="13.5" fill="#FBF6EA" fill-opacity=".28" stroke="${HEX[j]}" stroke-width="2.6" stroke-dasharray="4 3.2"/><text x="${X(x)}" y="${Y(y)+4.5}" text-anchor="middle" font-family="NS,sans-serif" font-weight="800" font-size="12.5" fill="#3A2510" fill-opacity=".8">${LBL[j]}</text>`).join('')+'</g>')}
 const FX_IC={bulb:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg>',
@@ -4724,13 +4842,22 @@ function pzMake(day){if(PZ.cache&&PZ.cache.day===day)return PZ.cache.pz;const rn
 const PZ={cache:null,bet:[1,1,1],pick:-1};
 // 판정(엄밀): 베팅형은 '확실히 해내고 + 합계가 최소', 고르기는 정답 후보
 function pzJudge(pz,a){if(pz.type==='pick')return a===pz.ans;if(!validBets(a,pz.P))return false;const O=fxOutcomes(pz.bd,pz.cells,1,pz.meSun);return pzGood(O,a,pz.X,pz.meSun,pz.goal)&&a[0]+a[1]+a[2]===pz.best}
-// 설명(짧게, 숫자 위주)
-function pzExplain(pz){const s=pz.meSun?0:1,L=G=>gcells(G).map(i=>LBL[i]).join('·');
- if(pz.type==='pick'){const c=pz.cost[pz.ans];return[`${pz.ans+1}번: 내 오목 칸(${coord(...pz.five)}) 있고 상대 오목 칸 없음`,`상대는 한 칸에 최대 ${pz.X-2}점 · 같으면 상대 돌(상대가 후)`,`오목 칸에 ${pz.X-1}점, 나머지 1점씩 → 합계 ${c}점`,`다른 후보는 ${pz.P}점으로 확실히 이길 수 없어요`]}
- const tie=pz.meSun?'같으면 상대 돌(상대가 후)':'같으면 내 돌(내가 후)',out=[];
- if(pz.goal==='win'){const G=pz.groups[0],n=pc3(G);out.push(n===1?`내가 ${L(G)}만 가져도 오목`:`내가 ${L(G)}를 다 가져야 오목`);out.push(`상대는 한 칸에 최대 ${pz.X-2}점 · ${tie}`);out.push(`${L(G)}에 ${n>1?'칸마다 ':''}${pz.X-1-s}점${n<3?' · 나머지 1점':''} → 합계 ${pz.best}점`)}
- else{for(const G of pz.groups){const n=pc3(G);out.push(n===1?`상대가 ${L(G)}만 가져도 오목 · 상대는 거기에 최대 ${pz.X-2}점`:`상대가 ${L(G)}를 다 가져야 오목 · ${n===3?'세':'두'} 칸 합 최대 ${pz.X-3+n}점`)}
-  out.push(tie);out.push(pz.groups.map(G=>`${pc3(G)>1?L(G)+' 합':L(G)+'에'} ${pz.X-2+pc3(G)*(1-s)}점 이상`).join(' · ')+(pz.n>1?' (나누는 방법 자유)':'')+` → 합계 ${pz.best}점`)}
+// 설명(디자인팀 3차): '왜 그 합이면 되는지' — 상대가 뚫으려면 칸마다 몇 칩이 드는지 더해 보이고, 상대 칩보다 많으면 막힘/확실
+//  선·후: 같으면 후 플레이어 돌. 내가 후면 상대는 칸마다 내 칩 +1, 내가 선이면 내 칩만큼만 걸어도 그 칸을 가져감. 판정 로직은 그대로(pzJudge)
+function pzExplain(pz){const L=G=>gcells(G).map(i=>LBL[i]).join('·'),P=PTU,ex=pz.ex||[1,1,1],ap=pz.meSun?0:1,exs=ex.join('·');
+ const tie=pz.meSun?'같으면 상대 돌(상대가 후 플레이어)':'같으면 내 돌(내가 후 플레이어)';
+ if(pz.type==='pick'){const c=pz.cost[pz.ans];return[`${pz.ans+1}번: 내 오목 칸(${coord(...pz.five)}) 있고 상대 오목 칸 없음`,`상대는 한 칸에 최대 ${pz.X-2}${P} · 같으면 상대 돌(상대가 후 플레이어)`,`오목 칸에 ${pz.X-1}${P}, 나머지 1${P}씩 → 합 ${c}${P}`,`다른 후보는 ${jo(pz.P+P,'으로')}는 확실히 이길 수 없어요`]}
+ const out=[];
+ if(pz.goal==='win'){const G=pz.groups[0],n=pc3(G),need=pz.X-1-(pz.meSun?0:1);
+  out.push(n===1?`내가 ${L(G)}만 가져도 오목`:`내가 ${jo(L(G),'을')} 다 가져야 오목`);
+  out.push(`상대는 막을 칸 하나에 최대 ${pz.X-2}${P} (나머지 두 칸에 1${P}씩)`);
+  out.push(`${tie} → ${L(G)}에 ${n>1?'칸마다 ':''}${jo(need+P,'이')}면 확실`);
+  out.push(`그래서 합 ${jo(pz.best+P,'이')} 최소 (예: ${exs})`)}
+ else{const cost=G=>[0,1,2].map(i=>gcells(G).includes(i)?ex[i]+ap:1),g=pz.groups.map(G=>{const c=cost(G);return{c,t:c.reduce((a,b)=>a+b,0)}}).sort((a,b)=>a.t-b.t)[0];
+  for(const G of pz.groups){const n=pc3(G);out.push(n===1?`상대가 ${L(G)}만 가져도 오목`:`상대가 ${jo(L(G),'을')} 다 가져야 오목`)}
+  out.push(tie);out.push(pz.meSun?`상대는 칸마다 내 ${P}만큼만 걸면 가져가요`:`상대는 칸마다 내 ${P}보다 1${P} 더 필요`);
+  out.push(`${jo(exs,'을')} 걸면 상대는 ${g.c.join('+')} = ${g.t}${P} 필요`);out.push(`상대는 ${pz.X}${P}뿐 → 막힘`);
+  out.push(`그래서 합 ${jo(pz.best+P,'이')} 최소${pz.n>1?' · 나누는 방법은 자유':''}`)}
  return out}
 function pzState(){const day=fxDate(Date.now()),st=fxJ('bo-pz',null);return st&&st.d===day?st:null}
 function pzStreak(){const s=fxJ('bo-pzs',{n:0,last:'',best:0}),y=fxDate(Date.now()-864e5),t=fxDate(Date.now());return{n:s.last===t||s.last===y?s.n|0:0,best:s.best|0,last:s.last}}
@@ -4754,13 +4881,13 @@ function pzAria(pz){const st=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(pz.bd
 function renderPz(){const box=$('#pzBody');if(!box)return;const day=fxDate(Date.now()),pz=pzMake(day),st=pzState(),sk=pzStreak();
  if(!pz){box.innerHTML='<p class="sub">오늘 문제를 만들지 못했어요</p>';return}
  const q=pz.type==='pick'?'확실히 이길 수 있는 세 칸은?':pz.goal==='win'?'가장 적게 써서 확실히 오목 만들기':'가장 적게 써서 상대 오목 확실히 막기';
- const info=`<div class="pzinfo"><span><i class="st k"></i>나 · <b>${pz.meSun?'선':'후'}</b></span><span>내 점수 <b class="num">${pz.P}</b></span><span>상대 점수 <b class="num">${pz.X}</b></span></div>`;
+ const info=`<div class="pzinfo"><span><i class="st k"></i>나 · <b>${pz.meSun?'선':'후'} 플레이어</b></span><span>내 ${PTU} <b class="num">${pz.P}</b></span><span>상대 ${PTU} <b class="num">${pz.X}</b></span></div>`;
  let inp='';
  if(!st){if(pz.type==='pick')inp=`<div class="pzopts" role="radiogroup" aria-label="세 칸 후보">${pz.opts.map((t,j)=>`<button class="chip" role="radio" data-act="fxpzpick" data-i="${j}" aria-checked="${PZ.pick===j}" aria-pressed="${PZ.pick===j}">${j+1}번</button>`).join('')}</div>`;
-  else{const sum=PZ.bet[0]+PZ.bet[1]+PZ.bet[2];inp=`<div class="pzbets">${[0,1,2].map(j=>`<div class="pzb"><span class="lab" style="--k:${LCOL[j]}">${LBL[j]}</span><button class="ibtn f" data-act="fxpzb" data-i="${j}" data-v="-1" aria-label="${LBL[j]} 1점 빼기">−</button><b class="num" id="pzv${j}" aria-live="polite">${PZ.bet[j]}</b><button class="ibtn f" data-act="fxpzb" data-i="${j}" data-v="1" aria-label="${LBL[j]} 1점 더">+</button><button class="ibtn f" data-act="fxpzb" data-i="${j}" data-v="5" aria-label="${LBL[j]} 5점 더">+5</button></div>`).join('')}<p class="pzsum num ${sum>pz.P?'over':''}" id="pzsum">합계 ${sum} / ${pz.P}</p></div>`}
+  else{const sum=PZ.bet[0]+PZ.bet[1]+PZ.bet[2];inp=`<div class="pzbets">${[0,1,2].map(j=>`<div class="pzb"><span class="lab" style="--k:${LCOL[j]}">${LBL[j]}</span><button class="ibtn f" data-act="fxpzb" data-i="${j}" data-v="-1" aria-label="${LBL[j]} ${ptT('1{P} 빼기')}">−</button><b class="num" id="pzv${j}" aria-live="polite">${PZ.bet[j]}</b><button class="ibtn f" data-act="fxpzb" data-i="${j}" data-v="1" aria-label="${LBL[j]} 1${PTU} 더">+</button><button class="ibtn f" data-act="fxpzb" data-i="${j}" data-v="5" aria-label="${LBL[j]} 5${PTU} 더">+5</button></div>`).join('')}<p class="pzsum num ${sum>pz.P?'over':''}" id="pzsum">합 ${sum} / ${pz.P}${PTU}</p></div>`}
   inp+=`<button class="btn wide" data-act="fxpzgo" ${pz.type==='pick'&&PZ.pick<0?'disabled':''}>제출</button>`}
- else{const ok=st.ok,ex=pzExplain(pz),ans=pz.type==='pick'?`정답 ${pz.ans+1}번`:`예: ${pz.ex.map((v,j)=>LBL[j]+' '+v).join(' · ')}`;
-  const mine=pz.type==='pick'?(Number.isInteger(st.a)?`내 답 ${st.a+1}번`:''):(Array.isArray(st.a)?`내 답 ${st.a.map((v,j)=>LBL[j]+' '+v).join(' · ')}`:'');
+ else{const ok=st.ok,ex=pzExplain(pz),ans=pz.type==='pick'?`정답 ${pz.ans+1}번`:`정답 합 ${pz.best}${PTU} (예: ${pz.ex.join('·')})`;
+  const mine=pz.type==='pick'?(Number.isInteger(st.a)?`내 답 ${st.a+1}번`:''):(Array.isArray(st.a)?`내 답 ${st.a.join('·')} (합 ${st.a.reduce((x,y)=>x+y,0)}${PTU})`:'');
   inp=`<div class="pzres ${ok?'ok':'no'}" role="status"><b>${ok?'정답':'아쉬워요'}</b><span class="nw">${esc(mine)}</span><span class="nw">${esc(ans)}</span></div><ul class="pzex">${ex.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="note pznote">${sk.n?`${sk.n}일 연속 · `:''}최고 ${sk.best}일 · 내일 새 문제</p>`}
  box.innerHTML=`<div class="pzhead"><span class="nw">${day.slice(5).replace('-','월 ')}일</span>${PZ_STARS(pz.diff)}<span class="nw">${['','쉬움','보통','어려움'][pz.diff]}</span>${sk.n?`<span class="tag j">${sk.n}일 연속</span>`:''}</div>${pzBoardSVG(pz)}${info}<p class="pzq">${q}</p>${inp}`}
 function pzOpen(){PZ.bet=[1,1,1];PZ.pick=-1;lset('bo-pzseen',fxDate(Date.now()));renderPz();openSheet('puz');try{rwPaint()}catch(e){}}
@@ -4792,9 +4919,9 @@ function renderAna(){const box=$('#anaBody');if(!box)return;const R=anaCalc(arch
  let h='';
  if(!R.n)h+='<p class="sub">끝난 대국이 쌓이면 보여 줘요</p>';
  else{const f=anaPct(R.fs[0],R.fs[1]),s=anaPct(R.ss[0],R.ss[1]),c=anaAvg(R.crit[0],R.crit[1]),nn=anaAvg(R.norm[0],R.norm[1]),o=anaPct(R.ones,R.turns),mx=Math.max(c||0,nn||0,1);
-  h+=`<p class="lbl">승률</p>`+row('선으로 시작',f==null?'–':f+'%',R.fs[1]+'판',bar(f||0,100))+row('후로 시작',s==null?'–':s+'%',R.ss[1]+'판',bar(s||0,100));
-  h+=`<p class="lbl">한 칸 평균 베팅</p>`+row('승부 칸',c==null?'–':c+'점',R.crit[1]+'칸',bar(c||0,mx,'var(--c)'))+row('보통 칸',nn==null?'–':nn+'점',R.norm[1]+'칸',bar(nn||0,mx,'var(--faint)'));
-  h+=`<p class="lbl">베팅 습관</p>`+row('1점씩만 건 턴',o==null?'–':o+'%',R.turns+'턴 중',bar(o||0,100,'var(--b)'));
+  h+=`<p class="lbl">승률</p>`+row('선 플레이어로 시작',f==null?'–':f+'%',R.fs[1]+'판',bar(f||0,100))+row('후 플레이어로 시작',s==null?'–':s+'%',R.ss[1]+'판',bar(s||0,100));
+  h+=`<p class="lbl">한 칸 평균 베팅</p>`+row('승부 칸',c==null?'–':c+PTU,R.crit[1]+'칸',bar(c||0,mx,'var(--c)'))+row('보통 칸',nn==null?'–':nn+PTU,R.norm[1]+'칸',bar(nn||0,mx,'var(--faint)'));
+  h+=`<p class="lbl">베팅 습관</p>`+row(ptT('1{P}씩만 건 턴'),o==null?'–':o+'%',R.turns+'턴 중',bar(o||0,100,'var(--b)'));
   const lz=Object.entries(R.lose).sort((a,b)=>b[1]-a[1]),lt=lz.reduce((a,b)=>a+b[1],0);
   if(lt){h+=`<p class="lbl">자주 지는 장면</p>`+lz.slice(0,2).map(([k,v])=>row(ANA_LOSE[k],v+'판',anaPct(v,lt)+'%',bar(v,lz[0][1],'var(--warn)'))).join('')}
   if(R.n<5)h+='<p class="note anote">판 수가 적어 참고용이에요</p>'}
@@ -4949,7 +5076,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
  if(a==='fxrvai'){lset('bo-rvai',rvaiOn()?'0':'1');UI.panelKey='';renderAll();const f=$('[data-act=fxrvai]');if(f)f.focus({preventScroll:true})}
  else if(a==='fxpuz')pzOpen();
  else if(a==='fxpzb'){const pz=pzMake(fxDate(Date.now()));if(!pz||pzState())return;const others=PZ.bet.reduce((s,v,j)=>j===i?s:s+v,0);PZ.bet[i]=Math.max(1,Math.min(pz.P-others,PZ.bet[i]+(+b.dataset.v)));
-  const v=$('#pzv'+i);if(v)v.textContent=PZ.bet[i];const sm=$('#pzsum'),sum=PZ.bet[0]+PZ.bet[1]+PZ.bet[2];if(sm){sm.textContent=`합계 ${sum} / ${pz.P}`;sm.classList.toggle('over',sum>pz.P)}}
+  const v=$('#pzv'+i);if(v)v.textContent=PZ.bet[i];const sm=$('#pzsum'),sum=PZ.bet[0]+PZ.bet[1]+PZ.bet[2];if(sm){sm.textContent=`합 ${sum} / ${pz.P}${PTU}`;sm.classList.toggle('over',sum>pz.P)}}
  else if(a==='fxpzpick'){PZ.pick=i;renderPz();const f=$(`[data-act=fxpzpick][data-i="${i}"]`);if(f)f.focus({preventScroll:true})}
  else if(a==='fxpzgo'){const pz=pzMake(fxDate(Date.now()));if(!pz||pzState())return;const ans=pz.type==='pick'?PZ.pick:PZ.bet.slice();if(pz.type==='pick'&&ans<0)return;
   const ok=pzJudge(pz,ans);pzRecord(ok,ans);/* ECO */try{ecoEv('pz')}catch(e){}renderPz();renderPzTile();say(ok?'정답':'아쉬워요. 풀이를 확인하세요');const r=$('.pzres');if(r){r.setAttribute('tabindex','-1');r.focus({preventScroll:false})}}
@@ -4971,9 +5098,10 @@ setInterval(()=>{if(UI.view==='game'){emoBtn();emoAiTick()}else{const b=$('#emoB
 setInterval(()=>{try{recapSnap()}catch(e){}},30000);
 setTimeout(()=>{try{renderPzTile();renderAna()}catch(e){}},0);
 
-// ===== 받을 보상 자리(디자인팀 2차 11/26) =====
-// 홈 맨 위 띠 #rwBar(#hTop 안, '이어 하기' 아래): 받을 보상(ready)이나 오늘 새로 할 것(new)이 있을 때만 보임. 없으면 자리도 없음
-// '대국' 탭 점(.rwpip): 받을 보상이 있거나 오늘 아직 안 열어 본 새 문제가 있고, 지금 다른 탭일 때
+// ===== 받을 보상 자리(디자인팀 2차 11/26 → 3차 11/26: 보상 탭으로) =====
+// 띠 #rwBar: '보상' 탭 맨 위. 받을 보상(ready)이 있을 때만 보임 → [모두 받기]. 진행 중 과제는 아래 '오늘의 과제' 목록이 보여 줌
+// '보상' 탭 숫자 배지(.tbn): 받을 보상 개수 — 하단 탭 줄·PC 머리줄 어디서나 보임
+// '대국' 탭 점(.rwpip): 오늘 아직 안 열어 본 새 묘수 문제가 있고 지금 다른 탭일 때(묘수 풀이는 홈 타일)
 // 공급자 등록: rwAdd({id,order,items:()=>[{id,ic,t,sub,st:'ready'|'new'|'prog',act,v,btn,g,p,dot}],claim:async()=>{}})
 //  · ready = 지금 받을 수 있는 보상 → 띠 제목 '받을 보상 n' + [모두 받기](rwClaim: 공급자마다 claim 한 번씩)
 //  · new = 오늘 새로 할 것(예: 묘수 풀이) → 받을 보상이 없을 때 띠 제목으로, [풀기]는 act 실행
@@ -4982,23 +5110,29 @@ const RW={prov:new Map(),busy:false};
 const RW_IC={gift:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="8.5" width="17" height="4" rx="1"/><path d="M5 12.5V20h14v-7.5M12 8.5V20M12 8.5C10.5 5 7 4.5 7 6.6 7 8 9.5 8.5 12 8.5zM12 8.5c1.5-3.5 5-4 5-1.9 0 1.4-2.5 1.9-5 1.9z"/></svg>'};
 function rwAdd(p){if(!p||!p.id)return;RW.prov.set(p.id,p);rwPaint()}
 function rwItems(){const out=[];for(const p of [...RW.prov.values()].sort((a,b)=>(a.order||0)-(b.order||0))){let L=[];try{L=p.items()||[]}catch(e){L=[]}for(const it of L)if(it&&it.t)out.push(Object.assign({pv:p.id},it))}return out}
-function rwPaint(){const el=$('#rwBar');if(!el)return;const L=rwItems(),rd=L.filter(x=>x.st==='ready'),nw=L.filter(x=>x.st==='new');
- const pip=rd.length>0||nw.some(x=>x.dot);document.querySelectorAll('.tabbar [data-k=home] .rwpip').forEach(p=>p.classList.toggle('on',pip&&UI.tab!=='home'));
- const show=rd.length>0||nw.length>0;el.classList.toggle('hide',!show);if(!show){if(el.innerHTML)el.innerHTML='';return}
+function rwPaint(){const el=$('#rwBar');if(!el)return;const L=rwItems(),rd=L.filter(x=>x.st==='ready'),nw=[];
+ document.querySelectorAll('.tabbar [data-k=home] .rwpip').forEach(p=>p.classList.toggle('on',L.some(x=>x.st==='new'&&x.dot)&&UI.tab!=='home'));
+ {const n=rd.length?String(rd.length):'',lb=rd.length?`보상 · 받을 보상 ${rd.length}개`:'보상';document.querySelectorAll('.tabbar [data-k=rwd]').forEach(b=>{const e=b.querySelector('.tbn');if(e&&e.textContent!==n){e.textContent=n;e.classList.toggle('on',!!n)}if(b.getAttribute('aria-label')!==lb)b.setAttribute('aria-label',lb)})}
+ const show=rd.length>0;el.classList.toggle('hide',!show);if(!show){if(el.innerHTML)el.innerHTML='';el.dataset.k='';return}
  let head,top=null;
  if(rd.length){const g=rd.reduce((a,x)=>a+(x.g|0),0);
-  head=`<span class="rwic" aria-hidden="true">${RW_IC.gift}</span><span class="rwt"><b>받을 보상 <i class="rwn num">${rd.length}</i></b><span>${esc(rd.map(x=>x.t).join(' · '))}</span></span><button class="btn small" data-act="rwclaim"${RW.busy?' disabled':''} aria-label="보상 ${rd.length}개 모두 받기${g?` · 옥돌 ${g}`:''}">모두 받기</button>`}
+  head=`<span class="rwic" aria-hidden="true">${RW_IC.gift}</span><span class="rwt"><b>받을 보상 <i class="rwn num">${rd.length}</i></b><span>${esc(rd.length>1?`${rd[0].t} 외 ${rd.length-1}개`:rd[0].t)}</span></span><button class="btn small" data-act="rwclaim"${RW.busy?' disabled':''} aria-label="보상 ${rd.length}개 모두 받기${g?` · 옥돌 ${g}`:''}">모두 받기</button>`}
  else{top=nw[0];head=`<span class="rwic" aria-hidden="true">${top.ic||RW_IC.gift}</span><span class="rwt"><b>${esc(top.t)}${top.dot?'<i class="rwnew">새 문제</i>':''}</b><span>${esc(top.sub||'')}</span></span><button class="btn small" data-act="${esc(top.act||'')}"${top.v?` data-v="${esc(top.v)}"`:''}>${esc(top.btn||'열기')}</button>`}
- const rest=L.filter(x=>x!==top&&x.st!=='ready');
+ const rest=[];
  const chips=rest.length?`<div class="rwchips">${rest.slice(0,4).map(x=>`<span class="rwchip ${esc(x.st)}">${esc(x.t)}${x.p?` <i class="num">${esc(x.p)}</i>`:''}</span>`).join('')}</div>`:'';
  const k=head+chips;if(el.dataset.k!==k){el.dataset.k=k;el.innerHTML=`<div class="rwh">${head}</div>${chips}`}}
 async function rwClaim(){if(RW.busy)return;RW.busy=true;rwPaint();for(const p of RW.prov.values())if(typeof p.claim==='function'){try{await p.claim()}catch(e){}}RW.busy=false;rwPaint()}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act=rwclaim]');if(b)rwClaim()});
+// 배지가 늘 맞게: 승급·업적 조건(랭킹 불러오기 등)은 지갑 변화 없이 바뀌므로 로비에서 2초마다 다시 셈(로컬 값만, 바뀔 때만 DOM 갱신)
+setInterval(()=>{if(UI.view==='lobby'&&document.visibilityState==='visible')try{rwPaint()}catch(e){}},2000);
+// 머리줄 맞추기: 닉네임이 잘리면 '베팅 오목' 글자를 숨기고(로고는 남김) 닉네임 칩에 자리를 줌. 짧은 닉네임은 제목 그대로
+function hdrFit(){const h=$('#lobby .ltop'),t=$('#nickTxt'),h1=h&&h.querySelector('h1');if(!h||!t)return;h.classList.remove('tight');if(t.scrollWidth>t.clientWidth+1||(h1&&h1.scrollWidth>h1.clientWidth+1)||h.scrollWidth>h.clientWidth+1)h.classList.add('tight')}
+{let hz=0;window.addEventListener('resize',()=>{if(!hz)hz=requestAnimationFrame(()=>{hz=0;hdrFit()})});try{document.fonts&&document.fonts.ready.then(()=>hdrFit())}catch(e){}setTimeout(hdrFit,0)}
 // 묘수 풀이: 오늘 문제를 아직 안 풀었으면 '새로 할 것'(보상은 상점 팀의 '오늘의 과제'가 붙으면 그쪽 ready로 들어옴)
 rwAdd({id:'pz',order:10,items:()=>{let pz=null;try{pz=pzMake(fxDate(Date.now()))}catch(e){pz=null}if(!pz||pzState())return[];const sk=pzStreak();
  return[{id:'pz',ic:FX_IC.puz,t:'오늘의 묘수 풀이',sub:['','쉬움','보통','어려움'][pz.diff]+(sk.n?` · ${sk.n}일 연속`:''),st:'new',act:'fxpuz',btn:'풀기',dot:lget('bo-pzseen')!==fxDate(Date.now())}]}});
 // ===== FEAT END =====
-// ===== ECO START (재화·상점 1단계 11/26: 옥돌 지갑 · 오늘의 과제 · 꾸미기 교환소 · 시즌·승급 보상) =====
+// ===== ECO START (재화·상점 1단계 11/26: 옥돌 지갑 · 오늘의 과제 · 상점 · 시즌·승급 보상) =====
 // 병합 메모: 이 블록은 새 함수만 담음. 기존 코드에 끼운 곳은 '/* ECO */' 표시가 붙은 짧은 호출뿐
 // 지갑 wal/{uid} (본인만 읽고 씀, 지우기 금지 — 계정 삭제 때는 비우기만):
 //   g 옥돌 · d 오늘(한국 날짜 번호) · dc 오늘 받은 옥돌(≤150) · dq 오늘 한 번씩 받는 것('w' 하루 첫 승, 'm0'~'m2' 과제)
@@ -5011,10 +5145,10 @@ ECO.q=new Promise(r=>{ECO.ready=r});
 var ECO_SK='';
 const ECO_CAP=150,ECO_GCAP=100,ECO_MAX=99999,ECO_MIN_T=3;
 const ecoDay=()=>Math.floor((Date.now()+KST)/864e5);
-const ECO_SLOTS=['t','n','f','s','w','b','x'],ECO_PUB=['t','n','f','s','x'];
+const ECO_SLOTS=['t','n','f','s','w','b','x'],ECO_PUB=['t','n','f','s','w','b','x']; // 3차: 돌 무늬(w)·판 테마(b)도 상대에게 보임
 const ECO_CAT={t:'칭호',n:'닉네임 장식',f:'문양 테두리',s:'봉인 인장',w:'돌 무늬',b:'판 테마',x:'오목 완성 연출'};
-const ECO_SEE={t:'랭킹·대국·프로필에 보여요',n:'랭킹·대국·프로필에 보여요',f:'랭킹·대국·프로필에 보여요',s:'봉인할 때 상대 화면에 보여요',w:'내 화면에서만 바뀌어요',b:'내 화면에서만 바뀌어요',x:'이긴 판 양쪽 화면에 보여요'};
-// 교환소 상품(첫 시즌). 가격은 규칙(firestore.rules)의 ecoPrice와 같아야 함. 뽑기·무작위 상품 없음, 티어 테두리는 팔지 않음
+const ECO_SEE={t:'랭킹·대국·프로필에 보여요',n:'랭킹·대국·프로필에 보여요',f:'랭킹·대국·프로필에 보여요',s:'봉인할 때 상대 화면에 보여요',w:'양쪽 화면 내 돌에 보여요',b:'양쪽 화면 판에 보여요',x:'이긴 판 양쪽 화면에 보여요'};
+// 상점 상품(첫 시즌). 가격은 규칙(firestore.rules)의 ecoPrice와 같아야 함. 뽑기·무작위 상품 없음, 티어 테두리는 팔지 않음
 const ECO_ITEMS=[
  {id:'t1',c:'t',n:'한 수 앞',p:800},{id:'t2',c:'t',n:'봉인 장인',p:800},{id:'t3',c:'t',n:'느긋한 고수',p:800},
  {id:'n1',c:'n',n:'물결 밑줄',p:1200},{id:'n2',c:'n',n:'꽃잎 장식',p:1200},{id:'n3',c:'n',n:'새벽빛 글씨',p:1200},
@@ -5023,13 +5157,13 @@ const ECO_ITEMS=[
  {id:'w1',c:'w',n:'자개 돌',p:2500},{id:'w2',c:'w',n:'비취 돌',p:2500},
  {id:'b1',c:'b',n:'청자 판',p:3000},{id:'b2',c:'b',n:'흰 비자 판',p:3000},
  {id:'x1',c:'x',n:'꽃잎 흩날림',p:3500},{id:'x2',c:'x',n:'먹물 획',p:3500}];
-// 유료 상품 자리(앱 출시 후, 서버 결제 확인이 생긴 뒤): {id,c,n,won} 꼴로 넣으면 교환소 맨 아래 '응원 상품' 칸이 생김.
+// 유료 상품 자리(앱 출시 후, 서버 결제 확인이 생긴 뒤): {id,c,n,won} 꼴로 넣으면 상점 상품 맨 아래 '응원 상품' 칸이 생김.
 // 권리는 서버만 쓰는 ent/{uid}에 둘 예정(옥돌과 서로 바꾸지 않음). 지금은 비어 있어 화면에 나오지 않음
 const ECO_PAID=[];
 const ECO_BY=new Map(ECO_ITEMS.map(x=>[x.id,x]));
 // 시즌 종료 보상(최종 티어 0브론즈~5마스터, 6챌린저). 관리자 기록 cfg/season{n}.amt가 있으면 그 값(규칙도 같은 값으로 확인)
 const ECO_SAMT=[200,400,700,1000,1400,1800,2500],ECO_PAMT=[0,50,100,150,200,300,300];
-const ECO_ACH=[{k:'a_link',n:'계정 연결',g:50},{k:'a_place',n:'랭크 배치 완료',g:50},{k:'a_ai1',n:'AI 초보 첫 승',g:50},{k:'a_ai2',n:'AI 중수 첫 승',g:80},{k:'a_ai3',n:'AI 고수 첫 승',g:120},{k:'a_ai4',n:'Ultimate 첫 승',g:300}];
+const ECO_ACH=[{k:'a_link',n:'계정 연결',g:50},{k:'a_place',n:'랭크 배치 완료',g:50},{k:'a_ai1',n:'AI Easy 첫 승',g:50},{k:'a_ai2',n:'AI Normal 첫 승',g:80},{k:'a_ai3',n:'AI Hard 첫 승',g:120},{k:'a_ai4',n:'AI Godlike 첫 승',g:300}];
 // 보상 전용 꾸미기: z{n}_{t} 시즌 티어 테두리 · zn{n} 다이아빛(닉네임) · zt{n}_{t} 시즌 칭호(마스터·챌린저)
 const ecoTierN=t=>t===6?CHAL.n:(TIERS[t]||TIERS[0]).n,ecoTierC=t=>t===6?CHAL.c:(TIERS[t]||TIERS[0]).c;
 function ecoItem(id){if(typeof id!=='string')return null;const x=ECO_BY.get(id);if(x)return x;let m;
@@ -5063,7 +5197,7 @@ function ecoBoot(){if(ECO.boot)return;ECO.boot=1;ecoDefs();ecoLoad().catch(()=>{
  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&ECO.ok&&ecoSrv()&&Date.now()-(ECO.at||0)>5*60e3){ECO.at=Date.now();ECO.q=ECO.q.then(async()=>{try{const x=await db.doc('wal/'+SEAT).get();if(x.exists){ECO.w=ecoNorm(x.data());ecoPaint()}}catch(e){}})}});
  setInterval(ecoTick,4000)}
 function ecoAfterLoad(){ECO.at=Date.now();ecoLook();ecoPaint();ecoSyncPub();setTimeout(()=>{try{attAuto()}catch(e){}},1500);setTimeout(()=>{ecoAch();ecoSeasonCheck()},800)}
-function ecoTick(){if(!ECO.ok)return;try{attAuto()}catch(e){}try{ecoPromoCheck()}catch(e){}try{ecoSyncPub()}catch(e){}if(UI.view==='lobby'){try{ecoSeasonCheck()}catch(e){}const c=$('#ecoCard');if(c&&c.dataset.d!==String(ecoDay()))ecoPaint()}}
+function ecoTick(){if(!ECO.ok)return;try{attAuto()}catch(e){}try{ecoPromoCheck()}catch(e){}try{ecoSyncPub()}catch(e){}if(UI.view==='lobby'){try{ecoSeasonCheck()}catch(e){}const c=$('#rwdBody');if(c&&c.dataset.d!==String(ecoDay()))ecoPaint()}}
 // ----- 오늘의 과제: 날짜마다 고정 목록에서 3개(모든 기기 같음). 진행은 이 기기에 저장 -----
 const ECO_MIS=[{id:'g3',t:'대국 3판',n:3},{id:'aw',t:'AI 대국 1승',n:1},{id:'fr',t:'일반 게임 1판',n:1},{id:'rk',t:'랭크전 1판',n:1},{id:'pz',t:'오늘의 묘수 풀이',n:1},{id:'rv',t:'복기 1번 보기',n:1},{id:'w2',t:'아무 대국 2승',n:2},{id:'am',t:'AI 중수 이상 1판',n:1}];
 function ecoMis(day){day=day||ecoDay();const pool=ECO_MIS.filter(m=>!(m.id==='rk'&&RANK_MAINT));let x=(Math.imul(day,2654435761)^0x5bd1e995)>>>0;const r=()=>{x=Math.imul(x^x>>>15,1|x)+0x6D2B79F5>>>0;return x/4294967296};
@@ -5101,7 +5235,7 @@ const ecoCurKey=()=>UI.mode==='online'&&G.gid?'G'+G.gid:UI.mode==='local'&&L.s?'
 function ecoResLine(vs){try{const o=ECO.last;if(!o||!vs||!vs.me||o.key!==ecoCurKey())return '';
  const first=!lget('bo-ecohint');if(first&&o.got)lset('bo-ecohint','1');
  const main=o.got?`<span class="gdot" aria-hidden="true"></span><b class="num">옥돌 +${o.got}</b>${o.parts.length?`<span class="ecop">${esc(o.parts.join(' · '))} 포함</span>`:''}`:o.why?`<span class="ecop">${esc(o.why)}</span>`:'';
- if(!main)return '';return `<div class="ecoln" role="status">${main}</div>${first&&o.got?'<p class="note ecohint">옥돌은 꾸미기에 쓰는 재화예요 · 판 점수와 달라요</p>':''}`}catch(e){return ''}}
+ if(!main)return '';return `<div class="ecoln" role="status">${main}</div>${first&&o.got?`<p class="note ecohint">${ptT('옥돌은 상점에서 써요 · {P과} 달라요')}</p>`:''}`}catch(e){return ''}}
 // ----- 1회성 보상: 업적 · 승급 · 시즌 -----
 function ecoClaim(key,amt,items,msg){if(!ECO.ok||!ECO.w||ECO.w.cl.includes(key)||ECO.busyK===key)return Promise.resolve(false);ECO.busyK=key;
  return ecoWrite('claim',n=>{if(n.cl.includes(key))return false;n.cl.push(key);n.g=Math.min(ECO_MAX,n.g+amt);for(const it of items||[])if(!n.own.includes(it))n.own.push(it)}).then(ok=>{ECO.busyK='';if(ok&&msg)toast(msg);return ok})}
@@ -5143,7 +5277,7 @@ function ecoRecap(R,again){try{const c=$('#rcCard');if(!c||!R)return;{const o=c.
 // ECO.auto=true(지금): 과제·승급·업적은 조건을 채우면 바로 받음. false로 바꾸면 ecoRewards()로 목록을 보여 주고 ecoClaimAll()로 한 번에 받음
 //  ecoRewards() → [{k 종류('mis'|'promo'|'ach'|'season'), key, n 이름, g 옥돌}] (지금 받을 수 있는 것만) · ecoRewardCount() → 개수
 //  ecoClaimAll() → Promise<받은 옥돌 합계>. 과제는 한 번의 쓰기로, 1회성 보상(업적·승급·시즌)은 보상마다 한 번씩(규칙이 키 하나씩 확인)
-ECO.auto=false; // 보상은 홈 '받을 보상' 띠에서 [모두 받기]로 받음(디자인팀 2차 결정)
+ECO.auto=false; // 보상은 '보상' 탭 맨 위 띠에서 [모두 받기]로 받음(디자인팀 2차 결정 → 3차에서 보상 탭으로)
 function ecoRewards(){const out=[];if(!ECO.ok||!ECO.w)return out;const w=ECO.w,dq=w.d===ecoDay()?w.dq:[],v=ecoProgGet();
  ecoMis().forEach((m,i)=>{if((v.p[m.id]|0)>=m.n&&!dq.includes('m'+i))out.push({k:'mis',key:'m'+i,n:m.t,g:10})});
  const P=user&&user.firebase?ecoPromoKey():null;if(P)for(const k of P.keys)if(!w.cl.includes(k)){const ix=+k.split('_')[1];out.push({k:'promo',key:k,n:ix===1?'배치 완료':ecoTierN(ix)+' 첫 도달',g:ECO_PAMT[ix]})}
@@ -5159,7 +5293,8 @@ const ecoPe=()=>ECO.w?ECO_PUB.map(c=>ECO.w.eq[c]||'').filter(Boolean).join('.'):
 const ecoPeObj=()=>{const p=ecoSrv()&&ECO.ok?ecoPe():'';return p?{eq:p}:{}};
 const ecoPresX=()=>{const p=ecoSrv()&&ECO.ok?ecoPe():'';return p?{eq:p}:{}};
 function ecoParse(pe){const o={};if(typeof pe!=='string'||pe.length>64)return o;for(const id of pe.split('.')){const it=ecoItem(id);if(it&&ECO_PUB.includes(it.c)&&!o[it.c])o[it.c]=id}return o}
-function ecoPeers(c){G.peq=G.peq||{};for(const p of (c&&c.peers)||[]){const s=p.presence&&p.presence.seat;if(typeof s==='string'&&s!==SEAT)G.peq[s]=typeof p.presence.eq==='string'?p.presence.eq:''}}
+function ecoPeers(c){G.peq=G.peq||{};const before=JSON.stringify(G.peq);for(const p of (c&&c.peers)||[]){const s=p.presence&&p.presence.seat;if(typeof s==='string'&&s!==SEAT)G.peq[s]=typeof p.presence.eq==='string'?p.presence.eq:''}
+ if(UI.view==='game'&&JSON.stringify(G.peq)!==before)try{renderBoard()}catch(e){}}
 function ecoRk(){const n=(RK.docs||[]).length+(RK.bdocs||[]).length;if(n===ECO.rkN)return ECO.rkEq;ECO.rkN=n;const m=new Map(),t=new Map();
  for(const d of [...(RK.docs||[]),...(RK.bdocs||[])]){if(!d||typeof d.by!=='string'||typeof d.ended!=='number')continue;if((t.get(d.by)||0)>d.ended)continue;t.set(d.by,d.ended);m.set(d.by,typeof d.eq==='string'?d.eq:'')}
  ECO.rkEq=m;return m}
@@ -5207,6 +5342,16 @@ function ecoMySeal(){try{const s=ecoEqOf('s');return `<span class="mysl${s?'':' 
 // 내 화면: 돌 무늬·판 테마
 function ecoLook(){const w=ecoEqOf('w'),b=ecoEqOf('b');ECO_SK=w&&/^w\d$/.test(w)?'_'+w:'';window.ECO_SK=ECO_SK;const bd=$('#board');if(bd){bd.classList.remove('bt-b1','bt-b2');if(b)bd.classList.add('bt-'+b)}
  if(UI.view==='game'){UI.panelKey='';try{renderAll()}catch(e){}}}
+// 대국 판(renderBoard 훅): 돌 무늬는 흑(A)·백(B) 각자 자기 것, 판 테마는 한 판에 하나 —
+//  장착한 사람 것. 둘 다 장착했으면 대국 번호(gid)로 한 사람을 골라 두 화면이 같은 판을 봄(판마다 반반, 방장·선후와 무관)
+//  온라인 = 자리 id · AI/봇 대국 = 내 돌(A)만 내 무늬, AI 돌은 기본 · 그 밖(한 폰·튜토리얼·복기) = 예전처럼 내 무늬·내 판
+function ecoSkOf(seat){const w=seat?cosOf(seat).w:'';return w&&/^w\d$/.test(w)?'_'+w:''}
+function ecoBoardPick(a,b,gid){if(!a||!b)return a||b||'';let h=0;for(const ch of String(gid||''))h=(h*31+ch.charCodeAt(0))>>>0;return h%2?b:a}
+function ecoBoardTheme(b){const bd=$('#board');if(!bd)return;const k=b&&/^b\d$/.test(b)?'bt-'+b:'';for(const c of ['bt-b1','bt-b2'])bd.classList.toggle(c,c===k)}
+function ecoBoardLook(o,vs){if(!vs)return;
+ if(UI.mode==='online'&&G.gid&&vs.A&&vs.B){o.skB=ecoSkOf(vs.A);o.skW=ecoSkOf(vs.B);ecoBoardTheme(ecoBoardPick(cosOf(vs.A).b,cosOf(vs.B).b,G.gid));return}
+ if(UI.mode==='local'&&L.s&&L.s.ai){o.skB=ecoSkOf(SEAT);o.skW='';ecoBoardTheme(ecoEqOf('b'));return}
+ ecoBoardTheme(ecoEqOf('b'))}
 // 이긴 줄 연출(renderBoard 훅): 이긴 사람이 장착한 연출을 양쪽 화면에
 function ecoFx(o,vs,live){if(!live||!vs||!vs.winner)return;let seat=null;if(UI.mode==='online')seat=vs.winner;else if(UI.mode==='local'&&L.s&&L.s.ai&&vs.winner==='A')seat=SEAT;if(!seat)return;
  const x=cosOf(seat).x;if(x&&/^x\d$/.test(x)){o.fx=x;o.spark=true}}
@@ -5220,7 +5365,7 @@ function ecoFxSvg(fx,mx,my,d0,p0,p1){let s='';const x1=X(p0[1]),y1=Y(p0[0]),x2=X
 function ecoSyncPub(){if(!ecoSrv()||!ECO.ok)return;const pe=ecoPe();
  if(G.room&&G.gid&&ECO.peRoom!==G.gid+'|'+pe){const had=ECO.peRoom.startsWith(G.gid+'|');if(pe||had){ECO.peRoom=G.gid+'|'+pe;G.room.presence({eq:pe||null}).catch(()=>{ECO.peRoom=''})}else ECO.peRoom=G.gid+'|'}
  try{if(frOk()&&FR.mineLoaded&&FR.mine&&'at' in FR.mine&&[...FR.pairs.values()].some(p=>p.st==='ok')&&(FR.mine.eq||'')!==pe&&ECO.peOn!==pe){ECO.peOn=pe;db.doc('on/'+SEAT).update({eq:pe,at:SRV_TS,st:frStNow()}).then(()=>{FR.mine.eq=pe},()=>{ECO.peOn=null})}}catch(e){}}
-// ----- 교환소 화면 -----
+// ----- 상점 화면(하단 '상점' 탭: 상품 · 보관함) -----
 function ecoArt(it,big){const c=it.c,id=it.id,me=ecoEqOf;
  if(c==='t')return `<span class="art at"><span class="nkx">${esc(myNick()||'닉네임')}</span><small class="ctt${it.rw?' rw':''}">${esc(it.n)}</small></span>`;
  if(c==='n')return `<span class="art an"><span class="cn cn-${id.startsWith('zn')?'zd':id}">${esc(myNick()||'닉네임')}</span></span>`;
@@ -5237,48 +5382,60 @@ function ecoPrev(){const e=ECO.w?ECO.w.eq:{};let t=null;try{t=tierOf(rkP(SEAT))}
   <span class="pvb"><svg viewBox="0 0 64 36" aria-hidden="true"><defs><linearGradient id="pvbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bP[0]}"/><stop offset="1" stop-color="${bP[1]}"/></linearGradient></defs><rect width="64" height="36" rx="7" fill="url(#pvbg)"/><path d="M0 18H64M21 0V36M43 0V36" stroke="#3A2510" stroke-opacity=".6"/><use href="#sB${sk}" transform="translate(21 18) scale(.72)"/><use href="#sW${sk}" transform="translate(43 18) scale(.72)"/></svg><span class="pvs" style="color:${ECO_SEALC[e.s]||'var(--pri)'}">${e.s?ecoSealSvg(e.s):IC.wax}</span></span></div>`}
 function ecoTile(it){const own=ecoHas(it.id),on=ecoEqOf(it.c)===it.id;
  return `<button class="etile${on?' on':''}${it.c==='t'?' tt':''}" data-act="ecoitem" data-id="${esc(it.id)}" aria-label="${esc(it.n)} · ${on?'장착 중':own?'보유':'옥돌 '+ecoFmt(it.p)}">${ecoArt(it)}${it.c==='t'?'':`<b>${esc(it.n)}</b>`}<span class="ep">${on?'장착 중':own?'보유':`<i class="gdot"></i>${ecoFmt(it.p)}`}</span></button>`}
-function ecoRender(){const body=$('#shopBody');if(!body||shOpen!=='shop')return;const w=ECO.w;
- $('#shopGem').innerHTML=`<span class="gdot" aria-hidden="true"></span><span class="srOnly">옥돌</span><b class="num">${ecoFmt(ecoBal())}</b>`;$('#shopPrev').innerHTML=ecoPrev();
+// 첫 화면 = 분류 버튼(상품 수·보유 수 / 보관함은 보유 수·장착 중), 누르면 그 분류 목록. 분류당 상품이 20~30개로 늘어도 한 분류씩만 보임
+const ecoCatItems=c=>ECO_ITEMS.filter(x=>x.c===c),ecoMine=c=>ECO.w?ECO.w.own.map(ecoItem).filter(x=>x&&x.c===c):[];
+function ecoInvTile(c,it,cur){const id=it?it.id:'',on=cur===id,n=it?(it.rw?it.n.replace(/ 테두리$/,''):it.n):'기본';
+ return `<button class="etile${on?' on':''}${it&&c==='t'?' tt':''}" data-act="ecoeq" data-c="${c}" data-id="${esc(id)}" aria-pressed="${on?'true':'false'}" aria-label="${esc(n)} · ${on?'장착 중':'장착하기'}">${it?ecoArt(it):'<span class="art adef" aria-hidden="true"><i></i></span>'}${it&&c==='t'?'':`<b>${esc(n)}</b>`}<span class="ep">${on?'장착 중':'장착'}</span></button>`}
+function ecoRender(){const body=$('#shopBody');if(!body||UI.tab!=='shop')return;const w=ECO.w;if(ECO.tab!=='inv')ECO.tab='shop';
+ $('#shopPrev').innerHTML=ecoPrev();
  document.querySelectorAll('#shopSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===ECO.tab?'true':'false'));
  if(!w){body.innerHTML=`<p class="sub">${ECO.err?'지갑을 불러오지 못했어요':'불러오는 중'}</p>`;return}
- let h='';
- if(ECO.tab==='shop'){h+=ECO_SLOTS.map(c=>`<section class="esec"><div class="eh"><h3>${ECO_CAT[c]}</h3><span>${ECO_SEE[c]}</span></div><div class="egrid">${ECO_ITEMS.filter(x=>x.c===c).map(ecoTile).join('')}</div></section>`).join('');
-  if(ECO_PAID.length)h+=`<section class="esec"><div class="eh"><h3>응원 상품</h3></div>${ECO_PAID.map(x=>`<div class="epaid"><b>${esc(x.n)}</b><span>${ecoFmt(x.won)}원</span></div>`).join('')}<p class="note">결제는 꾸미기와 광고에만 쓰여요 · 랭크·대국에는 영향이 없어요</p></section>`;
-  h+=`<p class="note enote">옥돌은 꾸미기에만 쓰여요 · 뽑기 없음</p>`}
- else if(ECO.tab==='inv'){h+=ECO_SLOTS.map(c=>{const mine=w.own.map(ecoItem).filter(x=>x&&x.c===c),cur=w.eq[c]||'';
-   return `<section class="esec"><div class="eh"><h3>${ECO_CAT[c]}</h3><span>${mine.length}개</span></div><div class="einv">${`<button class="echip${cur?'':' on'}" data-act="ecoeq" data-c="${c}" data-id="" aria-pressed="${cur?'false':'true'}">기본</button>`}${mine.map(x=>`<button class="echip${cur===x.id?' on':''}" data-act="ecoeq" data-c="${c}" data-id="${esc(x.id)}" aria-pressed="${cur===x.id?'true':'false'}">${esc(x.n)}</button>`).join('')}${mine.length?'':`<button class="echip ghost" data-act="ecotab" data-v="shop">교환소 보기</button>`}</div></section>`}).join('')}
- else{const ms=ecoMis(),v=ecoProgGet(),dq=w.d===ecoDay()?w.dq:[],t=ecoToday();
-  h+=`<section class="esec"><div class="eh"><h3>오늘의 과제</h3></div><div class="eqs">${ms.map((m,i)=>{const p=Math.min(m.n,v.p[m.id]|0),done=dq.includes('m'+i);return `<div class="eqr${done?' done':''}"><span class="ck" aria-hidden="true">${done?IC.check:''}</span><b>${esc(m.t)}</b><span class="num">${done?'받음':p+'/'+m.n}</span><em><i class="gdot"></i>10</em></div>`}).join('')}
-   <div class="eqr${dq.includes('w')?' done':''}"><span class="ck" aria-hidden="true">${dq.includes('w')?IC.check:''}</span><b>하루 첫 승</b><span class="num">${dq.includes('w')?'받음':'0/1'}</span><em><i class="gdot"></i>20</em></div></div>
-   <div class="ecap"><span>오늘 받은 옥돌</span><b class="num">${t} / ${ECO_CAP}</b></div><div class="ebar"><i style="width:${Math.min(100,t/ECO_CAP*100)}%"></i></div></section>`;
-  h+=`<section class="esec"><div class="eh"><h3>대국 끝 보상</h3></div><div class="etab"><span>랭크전</span><b>이기면 12 · 지면 6</b><span>일반 게임</span><b>이기면 10 · 지면 5</b><span>AI 대국</span><b>이기면 6 · 지면 3</b></div></section>`;
-  h+=`<section class="esec"><div class="eh"><h3>업적</h3></div><div class="eqs">${ECO_ACH.map(a=>{const d=w.cl.includes(a.k);return `<div class="eqr${d?' done':''}"><span class="ck" aria-hidden="true">${d?IC.check:''}</span><b>${esc(a.n)}</b><span class="num">${d?'받음':''}</span><em><i class="gdot"></i>${a.g}</em></div>`}).join('')}</div></section>`;
-  h+=`<section class="esec"><div class="eh"><h3>티어 보상</h3></div><div class="etab"><span>시즌 끝</span><b>옥돌 200~2,500 · 티어 테두리</b><span>처음 승급</span><b>옥돌 50~300</b></div><p class="note">시즌 보상은 랭크전 10판 이상</p></section>`;
-  if(ecoSrv()&&!(user.google&&user.google()))h+=`<p class="note enote"><span>게스트 옥돌은 이 기기에만 남아요</span><button class="linkbtn" data-act="acc">계정 연결</button></p>`}
+ const inv=ECO.tab==='inv',c=ECO_SLOTS.includes(ECO.cat)?ECO.cat:null;let h='';
+ if(!c){h=`<div class="ecats">${ECO_SLOTS.map(k=>{const all=ecoCatItems(k),own=ecoMine(k),ci=ecoItem(w.eq[k]||''),art=ci||all[0];
+   const ho=all.filter(x=>ecoHas(x.id)).length,sub=inv?`<span>보유 <b class="num">${own.length}</b></span><span class="ecq">${ci?esc(ci.n):'기본'}</span>`:`<span><b class="num">${all.length}</b>개</span>${ho?`<span class="ecq">보유 <b class="num">${ho}</b></span>`:''}`;
+   return `<button class="ecat" data-act="ecocat" data-c="${k}" aria-label="${ECO_CAT[k]} · ${inv?`보유 ${own.length}개 · ${ci?ci.n+' 장착 중':'기본'}`:`상품 ${all.length}개${ho?` · 보유 ${ho}개`:''}`}"><span class="ecart" aria-hidden="true">${art?ecoArt(art):''}</span><span class="ect"><b>${ECO_CAT[k]}</b><span class="ecs">${sub}</span></span><svg class="ecv" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>`}).join('')}</div>`;
+  if(!inv&&ECO_PAID.length)h+=`<section class="esec"><div class="eh"><h3>응원 상품</h3></div>${ECO_PAID.map(x=>`<div class="epaid"><b>${esc(x.n)}</b><span>${ecoFmt(x.won)}원</span></div>`).join('')}<p class="note">결제는 상점 상품과 광고에만 쓰여요 · 랭크·대국에는 영향이 없어요</p></section>`;
+  if(!inv)h+=`<p class="note enote">옥돌은 대국에 영향 없어요 · 뽑기 없음</p>`}
+ else{const L=inv?ecoMine(c):ecoCatItems(c),cur=w.eq[c]||'';
+  h=`<div class="ecath"><button class="ibtn" data-act="ecocat" data-c="" aria-label="분류로 돌아가기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h3>${ECO_CAT[c]}</h3><span class="ecn num">${inv?`${L.length}`:`${L.length}개`}</span></div><p class="ecsee">${ECO_SEE[c]}${c==='b'?' · 둘 다 쓰면 판마다 한 사람 것':''}</p>`;
+  h+=inv?`<div class="egrid">${ecoInvTile(c,null,cur)}${L.map(x=>ecoInvTile(c,x,cur)).join('')}</div>${L.length?'':`<p class="note ecempty"><button class="linkbtn" data-act="ecotab" data-v="shop">상품 보기</button></p>`}`
+   :`<div class="egrid">${L.map(ecoTile).join('')}</div>`}
  body.innerHTML=h}
-function ecoOpen(tab){if(tab)ECO.tab=tab;openSheet('shop');ecoRender();const b=$('#shopBody');if(b)b.scrollTop=0}
+function ecoOpen(tab){closeSheet();if(tab==='quest'){setTab('rwd');return}if(tab)ECO.tab=tab;setTab('shop')}
 function ecoItemTap(id){const it=ecoItem(id);if(!it)return;const own=ecoHas(id),on=ecoEqOf(it.c)===id;
  const head=`<div class="edlg">${ecoArt(it,true)}<b>${esc(it.n)}</b><span>${ECO_CAT[it.c]} · ${ECO_SEE[it.c]}</span></div>`;
  if(own){dialog(head,on?'해제':'장착',()=>ecoEquip(it.c,on?'':id),'닫기');return}
  if(!ECO.ok){dialog(head+'<p class="edq">지갑을 불러오는 중이에요</p>','확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
  const free=isAdmin(),need=free?0:it.p-ecoBal();
  if(need>0){dialog(head+`<p class="edq">옥돌 <b class="num">${ecoFmt(need)}</b>개 더 필요해요</p>`,'확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
- dialog(head+(free?`<p class="edq">관리자 · 옥돌 없이 받기</p>`:`<p class="edq">옥돌 <b class="num">${ecoFmt(it.p)}</b>으로 바꿀까요?</p>`),free?'받기':'바꾸기',()=>ecoBuy(id))}
+ dialog(head+(free?`<p class="edq">관리자 · 옥돌 없이 받기</p>`:`<p class="edq">옥돌 <b class="num">${ecoFmt(it.p)}</b>으로 살까요?</p>`),free?'받기':'사기',()=>ecoBuy(id))}
 function ecoBuy(id){const it=ECO_BY.get(id);if(!it)return;
- const free=isAdmin();ecoWrite('buy',n=>{if(n.own.includes(id)||(!free&&n.g<it.p))return false;if(!free)n.g-=it.p;n.own.push(id);n.eq[it.c]=id}).then(ok=>{if(ok){toast(`${it.n} · 장착했어요`);ecoLook();ecoSyncPub()}else toast('바꾸지 못했어요 · 잠시 뒤 다시')})}
+ const free=isAdmin();ecoWrite('buy',n=>{if(n.own.includes(id)||(!free&&n.g<it.p))return false;if(!free)n.g-=it.p;n.own.push(id);n.eq[it.c]=id}).then(ok=>{if(ok){toast(`${it.n} · 장착했어요`);ecoLook();ecoSyncPub()}else toast('사지 못했어요 · 잠시 뒤 다시')})}
 function ecoEquip(c,id){if(!ECO_SLOTS.includes(c))return;if(id&&!ecoHas(id))return;
  ecoWrite('equip',n=>{if((n.eq[c]||'')===id)return false;if(id)n.eq[c]=id;else delete n.eq[c]}).then(ok=>{if(ok){toast(id?'장착했어요':'기본으로 바꿨어요');ecoLook();ecoSyncPub();try{renderRank()}catch(e){}}})}
-// 홈 '꾸미기' 카드 + 열려 있는 화면 다시 그리기
-function ecoPaint(){try{const c=$('#ecoCard');if(c){const w=ECO.w,ms=ecoMis(),v=ecoProgGet(),dq=w&&w.d===ecoDay()?w.dq:[],done=ms.filter((m,i)=>dq.includes('m'+i)).length;c.dataset.d=String(ecoDay());
+// 보상 탭(#rwdBody: 오늘 — 출석체크·오늘의 과제 / 업적 / 보상 기준) + 상점 탭 다시 그리기. 서버 읽기·쓰기 없음(지갑 값만 읽음)
+function ecoPaint(){try{const c=$('#rwdBody');if(c){const w=ECO.w,ms=ecoMis(),v=ecoProgGet(),dq=w&&w.d===ecoDay()?w.dq:[],t=ecoToday();c.dataset.d=String(ecoDay());
   const sr=ECO.sr,szc=sr&&sr.st==='ok'?`<div class="eszr">${emblem(fxTierOfIx(sr.t),36)}<span><b>시즌 ${sr.n} 보상</b><small>옥돌 ${ecoFmt(sr.amt)} · ${esc(ecoTierN(sr.t))} 테두리</small></span><button class="btn small" data-act="ecosz">받기</button></div>`:sr&&sr.st==='wait'?`<p class="note eszw">시즌 ${sr.n} 보상은 집계가 끝나면 받을 수 있어요</p>`:'';
-  c.innerHTML=`<div class="chead"><h2><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="9.5" cy="9.5" r="2.4"/></svg>꾸미기</h2><button class="gemchip" data-act="ecoopen" data-v="shop" aria-label="옥돌 ${ecoFmt(ecoBal())}개 · 교환소 열기"><span class="gdot" aria-hidden="true"></span><b class="num">${ecoFmt(ecoBal())}</b></button></div>${szc}
-   ${attLine()}<button class="eqline" data-act="ecoopen" data-v="quest"><span class="lbl">오늘의 과제</span><span class="pips" aria-hidden="true">${ms.map((m,i)=>`<i class="${dq.includes('m'+i)?'on':''}"></i>`).join('')}</span><span class="qt">${done>=3?'모두 완료':esc(ms.find((m,i)=>!dq.includes('m'+i)).t)}</span><span class="num qn">${ecoToday()}/${ECO_CAP}</span></button>
-   <div class="ebtns"><button class="btn ghost small" data-act="ecoopen" data-v="shop">교환소</button><button class="btn ghost small" data-act="ecoopen" data-v="inv">보관함</button></div>`}
- if(shOpen==='shop')ecoRender();if(shOpen==='prof'){try{frRenderProf()}catch(e){}}}catch(e){console.warn('ecoPaint',e)}}
+  {const hg=$('#hGem'),hn=$('#hGemN'),gv=ecoFmt(ecoBal());if(hg&&hn){const was=hg.classList.contains('hide');hg.classList.toggle('hide',!w);if(hn.textContent!==gv||was!==!w){hn.textContent=gv;hg.setAttribute('aria-label',`옥돌 ${gv}개 · 상점 열기`);try{hdrFit()}catch(e){}}}}
+  const row=(st,n,p,g)=>`<div class="eqr${st?' '+st:''}"><span class="ck" aria-hidden="true">${st==='done'?IC.check:''}</span><b>${esc(n)}</b><span class="num">${st==='done'?'받음':st==='rdy'?'받기 전':p}</span><em><i class="gdot" aria-hidden="true"></i>${g}</em></div>`;
+  let today,ach;
+  if(!w){today=`<p class="sub">${ECO.err?'지갑을 불러오지 못했어요':'불러오는 중'}</p>`;ach=''}
+  else{const ready=new Set(ecoRewards().map(r=>r.key));
+   today=attLine()+`<div class="eh rwqh"><h3>오늘의 과제</h3><span>오늘 받은 옥돌 <b class="num">${t}/${ECO_CAP}</b></span></div><div class="ebar" aria-hidden="true"><i style="width:${Math.min(100,t/ECO_CAP*100)}%"></i></div><div class="eqs">${ms.map((m,i)=>{const p=Math.min(m.n,v.p[m.id]|0);return row(dq.includes('m'+i)?'done':ready.has('m'+i)?'rdy':'',m.t,p+'/'+m.n,10)}).join('')}${row(dq.includes('w')?'done':'','하루 첫 승','0/1',20)}</div>`;
+   ach=ECO_ACH.map(a=>row(w.cl.includes(a.k)?'done':ready.has(a.k)?'rdy':'',a.n,'',a.g)).join('')}
+  const na=w?ECO_ACH.filter(a=>w.cl.includes(a.k)).length:0;
+  c.innerHTML=`<section class="card rwc rwtoday"><div class="chead"><h2>오늘</h2></div>${szc}${today}</section>
+   ${w?`<section class="card rwc"><div class="chead"><h2>업적</h2><span class="num">${na}/${ECO_ACH.length}</span></div><div class="eqs">${ach}</div></section>`:''}
+   <section class="card rwc rwinfo"><details class="rules"><summary>보상 기준</summary>
+    <div class="eh"><h3>대국 끝</h3></div><div class="etab"><span>랭크전</span><b>이기면 12 · 지면 6</b><span>일반 게임</span><b>이기면 10 · 지면 5</b><span>AI 대국</span><b>이기면 6 · 지면 3</b></div>
+    <div class="eh"><h3>티어</h3></div><div class="etab"><span>시즌 끝</span><b>옥돌 200~2,500 · 티어 테두리</b><span>처음 승급</span><b>옥돌 50~300</b></div><p class="note">시즌 보상은 랭크전 10판 이상</p></details></section>
+   ${ecoSrv()&&!(user.google&&user.google())?`<p class="note enote"><span>게스트 옥돌은 이 기기에만 남아요</span><button class="linkbtn" data-act="acc">계정 연결</button></p>`:''}`}
+ if(UI.tab==='shop')ecoRender();if(shOpen==='prof'){try{frRenderProf()}catch(e){}}}catch(e){console.warn('ecoPaint',e)}}
 // 계정 삭제(설정): 지갑은 지우지 않고 비움(1회성 보상 기록 cl만 남김 → 지웠다 다시 만들어 보상을 또 받지 못하게. 개인정보 없음)
 async function ecoWipe(){if(!ecoSrv()||!ECO.ok)return;await ecoWrite('reset',n=>{n.g=0;n.own=[];n.eq={}}).catch(()=>{})}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;if(!a.startsWith('eco'))return;
  if(a==='ecoopen')ecoOpen(b.dataset.v);else if(a==='ecotab'){ECO.tab=b.dataset.v;ecoRender();const bd=$('#shopBody');if(bd)bd.scrollIntoView({block:'nearest'})}
+ else if(a==='ecocat'){const prev=ECO.cat;ECO.cat=b.dataset.c||null;ecoRender();const bd=$('#shopBody');if(bd){bd.scrollTop=0;if(bd.getBoundingClientRect().top<0)$('#shopSeg').scrollIntoView({block:'start'})}if(e.detail===0){const f=ECO.cat?$('#shopBody .ecath .ibtn'):$(`#shopBody .ecat[data-c="${prev}"]`);if(f)f.focus({preventScroll:true})}}
  else if(a==='ecoitem')ecoItemTap(b.dataset.id);else if(a==='ecoeq')ecoEquip(b.dataset.c,b.dataset.id||'');else if(a==='ecosz'){if(b.closest('#recap'))try{recapClose()}catch(e){}ecoSeasonClaim()}else if(a==='ecoatt'){attDone()?attShow(-1):attStamp()}});
 // ===== 출석체크: 그날 처음 앱을 열면 이번 달 달력의 오늘 날짜에 자동으로 도장 + 옥돌. 한 달(한국 시각) 단위로 초기화
 // 지갑 wal: am 이번 달(yyyymm) · ad 이번 달 도장 찍은 날(1~31). 보상: 매일 10, 이번 달 7·14번째 도장 50, 21번째 80, 28번째 120(규칙도 같은 표)
@@ -5305,7 +5462,7 @@ function attAuto(){if(!ECO.ok||!ECO.w||attDone()||ECO.attBusy)return;try{if(sess
  if(ECO.attFail&&Date.now()-ECO.attFail<60e3)return;
  if(UI.view!=='lobby'||UI.mode==='tut'||shOpen||!$('#dlg').classList.contains('hide')||!$('#welcome').classList.contains('hide'))return;attStamp()}
 rwAdd({id:'att',order:-1,items:()=>!ECO.ok||!ECO.w||attDone()||!ECO.attFail?[]:[{id:'att',t:'출석체크',st:'ready',g:attAmt(attDays().length+1)}],claim:()=>attStamp()});
-// 홈 보상 띠(rwBar)에 상점 보상 등록 — 받을 것(ready)·진행 중 과제(prog)
+// 보상 탭 띠(rwBar)·배지에 상점 보상 등록 — 받을 것(ready)·진행 중 과제(prog)
 rwAdd({id:'eco',order:0,
  items:()=>{if(!ECO.ok||!ECO.w)return[];
   const R=ecoRewards().map(r=>({id:r.key,t:r.n,st:'ready',g:r.g}));
