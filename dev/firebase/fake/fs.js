@@ -372,10 +372,9 @@ export const documentId=()=>'__name__';
    if(cur&&n.k==='mail'){const o=cur,old=mrOf(o),mr=n.mr,F=why=>{window.__mailDeny.push(why);deny('wal mail '+why)};
     if(!Array.isArray(mr)||!mr.length)F('mr');const id=mr[mr.length-1];
     if(typeof id!=='string'||!IDRE.test(id)||old.includes(id))F('id '+id);
-    if(mr.length>20||new Set(mr).size!==mr.length||!mr.slice(0,-1).every(x=>old.includes(x))||mr.filter(x=>x===id).length!==1)F('mr shape');
-    for(const x of old)if(!mr.includes(x)&&!(x<'m'+now))F('removed live '+x);
+    if(mr.length>60||!eq(mr,old.concat([id])))F('mr shape');
     window.__mailGets++;const m=store['mail/'+id];if(!m)F('no mail '+id);
-    if(!(m.to==='all'||m.to===me))F('not mine');if(!(m.from<=now&&now<m.until))F('time');
+    if(!(m.to==='all'||m.to===me))F('not mine');if(!(m.from<=now+600000&&now<m.until))F('time');
     const has=m.it!==''&&o.own.includes(m.it),add=m.g+(has?PRICE[m.it]:0),g2=o.g+add>99999?99999:o.g+add;
     if(n.g!==g2)F('g '+n.g+'!='+g2);if(!eq(n.own,m.it===''||has?o.own:o.own.concat([m.it])))F('own');if(!eq(n.eq,o.eq))F('eq');
     // 나머지(모양·서버 시각·같은 날·cl·nc·ck·am/ad 가드)는 '장착' 검사에 맡김: 옥돌·보유만 미리 맞춘 지갑으로
@@ -383,7 +382,7 @@ export const documentId=()=>'__name__';
     try{return _check4(op,p,r2,merge)}finally{if(store[p]===o2)store[p]=cur}}
    if(cur&&!eq(mrOf(n),mrOf(cur))){window.__mailDeny.push('mr changed by '+n.k);deny('wal mr '+p)}
    if('mr' in raw||(cur&&'mr' in cur)){const r2=Object.assign({},raw);delete r2.mr;let o2=null;if(cur&&'mr' in cur){o2=Object.assign({},cur);delete o2.mr;store[p]=o2}
-    if(!cur&&'mr' in raw&&!(Array.isArray(raw.mr)&&raw.mr.length<=20))deny('wal mr create');
+    if(!cur&&'mr' in raw&&!(Array.isArray(raw.mr)&&raw.mr.length<=60))deny('wal mr create');
     try{return _check4(op,p,r2,merge)}finally{if(o2&&store[p]===o2)store[p]=cur}}}
   return _check4(op,p,raw,merge)};
  canRead=function(path,data){if(!on())return _canRead4(path,data);const seg=path.split('/');

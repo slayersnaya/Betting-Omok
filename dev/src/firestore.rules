@@ -495,22 +495,18 @@ service cloud.firestore {
     //  → 목록이 계속 커지지 않음. 아직 안 끝난 우편 id 는 못 뺌(다시 받기 막기). 다른 종류 쓰기는 mr 을 못 바꿈(update 가드 줄)
     //  이미 가진 아이템이면 상점 가격(ecoPrice)만큼 옥돌로 대신. 하루 상한(dc)·1회성 보상(cl)·장착(eq)과는 무관
     function mrOld(o) { return o.get('mr', []); }
-    function mrGone(o, n, i) { return mrOld(o).size() <= i || mrOld(o)[i] in n.mr || mrOld(o)[i] < 'm' + string(request.time.toMillis()); }
+    // 받은 우편 목록은 뒤에 하나씩 붙이기만(최대 60). 옥돌 상한 99999
+    function mailG(o, n, add) { return n.g == o.g + add || (n.g == 99999 && o.g + add > 99999); }
     function walMail(o, n) {
       let id = n.mr[n.mr.size() - 1];
       let m = get(/databases/$(database)/documents/mail/$(id)).data;
-      let has = m.it != '' && m.it in o.own;
-      let add = m.g + (has ? ecoPrice()[m.it] : 0);
-      return id is string && id.matches('^m[0-9]{13}_[a-z0-9]{6}$') && !(id in mrOld(o))
-        && n.mr.size() <= 20 && n.mr.toSet().size() == n.mr.size() && mrOld(o).hasAll(n.mr.removeAll([id]))
-        && mrGone(o, n, 0) && mrGone(o, n, 1) && mrGone(o, n, 2) && mrGone(o, n, 3) && mrGone(o, n, 4)
-        && mrGone(o, n, 5) && mrGone(o, n, 6) && mrGone(o, n, 7) && mrGone(o, n, 8) && mrGone(o, n, 9)
-        && mrGone(o, n, 10) && mrGone(o, n, 11) && mrGone(o, n, 12) && mrGone(o, n, 13) && mrGone(o, n, 14)
-        && mrGone(o, n, 15) && mrGone(o, n, 16) && mrGone(o, n, 17) && mrGone(o, n, 18) && mrGone(o, n, 19)
-        && (m.to == 'all' || m.to == me()) && m.from <= nowMs() && nowMs() < m.until
-        && n.g == (o.g + add > 99999 ? 99999 : o.g + add)
-        && n.own == (m.it == '' || has ? o.own : o.own.concat([m.it]))
-        && n.cl == o.cl && n.eq == o.eq && sameDay(o, n); }
+      return id is string && id.matches('^m[0-9]{13}_[a-z0-9]{6}$')
+        && n.mr.size() <= 60 && n.mr == mrOld(o).concat([id]) && !(id in mrOld(o))
+        && (m.to == 'all' || m.to == me()) && m.from <= nowMs() + 600000 && nowMs() < m.until
+        && n.cl == o.cl && n.eq == o.eq && sameDay(o, n)
+        && ((m.it == '' && n.own == o.own && mailG(o, n, m.g))
+          || (m.it != '' && (m.it in o.own) && n.own == o.own && mailG(o, n, m.g + ecoPrice()[m.it]))
+          || (m.it != '' && !(m.it in o.own) && n.own == o.own.concat([m.it]) && mailG(o, n, m.g))); }
     //  우편 문서: to 'all'(그 기간에 앱을 연 모두) 또는 한 사람 uid · t 제목 · msg 내용 · g 옥돌(0~10000) · it 상점 아이템 id 또는 ''
     //  from~until 받을 수 있는 기간(ms, 최대 31일) · nk 받는 사람 닉네임(관리자 표시용) · by 보낸 관리자 · at 서버 시각
     //  읽기: 받는 사람(전체 우편은 모두)·관리자 · 만들기·지우기: 관리자만 · 고치기 금지(잘못 보냈으면 지우고 다시)
