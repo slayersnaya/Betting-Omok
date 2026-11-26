@@ -1244,6 +1244,8 @@ ul.rknote li{text-wrap:balance}
 .tcar svg{width:16px;height:16px;fill:none;stroke:var(--faint);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .nkcost{display:flex;align-items:center;justify-content:center;gap:6px;margin:0 0 10px;font-size:13px;font-weight:700;color:var(--mute);white-space:nowrap}
 .nkcost b{color:var(--ink)}.nkcost .nkb{margin-left:6px;font-size:12px;color:var(--faint)}
+.ovtag{animation:ovFade 2.5s ease-out forwards}@keyframes ovFade{0%{opacity:0;transform:scale(.7)}10%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.ovtag{animation:ovFade 2.5s steps(1,end) forwards}}
 /* 출석체크 달력 */
 .attd{text-align:center}.attd h3{margin:0 0 10px;font-size:17px;white-space:nowrap}.attd h3 .num{color:var(--jadeink);margin-left:4px}
 .acal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;max-width:330px;margin:0 auto}
@@ -1603,7 +1605,7 @@ ul.rknote li{text-wrap:balance}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1818';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1833';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2371,6 +2373,7 @@ const chipMini=(x,y,i)=>`<circle cx="${x}" cy="${y}" r="15.6" fill="none" stroke
 // 개봉 타이밍(초): 칸마다 0.38초 간격, 도장 깨짐 → 돌 떨어짐(0.30) → 착지(0.55)
 const RS=.38,RD=.42,RL=.57,RV_MS=1850;
 const revealing=()=>!!(UI.rv&&Date.now()<UI.rv.until);
+const OVSEEN=new Map(); // 6목 줄(양 끝 좌표) → 처음 본 시각
 function boardSVG(bd,o){
  let s='';const el=o.el||0,fresh=new Map((o.fresh||[]).map(([r,c],i)=>[r+','+c,i]));
  // 이긴 다섯 돌: 차례로 떠올라 한 바퀴 돌고 내려옴
@@ -2386,9 +2389,11 @@ function boardSVG(bd,o){
  if(o.tags)o.tags.forEach(([r,c],i)=>{s+=chipMini(X(c),Y(r),i)});
  if(o.cells)o.cells.forEach(([r,c],i)=>{s+=chipSet(X(c),Y(r),i)});
  if(o.preview)o.preview.forEach(([r,c],i)=>{s+=chipPick(X(c),Y(r),i)});
- // 6목 이상: 점선과 '무효' 표시(규칙대로 승리 아님을 알려 줌)
+ // 6목 이상: 빨간 줄(승리 아님) + '무효' 글씨는 그 줄이 처음 생겼을 때 한 번만(2.5초 뒤 사라짐). 다시 그려도 이어서 흐려지게 시작 시각을 기억
  if(o.overs)o.overs.forEach(([p0,p1])=>{const x1=X(p0[1]),y1=Y(p0[0]),x2=X(p1[1]),y2=Y(p1[0]);const L=Math.hypot(x2-x1,y2-y1)||1,ux=(x2-x1)/L,uy=(y2-y1)/L;let bx=x2+ux*36,by=y2+uy*36;if(bx<26||bx>SZ-26||by<18||by>SZ-18){bx=x1-ux*36;by=y1-uy*36}bx=Math.max(26,Math.min(SZ-26,bx));by=Math.max(18,Math.min(SZ-18,by));
-  s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#FBF6EA" stroke-opacity=".85" stroke-width="4" stroke-dasharray="2 7" stroke-linecap="round"/><g transform="translate(${bx} ${by})"><rect x="-24" y="-13" width="48" height="26" rx="13" fill="#3A2510" fill-opacity=".9" stroke="#FBF6EA" stroke-width="1.5"/><text y="5.5" text-anchor="middle" font-family="NS,sans-serif" font-weight="800" font-size="16" fill="#FBF6EA">무효</text></g>`});
+  const k=[p0,p1].map(p=>p.join(',')).sort().join('|'),now=Date.now();if(!OVSEEN.has(k))OVSEEN.set(k,now);const el=now-OVSEEN.get(k);
+  s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#fff" stroke-opacity=".75" stroke-width="8" stroke-linecap="round"/><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#E5484D" stroke-width="4.5" stroke-linecap="round"/>`;
+  if(el<2500)s+=`<g transform="translate(${bx} ${by})"><g class="ovtag" style="animation-delay:-${(el/1000).toFixed(2)}s"><rect x="-24" y="-13" width="48" height="26" rx="13" fill="#E5484D" stroke="#fff" stroke-width="1.5"/><text y="5.5" text-anchor="middle" font-family="NS,sans-serif" font-weight="800" font-size="16" fill="#fff">무효</text></g></g>`});
  if(o.tap)s+=`<g transform="translate(${X(o.tap[1])} ${Y(o.tap[0])})"><circle class="tapring" r="15" fill="none" stroke="#FBF6EA" stroke-width="3"/><circle r="4" fill="#FBF6EA" opacity=".9"/></g>`;
  if(o.fives)o.fives.forEach(([p0,p1])=>{const a=`x1="${X(p0[1])}" y1="${Y(p0[0])}" x2="${X(p1[1])}" y2="${Y(p1[0])}" pathLength="1" stroke-linecap="round" class="draw" style="animation-delay:${(o.fdelay||0).toFixed(3)}s"`;s+=`<line ${a} stroke="#fff" stroke-width="10" opacity=".9"/><line ${a} stroke="#009999" stroke-width="5.5"/>`;
   // 이겼을 때: 줄이 다 그어지면 가운데에서 반짝임이 퍼짐
