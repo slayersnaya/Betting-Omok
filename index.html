@@ -1244,17 +1244,22 @@ ul.rknote li{text-wrap:balance}
 .tcar svg{width:16px;height:16px;fill:none;stroke:var(--faint);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .nkcost{display:flex;align-items:center;justify-content:center;gap:6px;margin:0 0 10px;font-size:13px;font-weight:700;color:var(--mute);white-space:nowrap}
 .nkcost b{color:var(--ink)}.nkcost .nkb{margin-left:6px;font-size:12px;color:var(--faint)}
-/* 출석체크 도장 판 */
-.attd{text-align:center}.attd h3{margin:0 0 12px;font-size:17px}
-.atrow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;max-width:320px;margin:0 auto}
-.atc{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:var(--soft);border:2px dashed var(--line);color:var(--faint);font-size:12px;font-weight:800}
-.atc.big{border-color:color-mix(in srgb,var(--jade) 55%,transparent);color:var(--jadeink)}
-.atc.on{background:radial-gradient(circle at 35% 30%,#3fd6c8,#009999 60%,#006b6b);border:2px solid #007a7a;color:#fff;box-shadow:inset 0 -2px 3px rgba(0,0,0,.25)}
-.atc svg{width:58%;height:58%;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-.atc.new{animation:atStamp .5s cubic-bezier(.2,1.6,.4,1) both}
-@keyframes atStamp{0%{transform:scale(1.9) rotate(-18deg);opacity:0}60%{opacity:1}100%{transform:none;opacity:1}}
-@media (prefers-reduced-motion:reduce){.atc.new{animation:none}}
-.atm{margin:14px 0 0;font-size:15px;font-weight:800;white-space:nowrap}
+/* 출석체크 달력 */
+.attd{text-align:center}.attd h3{margin:0 0 10px;font-size:17px;white-space:nowrap}.attd h3 .num{color:var(--jadeink);margin-left:4px}
+.acal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;max-width:330px;margin:0 auto}
+.acal .wk{font-size:11px;font-weight:800;color:var(--faint);padding-bottom:2px}
+.acd{position:relative;aspect-ratio:1;border-radius:10px;background:var(--soft);display:grid;place-items:center}
+.acd.e{background:none}.acd i{font-style:normal;font-size:12px;font-weight:700;color:var(--mute)}.acd.fu i{color:var(--faint)}
+.acd.td{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--jade) 70%,transparent)}
+.acd .stp{position:absolute;inset:8%;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#3fd6c8,#009999 60%,#006b6b);border:2px solid #007a7a;box-shadow:inset 0 -2px 3px rgba(0,0,0,.25);transform:rotate(-8deg)}
+.acd .stp svg{width:60%;height:60%;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.acd.new .stp{animation:atStamp .55s cubic-bezier(.2,1.6,.4,1) .25s both}
+@keyframes atStamp{0%{transform:scale(2.2) rotate(-28deg);opacity:0}55%{opacity:1}100%{transform:rotate(-8deg);opacity:1}}
+@media (prefers-reduced-motion:reduce){.acd.new .stp{animation:none}}
+.atms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:10px auto 0;max-width:330px}
+.atms>span{display:flex;align-items:center;justify-content:center;gap:3px;padding:5px 0;border-radius:8px;background:var(--soft);font-size:12px;font-weight:800;color:var(--mute);white-space:nowrap}
+.atms>span.ok{background:color-mix(in srgb,var(--jade) 18%,transparent);color:var(--jadeink)}.atms .gdot{width:8px;height:8px}
+.atm{margin:12px 0 0;font-size:15px;font-weight:800;white-space:nowrap}
 /* 교환소 시트 */
 .shopsh{display:flex;flex-direction:column;height:86vh;height:86dvh;overflow:hidden}
 .shopsh>*{flex:none}.shopsh>*+*:not(.shh){margin-top:10px}
@@ -1598,7 +1603,7 @@ ul.rknote li{text-wrap:balance}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1724';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1737';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -5119,7 +5124,7 @@ const ecoRwItems=(n,t)=>['z'+n+'_'+t].concat(t===4?['zn'+n]:t>=5?['zt'+n+'_'+t]:
 const ecoSrv=()=>!!(db&&user&&user.firebase&&SEAT);
 const ecoFresh=()=>({g:0,d:ecoDay(),dc:0,dq:[],own:[],eq:{},cl:[]});
 function ecoNorm(d){const o=ecoFresh();if(!d||typeof d!=='object')return o;const I=v=>Number.isInteger(v)?v:0,S=a=>Array.isArray(a)?a.filter(x=>typeof x==='string'):[];
- o.g=Math.max(0,Math.min(ECO_MAX,I(d.g)));o.d=I(d.d);o.dc=Math.max(0,I(d.dc));o.dq=S(d.dq);o.own=S(d.own);o.cl=S(d.cl);if(Number.isInteger(d.ck)&&d.ck>=0&&d.ck<=6)o.ck=d.ck;if(Number.isInteger(d.nc)&&d.nc>=0&&d.nc<=9999)o.nc=d.nc;
+ o.g=Math.max(0,Math.min(ECO_MAX,I(d.g)));o.d=I(d.d);o.dc=Math.max(0,I(d.dc));o.dq=S(d.dq);o.own=S(d.own);o.cl=S(d.cl);if(Number.isInteger(d.ck)&&d.ck>=0&&d.ck<=6)o.ck=d.ck;if(Number.isInteger(d.am))o.am=d.am;if(Array.isArray(d.ad))o.ad=d.ad.filter(x=>Number.isInteger(x)&&x>=1&&x<=31);if(Number.isInteger(d.nc)&&d.nc>=0&&d.nc<=9999)o.nc=d.nc;
  if(d.eq&&typeof d.eq==='object'&&!Array.isArray(d.eq))for(const k of ECO_SLOTS)if(typeof d.eq[k]==='string'&&(d.eq[k]===''||o.own.includes(d.eq[k])))o.eq[k]=d.eq[k];return o}
 // 날짜가 바뀌면 오늘 받은 양·오늘 항목은 0부터(규칙도 서버 날짜로 같은 계산)
 function ecoBase(w){const n=JSON.parse(JSON.stringify(w)),t=ecoDay();if(n.d!==t){n.d=t;n.dc=0;n.dq=[]}return n}
@@ -5140,8 +5145,8 @@ async function ecoLoad(){let loc=null;try{loc=JSON.parse(lget('bo-wal')||'null')
 function ecoBoot(){if(ECO.boot)return;ECO.boot=1;ecoDefs();ecoLoad().catch(()=>{ECO.ready()});
  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&ECO.ok&&ecoSrv()&&Date.now()-(ECO.at||0)>5*60e3){ECO.at=Date.now();ECO.q=ECO.q.then(async()=>{try{const x=await db.doc('wal/'+SEAT).get();if(x.exists){ECO.w=ecoNorm(x.data());ecoPaint()}}catch(e){}})}});
  setInterval(ecoTick,4000)}
-function ecoAfterLoad(){ECO.at=Date.now();ecoLook();ecoPaint();ecoSyncPub();setTimeout(()=>{ecoAch();ecoSeasonCheck()},800)}
-function ecoTick(){if(!ECO.ok)return;try{ecoPromoCheck()}catch(e){}try{ecoSyncPub()}catch(e){}if(UI.view==='lobby'){try{ecoSeasonCheck()}catch(e){}const c=$('#ecoCard');if(c&&c.dataset.d!==String(ecoDay()))ecoPaint()}}
+function ecoAfterLoad(){ECO.at=Date.now();ecoLook();ecoPaint();ecoSyncPub();setTimeout(()=>{try{attAuto()}catch(e){}},1500);setTimeout(()=>{ecoAch();ecoSeasonCheck()},800)}
+function ecoTick(){if(!ECO.ok)return;try{attAuto()}catch(e){}try{ecoPromoCheck()}catch(e){}try{ecoSyncPub()}catch(e){}if(UI.view==='lobby'){try{ecoSeasonCheck()}catch(e){}const c=$('#ecoCard');if(c&&c.dataset.d!==String(ecoDay()))ecoPaint()}}
 // ----- 오늘의 과제: 날짜마다 고정 목록에서 3개(모든 기기 같음). 진행은 이 기기에 저장 -----
 const ECO_MIS=[{id:'g3',t:'대국 3판',n:3},{id:'aw',t:'AI 대국 1승',n:1},{id:'fr',t:'일반 게임 1판',n:1},{id:'rk',t:'랭크전 1판',n:1},{id:'pz',t:'오늘의 묘수 풀이',n:1},{id:'rv',t:'복기 1번 보기',n:1},{id:'w2',t:'아무 대국 2승',n:2},{id:'am',t:'AI 중수 이상 1판',n:1}];
 function ecoMis(day){day=day||ecoDay();const pool=ECO_MIS.filter(m=>!(m.id==='rk'&&RANK_MAINT));let x=(Math.imul(day,2654435761)^0x5bd1e995)>>>0;const r=()=>{x=Math.imul(x^x>>>15,1|x)+0x6D2B79F5>>>0;return x/4294967296};
@@ -5358,22 +5363,31 @@ async function ecoWipe(){if(!ecoSrv()||!ECO.ok)return;await ecoWrite('reset',n=>
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;if(!a.startsWith('eco'))return;
  if(a==='ecoopen')ecoOpen(b.dataset.v);else if(a==='ecotab'){ECO.tab=b.dataset.v;ecoRender();const bd=$('#shopBody');if(bd)bd.scrollIntoView({block:'nearest'})}
  else if(a==='ecoitem')ecoItemTap(b.dataset.id);else if(a==='ecoeq')ecoEquip(b.dataset.c,b.dataset.id||'');else if(a==='ecosz'){if(b.closest('#recap'))try{recapClose()}catch(e){}ecoSeasonClaim()}else if(a==='ecoatt'){attDone()?attShow(-1):attStamp()}});
-// ===== 출석체크: 하루 한 번 도장. 7칸 판 — 1~6번째 옥돌 10, 7번째 옥돌 50 → 판 비움(연속일 필요 없음). 지갑 wal의 dq 'c'(오늘 찍음) · ck(판에 찍힌 수) =====
-const ATT_N=7,attAmt=c0=>c0===ATT_N-1?50:10;
-const attDone=()=>!!(ECO.w&&ECO.w.d===ecoDay()&&ECO.w.dq.includes('c'));
-const attCnt=()=>{const w=ECO.w;if(!w)return 0;const c=w.ck|0;return attDone()&&c===0?ATT_N:c};
-function attLine(){if(!ECO.w)return'';const n=attCnt(),dn=attDone();
- return `<button class="eqline att" data-act="ecoatt" aria-label="출석체크 ${n}/${ATT_N}${dn?' · 오늘 완료':' · 도장 찍기'}"><span class="lbl">출석체크</span><span class="pips" aria-hidden="true">${[...Array(ATT_N)].map((_,i)=>`<i class="${i<n?'on':''}"></i>`).join('')}</span><span class="qt">${dn?'오늘 완료':'도장 찍기'}</span><span class="num qn">${n}/${ATT_N}</span></button>`}
-function attStamp(){if(!ECO.ok||!ECO.w||attDone()||ECO.attBusy)return Promise.resolve(false);ECO.attBusy=1;const c0=ECO.w.ck|0,amt=attAmt(c0);
- return ecoWrite('att',n=>{if(n.dq.includes('c'))return false;const c=n.ck|0;n.dq.push('c');n.ck=c===ATT_N-1?0:c+1;n.g=Math.min(ECO_MAX,n.g+attAmt(c))})
-  .then(ok=>{ECO.attBusy=0;if(ok)attShow(c0,amt);else toast('도장을 찍지 못했어요 · 잠시 뒤 다시');return ok})}
-// 도장 판 보기. at=이번에 찍은 칸(0부터), -1이면 보기만
-function attShow(at,amt){const n=at>=0?at+1:attCnt(),full=n>=ATT_N;
- const cells=[...Array(ATT_N)].map((_,i)=>`<span class="atc${i<n?' on':''}${i===at?' new':''}${i===ATT_N-1?' big':''}">${i<n?`<svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-9"/></svg>`:i===ATT_N-1?'<b class="num">50</b>':`<b class="num">${i+1}</b>`}</span>`).join('');
- const msg=at>=0?(full?`7칸 완성 · 옥돌 <b class="num">+${amt}</b>`:`오늘 도장 · 옥돌 <b class="num">+${amt}</b>`):(attDone()?'오늘은 찍었어요 · 내일 또':'');
- dialog(`<div class="attd"><h3 id="attH">출석체크</h3><div class="atrow">${cells}</div>${msg?`<p class="atm">${msg}</p>`:''}</div>`,'확인',()=>{});
+// ===== 출석체크: 그날 처음 앱을 열면 이번 달 달력의 오늘 날짜에 자동으로 도장 + 옥돌. 한 달(한국 시각) 단위로 초기화
+// 지갑 wal: am 이번 달(yyyymm) · ad 이번 달 도장 찍은 날(1~31). 보상: 매일 10, 이번 달 7·14번째 도장 50, 21번째 80, 28번째 120(규칙도 같은 표)
+const attAmt=k=>k===7||k===14?50:k===21?80:k===28?120:10,ATT_MS=[7,14,21,28];
+const attNow=()=>{const t=new Date(Date.now()+KST);return{y:t.getUTCFullYear(),m:t.getUTCMonth()+1,d:t.getUTCDate(),wd:t.getUTCDay()}};
+const attMon=()=>{const t=attNow();return t.y*100+t.m};
+const attDays=()=>{const w=ECO.w;return w&&w.am===attMon()&&Array.isArray(w.ad)?w.ad:[]};
+const attDone=()=>attDays().includes(attNow().d);
+function attLine(){if(!ECO.w)return'';const n=attDays().length,dn=attDone(),nx=ATT_MS.find(x=>x>n);
+ return `<button class="eqline att" data-act="ecoatt" aria-label="출석체크 이번 달 ${n}일${dn?' · 오늘 완료':''}"><span class="lbl">출석체크</span><span class="qt">${dn?'오늘 완료':'오늘 도장 찍기'}${nx?` · ${nx}일째 옥돌 ${attAmt(nx)}`:''}</span><span class="num qn">${n}일</span></button>`}
+function attStamp(){if(!ECO.ok||!ECO.w||attDone()||ECO.attBusy)return Promise.resolve(false);ECO.attBusy=1;const T=attNow(),M=T.y*100+T.m;
+ let amt=0;return ecoWrite('att',n=>{const old=n.am===M&&Array.isArray(n.ad)?n.ad:[];if(old.includes(T.d))return false;amt=attAmt(old.length+1);n.am=M;n.ad=old.concat([T.d]);n.g=Math.min(ECO_MAX,n.g+amt)})
+  .then(ok=>{ECO.attBusy=0;if(ok)attShow(T.d,amt);else ECO.attFail=Date.now();return ok})}
+// 이번 달 달력. at=오늘 막 찍은 날(도장 애니메이션), -1이면 보기만
+function attShow(at,amt){const T=attNow(),days=attDays(),first=new Date(Date.UTC(T.y,T.m-1,1)).getUTCDay(),dim=new Date(Date.UTC(T.y,T.m,0)).getUTCDate(),n=days.length;
+ let cells='';for(let i=0;i<first;i++)cells+='<span class="acd e"></span>';
+ for(let d=1;d<=dim;d++){const on=days.includes(d),k=on?days.indexOf(d)+1:0;cells+=`<span class="acd${on?' on':''}${d===at?' new':''}${d===T.d?' td':''}${d>T.d?' fu':''}"><i class="num">${d}</i>${on?`<b class="stp" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-9"/></svg></b>`:''}</span>`}
+ const ms=ATT_MS.map(x=>`<span class="${n>=x?'ok':''}"><b class="num">${x}일</b> <span class="gdot" aria-hidden="true"></span>${attAmt(x)}</span>`).join('');
+ const msg=at>0?`오늘 출석 · 옥돌 <b class="num">+${amt}</b>`:(attDone()?'오늘 출석 완료':'');
+ dialog(`<div class="attd"><h3 id="attH">${T.m}월 출석체크 <span class="num">${n}일</span></h3><div class="acal" role="img" aria-label="${T.m}월 출석 ${n}일"><span class="wk">일</span><span class="wk">월</span><span class="wk">화</span><span class="wk">수</span><span class="wk">목</span><span class="wk">금</span><span class="wk">토</span>${cells}</div><div class="atms">${ms}</div>${msg?`<p class="atm">${msg}</p>`:''}</div>`,'확인',()=>{});
  {const x=document.querySelector('#dlg [data-act=dlgno]');if(x)x.remove()}$('#dlg').setAttribute('aria-labelledby','attH')}
-rwAdd({id:'att',order:-1,items:()=>!ECO.ok||!ECO.w||attDone()?[]:[{id:'att',t:'출석체크',st:'ready',g:attAmt(ECO.w.ck|0)}],claim:()=>attStamp()});
+// 그날 처음 열면 자동으로: 로비에서 다른 창이 없을 때(대국·튜토리얼·다른 안내 중이면 기다림). 실패하면 1분 뒤 다시
+function attAuto(){if(!ECO.ok||!ECO.w||attDone()||ECO.attBusy)return;try{if(sessionStorage.getItem('bo-noatt'))return}catch(e){} // 자동 시험용 끄기
+ if(ECO.attFail&&Date.now()-ECO.attFail<60e3)return;
+ if(UI.view!=='lobby'||UI.mode==='tut'||shOpen||!$('#dlg').classList.contains('hide')||!$('#welcome').classList.contains('hide'))return;attStamp()}
+rwAdd({id:'att',order:-1,items:()=>!ECO.ok||!ECO.w||attDone()||!ECO.attFail?[]:[{id:'att',t:'출석체크',st:'ready',g:attAmt(attDays().length+1)}],claim:()=>attStamp()});
 // 홈 보상 띠(rwBar)에 상점 보상 등록 — 받을 것(ready)·진행 중 과제(prog)
 rwAdd({id:'eco',order:0,
  items:()=>{if(!ECO.ok||!ECO.w)return[];

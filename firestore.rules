@@ -356,7 +356,8 @@ service cloud.firestore {
     function eqPub(v) { return v is string && v.size() <= 64 && v.matches('^[a-z0-9_.]*$')
       && (v == '' || get(walPath(me())).data.own.hasAll(v.split('[.]'))); }
     function slotOk(e, k, re) { return !(k in e) || e[k] == '' || e[k].matches(re); }
-    function walShape(n) { return n.keys().hasOnly(['g','d','dc','dq','own','eq','cl','k','at','ck','nc'])
+    function walShape(n) { return n.keys().hasOnly(['g','d','dc','dq','own','eq','cl','k','at','ck','nc','am','ad'])
+      && (!('am' in n) || n.am is int) && (!('ad' in n) || (n.ad is list && n.ad.size() <= 31))
       && (!('nc' in n) || (n.nc is int && n.nc >= 0 && n.nc <= 9999))
       && (!('ck' in n) || (n.ck is int && n.ck >= 0 && n.ck <= 6))
       && n.keys().hasAll(['g','d','dc','dq','own','eq','cl','k','at'])
@@ -381,12 +382,15 @@ service cloud.firestore {
       return n.dq.hasAll(dqOld(o)) && dlt >= 0 && n.dc == dcOld(o) + dlt
         && (dlt > 0 || added > 0) && dlt <= 15 + 20 * wNew + 10 * (added - wNew)
         && n.own == o.own && n.cl == o.cl && (!('c' in n.dq) || ('c' in dqOld(o))); }
-    // 출석체크: 하루 한 번 도장(dq 'c'). 7칸 판(ck 0~6), 1~6번째 도장 옥돌 10 · 7번째 50 후 판 비움
+    // 출석체크: 그날 처음 열면 이번 달(한국 시각) 달력 오늘 날짜에 도장. am 이번 달(yyyymm), ad 찍은 날 목록. 매일 10, 7·14번째 50, 21번째 80, 28번째 120
+    function attAmt(k) { return k == 7 || k == 14 ? 50 : k == 21 ? 80 : k == 28 ? 120 : 10; }
     function walAtt(o, n) {
-      let c0 = o.get('ck', 0);
-      return !('c' in dqOld(o)) && n.dq == dqOld(o).concat(['c']) && n.dc == dcOld(o)
-        && n.ck == (c0 == 6 ? 0 : c0 + 1) && n.g == o.g + (c0 == 6 ? 50 : 10)
-        && n.own == o.own && n.cl == o.cl && n.eq == o.eq; }
+      let t = request.time + duration.value(9, 'h');
+      let m = t.year() * 100 + t.month();
+      let old = o.get('am', 0) == m ? o.get('ad', []) : [];
+      return !(t.day() in old) && n.am == m && n.ad == old.concat([t.day()])
+        && n.g == o.g + attAmt(old.size() + 1)
+        && n.own == o.own && n.cl == o.cl && n.eq == o.eq && sameDay(o, n); }
     // 닉네임 변경: nc(변경 횟수) +1. 첫 변경 무료, 두 번째부터 옥돌 500(관리자는 무료). 남이 먼저 쓰는 이름이라 바꾸는 경우는 지갑에 쓰지 않음
     function walNick(o, n) {
       let c0 = o.get('nc', 0);
@@ -429,7 +433,8 @@ service cloud.firestore {
             || (request.resource.data.k == 'att' && walAtt(resource.data, request.resource.data))
             || (request.resource.data.k == 'nick' && walNick(resource.data, request.resource.data)))
         && (request.resource.data.k == 'nick' || request.resource.data.get('nc', 0) == resource.data.get('nc', 0))
-        && (request.resource.data.k == 'att' || request.resource.data.get('ck', 0) == resource.data.get('ck', 0));
+        && (request.resource.data.k == 'att' || (request.resource.data.get('am', 0) == resource.data.get('am', 0) && request.resource.data.get('ad', []) == resource.data.get('ad', [])))
+        && request.resource.data.get('ck', 0) == resource.data.get('ck', 0);
       allow delete: if false;
     }
 
