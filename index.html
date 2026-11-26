@@ -1695,7 +1695,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.2020';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.2022';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2725,7 +2725,7 @@ function snd(k,...a){try{if(SND[k]){SG=SNDG[k]||1;SND[k](...a);SG=1;if(k==='win'
 function beep(){snd('tick')} // 예전 호출 호환
 // ===== 배경음(파일): 은은하게(음량 낮게·천천히 커짐), 장면별로 바뀔 때 부드럽게 넘어감, 곡 끝에서 겹쳐 이어 붙여 끊김 없이 반복 =====
 // 파일은 sounds/ 에 두고 아래 표에 등록. 없는 장면은 조용히(로비 곡을 대국 중에 틀지 않음). 설정 '배경음'(bo-bgm, 기본 켬)
-const BGM_FILES={lobby:'sounds/bgm_lobby.mp3',game:'sounds/bgm_game.mp3',tense:'sounds/bgm_tense.mp3'};
+const BGM_FILES={lobby:'sounds/bgm_lobby.mp3',game:'sounds/bgm_game.mp3',tense:'sounds/bgm_tense.mp3',puzzle:'sounds/bgm_puzzle.mp3'};
 const BGM_VOL={lobby:.24,game:.15,tense:.18,match:.22,puzzle:.18};
 const BG={u:[],cur:-1,scene:'',duck:1,ok:false};
 const bgmOn=()=>lget('bo-bgm')!=='0';
