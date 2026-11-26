@@ -4,7 +4,7 @@
 const V='https://www.gstatic.com/firebasejs/10.12.2/';
 const cfg=window.BO_FIREBASE_CONFIG,FB=window.__BO_FB;
 try{
- const [{initializeApp},{getAuth,signInAnonymously,onAuthStateChanged,GoogleAuthProvider,linkWithPopup,signInWithCredential,reauthenticateWithPopup},{initializeFirestore,doc,collection,getDoc,getDocs,setDoc,deleteDoc,onSnapshot,query,orderBy,limit,where,serverTimestamp}]=
+ const [{initializeApp},{getAuth,signInAnonymously,onAuthStateChanged,GoogleAuthProvider,linkWithPopup,signInWithCredential,reauthenticateWithPopup,EmailAuthProvider,linkWithCredential,signInWithEmailAndPassword,sendPasswordResetEmail,reauthenticateWithCredential},{initializeFirestore,doc,collection,getDoc,getDocs,setDoc,deleteDoc,onSnapshot,query,orderBy,limit,where,serverTimestamp}]=
   await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-auth.js'),import(V+'firebase-firestore.js')]);
  const app=initializeApp(cfg),auth=getAuth(app),fs=initializeFirestore(app,{experimentalForceLongPolling:true,ignoreUndefinedProperties:true});
  // 로그인: 처음이면 익명(게스트)으로 바로 시작
@@ -72,13 +72,20 @@ try{
   id:()=>Promise.resolve(auth.currentUser?auth.currentUser.uid:uid),
   can:()=>Promise.resolve(true),
   me:()=>Promise.resolve({name:''}),
-  google:()=>{const u=auth.currentUser;if(!u||u.isAnonymous)return null;const g=u.providerData.find(p=>p.providerId==='google.com');return g?(g.email||'연결됨'):null},
+  // 연결된 계정(구글 또는 이메일)의 이메일. 게스트면 null. provider()는 'google'·'email'·null
+  google:()=>{const u=auth.currentUser;if(!u||u.isAnonymous)return null;const g=u.providerData.find(p=>p.providerId==='google.com'||p.providerId==='password');return g?(g.email||'연결됨'):null},
+  provider:()=>{const u=auth.currentUser;if(!u||u.isAnonymous)return null;return u.providerData.some(p=>p.providerId==='google.com')?'google':u.providerData.some(p=>p.providerId==='password')?'email':null},
+  // 이메일: 지금 게스트 기록에 이메일 계정을 붙임. 이미 있는 이메일이면 그 비밀번호로 로그인(그 계정 기록으로 전환)
+  linkEmail:async(email,pw)=>{try{await linkWithCredential(auth.currentUser,EmailAuthProvider.credential(email,pw));return 'linked'}
+   catch(e){if(e&&(e.code==='auth/email-already-in-use'||e.code==='auth/credential-already-in-use')){await signInWithEmailAndPassword(auth,email,pw);return 'switched'}throw e}},
+  loginEmail:(email,pw)=>signInWithEmailAndPassword(auth,email,pw).then(()=>'switched'),
+  resetEmail:email=>sendPasswordResetEmail(auth,email),
   linkGoogle:()=>linkWithPopup(auth.currentUser,prov).then(()=> 'linked').catch(e=>{
    if(e&&e.code==='auth/credential-already-in-use'){const cred=GoogleAuthProvider.credentialFromError(e);return signInWithCredential(auth,cred).then(()=>'switched')}
    if(e&&e.code==='auth/popup-blocked'){const x=new Error('popup');x.code='popup-blocked';throw x}
    throw e}),
   // 계정 삭제(구글 계정은 최근 로그인이 필요하면 한 번 더 확인 창)
-  deleteAccount:async()=>{const u=auth.currentUser;if(!u)return;try{await u.delete()}catch(e){if(e&&e.code==='auth/requires-recent-login'&&!u.isAnonymous){await reauthenticateWithPopup(u,prov);await u.delete()}else throw e}}};
+  deleteAccount:async pw=>{const u=auth.currentUser;if(!u)return;try{await u.delete()}catch(e){if(e&&e.code==='auth/requires-recent-login'&&!u.isAnonymous){if(u.providerData.some(p=>p.providerId==='google.com'))await reauthenticateWithPopup(u,prov);else{if(!pw){const x=new Error('pw');x.code='need-password';throw x}const em=(u.providerData.find(p=>p.providerId==='password')||{}).email;await reauthenticateWithCredential(u,EmailAuthProvider.credential(em,pw))}await u.delete()}else throw e}}};
  FB.resolve({db,user,room});
 }catch(e){console.warn('firebase init failed',e);FB.resolve({})}
 

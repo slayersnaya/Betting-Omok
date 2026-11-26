@@ -6,9 +6,10 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
     function me() { return request.auth.uid; }
-    function google() { return signedIn() && 'google.com' in request.auth.token.firebase.identities; }
+    // 연결된 계정(구글 또는 이메일·비밀번호). 게스트(익명)는 아님
+    function google() { return signedIn() && ('google.com' in request.auth.token.firebase.identities || request.auth.token.firebase.sign_in_provider == 'password' || 'email' in request.auth.token.firebase.identities); }
     // 관리자(AI 대국 기록 전체 보기): 관리자 구글 이메일을 아래 목록에 넣으면 됨
-    function isAdmin() { return google() && request.auth.token.email_verified == true && request.auth.token.email in ['slayersnaya@gmail.com']; }
+    function isAdmin() { return google() && 'google.com' in request.auth.token.firebase.identities && request.auth.token.email_verified == true && request.auth.token.email in ['slayersnaya@gmail.com']; }
     function nowMs() { return request.time.toMillis(); }
     function nearNow(ms, back, ahead) { return ms is int && ms > nowMs() - back && ms < nowMs() + ahead; }
     function nick(v) { return v is string && v.size() <= 12; }

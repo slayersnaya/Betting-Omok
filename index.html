@@ -50,8 +50,8 @@ p{margin:0 0 8px}.sub{color:var(--mute);font-size:13px}
 .chip{min-height:46px;padding:6px 12px;border-radius:12px;border:2px solid transparent;background:var(--soft);cursor:pointer;text-align:center;line-height:1.25}
 .chip b{display:block;font-size:14px;white-space:nowrap}.chip span{font-size:11px;color:var(--mute);white-space:nowrap}
 .chip[aria-pressed=true]{border-color:var(--jade);background:var(--sel)}
-input[type=text],input[type=number]{font-size:16px;min-height:46px;border-radius:12px;border:2px solid transparent;background:var(--soft);padding:0 12px;width:100%}
-input[type=text]:focus{border-color:var(--jade);outline:0}
+input[type=text],input[type=number],input[type=email],input[type=password]{font-size:16px;min-height:46px;border-radius:12px;border:2px solid transparent;background:var(--soft);padding:0 12px;width:100%}
+input[type=text]:focus,input[type=email]:focus,input[type=password]:focus{border-color:var(--jade);outline:0}
 .st{display:inline-block;border-radius:50%;flex:none}
 .st.k{background:radial-gradient(circle at 36% 30%,#62676b,#2a2e31 28%,#0d0f10 72%,#030404);box-shadow:0 1px 2px rgba(0,0,0,.5)}
 .st.w{background:radial-gradient(circle at 38% 32%,#fff,#f6f3ec 45%,#e0dace 82%,#bdb5a5);box-shadow:0 1px 2px rgba(0,0,0,.4)}
@@ -669,6 +669,9 @@ input,select,textarea{font-size:16px}
 .nkerr{min-height:18px;margin:6px 2px 2px;font-size:13px;font-weight:800;color:#e06a4f}.nkerr:empty{min-height:0;margin:0}
 .tag.strk.w{background:color-mix(in srgb,#CC6600 22%,transparent);color:#f0a35e}.tag.strk.l{background:color-mix(in srgb,#3366CC 20%,transparent);color:#8fb0ee}
 :root[data-theme=light] .tag.strk.w{color:#a84d00}:root[data-theme=light] .tag.strk.l{color:#2a55b0}
+.accsub{margin:0 2px 12px;font-size:13px;color:var(--mute);font-weight:700}.accsub span{display:block}
+.accg{gap:8px}.ordiv{display:flex;align-items:center;gap:10px;margin:14px 2px 10px;font-size:12px;color:var(--mute);font-weight:800}.ordiv::before,.ordiv::after{content:'';flex:1;height:1px;background:var(--line)}
+.accrow{display:grid;grid-template-columns:3fr 2fr;gap:8px;margin-top:4px}.accfg{display:block;margin:4px auto 0;font-size:13px}
 /* ===== 랭크 탭: 잠김 표시·시상대(1~3위)·순위 줄 ===== */
 .tabbar .tlk{display:none;position:absolute;top:7px;left:calc(50% + 5px);width:14px;height:14px;padding:2px;border-radius:50%;background:var(--raise);fill:none;stroke:var(--mute);stroke-width:2.6}
 .tabbar button.lk{color:var(--faint)}.tabbar button.lk .tlk{display:block}.tabbar button.lk .pip{display:none}
@@ -910,9 +913,20 @@ input,select,textarea{font-size:16px}
 </div>
 <div id="coin" class="hide" role="dialog" aria-label="선 플레이어 정하기"><div class="cstage"><div class="coin" id="coinEl"><div class="face f1"><span class="cst st k"></span><b id="cn1"></b></div><div class="face f2"><span class="cst st w"></span><b id="cn2"></b></div></div><p class="ctext" id="ctext"></p><p class="csub" id="csub"></p></div></div>
 <div id="cover" class="hide"></div>
-<div id="welcome" class="hide" role="dialog" aria-modal="true" aria-labelledby="wlT"><div class="wcard"><svg class="wart" id="wart" viewBox="0 0 240 132" aria-hidden="true"></svg><div><h2 id="wlT">처음 오셨네요</h2><p><span>몰래 건 점수로 돌을 놓는 오목</span><br><span>1분이면 배워요</span></p><button class="btn wide" data-act="wtut">튜토리얼 시작</button><button class="btn ghost wide" data-act="wskip">바로 둘래요</button><button class="btn ghost wide wgl" data-act="wglink">구글로 기록 불러오기</button></div></div></div>
+<div id="welcome" class="hide" role="dialog" aria-modal="true" aria-labelledby="wlT"><div class="wcard"><svg class="wart" id="wart" viewBox="0 0 240 132" aria-hidden="true"></svg><div><h2 id="wlT">처음 오셨네요</h2><p><span>몰래 건 점수로 돌을 놓는 오목</span><br><span>1분이면 배워요</span></p><button class="btn wide" data-act="wtut">튜토리얼 시작</button><button class="btn ghost wide" data-act="wskip">바로 둘래요</button><button class="btn ghost wide wgl" data-act="wglink">구글로 기록 불러오기</button><button class="linkbtn wgl" data-act="wemail" style="display:block;margin:2px auto 0">이메일로 불러오기</button></div></div></div>
 <!-- 시트는 화면(로비·대국) 밖에 둠: 대국 화면에서도 닉네임 등을 열 수 있게 -->
  <div class="shbg hide" data-act="shclose" id="shbg"></div>
+ <div class="lsheet hide" id="sh-acc" role="dialog" aria-label="계정 연결">
+  <div class="shh"><h2>계정 연결</h2><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <p class="accsub"><span>기록을 지키고 랭크전을 할 수 있어요</span><span>지금 기록은 그대로 이어져요</span></p>
+  <button class="btn ghost wide accg" data-act="glink"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;stroke:none"><path fill="#4285F4" d="M22.6 12.2c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.3-4.8 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.8c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2.1a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.2-3.2A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg>구글로 계속</button>
+  <div class="ordiv"><span>또는 이메일</span></div>
+  <input type="email" id="accEm" placeholder="이메일" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" aria-label="이메일">
+  <input type="password" id="accPw" placeholder="비밀번호 (6자 이상)" autocomplete="current-password" aria-label="비밀번호" style="margin-top:8px">
+  <p class="nkerr" id="accErr" role="alert"></p>
+  <div class="accrow"><button class="btn" data-act="emlink" id="emLink">가입하고 연결</button><button class="btn ghost" data-act="emlogin" id="emLogin">로그인</button></div>
+  <button class="linkbtn accfg" data-act="emreset">비밀번호를 잊었어요</button>
+ </div>
  <div class="lsheet hide" id="sh-nick" role="dialog" aria-label="닉네임">
   <div class="shh"><h2>닉네임</h2><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <input type="text" id="nick" maxlength="12" placeholder="이름" autocomplete="nickname" aria-describedby="nickErr">
@@ -948,14 +962,14 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1401';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1434';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
 const V='https://www.gstatic.com/firebasejs/10.12.2/';
 const cfg=window.BO_FIREBASE_CONFIG,FB=window.__BO_FB;
 try{
- const [{initializeApp},{getAuth,signInAnonymously,onAuthStateChanged,GoogleAuthProvider,linkWithPopup,signInWithCredential,reauthenticateWithPopup},{initializeFirestore,doc,collection,getDoc,getDocs,setDoc,deleteDoc,onSnapshot,query,orderBy,limit,where,serverTimestamp}]=
+ const [{initializeApp},{getAuth,signInAnonymously,onAuthStateChanged,GoogleAuthProvider,linkWithPopup,signInWithCredential,reauthenticateWithPopup,EmailAuthProvider,linkWithCredential,signInWithEmailAndPassword,sendPasswordResetEmail,reauthenticateWithCredential},{initializeFirestore,doc,collection,getDoc,getDocs,setDoc,deleteDoc,onSnapshot,query,orderBy,limit,where,serverTimestamp}]=
   await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-auth.js'),import(V+'firebase-firestore.js')]);
  const app=initializeApp(cfg),auth=getAuth(app),fs=initializeFirestore(app,{experimentalForceLongPolling:true,ignoreUndefinedProperties:true});
  // 로그인: 처음이면 익명(게스트)으로 바로 시작
@@ -1023,13 +1037,20 @@ try{
   id:()=>Promise.resolve(auth.currentUser?auth.currentUser.uid:uid),
   can:()=>Promise.resolve(true),
   me:()=>Promise.resolve({name:''}),
-  google:()=>{const u=auth.currentUser;if(!u||u.isAnonymous)return null;const g=u.providerData.find(p=>p.providerId==='google.com');return g?(g.email||'연결됨'):null},
+  // 연결된 계정(구글 또는 이메일)의 이메일. 게스트면 null. provider()는 'google'·'email'·null
+  google:()=>{const u=auth.currentUser;if(!u||u.isAnonymous)return null;const g=u.providerData.find(p=>p.providerId==='google.com'||p.providerId==='password');return g?(g.email||'연결됨'):null},
+  provider:()=>{const u=auth.currentUser;if(!u||u.isAnonymous)return null;return u.providerData.some(p=>p.providerId==='google.com')?'google':u.providerData.some(p=>p.providerId==='password')?'email':null},
+  // 이메일: 지금 게스트 기록에 이메일 계정을 붙임. 이미 있는 이메일이면 그 비밀번호로 로그인(그 계정 기록으로 전환)
+  linkEmail:async(email,pw)=>{try{await linkWithCredential(auth.currentUser,EmailAuthProvider.credential(email,pw));return 'linked'}
+   catch(e){if(e&&(e.code==='auth/email-already-in-use'||e.code==='auth/credential-already-in-use')){await signInWithEmailAndPassword(auth,email,pw);return 'switched'}throw e}},
+  loginEmail:(email,pw)=>signInWithEmailAndPassword(auth,email,pw).then(()=>'switched'),
+  resetEmail:email=>sendPasswordResetEmail(auth,email),
   linkGoogle:()=>linkWithPopup(auth.currentUser,prov).then(()=> 'linked').catch(e=>{
    if(e&&e.code==='auth/credential-already-in-use'){const cred=GoogleAuthProvider.credentialFromError(e);return signInWithCredential(auth,cred).then(()=>'switched')}
    if(e&&e.code==='auth/popup-blocked'){const x=new Error('popup');x.code='popup-blocked';throw x}
    throw e}),
   // 계정 삭제(구글 계정은 최근 로그인이 필요하면 한 번 더 확인 창)
-  deleteAccount:async()=>{const u=auth.currentUser;if(!u)return;try{await u.delete()}catch(e){if(e&&e.code==='auth/requires-recent-login'&&!u.isAnonymous){await reauthenticateWithPopup(u,prov);await u.delete()}else throw e}}};
+  deleteAccount:async pw=>{const u=auth.currentUser;if(!u)return;try{await u.delete()}catch(e){if(e&&e.code==='auth/requires-recent-login'&&!u.isAnonymous){if(u.providerData.some(p=>p.providerId==='google.com'))await reauthenticateWithPopup(u,prov);else{if(!pw){const x=new Error('pw');x.code='need-password';throw x}const em=(u.providerData.find(p=>p.providerId==='password')||{}).email;await reauthenticateWithCredential(u,EmailAuthProvider.credential(em,pw))}await u.delete()}else throw e}}};
  FB.resolve({db,user,room});
 }catch(e){console.warn('firebase init failed',e);FB.resolve({})}
 
@@ -2121,7 +2142,7 @@ function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.re
 // Firebase 모드 계정: 게스트(익명)로 시작, 원하면 구글 계정 연결(기록 그대로 유지)
 // 관리자: 연결된 구글 계정이 관리자 이메일일 때만 관리자 버튼이 보임(실제 권한은 서버 규칙이 다시 확인)
 const ADMIN_EMAILS=['slayersnaya@gmail.com'];
-const isAdmin=()=>{try{const g=user&&user.firebase&&user.google&&user.google();return !!g&&ADMIN_EMAILS.includes(String(g).toLowerCase())}catch(e){return false}};
+const isAdmin=()=>{try{const g=user&&user.firebase&&user.google&&user.google()&&(!user.provider||user.provider()==='google')&&user.google();return !!g&&ADMIN_EMAILS.includes(String(g).toLowerCase())}catch(e){return false}};
 // 관리자 폰을 열면 하루 한 번: 학습에 안 쓰는 예전 AI 연습판(초보·중수·고수, 랭크전 아님)을 서버에서 지움(한 번에 최대 300건)
 function adminClean(){if(!db||!isAdmin()||adminClean.done)return;adminClean.done=1;const k='bo-admclean';if(Date.now()-(+lget(k)||0)<864e5)return;
  (async()=>{let n=0;for(const lv of ['beginner','mid','pro']){try{const qs=await db.collection('aigames').where('level','==',lv).limit(100).get();
@@ -2129,7 +2150,7 @@ function adminClean(){if(!db||!isAdmin()||adminClean.done)return;adminClean.done
   lset(k,String(Date.now()));if(n)toast(`예전 연습판 기록 ${n}건 정리`)})()}
 function cfgMaster(){if(!db||!isAdmin()||!SEAT||(RK.master||[]).includes(SEAT)||cfgMaster.done)return;cfgMaster.done=1;db.doc('cfg/master').set({seats:[...(RK.master||[]),SEAT].slice(-5),at:Date.now()}).catch(()=>{cfgMaster.done=0})}
 function renderAcct(){try{cfgMaster()}catch(e){}try{adminClean()}catch(e){}try{nickCheck()}catch(e){}const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!isAdmin());const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
- const g=user.google&&user.google();a.innerHTML=g?`<div class="at"><b>구글 계정 연결됨</b><span>${esc(g)}</span></div>`:`<div class="at"><b>게스트로 플레이 중</b><span>기록을 지키려면 구글 연결</span></div><button class="btn small" data-act="glink">구글 연결</button>`}
+ const g=user.google&&user.google(),pv=user.provider?user.provider():(g?'google':null);a.innerHTML=g?`<div class="at"><b>${pv==='email'?'이메일':'구글'} 계정 연결됨</b><span>${esc(g)}</span></div>`:`<div class="at"><b>게스트로 플레이 중</b><span>기록을 지키려면 계정 연결</span></div><button class="btn small" data-act="acc">연결</button>`}
 // ===== 웹(Firebase): 앱을 지웠다 다시 깔아도 구글 계정으로 기록 복원. 닉네임·AI 전적은 본인만 읽는 prof/{uid}, 학습 집계는 ailearn/{uid} =====
 let profT=0;
 function profSave(){if(!(user&&user.firebase&&db&&SEAT))return;clearTimeout(profT);profT=setTimeout(()=>{let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}
@@ -2155,11 +2176,24 @@ async function deleteMyData(){toast('지우는 중');try{
   await db.doc('ailearn/'+SEAT).delete().catch(()=>{});await db.doc('prof/'+SEAT).delete().catch(()=>{});
   try{const qs=await db.collection('aigames').where('by','==',SEAT).limit(500).get();for(const d of qs.docs)await db.doc('aigames/'+d.id).delete().catch(()=>{})}catch(e){}
   try{if(room)await room.leave()}catch(e){}
-  if(user.deleteAccount)await user.deleteAccount()}
+  if(user.deleteAccount){try{await user.deleteAccount()}catch(e){if(e&&e.code==='need-password'){toast('보안을 위해 이메일로 다시 로그인한 뒤 삭제해 주세요');return}throw e}}}
  Object.keys(localStorage).filter(k=>k.startsWith('bo-')).forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
  toast('삭제했어요');setTimeout(()=>location.reload(),900)
 }catch(e){toast('삭제 실패 · '+((e&&e.code)||'다시 시도'))}}
-async function googleLink(){if(!(user&&user.firebase))return;try{const r=await user.linkGoogle();if(r==='switched'){toast('이미 쓰던 구글 기록으로 전환');setTimeout(()=>location.reload(),800);return}toast('구글 연결됨 · 이 기기 기록을 이어 써요');renderAcct();profLoad().then(profSave);return 'linked'}catch(e){toast(e&&e.code==='popup-blocked'?'팝업이 막힘 · 크롬에서 열어 주세요':'연결 실패 · 크롬에서 다시 시도')}}
+async function googleLink(){if(!(user&&user.firebase))return;try{const r=await user.linkGoogle();if(r==='switched'){toast('이미 쓰던 구글 기록으로 전환');setTimeout(()=>location.reload(),800);return}if(shOpen==='acc')closeSheet();toast('구글 연결됨 · 이 기기 기록을 이어 써요');renderAcct();profLoad().then(profSave);return 'linked'}catch(e){toast(e&&e.code==='popup-blocked'?'팝업이 막힘 · 크롬에서 열어 주세요':'연결 실패 · 크롬에서 다시 시도')}}
+// 이메일 계정: 가입하고 연결(지금 기록 유지) · 로그인(그 계정 기록으로 전환) · 비밀번호 재설정 메일
+const accErrMsg=c=>({'auth/invalid-email':'이메일 형식을 확인해 주세요','auth/missing-email':'이메일을 입력해 주세요','auth/weak-password':'비밀번호는 6자 이상이에요','auth/missing-password':'비밀번호를 입력해 주세요','auth/wrong-password':'비밀번호가 맞지 않아요','auth/invalid-credential':'이메일이나 비밀번호가 맞지 않아요','auth/invalid-login-credentials':'이메일이나 비밀번호가 맞지 않아요','auth/user-not-found':'가입된 이메일이 아니에요','auth/too-many-requests':'잠시 뒤 다시 시도해 주세요','auth/network-request-failed':'인터넷 연결을 확인해 주세요','auth/operation-not-allowed':'이메일 로그인이 아직 켜지지 않았어요'}[c]||'다시 시도해 주세요');
+function accVals(){const em=($('#accEm').value||'').trim(),pw=$('#accPw').value||'',er=$('#accErr');er.textContent='';
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){er.textContent='이메일 형식을 확인해 주세요';$('#accEm').focus();return null}
+ if(pw.length<6){er.textContent='비밀번호는 6자 이상이에요';$('#accPw').focus();return null}return{em,pw}}
+async function accRun(kind){if(!(user&&user.firebase)){toast('오프라인');return}const v=kind==='reset'?null:accVals();if(kind!=='reset'&&!v)return;
+ const bs=['#emLink','#emLogin'].map(x=>$(x));bs.forEach(b=>b&&(b.disabled=true));const er=$('#accErr');
+ try{if(kind==='reset'){const em=($('#accEm').value||'').trim();if(!/@/.test(em)){er.textContent='이메일을 먼저 입력해 주세요';$('#accEm').focus();return}await user.resetEmail(em);toast('재설정 메일을 보냈어요 · 메일함 확인');return}
+  const r=kind==='link'?await user.linkEmail(v.em,v.pw):await user.loginEmail(v.em,v.pw);
+  if(r==='switched'){toast('이메일 계정 기록으로 전환');setTimeout(()=>location.reload(),800);return}
+  $('#accPw').value='';UI.accOk=true;closeSheet();toast('이메일 연결됨 · 이 기기 기록을 이어 써요');renderAcct();profLoad().then(profSave);const f=UI.afterAcct;UI.afterAcct=null;if(f)setTimeout(f,0)}
+ catch(e){er.textContent=accErrMsg(e&&e.code)}finally{bs.forEach(b=>b&&(b.disabled=false))}}
+function openAcct(then){UI.afterAcct=then||null;openSheet('acc');setTimeout(()=>{const e=$('#accEm');if(e)e.focus()},80)}
 function say(m){const e=$('#srlive');if(!e||!m)return;e.textContent='';setTimeout(()=>{e.textContent=m},60)}
 function announce(){
  const vs=vstate();if(!vs||!vs.A||UI.review||UI.view!=='game'){UI.srKey='';return}
@@ -2556,7 +2590,7 @@ function mmStart(){
  if(!UI.ready){toast('연결 확인 중');return}
  if(!db||!room){toast('랭크전 이용 불가');return}
  if(canWrite===false){toast('관전 전용 · 랭크전 불가');return}
- if(user&&user.firebase&&!(user.google&&user.google())){dialog('랭크전은 구글 계정을 연결하면 할 수 있어요. 지금까지 기록은 그대로 남아요.','구글 연결',()=>googleLink());return}
+ if(user&&user.firebase&&!(user.google&&user.google())){dialog('랭크전은 구글이나 이메일 계정을 연결하면 할 수 있어요.<br>지금까지 기록은 그대로 남아요.','계정 연결',()=>openAcct(mmStart));return}
  ensureSecret();mmSub();renderTiers();MM.on=true;MM.busy=false;MM.since=Date.now();MM.botAt=MM.since+MM_BOT+Math.floor(Math.random()*8e3);
  room.presence({mm:mmMe()}).catch(()=>{});mmPeers(true);renderMM();
 }
@@ -3021,6 +3055,11 @@ document.addEventListener('click',e=>{
  else if(a==='shclose')closeSheet();
  else if(a==='theme')setTheme(b.dataset.v);
  else if(a==='glink')googleLink();
+ else if(a==='acc')openAcct();
+ else if(a==='wemail'){$('#welcome').classList.add('hide');openAcct()}
+ else if(a==='emlink')accRun('link');
+ else if(a==='emlogin')accRun('login');
+ else if(a==='emreset')accRun('reset');
  else if(a==='qinfo')toast('상대 점수는 대국이 끝나면 공개돼요');
  else if(a==='hintx'){lset('bo-hint','0');b.closest('.hint').remove();syncSettings();toast('설정에서 다시 켤 수 있어요')}
  else if(a==='tskip')T.skip();
