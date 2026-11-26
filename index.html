@@ -1605,7 +1605,7 @@ ul.rknote li{text-wrap:balance}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1833';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1835';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3151,7 +3151,7 @@ const kOf=g=>g<10?40:32,expOf=(a,b)=>1/(1+Math.pow(10,(b-a)/400));
 // AI 상대끼리의 랭크전: 시즌 첫날은 '배치 기간'으로 1시간에 BOT_GPH0판(매칭 점수가 가까운 60명 중 한 명), 그 뒤 BOT_GPH판(가까운 6명 중 한 명).
 // 결과는 실제 승률(BOT_WIN)과 고정 씨앗으로 정해져서 서버 없이도 모든 폰이 같은 결과를 계산함
 // AI의 시즌 처음 BOT_KG판은 K=BOT_K0(빨리 제자리를 찾게) → 시뮬레이션에서 첫날부터 항아리 모양
-const BOT_GPH=10,BOT_GPH0=400,BOT_K0=100,BOT_KG=80,BOT_NN=6,BOT_NN0=60,BOT_EPOCH=Date.UTC(2026,10,25,15);
+const BOT_GPH=15,BOT_GPH0=400,BOT_K0=100,BOT_KG=80,BOT_NN=6,BOT_NN0=60,BOT_EPOCH=Date.UTC(2026,10,25,15);
 // AI 점수 재배치(2026-11-26 18:00 한국 시각, 시즌 1에 한 번): 그때까지의 AI끼리 판 결과를 지우고 실력별로 최고 1300점 안에 고르게 나눔.
 // 초보 700~900 · 중수 850~1050 · 고수 1000~1200 · Ultimate 1100~1300. 그 뒤로는 첫날 빠른 배치(시간당 400판)를 끄고 시간당 BOT_GPH판만
 const BOT_RESET=Date.UTC(2026,10,26,9),BOT_RRANGE=[[700,900],[850,1050],[1000,1200],[1100,1300]];
