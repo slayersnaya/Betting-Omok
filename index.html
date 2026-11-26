@@ -1709,7 +1709,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.2217';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.2259';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -4684,7 +4684,7 @@ function lvSnap(c){let o;
  else if(c.k==='r'){d.ph='live';H=H.slice(0,Math.max(0,H.length-LV_D))}
  else{d.ph=o.ph==='bet'?'bet':'designate';if(o.sun==='A'||o.sun==='B')d.sun=o.sun;if(o.ph==='bet'&&o.cells)d.c=o.cells.map(lvCell).join('')}
  const Bt=(o.Bt||[]).slice(0,H.length);
- if(c.k==='a')d.al=o.al||'';d.h=H.join(',');if(Bt.length===H.length&&Bt.every(Boolean))d.b=Bt.join(',');return d}
+ if(c.k==='a')d.al=o.al||'';d.h=H.join(',');if(!LV.noB&&Bt.length===H.length&&Bt.every(Boolean))d.b=Bt.join(',');return d}
 // 한 턴 베팅: '1.2.3-4.0.1'(A-B). 값이 이상하면 빈 글자(그 판은 베팅 표시 안 함)
 const lvBet=(a,b)=>{const ok=x=>Array.isArray(x)&&x.length===3&&x.every(v=>Number.isInteger(v)&&v>=0&&v<1000);return ok(a)&&ok(b)?a.join('.')+'-'+b.join('.'):''};
 // 두는 사람 쪽: 1초마다(frTick) 관전자 목록 구독·중계 쓰기·상대에게 관전 수 알림
@@ -4697,7 +4697,8 @@ function lvTick(){const c=lvCtx(),want=!!(c&&lvAllow()&&db);
  if(c.src==='G'&&G.room&&(LV.wnRoom!==G.gid||LV.wn!==LV.n)){LV.wnRoom=G.gid;LV.wn=LV.n;G.room.presence({wn:LV.n||null}).catch(()=>{LV.wn=-1})}
  if(c.k==='g'||!LV.n)return;
  const d=lvSnap(c);if(!d)return;const key=JSON.stringify(d);if(key===LV.key)return;LV.key=key;LV.wrote=true;
- db.doc('lv/'+SEAT).set(Object.assign(d,{at:SRV_TS})).catch(()=>{LV.key=''})}
+ db.doc('lv/'+SEAT).set(Object.assign(d,{at:SRV_TS})).catch(()=>{LV.key='';
+  if('b' in d){LV.noB=true;const d2=Object.assign({},d);delete d2.b;db.doc('lv/'+SEAT).set(Object.assign(d2,{at:SRV_TS})).catch(()=>{})}})}
 function lvCount(){const now=Date.now(),ids=[...LV.docs].filter(([,at])=>now-at<LV_FRESH).map(([u])=>u).sort(),j=ids.join();
  if(j!==LV.ids){const added=ids.some(u=>!LV.ids.split(',').includes(u));LV.ids=j;LV.n=ids.length;if(added)LV.key='';lvBadge()}}
 function lvOff(){if(LV.unsub)try{LV.unsub()}catch(e){}LV.unsub=null;LV.docs=new Map();LV.ids='';LV.key='';LV.wn=-1;if(LV.n){LV.n=0;lvBadge()}}
