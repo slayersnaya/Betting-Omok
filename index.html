@@ -1695,7 +1695,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.2026';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.2038';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2755,7 +2755,13 @@ function bgmUpdate(){try{const k=bgmScene();if(k===BG.scene)return;bgmPlay(k,BG.
 function bgmDuck(ms){const u=BG.u[BG.cur];if(!u)return;BG.duck=.35;bgmGain(u,(BGM_VOL[BG.scene]||.2)*.35,.3);clearTimeout(bgmDuck.t);bgmDuck.t=setTimeout(()=>{BG.duck=1;const v=BG.u[BG.cur];if(v)bgmGain(v,BGM_VOL[BG.scene]||.2,1.5)},ms)}
 setInterval(bgmUpdate,800);document.addEventListener('visibilitychange',bgmUpdate);
 // 첫 터치 때 소리 장치를 깨움(브라우저 정책). 배경음도 이때부터
-['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{aCtx();BG.ok=true;bgmUpdate();sndLoad()}catch(e){}},{once:true,capture:true}));
+// 브라우저는 '손을 뗀 순간(터치 끝·클릭·키)'을 첫 사용자 동작으로 인정 → 여러 이벤트에서 계속 시도하다가 소리 장치가 실제로 켜지면 그만둠
+const SND_EV=['pointerdown','pointerup','touchend','mousedown','click','keydown'];
+function sndUnlock(){try{const c=aCtx();if(!c)return;const go=()=>{if(c.state!=='running'||sndUnlock.done)return;sndUnlock.done=1;BG.ok=true;bgmUpdate();sndLoad();SND_EV.forEach(ev=>document.removeEventListener(ev,sndUnlock,true))};
+ if(c.state==='running')go();else if(c.resume)c.resume().then(go).catch(()=>{})}catch(e){}}
+SND_EV.forEach(ev=>document.addEventListener(ev,sndUnlock,true));
+// 열자마자 한 번 시도(설치한 앱 등 브라우저가 허용하면 터치 없이 바로 배경음) + 로비 곡은 미리 내려받아 둠
+setTimeout(sndUnlock,400);try{if(bgmOn()&&BGM_FILES.lobby){const pre=new Audio();pre.preload='auto';pre.src=BGM_FILES.lobby}}catch(e){}
 // 버튼마다 기본 소리: 특별한 소리가 나는 버튼은 그 함수에서 냄(아래 표는 탭 소리를 생략할 버튼)
 const SND_SKIP=new Set(['fxpzgo','rwclaim','ecoatt']);
 const SND_ACT={bp:'chipUp',b5:'chipUp',bq:'chipUp',bm:'chipDown',breset:'chipReset',beven:'chipReset',bsubmit:'seal',lsubmit:'seal',tsubmit:'seal',dconfirm:'stone',tab:'tab',sheet:'open',shclose:'close',ecoopen:'open',ecocat:'open',fxpuz:'open',frchat:'open',prof:'open',frprof:'open',rvprev:'page',rvnext:'page',level:'soft',preset:'soft',aitime:'soft',bcol:'soft',theme:'soft',dlgno:'soft',fxemo:'pop',fxemobtn:'soft'};
