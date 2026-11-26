@@ -436,7 +436,7 @@ service cloud.firestore {
     function fcMine(c) { return c is string && c.matches('^[A-HJ-NP-Z2-9]{8}$')
       && get(/databases/$(database)/documents/fc/$(c)).data.by == me(); }
     match /on/{uid} {
-      allow read: if signedIn() && (uid == me() || get(fpPath(pid(uid, me()))).data.st == 'ok');
+      allow read: if signedIn() && (uid == me() || isAdmin() || get(fpPath(pid(uid, me()))).data.st == 'ok');
       allow create: if google() && uid == me() && onFields(request.resource.data)
         && (!('fc' in request.resource.data) || fcMine(request.resource.data.fc))
         && (!('tka' in request.resource.data) || nearNow(request.resource.data.tka, 120000, 120000));
@@ -476,6 +476,16 @@ service cloud.firestore {
         && request.resource.data.why in ['abuse','spam','nick','etc']
         && request.resource.data.txt is string && request.resource.data.txt.size() <= 2000
         && request.resource.data.at == request.time;
+    }
+    // 관리자 사용자 목록: 각자 자기 '마지막 접속'만 기록, 읽기는 관리자만
+    match /seen/{uid} {
+      allow read: if isAdmin();
+      allow create, update: if signedIn() && uid == me()
+        && request.resource.data.keys().hasOnly(['at', 'pv', 'nk', 'v'])
+        && request.resource.data.at == request.time
+        && request.resource.data.pv in ['g', 'e', 'n']
+        && nick(request.resource.data.nk)
+        && request.resource.data.v is string && request.resource.data.v.size() <= 16;
     }
   }
 }
