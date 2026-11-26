@@ -1,0 +1,2 @@
+const r=JSON.parse(require('fs').readFileSync(process.argv[2]));const sel=process.argv[3]?process.argv[3].split(',').map(Number):null;
+for(const g of r){if(sel&&!sel.includes(g.i))continue;console.log('game',g.i,'sw',g.sw,'winner(1=A)',g.w,'(A=흑 if sw=0)');for(const h of g.hist)console.log(' t'+h.t,'sun',h.sun,h.cells.map(c=>c.join('.')).join(' '),'| b1',h.b1.join(','),'b2',h.b2.join(','),'| p',h.p1,h.p2,h.win.join(''),h.est?JSON.stringify(h.est):'')}

@@ -1,0 +1,9 @@
+15c15,17
+<   force:1}
+---
+>   force:1,
+>   // 지정 후보를 '판돈이 큰 세 칸' 상위 30개로 좁힘(평가 라운드 시험: 배포본 상대 67~72%, 더 빠름)
+>   dPre:30}
+172a175,176
+>  // 후보가 많으면 값싼 1차 평가(8결과 값의 폭 + 세 칸 다 가졌을 때 값, 오목 걸린 칸·내 한 칸 오목 자리는 무조건 포함)로 상위 dPre개만 정밀 평가
+>  if(lv.dPre&&cand.length>lv.dPre){const q=cand.map(t=>{const V=aiOutcomes2(bd,t,v.aiCol,true,false,lv);let s=0;for(const x of V)s+=Math.min(Math.abs(x),3e4);if(V.some(x=>Math.abs(x)>=AI_WIN))s+=1e9;if(myF.size&&t.some(([r,c])=>myF.has(r*N+c)))s+=1e9;return{t,s:s+Math.max(0,V[7])}});q.sort((a,b)=>b.s-a.s);cand=q.slice(0,lv.dPre).map(x=>x.t)}
