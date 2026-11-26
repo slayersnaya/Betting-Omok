@@ -1,6 +1,6 @@
 rules_version = '2';
 // 베팅 오목 — Firestore 보안 규칙 (2026-11 강화판)
-// 2026-11 재화·상점 1단계: wal(구슬 지갑·꾸미기) 추가, res·bres·rt·on에 공개 장착 eq
+// 2026-11 재화·상점 1단계: wal(옥돌 지갑·꾸미기) 추가, res·bres·rt·on에 공개 장착 eq
 // 2026-11 친구 기능: fp(친구·대화)·on(접속)·fc(친구 코드)·bk(차단)·rep(신고) 추가, nicks에 표시용 n
 // 핵심: ① 대국 기록은 '추가만'(이미 쓴 값 수정·삭제 금지) ② 시각은 서버 시각으로 검사
 //       ③ 랭크 결과는 실제 랭크 방·구글 계정에만 묶음 ④ 키·크기·시각 범위 제한
@@ -338,8 +338,8 @@ service cloud.firestore {
     }
 
 
-    // ===== 재화·상점 1단계: 구슬 지갑 wal/{uid} (본인만 읽고 씀. 지우기 금지 — 계정 삭제 때는 비우기만) =====
-    //  g 구슬(0~99999) · d 한국 날짜 번호(서버 시각) · dc 오늘 받은 구슬(≤150) · dq 오늘 한 번씩 받은 것('w' 첫 승, 'm0'~'m2' 과제)
+    // ===== 재화·상점 1단계: 옥돌 지갑 wal/{uid} (본인만 읽고 씀. 지우기 금지 — 계정 삭제 때는 비우기만) =====
+    //  g 옥돌(0~99999) · d 한국 날짜 번호(서버 시각) · dc 오늘 받은 옥돌(≤150) · dq 오늘 한 번씩 받은 것('w' 첫 승, 'm0'~'m2' 과제)
     //  own 보유 꾸미기 · eq 장착{t,n,f,s,w,b,x} · cl 한 번만 받는 보상 키 · k 이번 쓰기 종류 · at 서버 시각
     //  k: new(처음) · earn(대국·첫 승·과제) · claim(1회성: 시즌 s{n}·승급 p{n}_{t}·업적 a_*) · buy(교환소) · equip · reset(계정 삭제)
     //  규칙이 지키는 것: 하루 150 · 한 번 쓰기에 늘 수 있는 양 · 1회성 보상 한 번 · 시즌 보상 = 관리자 기록 · 정해진 가격 · 보유한 것만 장착
@@ -356,10 +356,11 @@ service cloud.firestore {
     function eqPub(v) { return v is string && v.size() <= 64 && v.matches('^[a-z0-9_.]*$')
       && (v == '' || get(walPath(me())).data.own.hasAll(v.split('[.]'))); }
     function slotOk(e, k, re) { return !(k in e) || e[k] == '' || e[k].matches(re); }
-    function walShape(n) { return n.keys().hasOnly(['g','d','dc','dq','own','eq','cl','k','at'])
+    function walShape(n) { return n.keys().hasOnly(['g','d','dc','dq','own','eq','cl','k','at','ck'])
+      && (!('ck' in n) || (n.ck is int && n.ck >= 0 && n.ck <= 6))
       && n.keys().hasAll(['g','d','dc','dq','own','eq','cl','k','at'])
       && n.g is int && n.g >= 0 && n.g <= 99999 && n.d == kday() && n.dc is int && n.dc >= 0 && n.dc <= 150
-      && n.dq is list && n.dq.size() <= 4 && n.dq.toSet().size() == n.dq.size() && n.dq.toSet().hasOnly(['w','m0','m1','m2'])
+      && n.dq is list && n.dq.size() <= 5 && n.dq.toSet().size() == n.dq.size() && n.dq.toSet().hasOnly(['w','m0','m1','m2','c'])
       && n.own is list && n.own.size() <= 300 && n.own.toSet().size() == n.own.size()
       && n.cl is list && n.cl.size() <= 400 && n.eq is map && n.eq.keys().hasOnly(['t','n','f','s','w','b','x'])
       && n.own.concat(['']).hasAll(n.eq.values())
@@ -378,7 +379,13 @@ service cloud.firestore {
       let added = n.dq.size() - dqOld(o).size();
       return n.dq.hasAll(dqOld(o)) && dlt >= 0 && n.dc == dcOld(o) + dlt
         && (dlt > 0 || added > 0) && dlt <= 15 + 20 * wNew + 10 * (added - wNew)
-        && n.own == o.own && n.cl == o.cl; }
+        && n.own == o.own && n.cl == o.cl && (!('c' in n.dq) || ('c' in dqOld(o))); }
+    // 출석체크: 하루 한 번 도장(dq 'c'). 7칸 판(ck 0~6), 1~6번째 도장 옥돌 10 · 7번째 50 후 판 비움
+    function walAtt(o, n) {
+      let c0 = o.get('ck', 0);
+      return !('c' in dqOld(o)) && n.dq == dqOld(o).concat(['c']) && n.dc == dcOld(o)
+        && n.ck == (c0 == 6 ? 0 : c0 + 1) && n.g == o.g + (c0 == 6 ? 50 : 10)
+        && n.own == o.own && n.cl == o.cl && n.eq == o.eq; }
     function rwItems(sn, t) { return t == 4 ? ['z' + string(sn) + '_4', 'zn' + string(sn)]
       : t >= 5 ? ['z' + string(sn) + '_' + string(t), 'zt' + string(sn) + '_' + string(t)] : ['z' + string(sn) + '_' + string(t)]; }
     // 시즌 보상: 관리자 기록 cfg/season{n}의 내 최종 티어·판 수(10판 이상)·금액표(없으면 기본표)와 같아야 함
@@ -399,7 +406,7 @@ service cloud.firestore {
     function walBuy(o, n) {
       let it = n.own[n.own.size() - 1];
       return n.own == o.own.concat([it]) && !(it in o.own) && it in ecoPrice()
-        && o.g - n.g == ecoPrice()[it] && n.cl == o.cl && sameDay(o, n); }
+        && (o.g - n.g == ecoPrice()[it] || (isAdmin() && n.g == o.g)) && n.cl == o.cl && sameDay(o, n); }
     function walEquip(o, n) { return n.g == o.g && n.own == o.own && n.cl == o.cl && sameDay(o, n); }
     function walReset(o, n) { return n.g == 0 && n.own == [] && n.eq == {} && n.cl == o.cl && sameDay(o, n); }
     match /wal/{uid} {
@@ -412,7 +419,9 @@ service cloud.firestore {
             || (request.resource.data.k == 'claim' && walClaim(resource.data, request.resource.data))
             || (request.resource.data.k == 'buy' && walBuy(resource.data, request.resource.data))
             || (request.resource.data.k == 'equip' && walEquip(resource.data, request.resource.data))
-            || (request.resource.data.k == 'reset' && walReset(resource.data, request.resource.data)));
+            || (request.resource.data.k == 'reset' && walReset(resource.data, request.resource.data))
+            || (request.resource.data.k == 'att' && walAtt(resource.data, request.resource.data)))
+        && (request.resource.data.k == 'att' || request.resource.data.get('ck', 0) == resource.data.get('ck', 0));
       allow delete: if false;
     }
 

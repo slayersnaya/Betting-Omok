@@ -1236,6 +1236,23 @@ ul.rknote li{text-wrap:balance}
 .rcrw span:not(.gdot){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .mysl{display:inline-grid;place-items:center;width:22px;height:22px;color:var(--pri);flex:none}.mysl svg{width:22px;height:22px}
 .sealed .mysl{margin-right:2px}
+/* 튜토리얼 이월 장면: 10 → 4만 걸기(6 남음) → 다음 턴 16 */
+.tcar{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:4px;margin:2px 0 10px;white-space:nowrap}
+.tcar>span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;border-radius:12px;background:var(--soft)}
+.tcar small{font-size:11.5px;color:var(--mute);font-weight:700}.tcar b{font-size:17px;font-weight:800}
+.tcar .bt b{font-size:15px}.tcar .kp{background:color-mix(in srgb,var(--jade) 16%,transparent)}.tcar .kp b{color:var(--jadeink)}
+.tcar svg{width:16px;height:16px;fill:none;stroke:var(--faint);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+/* 출석체크 도장 판 */
+.attd{text-align:center}.attd h3{margin:0 0 12px;font-size:17px}
+.atrow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;max-width:320px;margin:0 auto}
+.atc{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:var(--soft);border:2px dashed var(--line);color:var(--faint);font-size:12px;font-weight:800}
+.atc.big{border-color:color-mix(in srgb,var(--jade) 55%,transparent);color:var(--jadeink)}
+.atc.on{background:radial-gradient(circle at 35% 30%,#3fd6c8,#009999 60%,#006b6b);border:2px solid #007a7a;color:#fff;box-shadow:inset 0 -2px 3px rgba(0,0,0,.25)}
+.atc svg{width:58%;height:58%;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.atc.new{animation:atStamp .5s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes atStamp{0%{transform:scale(1.9) rotate(-18deg);opacity:0}60%{opacity:1}100%{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.atc.new{animation:none}}
+.atm{margin:14px 0 0;font-size:15px;font-weight:800;white-space:nowrap}
 /* 교환소 시트 */
 .shopsh{display:flex;flex-direction:column;height:86vh;height:86dvh;overflow:hidden}
 .shopsh>*{flex:none}.shopsh>*+*:not(.shh){margin-top:10px}
@@ -1578,7 +1595,7 @@ ul.rknote li{text-wrap:balance}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1636';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1658';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2442,7 +2459,7 @@ function renderPlayers(){
   const ring=mine?`<div class="ring hide" id="ring"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" stroke="var(--raise)" stroke-width="5" fill="none"/><circle id="ringArc" cx="24" cy="24" r="20" stroke="var(--jadeink)" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="125.7" stroke-dashoffset="0"/></svg><b id="ringTxt"></b></div>`:'';
   return `<div class="pbar${!coining&&!rv&&actorOf(vs,id)?' turn':''}${tags?'':' notag'}">${ecoPbar(vs,id)}</div>${tags?`<div class="pt">${tags}</div>`:''}</div>${pp}${ring}</div>`};
  ob.innerHTML=bar(opId,false);mb.innerHTML=bar(meId,true);rollNums();
- if(UI.mode==='tut'){const n=TUT[T.s.step].n;gm.innerHTML=`<span class="tdots" aria-label="연습 ${n}/4">${[1,2,3,4].map(i=>`<i class="${i===n?'on':i<n?'done':''}"></i>`).join('')}</span>`}
+ if(UI.mode==='tut'){const n=TUT[T.s.step].n;gm.innerHTML=`<span class="tdots" aria-label="연습 ${n}/5">${[1,2,3,4,5].map(i=>`<i class="${i===n?'on':i<n?'done':''}"></i>`).join('')}</span>`}
  else if(vs.phase==='review')gm.innerHTML=`<span class="phase">복기</span><span class="tn">${RV.i+1}/${RV.d.hist.length}</span>`;
  else{const k=rv?2:['designate','bet','reveal'].indexOf(vs.phase),t=rv?UI.rv.t:vs.t;
   gm.innerHTML=`${t?`<span class="tn">${t}턴</span>`:''}${k>=0?`<span class="steps">${[0,1,2].map(i=>`<i class="${i===k?'on':i<k?'done':''}"></i>`).join('')}</span>`:''}<span class="phase">${rv?'개봉':phaseName(vs.phase)}</span>`}
@@ -3880,9 +3897,10 @@ const TUT=[
  {k:'info',n:1,title:'정확히 5개면 승리',text:'가로·세로·대각선 어디든&nbsp;<b>5개</b> <span style="white-space:nowrap">· 6개 이상은 무효</span>',setup(s){for(let c=7;c<=11;c++)s.bd[9][c]=1;s.bd[8][9]=2;s.bd[10][8]=2;s.bd[8][11]=2;s.bd[10][12]=2;s.demo=[[[9,7],[9,11]]]}},
  {k:'designate',n:2,tap:[9,8],title:'이어진 빈칸 세 개 고르기',text:'세 칸을 고르는 사람이 <b>선 플레이어</b> · 이번엔 나',setup(s){s.bd=emptyBoard();s.bd[9][9]=1;s.bd[8][10]=2;s.bd[10][7]=1;s.bd[11][10]=2;s.last=null;s.hist=[];s.sun='A';s.hu='B'}},
  {k:'bet',n:3,title:'몰래 나눠 걸기',opp:[2,2,2],text:'합계는 내 점수까지<br>상대 베팅은 안 보여요'},
- {k:'result',n:3,title:'몰래 나눠 걸기',text:'건 점수는 사라짐 · 매 턴 <b>+10</b>점<br>안 쓴 점수는 다음 턴으로 <b>이월</b>'},
- {k:'bet',n:4,title:'동점이면 후 플레이어',opp:[3,3,3],oppPick:true,need:[0,3],text:'상대 3·3·3 공개 · A에 <b>3</b> 걸기'},
- {k:'result',n:4,title:'동점이면 후 플레이어',end:true}
+ {k:'result',n:3,title:'몰래 나눠 걸기',text:'건 점수는 사라짐 · 매 턴 <b>+10</b>점'},
+ {k:'info',n:4,title:'다 안 걸어도 돼요',text:s=>`<span class="tcar" aria-label="예시: 10점 중 4점만 걸면 6점이 남고, 다음 턴에 6 더하기 10, 16점"><span><small>내 점수</small><b class="num">10</b></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span class="bt"><small>4만 걸기</small><b class="num">6 남음</b></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span class="kp"><small>다음 턴</small><b class="num">16</b></span></span>안 건 점수는 다음 턴으로 <b>이월</b><br>아꼈다가 승부처에 몰아 걸기 · 이게 <b>심리전</b>`},
+ {k:'bet',n:5,title:'동점이면 후 플레이어',opp:[3,3,3],oppPick:true,need:[0,3],text:'상대 3·3·3 공개 · A에 <b>3</b> 걸기'},
+ {k:'result',n:5,title:'동점이면 후 플레이어',end:true}
 ];
 const T={
  s:null,
@@ -3905,7 +3923,7 @@ const T={
   if(key===UI.panelKey){if(st.k==='bet')updateBetSum(s.pts.A);return}UI.panelKey=key;
   const head=`<div class="tstep"><i>${st.n}</i>${st.title}</div>`;
   let h='';
-  if(st.k==='info')h=`${head}<p class="tmsg">${st.text}</p><button class="btn wide" data-act="tnext">다음</button>`;
+  if(st.k==='info')h=`${head}<p class="tmsg">${typeof st.text==='function'?st.text(s):st.text}</p><button class="btn wide" data-act="tnext">다음</button>`;
   else if(st.k==='designate')h=`<div class="tstep sm"><i>${st.n}</i><div><b>${st.title}</b><small>${st.text}</small></div></div>`+designPanel(this.vs(),'');
   else if(st.k==='bet')h=`<div class="tstep sm"><i>${st.n}</i><div><b>${st.title}</b><small>${st.text}</small></div></div>${betRows(s.cells,s.pts.A)}${betFoot('tsubmit','봉인')}`;
   else if(st.k==='result'){const L=s.last,rows=L.cells.map((c,i)=>`<div class="trow"><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span><span class="vs">나 <b>${L.bets.A[i]}</b> : <b>${L.bets.B[i]}</b> 상대${L.bets.A[i]===L.bets.B[i]?' <span class="tie">동점→후 플레이어</span>':''}</span><span class="nw"><span class="mini st ${L.win[i]==='A'?'k':'w'}"></span> ${L.win[i]==='A'?'나':'상대'}</span></div>`).join('');
@@ -5027,7 +5045,7 @@ function rwPaint(){const el=$('#rwBar');if(!el)return;const L=rwItems(),rd=L.fil
  const show=rd.length>0||nw.length>0;el.classList.toggle('hide',!show);if(!show){if(el.innerHTML)el.innerHTML='';return}
  let head,top=null;
  if(rd.length){const g=rd.reduce((a,x)=>a+(x.g|0),0);
-  head=`<span class="rwic" aria-hidden="true">${RW_IC.gift}</span><span class="rwt"><b>받을 보상 <i class="rwn num">${rd.length}</i></b><span>${esc(rd.map(x=>x.t).join(' · '))}</span></span><button class="btn small" data-act="rwclaim"${RW.busy?' disabled':''} aria-label="보상 ${rd.length}개 모두 받기${g?` · 구슬 ${g}`:''}">모두 받기</button>`}
+  head=`<span class="rwic" aria-hidden="true">${RW_IC.gift}</span><span class="rwt"><b>받을 보상 <i class="rwn num">${rd.length}</i></b><span>${esc(rd.map(x=>x.t).join(' · '))}</span></span><button class="btn small" data-act="rwclaim"${RW.busy?' disabled':''} aria-label="보상 ${rd.length}개 모두 받기${g?` · 옥돌 ${g}`:''}">모두 받기</button>`}
  else{top=nw[0];head=`<span class="rwic" aria-hidden="true">${top.ic||RW_IC.gift}</span><span class="rwt"><b>${esc(top.t)}${top.dot?'<i class="rwnew">새 문제</i>':''}</b><span>${esc(top.sub||'')}</span></span><button class="btn small" data-act="${esc(top.act||'')}"${top.v?` data-v="${esc(top.v)}"`:''}>${esc(top.btn||'열기')}</button>`}
  const rest=L.filter(x=>x!==top&&x.st!=='ready');
  const chips=rest.length?`<div class="rwchips">${rest.slice(0,4).map(x=>`<span class="rwchip ${esc(x.st)}">${esc(x.t)}${x.p?` <i class="num">${esc(x.p)}</i>`:''}</span>`).join('')}</div>`:'';
@@ -5038,14 +5056,14 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act=rwclai
 rwAdd({id:'pz',order:10,items:()=>{let pz=null;try{pz=pzMake(fxDate(Date.now()))}catch(e){pz=null}if(!pz||pzState())return[];const sk=pzStreak();
  return[{id:'pz',ic:FX_IC.puz,t:'오늘의 묘수 풀이',sub:['','쉬움','보통','어려움'][pz.diff]+(sk.n?` · ${sk.n}일 연속`:''),st:'new',act:'fxpuz',btn:'풀기',dot:lget('bo-pzseen')!==fxDate(Date.now())}]}});
 // ===== FEAT END =====
-// ===== ECO START (재화·상점 1단계 11/26: 구슬 지갑 · 오늘의 과제 · 꾸미기 교환소 · 시즌·승급 보상) =====
+// ===== ECO START (재화·상점 1단계 11/26: 옥돌 지갑 · 오늘의 과제 · 꾸미기 교환소 · 시즌·승급 보상) =====
 // 병합 메모: 이 블록은 새 함수만 담음. 기존 코드에 끼운 곳은 '/* ECO */' 표시가 붙은 짧은 호출뿐
 // 지갑 wal/{uid} (본인만 읽고 씀, 지우기 금지 — 계정 삭제 때는 비우기만):
-//   g 구슬 · d 오늘(한국 날짜 번호) · dc 오늘 받은 구슬(≤150) · dq 오늘 한 번씩 받는 것('w' 하루 첫 승, 'm0'~'m2' 과제)
+//   g 옥돌 · d 오늘(한국 날짜 번호) · dc 오늘 받은 옥돌(≤150) · dq 오늘 한 번씩 받는 것('w' 하루 첫 승, 'm0'~'m2' 과제)
 //   own 보유 꾸미기 · eq 장착 {t 칭호, n 닉네임 장식, f 테두리, s 인장, w 돌, b 판, x 완성 연출} · cl 한 번만 받는 보상 키 · k 이번 쓰기 종류 · at 서버 시각
 // 규칙(firestore.rules)이 하루 상한·1회성 보상·정해진 가격·보유한 것만 장착을 검사함.
 // 남에게 보이는 장착(pe: "t1.n2.f1" 꼴)은 이미 읽는 문서에 실음: 대국 접속 rt · 친구 접속 on · 랭크 결과 res/bres → 추가 읽기 없음
-// 구슬은 꾸미기에만 씀. 판 점수·베팅·매칭·랭크 점수와 무관(돈으로 사거나 바꿀 수 없음)
+// 옥돌은 꾸미기에만 씀. 판 점수·베팅·매칭·랭크 점수와 무관(돈으로 사거나 바꿀 수 없음)
 var ECO={w:null,ok:false,err:0,q:null,ready:null,last:null,gk:null,sz:{},sr:null,rkEq:new Map(),rkN:-1,tab:'shop',peRoom:'',peOn:null,promoAt:{},busy:0};
 ECO.q=new Promise(r=>{ECO.ready=r});
 var ECO_SK='';
@@ -5060,11 +5078,11 @@ const ECO_ITEMS=[
  {id:'n1',c:'n',n:'물결 밑줄',p:1200},{id:'n2',c:'n',n:'꽃잎 장식',p:1200},{id:'n3',c:'n',n:'새벽빛 글씨',p:1200},
  {id:'f1',c:'f',n:'매듭 테두리',p:1500},{id:'f2',c:'f',n:'물결 테두리',p:1500},{id:'f3',c:'f',n:'팔각 테두리',p:1500},
  {id:'s1',c:'s',n:'매화 인장',p:1200},{id:'s2',c:'s',n:'별 인장',p:1200},{id:'s3',c:'s',n:'구름 인장',p:1200},
- {id:'w1',c:'w',n:'자개 돌',p:2500},{id:'w2',c:'w',n:'옥돌',p:2500},
+ {id:'w1',c:'w',n:'자개 돌',p:2500},{id:'w2',c:'w',n:'비취 돌',p:2500},
  {id:'b1',c:'b',n:'청자 판',p:3000},{id:'b2',c:'b',n:'흰 비자 판',p:3000},
  {id:'x1',c:'x',n:'꽃잎 흩날림',p:3500},{id:'x2',c:'x',n:'먹물 획',p:3500}];
 // 유료 상품 자리(앱 출시 후, 서버 결제 확인이 생긴 뒤): {id,c,n,won} 꼴로 넣으면 교환소 맨 아래 '응원 상품' 칸이 생김.
-// 권리는 서버만 쓰는 ent/{uid}에 둘 예정(구슬과 서로 바꾸지 않음). 지금은 비어 있어 화면에 나오지 않음
+// 권리는 서버만 쓰는 ent/{uid}에 둘 예정(옥돌과 서로 바꾸지 않음). 지금은 비어 있어 화면에 나오지 않음
 const ECO_PAID=[];
 const ECO_BY=new Map(ECO_ITEMS.map(x=>[x.id,x]));
 // 시즌 종료 보상(최종 티어 0브론즈~5마스터, 6챌린저). 관리자 기록 cfg/season{n}.amt가 있으면 그 값(규칙도 같은 값으로 확인)
@@ -5081,7 +5099,7 @@ const ecoRwItems=(n,t)=>['z'+n+'_'+t].concat(t===4?['zn'+n]:t>=5?['zt'+n+'_'+t]:
 const ecoSrv=()=>!!(db&&user&&user.firebase&&SEAT);
 const ecoFresh=()=>({g:0,d:ecoDay(),dc:0,dq:[],own:[],eq:{},cl:[]});
 function ecoNorm(d){const o=ecoFresh();if(!d||typeof d!=='object')return o;const I=v=>Number.isInteger(v)?v:0,S=a=>Array.isArray(a)?a.filter(x=>typeof x==='string'):[];
- o.g=Math.max(0,Math.min(ECO_MAX,I(d.g)));o.d=I(d.d);o.dc=Math.max(0,I(d.dc));o.dq=S(d.dq);o.own=S(d.own);o.cl=S(d.cl);
+ o.g=Math.max(0,Math.min(ECO_MAX,I(d.g)));o.d=I(d.d);o.dc=Math.max(0,I(d.dc));o.dq=S(d.dq);o.own=S(d.own);o.cl=S(d.cl);if(Number.isInteger(d.ck)&&d.ck>=0&&d.ck<=6)o.ck=d.ck;
  if(d.eq&&typeof d.eq==='object'&&!Array.isArray(d.eq))for(const k of ECO_SLOTS)if(typeof d.eq[k]==='string'&&(d.eq[k]===''||o.own.includes(d.eq[k])))o.eq[k]=d.eq[k];return o}
 // 날짜가 바뀌면 오늘 받은 양·오늘 항목은 0부터(규칙도 서버 날짜로 같은 계산)
 function ecoBase(w){const n=JSON.parse(JSON.stringify(w)),t=ecoDay();if(n.d!==t){n.d=t;n.dc=0;n.dq=[]}return n}
@@ -5110,10 +5128,10 @@ function ecoMis(day){day=day||ecoDay();const pool=ECO_MIS.filter(m=>!(m.id==='rk
  const a=pool.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,3)}
 function ecoProgGet(){let v=null;try{v=JSON.parse(lget('bo-ecom')||'null')}catch(e){}if(!v||v.d!==ecoDay()||typeof v.p!=='object')v={d:ecoDay(),p:{},gd:0,f:{}};v.gd=v.gd|0;v.f=v.f&&typeof v.f==='object'?v.f:{};return v}
 function ecoProg(evs){const v=ecoProgGet();for(const e of evs)v.p[e]=(v.p[e]|0)+1;lset('bo-ecom',JSON.stringify(v));return v}
-// 완료한 과제 중 아직 안 받은 것 → 구슬 10씩(같은 쓰기에 넣음)
+// 완료한 과제 중 아직 안 받은 것 → 옥돌 10씩(같은 쓰기에 넣음)
 function ecoMisClaim(n,v,force){let add=0,k=0;if(!ECO.auto&&!force)return{add,k};ecoMis().forEach((m,i)=>{const key='m'+i;if((v.p[m.id]|0)>=m.n&&!n.dq.includes(key)){n.dq.push(key);add+=10;k++}});return{add,k}}
 function ecoEv(kind){if(!ECO.ok)return;const v=ecoProg([kind]);if(!ECO.auto)return ecoPaint();const ms=ecoMis();if(!ms.some((m,i)=>m.id===kind&&(v.p[m.id]|0)>=m.n&&!(ECO.w&&ECO.w.d===ecoDay()&&ECO.w.dq.includes('m'+i))))return ecoPaint();
- ecoWrite('earn',n=>{const v2=ecoProgGet(),c=ecoMisClaim(n,v2);if(!c.k)return false;const got=Math.max(0,Math.min(c.add,ECO_CAP-n.dc,ECO_MAX-n.g));n.g+=got;n.dc+=got;ECO.toast=got?`오늘의 과제 완료 · 구슬 +${got}`:'오늘 받을 수 있는 구슬을 다 받았어요'}).then(ok=>{if(ok&&ECO.toast){toast(ECO.toast);ECO.toast=''}})}
+ ecoWrite('earn',n=>{const v2=ecoProgGet(),c=ecoMisClaim(n,v2);if(!c.k)return false;const got=Math.max(0,Math.min(c.add,ECO_CAP-n.dc,ECO_MAX-n.g));n.g+=got;n.dc+=got;ECO.toast=got?`오늘의 과제 완료 · 옥돌 +${got}`:'오늘 받을 수 있는 옥돌을 다 받았어요'}).then(ok=>{if(ok&&ECO.toast){toast(ECO.toast);ECO.toast=''}})}
 // ----- 대국 끝 보상: archiveGame 훅(끝난 판마다 한 번) -----
 function ecoGameInfo(d,key){const res=d.winner==null?'d':d.winner===d.me?'w':'l';
  if(key[0]==='G'){const m=G.meta&&('G'+G.gid===key)?G.meta:null;const opp=d.me===d.A?d.B:d.A;return{mode:m&&m.ranked?'rank':'friend',res,opp,lv:''}}
@@ -5123,25 +5141,25 @@ function ecoGame(d,key){if(!d||!key||!d.me)return;let seen=[];try{seen=JSON.pars
  const I=ecoGameInfo(d,key);if(!I||I.mode==='local')return;seen.unshift(key);lset('bo-ecogk',JSON.stringify(seen.slice(0,120)));
  const turns=(d.hist||[]).length,quit=I.res==='l'&&['기권','시간 초과 3회','상대 부재','상대 나감'].includes(d.reason);
  const out={key,got:0,parts:[],why:''};ECO.last=out;
- if(turns<ECO_MIN_T){out.why=`${ECO_MIN_T}턴 이상 둔 판부터 구슬을 받아요`;ecoRepaintPanel();return}
+ if(turns<ECO_MIN_T){out.why=`${ECO_MIN_T}턴 이상 둔 판부터 옥돌을 받아요`;ecoRepaintPanel();return}
  const ev=['g3'];if(I.mode==='ai'&&I.res==='w')ev.push('aw');if(I.mode==='friend')ev.push('fr');if(I.mode==='rank')ev.push('rk');if(I.res==='w')ev.push('w2');if(I.mode==='ai'&&I.lv!=='beginner')ev.push('am');
  const v=ecoProg(quit?[]:ev);
  let base=I.mode==='rank'?(I.res==='w'?12:6):I.mode==='friend'?(I.res==='w'?10:5):(I.res==='w'?(I.lv==='ultimate'?15:6):3);
  if(quit)base=0;
- if(I.mode==='friend'&&I.opp){const f=v.f;f[I.opp]=(f[I.opp]|0)+1;lset('bo-ecom',JSON.stringify(v));if(f[I.opp]>5){base=0;out.why='같은 상대와는 하루 5판까지 구슬을 받아요'}}
+ if(I.mode==='friend'&&I.opp){const f=v.f;f[I.opp]=(f[I.opp]|0)+1;lset('bo-ecom',JSON.stringify(v));if(f[I.opp]>5){base=0;out.why='같은 상대와는 하루 5판까지 옥돌을 받아요'}}
  ecoWrite('earn',(n,b)=>{const v2=ecoProgGet();let add=0,gb=Math.min(base,Math.max(0,ECO_GCAP-v2.gd));const parts=[];
-  if(base>0&&gb<base&&!out.why)out.why='오늘 대국 구슬은 다 받았어요';add+=gb;
+  if(base>0&&gb<base&&!out.why)out.why='오늘 대국 옥돌은 다 받았어요';add+=gb;
   if(I.res==='w'&&!quit&&!n.dq.includes('w')){n.dq.push('w');add+=20;parts.push('하루 첫 승')}
   const c=quit?{add:0,k:0}:ecoMisClaim(n,v2);if(c.k){add+=c.add;parts.push(c.k>1?`과제 ${c.k}개`:'과제 완료')}
-  const got=Math.max(0,Math.min(add,ECO_CAP-n.dc,ECO_MAX-n.g));if(got<add&&!out.why)out.why='오늘 받을 수 있는 구슬을 다 받았어요';
+  const got=Math.max(0,Math.min(add,ECO_CAP-n.dc,ECO_MAX-n.g));if(got<add&&!out.why)out.why='오늘 받을 수 있는 옥돌을 다 받았어요';
   if(!got&&n.dq.length===b.dq.length)return false;n.g+=got;n.dc+=got;v2.gd+=Math.min(gb,got);lset('bo-ecom',JSON.stringify(v2));out.got=got;out.parts=parts}).then(()=>{ecoRepaintPanel();setTimeout(ecoAch,300)});}
 function ecoRepaintPanel(){setTimeout(()=>{if(UI.view==='game'){UI.panelKey='';try{renderAll()}catch(e){}}},0)}
 const ecoCurKey=()=>UI.mode==='online'&&G.gid?'G'+G.gid:UI.mode==='local'&&L.s?'L'+L.s.id:'';
-// 결과 화면 한 줄(overSheet 안): 구슬 변동 · 이유
+// 결과 화면 한 줄(overSheet 안): 옥돌 변동 · 이유
 function ecoResLine(vs){try{const o=ECO.last;if(!o||!vs||!vs.me||o.key!==ecoCurKey())return '';
  const first=!lget('bo-ecohint');if(first&&o.got)lset('bo-ecohint','1');
- const main=o.got?`<span class="gdot" aria-hidden="true"></span><b class="num">구슬 +${o.got}</b>${o.parts.length?`<span class="ecop">${esc(o.parts.join(' · '))} 포함</span>`:''}`:o.why?`<span class="ecop">${esc(o.why)}</span>`:'';
- if(!main)return '';return `<div class="ecoln" role="status">${main}</div>${first&&o.got?'<p class="note ecohint">구슬은 꾸미기에 쓰는 재화예요 · 판 점수와 달라요</p>':''}`}catch(e){return ''}}
+ const main=o.got?`<span class="gdot" aria-hidden="true"></span><b class="num">옥돌 +${o.got}</b>${o.parts.length?`<span class="ecop">${esc(o.parts.join(' · '))} 포함</span>`:''}`:o.why?`<span class="ecop">${esc(o.why)}</span>`:'';
+ if(!main)return '';return `<div class="ecoln" role="status">${main}</div>${first&&o.got?'<p class="note ecohint">옥돌은 꾸미기에 쓰는 재화예요 · 판 점수와 달라요</p>':''}`}catch(e){return ''}}
 // ----- 1회성 보상: 업적 · 승급 · 시즌 -----
 function ecoClaim(key,amt,items,msg){if(!ECO.ok||!ECO.w||ECO.w.cl.includes(key)||ECO.busyK===key)return Promise.resolve(false);ECO.busyK=key;
  return ecoWrite('claim',n=>{if(n.cl.includes(key))return false;n.cl.push(key);n.g=Math.min(ECO_MAX,n.g+amt);for(const it of items||[])if(!n.own.includes(it))n.own.push(it)}).then(ok=>{ECO.busyK='';if(ok&&msg)toast(msg);return ok})}
@@ -5150,15 +5168,15 @@ function ecoAchWant(){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catc
  try{if(RK.loaded&&rkP(SEAT).g>=PLACE)want.push('a_place')}catch(e){}
  ['beginner','mid','pro','ultimate'].forEach((k,i)=>{if(r&&r[k]&&int(r[k].w)>=1)want.push('a_ai'+(i+1))});return want}
 async function ecoAch(){if(!ECO.ok||!ECO.w||ECO.achBusy||!ECO.auto)return;ECO.achBusy=1;try{const want=ecoAchWant();
- for(const k of want){const a=ECO_ACH.find(x=>x.k===k);if(a&&!ECO.w.cl.includes(k))await ecoClaim(k,a.g,[],`업적 · ${a.n} · 구슬 +${a.g}`)}}finally{ECO.achBusy=0}}
+ for(const k of want){const a=ECO_ACH.find(x=>x.k===k);if(a&&!ECO.w.cl.includes(k))await ecoClaim(k,a.g,[],`업적 · ${a.n} · 옥돌 +${a.g}`)}}finally{ECO.achBusy=0}}
 // 시즌 중 티어 처음 도달(같은 시즌 같은 티어 한 번). 실버는 배치 완료로 대신. 남에게 보이는 보상은 주지 않음(위조 대응)
 function ecoPromoKey(){try{if(!RK.loaded)return null;const p=rkP(SEAT),t=tierOf(p);if(!t)return null;const n=(RK.season||seasonOf(Date.now())).n,ix=t===CHAL?6:TIERS.indexOf(t);return{n,ix,keys:['p'+n+'_1'].concat(ix>=2?['p'+n+'_'+ix]:[])}}catch(e){return null}}
 function ecoPromoCheck(){if(!ECO.ok||!ECO.w||!ECO.auto||!(user&&user.firebase))return;const P=ecoPromoKey();if(!P)return;
  for(const k of P.keys)if(!ECO.w.cl.includes(k)&&!ECO.promoAt[k]){ECO.promoAt[k]=Date.now();const ix=+k.split('_')[1],amt=ECO_PAMT[ix];
-  ecoClaim(k,amt,[],null).then(ok=>{if(ok){ECO.promoAt[k]=Date.now();if(!TUPC.el)toast(ix===1?`배치 완료 보상 · 구슬 +${amt}`:`${ecoTierN(ix)} 첫 도달 · 구슬 +${amt}`);else ecoTupNote(TUPC.el)}else delete ECO.promoAt[k]})}}
+  ecoClaim(k,amt,[],null).then(ok=>{if(ok){ECO.promoAt[k]=Date.now();if(!TUPC.el)toast(ix===1?`배치 완료 보상 · 옥돌 +${amt}`:`${ecoTierN(ix)} 첫 도달 · 옥돌 +${amt}`);else ecoTupNote(TUPC.el)}else delete ECO.promoAt[k]})}}
 // 승급 축하 창에 한 줄(tupShow 훅)
 function ecoTupNote(el){try{if(!el||el.querySelector('.tgem'))return;const P=ecoPromoKey();if(!P)return;const k=P.keys[P.keys.length-1];if(!ECO.w||!(ECO.w.cl.includes(k)||ECO.promoAt[k]))return;
- const ix=+k.split('_')[1],b=el.querySelector('.tcard .btn');if(!b)return;const p=document.createElement('p');p.className='tgem';p.innerHTML=`<span class="gdot" aria-hidden="true"></span>구슬 +${ECO_PAMT[ix]}`;b.before(p)}catch(e){}}
+ const ix=+k.split('_')[1],b=el.querySelector('.tcard .btn');if(!b)return;const p=document.createElement('p');p.className='tgem';p.innerHTML=`<span class="gdot" aria-hidden="true"></span>옥돌 +${ECO_PAMT[ix]}`;b.before(p)}catch(e){}}
 // 시즌 종료 보상: 관리자 기록 cfg/season{n}(최종 티어·판 수)으로. 랭크전 10판 이상, 사람 계정만(문서 키가 uid)
 async function ecoSeasonCheck(force){if(!ECO.ok||!ECO.w||!ecoSrv())return;const SS=seasonOf(Date.now());if(SS.n<2)return;const pn=SS.n-1,key='s'+pn;
  if(ECO.w.cl.includes(key)){if(ECO.sr&&ECO.sr.n===pn){ECO.sr=null;ecoPaint()}return}
@@ -5169,20 +5187,20 @@ async function ecoSeasonCheck(force){if(!ECO.ok||!ECO.w||!ecoSrv())return;const 
    else{const t=v[0],g=v[2]|0,amt=Array.isArray(d.amt)&&Number.isInteger(d.amt[t])?d.amt[t]:ECO_SAMT[t];ECO.sz[pn]={st:'ok',at:Date.now()};ECO.sr=g>=10?{n:pn,st:'ok',t,amt}:{n:pn,st:'few',t,g}}}}
  catch(e){ECO.sz[pn]={st:'err',at:Date.now()}}finally{ECO.szBusy=0}ecoPaint()}
 function ecoSeasonClaim(){const s=ECO.sr;if(!s||s.st!=='ok')return;const key='s'+s.n;
- ecoClaim(key,s.amt,ecoRwItems(s.n,s.t),`시즌 ${s.n} 보상 · 구슬 +${ecoFmt(s.amt)}`).then(ok=>{if(ok){ECO.sr=null;ecoPaint();ecoOpen('inv')}else{toast('보상을 받지 못했어요 · 잠시 뒤 다시');ecoSeasonCheck(true)}})}
+ ecoClaim(key,s.amt,ecoRwItems(s.n,s.t),`시즌 ${s.n} 보상 · 옥돌 +${ecoFmt(s.amt)}`).then(ok=>{if(ok){ECO.sr=null;ecoPaint();ecoOpen('inv')}else{toast('보상을 받지 못했어요 · 잠시 뒤 다시');ecoSeasonCheck(true)}})}
 // 시즌 결산 창(recapShow 훅)에 보상 한 줄
 function ecoRecap(R,again){try{const c=$('#rcCard');if(!c||!R)return;{const o=c.querySelector('.rcrw');if(o)o.remove()}const s=ECO.sr,box=document.createElement('div');box.className='rcrw';
  // 결산 창이 지갑·시즌 기록 확인보다 먼저 뜨면, 확인이 끝난 뒤 이 줄만 다시 그림
  if(!again&&!(s&&s.n===R.n)&&!(ECO.w&&ECO.w.cl.includes('s'+R.n)))ECO.ready&&ECO.q.then(()=>ecoSeasonCheck(true)).then(()=>{const el=$('#recap');if(el&&!el.classList.contains('hide')&&FX.rc===R)ecoRecap(R,1)});
- if(s&&s.n===R.n&&s.st==='ok')box.innerHTML=`<span class="gdot" aria-hidden="true"></span><span>시즌 보상 · 구슬 ${ecoFmt(s.amt)} · ${esc(ecoTierN(s.t))} 테두리</span><button class="btn small" data-act="ecosz">받기</button>`;
+ if(s&&s.n===R.n&&s.st==='ok')box.innerHTML=`<span class="gdot" aria-hidden="true"></span><span>시즌 보상 · 옥돌 ${ecoFmt(s.amt)} · ${esc(ecoTierN(s.t))} 테두리</span><button class="btn small" data-act="ecosz">받기</button>`;
  else if(s&&s.n===R.n&&s.st==='few')box.innerHTML=`<span>시즌 보상은 랭크전 10판부터 받아요</span>`;
  else if(ECO.w&&ECO.w.cl.includes('s'+R.n))box.innerHTML=`<span>시즌 ${R.n} 보상을 받았어요</span>`;
  else box.innerHTML=`<span>시즌 보상은 집계가 끝나면 받을 수 있어요</span>`;
  const b=c.querySelector('.rcbtn');if(b)b.before(box);else c.appendChild(box)}catch(e){}}
 // ----- 받을 보상 API(디자인팀이 정할 '받을 보상' 자리에 붙이는 용도) -----
 // ECO.auto=true(지금): 과제·승급·업적은 조건을 채우면 바로 받음. false로 바꾸면 ecoRewards()로 목록을 보여 주고 ecoClaimAll()로 한 번에 받음
-//  ecoRewards() → [{k 종류('mis'|'promo'|'ach'|'season'), key, n 이름, g 구슬}] (지금 받을 수 있는 것만) · ecoRewardCount() → 개수
-//  ecoClaimAll() → Promise<받은 구슬 합계>. 과제는 한 번의 쓰기로, 1회성 보상(업적·승급·시즌)은 보상마다 한 번씩(규칙이 키 하나씩 확인)
+//  ecoRewards() → [{k 종류('mis'|'promo'|'ach'|'season'), key, n 이름, g 옥돌}] (지금 받을 수 있는 것만) · ecoRewardCount() → 개수
+//  ecoClaimAll() → Promise<받은 옥돌 합계>. 과제는 한 번의 쓰기로, 1회성 보상(업적·승급·시즌)은 보상마다 한 번씩(규칙이 키 하나씩 확인)
 ECO.auto=false; // 보상은 홈 '받을 보상' 띠에서 [모두 받기]로 받음(디자인팀 2차 결정)
 function ecoRewards(){const out=[];if(!ECO.ok||!ECO.w)return out;const w=ECO.w,dq=w.d===ecoDay()?w.dq:[],v=ecoProgGet();
  ecoMis().forEach((m,i)=>{if((v.p[m.id]|0)>=m.n&&!dq.includes('m'+i))out.push({k:'mis',key:'m'+i,n:m.t,g:10})});
@@ -5193,7 +5211,7 @@ const ecoRewardCount=()=>ecoRewards().length;
 async function ecoClaimAll(){const L0=ecoRewards();if(!L0.length)return 0;const g0=ecoBal();
  if(L0.some(r=>r.k==='mis'))await ecoWrite('earn',n=>{const c=ecoMisClaim(n,ecoProgGet(),1);if(!c.k)return false;const got=Math.max(0,Math.min(c.add,ECO_CAP-n.dc,ECO_MAX-n.g));n.g+=got;n.dc+=got});
  for(const r of L0){if(r.k==='promo'||r.k==='ach')await ecoClaim(r.key,r.g,[],null);else if(r.k==='season'&&ECO.sr)await ecoClaim(r.key,ECO.sr.amt,ecoRwItems(ECO.sr.n,ECO.sr.t),null)}
- const got=ecoBal()-g0;if(got>0)toast(`보상 받기 · 구슬 +${ecoFmt(got)}`);ecoPaint();return got}
+ const got=ecoBal()-g0;if(got>0)toast(`보상 받기 · 옥돌 +${ecoFmt(got)}`);ecoPaint();return got}
 // ----- 남에게 보이는 장착(pe) -----
 const ecoPe=()=>ECO.w?ECO_PUB.map(c=>ECO.w.eq[c]||'').filter(Boolean).join('.'):'';
 const ecoPeObj=()=>{const p=ecoSrv()&&ECO.ok?ecoPe():'';return p?{eq:p}:{}};
@@ -5276,50 +5294,66 @@ function ecoPrev(){const e=ECO.w?ECO.w.eq:{};let t=null;try{t=tierOf(rkP(SEAT))}
  return `<div class="shprev"><span class="pvemb">${cosFrame(SEAT,emblem(t,46),46)}</span><span class="pvt"><b>${cosName(SEAT,nk)}</b>${cosTitle(SEAT)||'<small class="ctt none">칭호 없음</small>'}</span>
   <span class="pvb"><svg viewBox="0 0 64 36" aria-hidden="true"><defs><linearGradient id="pvbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bP[0]}"/><stop offset="1" stop-color="${bP[1]}"/></linearGradient></defs><rect width="64" height="36" rx="7" fill="url(#pvbg)"/><path d="M0 18H64M21 0V36M43 0V36" stroke="#3A2510" stroke-opacity=".6"/><use href="#sB${sk}" transform="translate(21 18) scale(.72)"/><use href="#sW${sk}" transform="translate(43 18) scale(.72)"/></svg><span class="pvs" style="color:${ECO_SEALC[e.s]||'var(--pri)'}">${e.s?ecoSealSvg(e.s):IC.wax}</span></span></div>`}
 function ecoTile(it){const own=ecoHas(it.id),on=ecoEqOf(it.c)===it.id;
- return `<button class="etile${on?' on':''}${it.c==='t'?' tt':''}" data-act="ecoitem" data-id="${esc(it.id)}" aria-label="${esc(it.n)} · ${on?'장착 중':own?'보유':'구슬 '+ecoFmt(it.p)}">${ecoArt(it)}${it.c==='t'?'':`<b>${esc(it.n)}</b>`}<span class="ep">${on?'장착 중':own?'보유':`<i class="gdot"></i>${ecoFmt(it.p)}`}</span></button>`}
+ return `<button class="etile${on?' on':''}${it.c==='t'?' tt':''}" data-act="ecoitem" data-id="${esc(it.id)}" aria-label="${esc(it.n)} · ${on?'장착 중':own?'보유':'옥돌 '+ecoFmt(it.p)}">${ecoArt(it)}${it.c==='t'?'':`<b>${esc(it.n)}</b>`}<span class="ep">${on?'장착 중':own?'보유':`<i class="gdot"></i>${ecoFmt(it.p)}`}</span></button>`}
 function ecoRender(){const body=$('#shopBody');if(!body||shOpen!=='shop')return;const w=ECO.w;
- $('#shopGem').innerHTML=`<span class="gdot" aria-hidden="true"></span><span class="srOnly">구슬</span><b class="num">${ecoFmt(ecoBal())}</b>`;$('#shopPrev').innerHTML=ecoPrev();
+ $('#shopGem').innerHTML=`<span class="gdot" aria-hidden="true"></span><span class="srOnly">옥돌</span><b class="num">${ecoFmt(ecoBal())}</b>`;$('#shopPrev').innerHTML=ecoPrev();
  document.querySelectorAll('#shopSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===ECO.tab?'true':'false'));
  if(!w){body.innerHTML=`<p class="sub">${ECO.err?'지갑을 불러오지 못했어요':'불러오는 중'}</p>`;return}
  let h='';
  if(ECO.tab==='shop'){h+=ECO_SLOTS.map(c=>`<section class="esec"><div class="eh"><h3>${ECO_CAT[c]}</h3><span>${ECO_SEE[c]}</span></div><div class="egrid">${ECO_ITEMS.filter(x=>x.c===c).map(ecoTile).join('')}</div></section>`).join('');
   if(ECO_PAID.length)h+=`<section class="esec"><div class="eh"><h3>응원 상품</h3></div>${ECO_PAID.map(x=>`<div class="epaid"><b>${esc(x.n)}</b><span>${ecoFmt(x.won)}원</span></div>`).join('')}<p class="note">결제는 꾸미기와 광고에만 쓰여요 · 랭크·대국에는 영향이 없어요</p></section>`;
-  h+=`<p class="note enote">구슬은 꾸미기에만 쓰여요 · 뽑기 없음</p>`}
+  h+=`<p class="note enote">옥돌은 꾸미기에만 쓰여요 · 뽑기 없음</p>`}
  else if(ECO.tab==='inv'){h+=ECO_SLOTS.map(c=>{const mine=w.own.map(ecoItem).filter(x=>x&&x.c===c),cur=w.eq[c]||'';
    return `<section class="esec"><div class="eh"><h3>${ECO_CAT[c]}</h3><span>${mine.length}개</span></div><div class="einv">${`<button class="echip${cur?'':' on'}" data-act="ecoeq" data-c="${c}" data-id="" aria-pressed="${cur?'false':'true'}">기본</button>`}${mine.map(x=>`<button class="echip${cur===x.id?' on':''}" data-act="ecoeq" data-c="${c}" data-id="${esc(x.id)}" aria-pressed="${cur===x.id?'true':'false'}">${esc(x.n)}</button>`).join('')}${mine.length?'':`<button class="echip ghost" data-act="ecotab" data-v="shop">교환소 보기</button>`}</div></section>`}).join('')}
  else{const ms=ecoMis(),v=ecoProgGet(),dq=w.d===ecoDay()?w.dq:[],t=ecoToday();
   h+=`<section class="esec"><div class="eh"><h3>오늘의 과제</h3></div><div class="eqs">${ms.map((m,i)=>{const p=Math.min(m.n,v.p[m.id]|0),done=dq.includes('m'+i);return `<div class="eqr${done?' done':''}"><span class="ck" aria-hidden="true">${done?IC.check:''}</span><b>${esc(m.t)}</b><span class="num">${done?'받음':p+'/'+m.n}</span><em><i class="gdot"></i>10</em></div>`}).join('')}
    <div class="eqr${dq.includes('w')?' done':''}"><span class="ck" aria-hidden="true">${dq.includes('w')?IC.check:''}</span><b>하루 첫 승</b><span class="num">${dq.includes('w')?'받음':'0/1'}</span><em><i class="gdot"></i>20</em></div></div>
-   <div class="ecap"><span>오늘 받은 구슬</span><b class="num">${t} / ${ECO_CAP}</b></div><div class="ebar"><i style="width:${Math.min(100,t/ECO_CAP*100)}%"></i></div></section>`;
+   <div class="ecap"><span>오늘 받은 옥돌</span><b class="num">${t} / ${ECO_CAP}</b></div><div class="ebar"><i style="width:${Math.min(100,t/ECO_CAP*100)}%"></i></div></section>`;
   h+=`<section class="esec"><div class="eh"><h3>대국 끝 보상</h3></div><div class="etab"><span>랭크전</span><b>이기면 12 · 지면 6</b><span>일반 게임</span><b>이기면 10 · 지면 5</b><span>AI 대국</span><b>이기면 6 · 지면 3</b></div></section>`;
   h+=`<section class="esec"><div class="eh"><h3>업적</h3></div><div class="eqs">${ECO_ACH.map(a=>{const d=w.cl.includes(a.k);return `<div class="eqr${d?' done':''}"><span class="ck" aria-hidden="true">${d?IC.check:''}</span><b>${esc(a.n)}</b><span class="num">${d?'받음':''}</span><em><i class="gdot"></i>${a.g}</em></div>`}).join('')}</div></section>`;
-  h+=`<section class="esec"><div class="eh"><h3>티어 보상</h3></div><div class="etab"><span>시즌 끝</span><b>구슬 200~2,500 · 티어 테두리</b><span>처음 승급</span><b>구슬 50~300</b></div><p class="note">시즌 보상은 랭크전 10판 이상</p></section>`;
-  if(ecoSrv()&&!(user.google&&user.google()))h+=`<p class="note enote"><span>게스트 구슬은 이 기기에만 남아요</span><button class="linkbtn" data-act="acc">계정 연결</button></p>`}
+  h+=`<section class="esec"><div class="eh"><h3>티어 보상</h3></div><div class="etab"><span>시즌 끝</span><b>옥돌 200~2,500 · 티어 테두리</b><span>처음 승급</span><b>옥돌 50~300</b></div><p class="note">시즌 보상은 랭크전 10판 이상</p></section>`;
+  if(ecoSrv()&&!(user.google&&user.google()))h+=`<p class="note enote"><span>게스트 옥돌은 이 기기에만 남아요</span><button class="linkbtn" data-act="acc">계정 연결</button></p>`}
  body.innerHTML=h}
 function ecoOpen(tab){if(tab)ECO.tab=tab;openSheet('shop');ecoRender();const b=$('#shopBody');if(b)b.scrollTop=0}
 function ecoItemTap(id){const it=ecoItem(id);if(!it)return;const own=ecoHas(id),on=ecoEqOf(it.c)===id;
  const head=`<div class="edlg">${ecoArt(it,true)}<b>${esc(it.n)}</b><span>${ECO_CAT[it.c]} · ${ECO_SEE[it.c]}</span></div>`;
  if(own){dialog(head,on?'해제':'장착',()=>ecoEquip(it.c,on?'':id),'닫기');return}
  if(!ECO.ok){dialog(head+'<p class="edq">지갑을 불러오는 중이에요</p>','확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
- const need=it.p-ecoBal();
- if(need>0){dialog(head+`<p class="edq">구슬 <b class="num">${ecoFmt(need)}</b>개 더 필요해요</p>`,'확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
- dialog(head+`<p class="edq">구슬 <b class="num">${ecoFmt(it.p)}</b>으로 바꿀까요?</p>`,'바꾸기',()=>ecoBuy(id))}
+ const free=isAdmin(),need=free?0:it.p-ecoBal();
+ if(need>0){dialog(head+`<p class="edq">옥돌 <b class="num">${ecoFmt(need)}</b>개 더 필요해요</p>`,'확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
+ dialog(head+(free?`<p class="edq">관리자 · 옥돌 없이 받기</p>`:`<p class="edq">옥돌 <b class="num">${ecoFmt(it.p)}</b>으로 바꿀까요?</p>`),free?'받기':'바꾸기',()=>ecoBuy(id))}
 function ecoBuy(id){const it=ECO_BY.get(id);if(!it)return;
- ecoWrite('buy',n=>{if(n.own.includes(id)||n.g<it.p)return false;n.g-=it.p;n.own.push(id);n.eq[it.c]=id}).then(ok=>{if(ok){toast(`${it.n} · 장착했어요`);ecoLook();ecoSyncPub()}else toast('바꾸지 못했어요 · 잠시 뒤 다시')})}
+ const free=isAdmin();ecoWrite('buy',n=>{if(n.own.includes(id)||(!free&&n.g<it.p))return false;if(!free)n.g-=it.p;n.own.push(id);n.eq[it.c]=id}).then(ok=>{if(ok){toast(`${it.n} · 장착했어요`);ecoLook();ecoSyncPub()}else toast('바꾸지 못했어요 · 잠시 뒤 다시')})}
 function ecoEquip(c,id){if(!ECO_SLOTS.includes(c))return;if(id&&!ecoHas(id))return;
  ecoWrite('equip',n=>{if((n.eq[c]||'')===id)return false;if(id)n.eq[c]=id;else delete n.eq[c]}).then(ok=>{if(ok){toast(id?'장착했어요':'기본으로 바꿨어요');ecoLook();ecoSyncPub();try{renderRank()}catch(e){}}})}
 // 홈 '꾸미기' 카드 + 열려 있는 화면 다시 그리기
 function ecoPaint(){try{const c=$('#ecoCard');if(c){const w=ECO.w,ms=ecoMis(),v=ecoProgGet(),dq=w&&w.d===ecoDay()?w.dq:[],done=ms.filter((m,i)=>dq.includes('m'+i)).length;c.dataset.d=String(ecoDay());
-  const sr=ECO.sr,szc=sr&&sr.st==='ok'?`<div class="eszr">${emblem(fxTierOfIx(sr.t),36)}<span><b>시즌 ${sr.n} 보상</b><small>구슬 ${ecoFmt(sr.amt)} · ${esc(ecoTierN(sr.t))} 테두리</small></span><button class="btn small" data-act="ecosz">받기</button></div>`:sr&&sr.st==='wait'?`<p class="note eszw">시즌 ${sr.n} 보상은 집계가 끝나면 받을 수 있어요</p>`:'';
-  c.innerHTML=`<div class="chead"><h2><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="9.5" cy="9.5" r="2.4"/></svg>꾸미기</h2><button class="gemchip" data-act="ecoopen" data-v="shop" aria-label="구슬 ${ecoFmt(ecoBal())}개 · 교환소 열기"><span class="gdot" aria-hidden="true"></span><b class="num">${ecoFmt(ecoBal())}</b></button></div>${szc}
-   <button class="eqline" data-act="ecoopen" data-v="quest"><span class="lbl">오늘의 과제</span><span class="pips" aria-hidden="true">${ms.map((m,i)=>`<i class="${dq.includes('m'+i)?'on':''}"></i>`).join('')}</span><span class="qt">${done>=3?'모두 완료':esc(ms.find((m,i)=>!dq.includes('m'+i)).t)}</span><span class="num qn">${ecoToday()}/${ECO_CAP}</span></button>
+  const sr=ECO.sr,szc=sr&&sr.st==='ok'?`<div class="eszr">${emblem(fxTierOfIx(sr.t),36)}<span><b>시즌 ${sr.n} 보상</b><small>옥돌 ${ecoFmt(sr.amt)} · ${esc(ecoTierN(sr.t))} 테두리</small></span><button class="btn small" data-act="ecosz">받기</button></div>`:sr&&sr.st==='wait'?`<p class="note eszw">시즌 ${sr.n} 보상은 집계가 끝나면 받을 수 있어요</p>`:'';
+  c.innerHTML=`<div class="chead"><h2><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="9.5" cy="9.5" r="2.4"/></svg>꾸미기</h2><button class="gemchip" data-act="ecoopen" data-v="shop" aria-label="옥돌 ${ecoFmt(ecoBal())}개 · 교환소 열기"><span class="gdot" aria-hidden="true"></span><b class="num">${ecoFmt(ecoBal())}</b></button></div>${szc}
+   ${attLine()}<button class="eqline" data-act="ecoopen" data-v="quest"><span class="lbl">오늘의 과제</span><span class="pips" aria-hidden="true">${ms.map((m,i)=>`<i class="${dq.includes('m'+i)?'on':''}"></i>`).join('')}</span><span class="qt">${done>=3?'모두 완료':esc(ms.find((m,i)=>!dq.includes('m'+i)).t)}</span><span class="num qn">${ecoToday()}/${ECO_CAP}</span></button>
    <div class="ebtns"><button class="btn ghost small" data-act="ecoopen" data-v="shop">교환소</button><button class="btn ghost small" data-act="ecoopen" data-v="inv">보관함</button></div>`}
  if(shOpen==='shop')ecoRender();if(shOpen==='prof'){try{frRenderProf()}catch(e){}}}catch(e){console.warn('ecoPaint',e)}}
 // 계정 삭제(설정): 지갑은 지우지 않고 비움(1회성 보상 기록 cl만 남김 → 지웠다 다시 만들어 보상을 또 받지 못하게. 개인정보 없음)
 async function ecoWipe(){if(!ecoSrv()||!ECO.ok)return;await ecoWrite('reset',n=>{n.g=0;n.own=[];n.eq={}}).catch(()=>{})}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;if(!a.startsWith('eco'))return;
  if(a==='ecoopen')ecoOpen(b.dataset.v);else if(a==='ecotab'){ECO.tab=b.dataset.v;ecoRender();const bd=$('#shopBody');if(bd)bd.scrollIntoView({block:'nearest'})}
- else if(a==='ecoitem')ecoItemTap(b.dataset.id);else if(a==='ecoeq')ecoEquip(b.dataset.c,b.dataset.id||'');else if(a==='ecosz'){if(b.closest('#recap'))try{recapClose()}catch(e){}ecoSeasonClaim()}});
+ else if(a==='ecoitem')ecoItemTap(b.dataset.id);else if(a==='ecoeq')ecoEquip(b.dataset.c,b.dataset.id||'');else if(a==='ecosz'){if(b.closest('#recap'))try{recapClose()}catch(e){}ecoSeasonClaim()}else if(a==='ecoatt'){attDone()?attShow(-1):attStamp()}});
+// ===== 출석체크: 하루 한 번 도장. 7칸 판 — 1~6번째 옥돌 10, 7번째 옥돌 50 → 판 비움(연속일 필요 없음). 지갑 wal의 dq 'c'(오늘 찍음) · ck(판에 찍힌 수) =====
+const ATT_N=7,attAmt=c0=>c0===ATT_N-1?50:10;
+const attDone=()=>!!(ECO.w&&ECO.w.d===ecoDay()&&ECO.w.dq.includes('c'));
+const attCnt=()=>{const w=ECO.w;if(!w)return 0;const c=w.ck|0;return attDone()&&c===0?ATT_N:c};
+function attLine(){if(!ECO.w)return'';const n=attCnt(),dn=attDone();
+ return `<button class="eqline att" data-act="ecoatt" aria-label="출석체크 ${n}/${ATT_N}${dn?' · 오늘 완료':' · 도장 찍기'}"><span class="lbl">출석체크</span><span class="pips" aria-hidden="true">${[...Array(ATT_N)].map((_,i)=>`<i class="${i<n?'on':''}"></i>`).join('')}</span><span class="qt">${dn?'오늘 완료':'도장 찍기'}</span><span class="num qn">${n}/${ATT_N}</span></button>`}
+function attStamp(){if(!ECO.ok||!ECO.w||attDone()||ECO.attBusy)return Promise.resolve(false);ECO.attBusy=1;const c0=ECO.w.ck|0,amt=attAmt(c0);
+ return ecoWrite('att',n=>{if(n.dq.includes('c'))return false;const c=n.ck|0;n.dq.push('c');n.ck=c===ATT_N-1?0:c+1;n.g=Math.min(ECO_MAX,n.g+attAmt(c))})
+  .then(ok=>{ECO.attBusy=0;if(ok)attShow(c0,amt);else toast('도장을 찍지 못했어요 · 잠시 뒤 다시');return ok})}
+// 도장 판 보기. at=이번에 찍은 칸(0부터), -1이면 보기만
+function attShow(at,amt){const n=at>=0?at+1:attCnt(),full=n>=ATT_N;
+ const cells=[...Array(ATT_N)].map((_,i)=>`<span class="atc${i<n?' on':''}${i===at?' new':''}${i===ATT_N-1?' big':''}">${i<n?`<svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-9"/></svg>`:i===ATT_N-1?'<b class="num">50</b>':`<b class="num">${i+1}</b>`}</span>`).join('');
+ const msg=at>=0?(full?`7칸 완성 · 옥돌 <b class="num">+${amt}</b>`:`오늘 도장 · 옥돌 <b class="num">+${amt}</b>`):(attDone()?'오늘은 찍었어요 · 내일 또':'');
+ dialog(`<div class="attd"><h3 id="attH">출석체크</h3><div class="atrow">${cells}</div>${msg?`<p class="atm">${msg}</p>`:''}</div>`,'확인',()=>{});
+ {const x=document.querySelector('#dlg [data-act=dlgno]');if(x)x.remove()}$('#dlg').setAttribute('aria-labelledby','attH')}
+rwAdd({id:'att',order:-1,items:()=>!ECO.ok||!ECO.w||attDone()?[]:[{id:'att',t:'출석체크',st:'ready',g:attAmt(ECO.w.ck|0)}],claim:()=>attStamp()});
 // 홈 보상 띠(rwBar)에 상점 보상 등록 — 받을 것(ready)·진행 중 과제(prog)
 rwAdd({id:'eco',order:0,
  items:()=>{if(!ECO.ok||!ECO.w)return[];
