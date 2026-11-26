@@ -198,7 +198,8 @@ body.fbmode .xfer,body.fbmode .xferC{display:none}body:not(.fbmode) .wgl{display
 .pbar .pp .coin{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe9a8,#d9ad4a 60%,#9c7420);flex:none}
 .pbar .pp.q{color:var(--faint);font-size:22px;position:relative;cursor:pointer}.pp.q::after{content:'';position:absolute;inset:-12px -8px}.tag.sealtag{position:relative}.tag.sealtag::after{content:'';position:absolute;inset:-12px -4px}
 .pbar .pp.q .coin{filter:grayscale(1);opacity:.5}
-.pbar .pp.q.cnt{color:var(--mute);font-size:18px;font-weight:800;display:inline-flex;align-items:center;gap:3px;white-space:nowrap}.pbar .pp.q.cnt small{font-size:11px;font-weight:800;margin-right:1px}.pbar .pp.q.cnt .coin{filter:none;opacity:.75}
+.pbar .pp.q.cnt{color:var(--mute);font-size:18px;font-weight:800;display:inline-flex;align-items:center;gap:3px;white-space:nowrap}.pbar .pp.q.cnt{cursor:pointer}.pbar .pp.q.cnt .cntq{display:inline-grid;place-items:center;width:17px;height:17px;margin-left:5px;border-radius:50%;border:1.5px solid currentColor;font-size:11px;font-weight:900;line-height:1;opacity:.8}
+.pbar .pp.q.cnt small{font-size:11px;font-weight:800;margin-right:1px}.pbar .pp.q.cnt .coin{filter:none;opacity:.75}
 .pbar .pp{position:relative}.pbar .pp .ch{display:inline-block;min-width:1ch;text-align:right}
 .pbar .pp .dl{position:absolute;right:calc(100% + 4px);top:50%;margin-top:-10px;height:20px;line-height:20px;padding:0 6px;border-radius:6px;font-size:12px;font-weight:800;background:var(--soft);opacity:0;animation:dl .8s ease-out both}.pbar .pp .dl.m{color:var(--mute)}.pbar .pp .dl.p{color:var(--jadeink)}@keyframes dl{0%{opacity:0;transform:translateX(4px)}25%,75%{opacity:1;transform:none}100%{opacity:0}}
 
@@ -1899,7 +1900,7 @@ function fiveLines(bd,col){const out=[];for(const [dr,dc] of DIRS)for(let r=0;r<
 // 상대 칩 계산 도움(11/27): 랭크 점수 1300(플래티넘) 미만이면 상대 남은 칩의 '최대치'를 계산해 보여 줌(대국 중인 본인 화면만)
 //  상대 수입(턴마다 10) − 확실히 쓴 칩: 내가 이긴 칸은 상대가 최소 1, 상대가 이긴 칸은 내 칩 이상(상대가 선 플레이어면 +1)
 const CNT_MAX_R=1300;
-function cntOn(){try{if(UI.mode==='tut'||UI.review)return false;const P=rkP(SEAT);return !(P&&P.r>=CNT_MAX_R)}catch(e){return false}}
+function cntOn(){try{if(UI.mode==='tut'||UI.review)return false;if(UI.mode==='local'&&L.s&&L.s.ai==='ultimate'&&!L.s.bot)return false;/* Godlike AI 대국은 도움 없음(랭크 상대는 실력이 드러나지 않게 그대로) */const P=rkP(SEAT);return !(P&&P.r>=CNT_MAX_R)}catch(e){return false}}
 function cntMax(vs,opp){if(!vs||!vs.me||!opp||opp===vs.me||!cntOn())return null;const me=vs.me;let lb=0,n=0;
  for(const h of vs.hist||[]){if(h.t>=vs.t&&vs.phase!=='over')continue;const mb=h.bets&&h.bets[me];if(!Array.isArray(mb))return null;n++;
   for(let i=0;i<3;i++)lb+=h.win[i]===me?1:(h.sun===opp?mb[i]+1:mb[i])}
@@ -2663,7 +2664,7 @@ function renderPlayers(){
      pp=`<div class="pp num">${sp?`<span class="dl m" style="animation-delay:${(-el).toFixed(3)}s">−${sp}</span>`:''}${gain?`<span class="dl ${gain>0?'p':'m'}" style="animation-delay:${((sp?.55:0)-el).toFixed(3)}s">${gain>0?'+':'−'}${Math.abs(gain)}</span>`:''}<span class="coin"></span><span class="ch" data-from="${a}" data-mid="${sp&&gain?a-sp:''}" data-to="${v}" data-at="${rr.at}">${a}</span></div>`}
     else pp=`<div class="pp num"><span class="coin"></span><span class="ch">${v}</span></div>`}}
   else if(!over||rv||late){const cm=!mine&&!rv&&!over?cntMax(vs,id):null;
-   pp=cm!=null?`<div class="pp q cnt" role="button" tabindex="0" data-act="qinfo" aria-label="상대 ${PTU} 최대 ${cm} · 계산 도움"><span class="coin"></span><small>최대</small>${cm}</div>`
+   pp=cm!=null?`<div class="pp q cnt" role="button" tabindex="0" data-act="cnthelp" aria-label="상대 ${PTU} 최대 ${cm} · 설명 보기"><span class="coin"></span><small>최대</small>${cm}<span class="cntq" aria-hidden="true">?</span></div>`
     :`<div class="pp q" role="button" tabindex="0" data-act="qinfo" aria-label="${ptT('상대 {P} 비공개')}"><span class="coin"></span>?</div>`}
   const ring=mine?`<div class="ring hide" id="ring"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" stroke="var(--raise)" stroke-width="5" fill="none"/><circle id="ringArc" cx="24" cy="24" r="20" stroke="var(--jadeink)" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="125.7" stroke-dashoffset="0"/></svg><b id="ringTxt"></b></div>`:'';
   return `<div class="pbar${!coining&&!rv&&actorOf(vs,id)?' turn':''}${tags?'':' notag'}">${ecoPbar(vs,id)}</div>${tags?`<div class="pt">${tags}</div>`:''}</div>${pp}${ring}</div>`};
@@ -5154,6 +5155,7 @@ document.addEventListener('click',e=>{
  else if(a==='emlink')accRun('link');
  else if(a==='emlogin')accRun('login');
  else if(a==='emreset')accRun('reset');
+ else if(a==='cnthelp'){dialog(`<span class="rkin cntin"><h3 id="rkinH">상대 칩 최대치</h3><ul><li>상대가 지금 가질 수 있는 가장 많은 칩이에요</li><li>턴마다 받는 10칩에서 확실히 쓴 칩을 뺐어요</li><li>실제 상대 칩은 이 숫자와 같거나 적어요</li><li>골드까지만 보여요</li></ul></span>`,'확인',null,'');{const d=$('#dlg'),no=d.querySelector('[data-act=dlgno]');if(no)no.remove();d.setAttribute('aria-labelledby','rkinH')}}
  else if(a==='qinfo')toast(b.classList.contains('cnt')?ptT('지금까지 결과로 계산한 상대 {P}의 최대치예요 · 플래티넘부터는 꺼져요'):ptT('상대 {P은} 대국이 끝나면 공개돼요'));
  else if(a==='hintx'){lset('bo-hint','0');b.closest('.hint').remove();syncSettings();toast('설정에서 다시 켤 수 있어요')}
  else if(a==='tskip')T.skip();
