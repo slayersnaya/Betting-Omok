@@ -1467,6 +1467,8 @@ html{scroll-padding-top:64px}
 .mft{grid-column:2;display:flex;align-items:center;gap:8px;min-height:40px}
 .mdue{margin-right:auto;font-size:12px;color:var(--faint);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .mgot{font-size:13px;font-weight:800;color:var(--mute);white-space:nowrap}
+.mft .mdel{width:40px;height:40px;flex:none;color:var(--mute)}.mft .mdel svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.mft .mdel:hover{color:var(--ink)}
+.mnote2 .linkbtn{display:inline;font-size:inherit;padding:0;min-height:0}
 .mft .btn.small{min-height:40px;min-width:72px}.mft .btn.ghost.small{min-width:60px}
 .mcard.got .mart,.mcard.got .mtt{opacity:.72}
 .mall{margin-bottom:10px}.mall:disabled,.mft .btn:disabled{opacity:.55;cursor:default}
@@ -1852,7 +1854,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.2339';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.2345';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6112,7 +6114,11 @@ const mailGot=m=>mailMr().includes(m.id);
 function mailRd(){let a=[];try{a=JSON.parse(lget('bo-mailrd')||'[]')}catch(e){}return Array.isArray(a)?a.filter(x=>typeof x==='string'&&MAIL_IDRE.test(x)):[]}
 function mailRdAdd(ids){const a=mailRd(),now=Date.now();for(const id of ids)if(!a.includes(id))a.push(id);lset('bo-mailrd',JSON.stringify(a.filter(x=>+x.slice(1,14)>now-864e5).slice(-50)))}
 // 지금 보이는 우편: 받을 수 있는 기간 안. 받는 사람만(관리자 화면은 따로)
-const mailLive=()=>{const now=Date.now();return MAIL.list.filter(m=>(m.to==='all'||m.to===SEAT)&&m.from<=now&&now<m.until).sort((a,b)=>(mailGot(a)-mailGot(b))||(b.from-a.from))};
+// 받은 우편·공지 지우기: 이 기기에서만 목록에서 숨김(서버 쓰기 없음). 안 받은 선물은 못 지움
+function mailHid(){let a=[];try{a=JSON.parse(lget('bo-mailhid')||'[]')}catch(e){}return Array.isArray(a)?a.filter(x=>typeof x==='string'&&MAIL_IDRE.test(x)):[]}
+function mailHide(ids){const a=mailHid(),now=Date.now();for(const id of ids)if(!a.includes(id))a.push(id);lset('bo-mailhid',JSON.stringify(a.filter(x=>+x.slice(1,14)>now-864e5).slice(-100)))}
+const mailCanDel=m=>!mailGift(m)||mailGot(m);
+const mailLive=()=>{const now=Date.now();return MAIL.list.filter(m=>(m.to==='all'||m.to===SEAT)&&m.from<=now&&now<m.until&&!mailHid().includes(m.id)).sort((a,b)=>(mailGot(a)-mailGot(b))||(b.from-a.from))};
 const mailReady=()=>mailLive().filter(m=>mailGift(m)&&!mailGot(m));
 const mailUnread=()=>{const rd=mailRd();return mailLive().filter(m=>mailGift(m)?!mailGot(m):!rd.includes(m.id)).length};
 // ----- 불러오기: 전체 우편(to=all)·내 우편(to=나) 질의 2개. 읽기 = 받은 문서 수(빈 결과는 1)
@@ -6170,13 +6176,14 @@ function mailCard(m){const gift=mailGift(m),got=gift&&mailGot(m),it=m.it?ecoItem
  let act='';if(gift&&!got)act=`<button class="btn small" data-act="mailget" data-id="${m.id}"${MAIL.claiming||!ECO.ok?' disabled':''}>받기</button>`;
  else if(got&&it&&ecoHas(m.it)&&ecoEqOf(it.c)!==m.it)act=`<button class="btn ghost small" data-act="mailequip" data-id="${m.id}">장착</button><span class="mgot">받음</span>`;
  else if(got)act='<span class="mgot">받음</span>';
+ if(mailCanDel(m))act+=`<button class="ibtn mdel" data-act="mailhide" data-id="${m.id}" aria-label="우편 지우기" title="지우기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7h15M9.5 7V4.8h5V7M6.5 7l.9 12.2h9.2L17.5 7M10.3 10.5v5.6M13.7 10.5v5.6"/></svg></button>`;
  return `<article class="mcard${got?' got':''}${gift?'':' ntc'}"><span class="mart">${mailArt(m)}</span><div class="mtx"><b class="mtt">${esc(m.t)}</b>${m.msg?`<p class="mmsg">${esc(m.msg)}</p>`:''}${gift?mailGiftTxt(m,got):''}</div><div class="mft"><span class="mdue">${mailDue(m)}</span>${act}</div></article>`}
 function mailRender(){const body=$('#mailBody');if(!body)return;{const t=$('#mailToAdm');if(t)t.classList.toggle('hide',!isAdmin())}
  const L=mailLive(),R=mailReady();let h='';
  if(isAdmin()&&Date.now()<MAIL_BETA.end&&!MAIL.list.some(m=>m.t===MAIL_BETA.t)&&!(MAIL.adm||[]).some(m=>m.t===MAIL_BETA.t))h+=`<div class="mbeta"><span>베타 선물을 아직 보내지 않았어요</span><button class="btn small" data-act="mailbeta">보내기 화면</button></div>`;
  if(R.length>1)h+=`<button class="btn wide mall" data-act="mailall"${MAIL.claiming||!ECO.ok?' disabled':''}>모두 받기 · ${R.length}개</button>`;
  if(!L.length)h+=`<div class="mempty">${MAIL_IC}<p>${MAIL.busy&&!MAIL.at?'불러오는 중':MAIL.err&&!MAIL.at?'불러오지 못했어요':'받은 우편이 없어요'}</p></div>`;
- else h+=`<div class="mlist">${L.map(mailCard).join('')}</div><p class="note mnote2">기간이 지나면 우편이 사라져요</p>`;
+ else{const D=L.filter(mailCanDel);h+=`<div class="mlist">${L.map(mailCard).join('')}</div><p class="note mnote2">기간이 지나면 우편이 사라져요${D.length>1?` · <button class="linkbtn" data-act="mailhideall">받은 우편 모두 지우기</button>`:''}</p>`}
  body.innerHTML=h;
  // 본 공지는 읽음(선물 없는 우편만. 선물은 받아야 읽음)
  const ntc=L.filter(m=>!mailGift(m)).map(m=>m.id);if(ntc.length){const rd=mailRd();if(ntc.some(x=>!rd.includes(x))){mailRdAdd(ntc);mailPaintHdr()}}}
@@ -6226,6 +6233,8 @@ async function mailSend(c){if(!isAdmin()||!db)return;const f=c.f,r=[...crypto.ge
  try{await db.doc('mail/'+id).set(d);snd('notify');toast('보냈어요');MAIL.f=null;MAIL.tgt=null;mailAdmLoad();mailFetch(true)}catch(e){snd('error');toast('보내지 못했어요 · 규칙 게시를 확인해 주세요');console.warn('mail send',e&&e.code)}}
 function mailDel(id){const m=(MAIL.adm||[]).find(x=>x.id===id);if(!m)return;dialog(`<div class="mconf"><b>${esc(m.t)}</b><span>이 우편을 지울까요? 아직 안 받은 사람은 못 받아요</span></div>`,'지우기',async()=>{try{await db.doc('mail/'+id).delete();toast('지웠어요');MAIL.adm=MAIL.adm.filter(x=>x.id!==id);MAIL.list=MAIL.list.filter(x=>x.id!==id);mailPaint()}catch(e){toast('지우지 못했어요')}},'취소')}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;if(!a.startsWith('mail'))return;
+ if(a==='mailhide'){mailHide([b.dataset.id]);snd('tap');mailPaint();mailRender();return}
+ if(a==='mailhideall'){mailHide(mailLive().filter(mailCanDel).map(m=>m.id));snd('tap');mailPaint();mailRender();toast('받은 우편을 지웠어요');return}
  if(a==='mailopen')mailOpen();else if(a==='mailget')mailClaim([b.dataset.id]);else if(a==='mailall')mailClaim(mailReady().map(m=>m.id));
  else if(a==='mailequip'){const m=MAIL.list.find(x=>x.id===b.dataset.id),it=m&&ecoItem(m.it);if(it)ecoEquip(it.c,m.it)}
  else if(a==='mailadm'){if(shOpen==='set'||shOpen==='mail')closeSheet(true);mailAdmOpen(false)}else if(a==='mailbeta'){closeSheet(true);mailAdmOpen(true)}

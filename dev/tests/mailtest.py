@@ -117,7 +117,7 @@ async def main():
         r=await forge(A,f"n.mr=n.mr.filter(x=>x!=='{old}');n.k='equip'");chk('끝난 id 도 다른 쓰기로는 못 뺌',r=='denied',r)
         await fetchm(A);chk('A 배지 1(옥돌 우편)',await badge(A)=='1',await badge(A))
         g0=(await wal(ua))['g'];await openmail(A);await A.evaluate(f"()=>document.querySelector('[data-act=mailget][data-id=\"{bmid}\"]').click()");await asyncio.sleep(1.5)
-        w=await wal(ua);chk('받으면서 끝난 id 정리·옥돌 +500',old not in w['mr'] and bmid in w['mr'] and w['g']==g0+500,json.dumps(w.get('mr')))
+        w=await wal(ua);chk('받기·옥돌 +500(목록은 붙이기만)',bmid in w['mr'] and w['g']==g0+500,json.dumps(w.get('mr')))
         # --- 개인 우편: 관리자 화면 '한 명' → 찾기 → 보내기
         k=await ev(C,"nickKey('바다')");await push('nicks/'+k,{'by':uc,'g':True,'at':now,'n':'바다'})
         await ad.evaluate("()=>window.__T.ev('closeSheet(true)')");await ad.evaluate("()=>window.__T.ev('mailAdmOpen(false)')");await asyncio.sleep(0.8)
@@ -137,17 +137,21 @@ async def main():
         g0=(await wal(uc))['g'];await C.evaluate("()=>document.querySelector('[data-act=mailall]').click()");await asyncio.sleep(2.5)
         w=await wal(uc);chk('C 모두 받기: +500+300+70',w['g']==g0+870 and len(w['mr'])==4,json.dumps(w.get('mr')))
         chk('모두 받기 알림',('옥돌 +870' in await toastt(C)),await toastt(C))
+        n1=await C.evaluate("()=>document.querySelectorAll('#mailBody .mcard').length");nd=await C.evaluate("()=>document.querySelectorAll('#mailBody [data-act=mailhide]').length")
+        await C.evaluate("()=>document.querySelector('#mailBody [data-act=mailhide]').click()");await asyncio.sleep(0.4)
+        n2=await C.evaluate("()=>document.querySelectorAll('#mailBody .mcard').length");chk('받은 우편 지우기 버튼 → 목록에서 빠짐',nd>=1 and n2==n1-1,(n1,nd,n2))
+        await C.screenshot(path=SH+'/m_box_del.png')
         # --- 공지(선물 없음): 열면 읽음
         nid=await mkmail(ad,{'to':'all','t':'점검 안내','msg':'오늘 밤 10시에 잠깐 점검해요','g':0,'it':'','from':now-60000,'until':now+864e5})
         await A.evaluate("()=>window.__T.ev('closeSheet(true)')");await fetchm(A);chk('공지 배지 1',await badge(A)=='1',await badge(A))
         await openmail(A);t=await mailtxt(A);chk('공지는 받기 버튼 없음',('점검 안내' in t),t);await asyncio.sleep(0.3)
         chk('열면 공지 읽음 → 배지 0',await badge(A)=='',await badge(A))
         await A.screenshot(path=SH+'/m_box_360_notice.png')
-        # --- mr 20개 한도
-        w=dict(await wal(ug));w['mr']=['m%d_%06d'%(now+864e5,i) for i in range(20)];await push('wal/'+ug,w);await reload_w(G)
+        # --- mr 60개 한도
+        w=dict(await wal(ug));w['mr']=['m%d_%06d'%(now+864e5,i) for i in range(60)];await push('wal/'+ug,w);await reload_w(G)
         await fetchm(G);await openmail(G);await G.evaluate(f"()=>document.querySelector('[data-act=mailget][data-id=\"{bmid}\"]').click()");await asyncio.sleep(1.5)
-        chk('20개 한도: 안내',('많아요' in await toastt(G)),await toastt(G))
-        r=await forge(G,f"n.mr=n.mr.concat(['{bmid}']);n.g+=500;n.k='mail'");chk('21개 쓰기 거부',r=='denied',r)
+        chk('60개 한도: 안내',('많아요' in await toastt(G)),await toastt(G))
+        r=await forge(G,f"n.mr=n.mr.concat(['{bmid}']);n.g+=500;n.k='mail'");chk('61개 쓰기 거부',r=='denied',r)
         # --- 관리자 지우기·자동 정리
         STORE['mail/'+old]['until']=now-2*864e5;await push('mail/'+old,STORE['mail/'+old])
         await ad.evaluate("()=>window.__T.ev('closeSheet(true)')");await ad.evaluate("()=>window.__T.ev('mailAdmOpen(false)')");await asyncio.sleep(1.2)
