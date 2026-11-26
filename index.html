@@ -666,6 +666,7 @@ input,select,textarea{font-size:16px}
 #roomsHome .sub{margin:2px 2px 0}.room.join{background:color-mix(in srgb,var(--jade) 12%,var(--soft))}
 #roomsHome .more{display:block;margin:2px auto 0;font-size:13px}
 #tab-home .tiles{grid-template-columns:1fr}
+.nkerr{min-height:18px;margin:6px 2px 2px;font-size:13px;font-weight:800;color:#e06a4f}.nkerr:empty{min-height:0;margin:0}
 /* ===== 랭크 탭: 잠김 표시·시상대(1~3위)·순위 줄 ===== */
 .tabbar .tlk{display:none;position:absolute;top:7px;left:calc(50% + 5px);width:14px;height:14px;padding:2px;border-radius:50%;background:var(--raise);fill:none;stroke:var(--mute);stroke-width:2.6}
 .tabbar button.lk{color:var(--faint)}.tabbar button.lk .tlk{display:block}.tabbar button.lk .pip{display:none}
@@ -912,8 +913,9 @@ input,select,textarea{font-size:16px}
  <div class="shbg hide" data-act="shclose" id="shbg"></div>
  <div class="lsheet hide" id="sh-nick" role="dialog" aria-label="닉네임">
   <div class="shh"><h2>닉네임</h2><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-  <input type="text" id="nick" maxlength="12" placeholder="이름" autocomplete="nickname">
-  <button class="btn wide" data-act="shclose">확인</button>
+  <input type="text" id="nick" maxlength="12" placeholder="이름" autocomplete="nickname" aria-describedby="nickErr">
+  <p class="nkerr" id="nickErr" role="alert"></p>
+  <button class="btn wide" data-act="nickok" id="nickOk">확인</button>
  </div>
  <div class="lsheet hide" id="sh-set" role="dialog" aria-label="설정">
   <div class="shh"><h2>설정</h2><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -944,7 +946,7 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1215';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1221';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2119,12 +2121,12 @@ function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.re
 const ADMIN_EMAILS=['slayersnaya@gmail.com'];
 const isAdmin=()=>{try{const g=user&&user.firebase&&user.google&&user.google();return !!g&&ADMIN_EMAILS.includes(String(g).toLowerCase())}catch(e){return false}};
 function cfgMaster(){if(!db||!isAdmin()||!SEAT||(RK.master||[]).includes(SEAT)||cfgMaster.done)return;cfgMaster.done=1;db.doc('cfg/master').set({seats:[...(RK.master||[]),SEAT].slice(-5),at:Date.now()}).catch(()=>{cfgMaster.done=0})}
-function renderAcct(){try{cfgMaster()}catch(e){}const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!isAdmin());const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
+function renderAcct(){try{cfgMaster()}catch(e){}try{nickCheck()}catch(e){}const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!isAdmin());const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
  const g=user.google&&user.google();a.innerHTML=g?`<div class="at"><b>구글 계정 연결됨</b><span>${esc(g)}</span></div>`:`<div class="at"><b>게스트로 플레이 중</b><span>기록을 지키려면 구글 연결</span></div><button class="btn small" data-act="glink">구글 연결</button>`}
 // ===== 웹(Firebase): 앱을 지웠다 다시 깔아도 구글 계정으로 기록 복원. 닉네임·AI 전적은 본인만 읽는 prof/{uid}, 학습 집계는 ailearn/{uid} =====
 let profT=0;
 function profSave(){if(!(user&&user.firebase&&db&&SEAT))return;clearTimeout(profT);profT=setTimeout(()=>{let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}
- const nk=(($('#nick')||{}).value||'').trim().slice(0,12),pt={airec:r,pts:Date.now()};if(nk)pt.nick=nk;db.doc('prof/'+SEAT).update(pt).catch(()=>{})},1500)}
+ const nk=(lget('bo-nick')||'').trim().slice(0,12),pt={airec:r,pts:Date.now()};if(nk)pt.nick=nk;db.doc('prof/'+SEAT).update(pt).catch(()=>{})},1500)}
 async function profLoad(){if(!(user&&user.firebase&&db&&SEAT&&user.google&&user.google()))return;
  let d=null,old=null;try{d=(await db.doc('prof/'+SEAT).get()).data()}catch(e){}try{old=lrnNorm((await db.doc('ailearn/'+SEAT).get()).data())}catch(e){}
  // 예전에는 닉네임·AI 전적을 모두가 읽는 ailearn에 함께 두었음 → 읽어 온 뒤 ailearn에서는 빼고 prof로 옮김
@@ -2263,7 +2265,31 @@ function recompute(){
  if(G.st&&G.st.phase!=='designate')UI.sel=null;
  renderAll();effects();
 }
-function myNick(){return (($('#nick').value||'').trim()||'플레이어').slice(0,12)}
+function myNick(){return ((lget('bo-nick')||($('#nick')||{}).value||'').trim()||'플레이어').slice(0,12)}
+// ===== 닉네임 중복 막기: 서버 nicks/{닉네임 코드}에 '이 닉네임은 내 것' 표시. 이미 다른 사람 것이면 못 씀 =====
+// 대소문자·띄어쓰기만 다른 닉네임도 같은 것으로 봄. AI 상대 이름·'플레이어'도 못 씀
+const nickKey=n=>{const t=String(n||'').normalize('NFC').trim().toLowerCase().replace(/\s+/g,'');return t?'n'+[...new TextEncoder().encode(t)].map(b=>b.toString(16).padStart(2,'0')).join(''):''};
+let NICK_RES_=null;const nickRes=()=>NICK_RES_||(NICK_RES_=new Set([...BOTS.map(b=>nickKey(b.nick)),nickKey('플레이어'),nickKey('AI'),nickKey('관리자'),nickKey('운영자')]));
+const nickG=()=>!!(user&&user.google&&user.google());
+// 남이 쓰는 중이면 false, 내가 가지면 true. 서버를 못 쓰면 null(확인 불가)
+async function nickClaim(n){const k=nickKey(n);if(!k)return true;if(nickRes().has(k))return false;if(!(db&&SEAT&&user&&user.firebase))return null;
+ // 서버가 읽기를 못 하게 하면(규칙 게시 전) 확인 불가로 보고 막지 않음
+ let d=null;try{const x=await db.doc('nicks/'+k).get();d=x.exists?x.data():null}catch(e){return null}
+ if(d&&d.by!==SEAT&&!(d.g===false&&typeof d.at==='number'&&Date.now()-d.at>30*864e5))return false;
+ try{await db.doc('nicks/'+k).set({by:SEAT,g:nickG(),at:Date.now()});return true}catch(e){return d?false:null}}
+function nickRelease(n){const k=nickKey(n);if(!k||!db||!SEAT)return;db.doc('nicks/'+k).get().then(x=>{if(x.exists&&(x.data()||{}).by===SEAT)return db.doc('nicks/'+k).delete()}).catch(()=>{})}
+async function nickCommit(){const inp=$('#nick'),err=$('#nickErr'),btn=$('#nickOk'),v=(inp.value||'').trim().slice(0,12),old=(lget('bo-nick')||'').trim();
+ const done=()=>{UI.nickOk=true;closeSheet()};
+ if(nickKey(v)===nickKey(old)){if(v!==old){lset('bo-nick',v);syncNick()}done();return}
+ if(!v){err.textContent='닉네임을 입력해 주세요';inp.focus();return}
+ btn.disabled=true;err.textContent='';const r=await nickClaim(v);btn.disabled=false;
+ if(r===false){err.textContent='이미 쓰는 닉네임이에요';inp.focus();inp.select();return}
+ if(old&&nickKey(old)!==nickKey(v)&&r===true)nickRelease(old);
+ lset('bo-nick',v);syncNick();done()}
+// 앱을 열 때: 지금 닉네임을 내 것으로 표시(이미 표시돼 있으면 하루에 한 번 갱신). 남이 먼저 쓰고 있으면 바꾸라고 안내
+async function nickCheck(){const n=(lget('bo-nick')||'').trim();if(!n||!db||!SEAT||!(user&&user.firebase)||nickCheck.seat===SEAT)return;nickCheck.seat=SEAT;
+ const k=nickKey(n);let mine=false;try{const x=await db.doc('nicks/'+k).get(),d=x.exists?x.data():null;mine=!!d&&d.by===SEAT;if(mine&&d.g===nickG()&&Date.now()-(d.at||0)<864e5)return}catch(e){return}
+ const r=await nickClaim(n);if(r===false&&!mine){const go=()=>{if(UI.view==='lobby'&&!shOpen&&$('#dlg').classList.contains('hide')&&$('#welcome').classList.contains('hide'))dialog(`<b>${esc(n)}</b> 닉네임은 다른 사람이 먼저 쓰고 있어요.<br>새 닉네임을 정해 주세요.`,'바꾸기',()=>openSheet('nick'),'나중에');else setTimeout(go,4000)};setTimeout(go,1200)}}
 
 // 대국이 끝났거나 시작 전에 나가면 방을 없앰. 대국 중에 로비로 가면 방은 남아서 이어하기 가능
 async function leaveRoom(){
@@ -2315,7 +2341,7 @@ async function createRoom(){
  try{await createRoomInner()}finally{delete btn.dataset.busy;btn.textContent='방 만들기'}
 }
 async function createRoomInner(){
- const nick=myNick();lset('bo-nick',nick);
+ const nick=myNick();
  const gid='g'+rhex(4),pr=PRESETS[UI.preset];
  try{
   const now=Date.now(),priv=!!($('#privRoom')||{}).checked;
@@ -2507,7 +2533,7 @@ function mmStart(){
  if(!db||!room){toast('랭크전 이용 불가');return}
  if(canWrite===false){toast('관전 전용 · 랭크전 불가');return}
  if(user&&user.firebase&&!(user.google&&user.google())){dialog('랭크전은 구글 계정을 연결하면 할 수 있어요. 지금까지 기록은 그대로 남아요.','구글 연결',()=>googleLink());return}
- ensureSecret();mmSub();renderTiers();lset('bo-nick',myNick());MM.on=true;MM.busy=false;MM.since=Date.now();MM.botAt=MM.since+MM_BOT+Math.floor(Math.random()*8e3);
+ ensureSecret();mmSub();renderTiers();MM.on=true;MM.busy=false;MM.since=Date.now();MM.botAt=MM.since+MM_BOT+Math.floor(Math.random()*8e3);
  room.presence({mm:mmMe()}).catch(()=>{});mmPeers(true);renderMM();
 }
 function rankLockDlg(){let top=0;LEVELS.forEach((_,x)=>{if(lvOpen(x)&&x<=1)top=x});const lv=LEVELS[top];
@@ -2521,7 +2547,7 @@ function mmSub(){if(!db||MM.inboxSeat===SEAT)return;if(MM.inbox)try{MM.inbox()}c
 function mmPeers(on){if(!(user&&user.firebase)||!room)return;if(on&&!MM.unPeers){try{MM.unPeers=room.onPeers(c=>{MM.peers=(c&&c.peers)||[];renderMM()})||null}catch(e){}}
  else if(!on&&MM.unPeers){try{MM.unPeers()}catch(e){}MM.unPeers=null;MM.peers=[]}}
 // 닉네임이 없으면 먼저 정하게 하고, 정한 뒤 하려던 일을 이어서 함
-function needNick(then){if((($('#nick')||{}).value||'').trim())return true;UI.afterNick=then||null;openSheet('nick');toast('먼저 닉네임을 정해 주세요');return false}
+function needNick(then){if((lget('bo-nick')||($('#nick')||{}).value||'').trim())return true;UI.afterNick=then||null;openSheet('nick');toast('먼저 닉네임을 정해 주세요');return false}
 function mmStop(){MM.on=false;MM.busy=false;if(room)room.presence({mm:null}).catch(()=>{});mmPeers(false);renderMM()}
 async function mmHost(q){
  MM.busy=true;if(room)room.presence({mm:null}).catch(()=>{});
@@ -2603,8 +2629,8 @@ let shOpen=null;
 function openSheet(k){closeSheet(true);const el=$('#sh-'+k);if(!el)return;shOpen=k;el.classList.remove('hide');$('#shbg').classList.remove('hide');document.body.classList.add('shopen');
  if(k==='friend')renderRooms();if(k==='set')syncSettings();if(k==='friend'&&UI.sheetV==='code')setTimeout(()=>{const c=$('#roomCode');if(c)c.focus()},60);UI.sheetV=null;
  modalOpen(el,k==='nick'?'input[type=text]':null)}
-function closeSheet(silent){if(UI.showCode){UI.showCode=false;try{renderTiers()}catch(e){}}if(!shOpen)return;$('#sh-'+shOpen).classList.add('hide');modalClose($('#sh-'+shOpen));$('#shbg').classList.add('hide');document.body.classList.remove('shopen');if(shOpen==='nick'){lset('bo-nick',myNick());syncNick();const f=UI.afterNick;UI.afterNick=null;if(f&&(($('#nick')||{}).value||'').trim())setTimeout(f,0)}shOpen=null}
-function syncNick(){const t=$('#nickTxt');if(t)t.textContent=($('#nick').value||'').trim()||'닉네임';profSave()}
+function closeSheet(silent){if(UI.showCode){UI.showCode=false;try{renderTiers()}catch(e){}}if(!shOpen)return;$('#sh-'+shOpen).classList.add('hide');modalClose($('#sh-'+shOpen));$('#shbg').classList.add('hide');document.body.classList.remove('shopen');if(shOpen==='nick'){const ok=UI.nickOk;UI.nickOk=false;$('#nickErr').textContent='';if(!ok){$('#nick').value=lget('bo-nick')||''}syncNick();const f=UI.afterNick;UI.afterNick=null;if(ok&&f&&(lget('bo-nick')||'').trim())setTimeout(f,0)}shOpen=null}
+function syncNick(){const t=$('#nickTxt');if(t)t.textContent=(lget('bo-nick')||'').trim()||'닉네임';profSave()}
 function setTheme(v){v=v==='light'?'light':'dark';document.documentElement.dataset.theme=v;{const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',v==='light'?'#f1eee7':'#0f1716')}lset('bo-theme',v);document.querySelectorAll('#themeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)))}
 // ===== 로비 =====
 const LEVELS=[['beginner','초보'],['mid','중수'],['pro','고수'],['ultimate','Ultimate']];
@@ -2887,7 +2913,7 @@ document.addEventListener('click',e=>{
  if(b.dataset.t0&&Date.now()-(+b.dataset.t0)<600)return;
  const vs=vstate();
  if(a==='preset'){UI.preset=i;renderPresets()}
- else if(a==='create'){lset('bo-nick',myNick());createRoom()}
+ else if(a==='create'){createRoom()}
  else if(a==='enter')enterGame(b.dataset.g);
  else if((a==='lobby'||a==='leave')&&UI.mode==='tut')T.skip();
  else if((a==='lobby'||a==='leave')&&UI.mode==='local'&&L.s&&L.s.bot&&L.s.phase!=='over')dialog('나가면 기권패로 기록돼요.','나가기',()=>{L.resign();goLobby();setTab('rank',true)});
@@ -2899,7 +2925,7 @@ document.addEventListener('click',e=>{
  else if((a==='local'||a==='solo')&&!b.dataset.ok&&(()=>{const sv=loadLocal();return a==='solo'&&sv&&sv.ai&&sv.phase!=='over'})()){dialog('이어 둘 AI 대국이 있어요.<br>새로 시작하면 그 판은 사라져요.','새로 시작',()=>{b.dataset.ok='1';b.click();delete b.dataset.ok},'취소')}
  else if(a==='local'||a==='solo'){if(MM.on){mmStop();toast('랭크 매칭 취소됨')}if(a==='solo'){lvFix()}closeSheet();leaveGame();UI.mode='local';L.start(null,a==='solo'?UI.aiLevel:null);show('game');$('#cover').classList.add('hide');renderAll()}
  else if(a==='level'){const i=LEVELS.findIndex(([k])=>k===b.dataset.k);if(i>0&&!lvOpen(i)){toast(`${LEVELS[i-1][1]} AI를 이기면 열려요`);return}UI.aiLevel=b.dataset.k;lset('bo-ai',UI.aiLevel);renderLevels()}
- else if(a==='join'){if(!needNick(()=>{const j=$('[data-act=join]');if(j)j.click()}))return;lset('bo-nick',myNick());wmine('join',{nick:myNick(),joined:Date.now()})}
+ else if(a==='join'){if(!needNick(()=>{const j=$('[data-act=join]');if(j)j.click()}))return;wmine('join',{nick:myNick(),joined:Date.now()})}
  else if(a==='zin'){UI.zoom=Math.min(2.2,+(UI.zoom+.4).toFixed(1));renderBoard()}
  else if(a==='zout'){UI.zoom=Math.max(1,+(UI.zoom-.4).toFixed(1));renderBoard()}
  else if(a==='dir'&&UI.sel)setSel(UI.sel.r,UI.sel.c,i);
@@ -2954,7 +2980,7 @@ document.addEventListener('click',e=>{
   if(navigator.share)navigator.share({title:'베팅 오목',text,url}).catch(()=>{});
   else (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>toast('초대 링크 복사됨'),()=>toast('링크: '+url))}
  else if(a==='copyroom'){(navigator.clipboard?navigator.clipboard.writeText(G.gid.slice(1)):Promise.reject()).then(()=>toast('복사됨'),()=>toast('길게 눌러 복사'))}
- else if(a==='joincode'){const v=($('#roomCode').value||'').trim().toLowerCase().replace(/^g/,'');if(!/^[0-9a-f]{8}$/.test(v)){toast('방 코드 8자리 확인');return}if(!db){toast('오프라인');return}lset('bo-nick',myNick());enterGame('g'+v)}
+ else if(a==='joincode'){const v=($('#roomCode').value||'').trim().toLowerCase().replace(/^g/,'');if(!/^[0-9a-f]{8}$/.test(v)){toast('방 코드 8자리 확인');return}if(!db){toast('오프라인');return}enterGame('g'+v)}
  else if(a==='copyvfy'){(navigator.clipboard?navigator.clipboard.writeText(b.dataset.v):Promise.reject()).then(()=>toast('복사됨'),()=>toast('길게 눌러 복사'))}
  else if(a==='tut'){closeSheet();T.start()}
  else if(a==='wtut'){$('#welcome').classList.add('hide');T.start()}
@@ -2965,6 +2991,7 @@ document.addEventListener('click',e=>{
  else if(a==='delacct'){closeSheet();dialog('내 계정과 기록을 모두 지워요.<br>닉네임 · AI 전적 · 학습 통계<br>AI 대국 기록 · 이 기기 기록<br>랭크·일반 게임의 판 기록은<br>상대 기록 때문에 남아요.<br>되돌릴 수 없어요.','삭제',()=>deleteMyData(),'취소')}
  else if(a==='wskip'){lset('bo-tut-done','1');$('#welcome').classList.add('hide');toast('규칙 탭에서 언제든 배울 수 있어요')}
  else if(a==='sheet'){UI.sheetV=b.dataset.v||null;openSheet(b.dataset.k)}
+ else if(a==='nickok')nickCommit();
  else if(a==='peek'){UI.peek=!UI.peek;renderPlayers()}
  else if(a==='shclose')closeSheet();
  else if(a==='theme')setTheme(b.dataset.v);
@@ -3041,8 +3068,8 @@ document.addEventListener('change',e=>{const id=e.target.id;
  else if(id==='setVib')lset('bo-vib',e.target.checked?'1':'0');
  else if(id==='setHint')lset('bo-hint',e.target.checked?'1':'0');
  else if(id==='setSnd'){lset('bo-snd',e.target.checked?'1':'0');if(e.target.checked)beep([660,880],.07)}});
-$('#nick').addEventListener('change',()=>{lset('bo-nick',myNick());syncNick()});
-$('#nick').addEventListener('keydown',e=>{if(e.key==='Enter')closeSheet()});
+$('#nick').addEventListener('input',()=>{$('#nickErr').textContent=''});
+$('#nick').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nickCommit()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#dlg').classList.contains('hide')){dialogClose();return}if(shOpen)closeSheet();else if(!$('#welcome').classList.contains('hide')){lset('bo-tut-done','1');$('#welcome').classList.add('hide')}else if(UI.review&&UI.view==='game')RV.close()}});
 // 키보드 사용자: 단계가 바뀌어 포커스가 사라지면 다음에 할 곳으로 옮김
 document.addEventListener('keydown',e=>{if(['Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Enter',' '].includes(e.key)&&!UI.kbd){UI.kbd=true;UI.panelKey='';if(UI.view==='game')renderAll()}},true);

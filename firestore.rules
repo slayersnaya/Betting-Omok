@@ -200,6 +200,22 @@ service cloud.firestore {
         && request.resource.data.at is int;
     }
 
+    // ===== 닉네임 주인 표시(중복 막기): 문서 id = 닉네임 코드. 비어 있거나 내 것일 때만 쓰기,
+    //       게스트(구글 미연결)가 30일 넘게 안 쓴 닉네임은 다른 사람이 가져갈 수 있음. 지우기는 본인만 =====
+    match /nicks/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && id.matches('^n[0-9a-f]{2,100}$')
+        && request.resource.data.keys().hasOnly(['by','g','at'])
+        && request.resource.data.by == me() && request.resource.data.g == google()
+        && nearNow(request.resource.data.at, 300000, 300000);
+      allow update: if signedIn() && id.matches('^n[0-9a-f]{2,100}$')
+        && request.resource.data.keys().hasOnly(['by','g','at'])
+        && request.resource.data.by == me() && request.resource.data.g == google()
+        && nearNow(request.resource.data.at, 300000, 300000)
+        && (resource.data.by == me() || (resource.data.g == false && resource.data.at < nowMs() - 2592000000));
+      allow delete: if signedIn() && resource.data.by == me();
+    }
+
     // ===== 로비 목록: 계정마다 한 칸(문서 id = 내 uid). 내가 방장인 공개된 열린 방만 =====
     match /lob/{uid} {
       allow read: if signedIn();
