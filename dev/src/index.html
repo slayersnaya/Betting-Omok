@@ -2616,7 +2616,7 @@ function snd(k,...a){try{if(SND[k]||SNDF[k]){if(!sndFile(k)){SG=SNDG[k]||1;SND[k
 function beep(){snd('tick')} // 예전 호출 호환
 // ===== 배경음(파일): 은은하게(음량 낮게·천천히 커짐), 장면별로 바뀔 때 부드럽게 넘어감, 곡 끝에서 겹쳐 이어 붙여 끊김 없이 반복 =====
 // 파일은 sounds/ 에 두고 아래 표에 등록. 없는 장면은 조용히(로비 곡을 대국 중에 틀지 않음). 설정 '배경음'(bo-bgm, 기본 켬)
-const BGM_FILES={lobby:'sounds/bgm_lobby.mp3',game:'sounds/bgm_game.mp3',tense:'sounds/bgm_tense.mp3',puzzle:'sounds/bgm_puzzle.mp3'};
+const BGM_FILES={lobby:'sounds/bgm_lobby.mp3',game:'sounds/bgm_game.mp3',tense:'sounds/bgm_tense.mp3',puzzle:'sounds/bgm_puzzle.mp3',match:'sounds/bgm_match.mp3'};
 const BGM_VOL={lobby:.24,game:.15,tense:.18,match:.22,puzzle:.18};
 const BG={u:[],cur:-1,scene:'',duck:1,ok:false};
 const bgmOn=()=>lget('bo-bgm')!=='0';
