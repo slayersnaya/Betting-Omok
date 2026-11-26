@@ -393,7 +393,8 @@ body.big .bfoot .qchip{font-size:17px}
 @media (max-height:520px) and (min-width:560px){#welcome .wcard{display:grid;grid-template-columns:44% 1fr;gap:16px;align-items:center;text-align:left;width:min(100%,640px);padding:16px}#welcome .wart{margin:0}}
 @media (prefers-reduced-motion:reduce){#welcome,#welcome .wcard,#welcome .wart *{animation:none!important}}
 #dlg{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:20px}
-#dlg .card{max-width:340px;width:100%;padding:18px}#dlgMsg{margin:0 0 8px;font-size:15px;font-weight:700}
+#dlg .card{max-width:340px;width:100%;padding:18px}#dlg .card{max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow-y:auto;overscroll-behavior:contain}#dlg .card:has(>#dlgMsg){display:flex;flex-direction:column;overflow:hidden}#dlg .card>#dlgMsg{overflow-y:auto;min-height:0;overscroll-behavior:contain}#dlg .card>#dlgMsg~.gfoot{flex:none}
+@media (max-height:720px){.rkin .tiers div{min-height:24px}.rkin .rklgb .btn{min-height:42px}}#dlgMsg{margin:0 0 8px;font-size:15px;font-weight:700}
 #toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#2a3634;color:#e9f0ee;padding:10px 16px;border-radius:12px;font-size:14px;font-weight:800;z-index:40;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.3)}
 #toast.on{opacity:1}body.sheeton #toast{bottom:auto;top:calc(var(--toastY,120px))}
 /* 내 차례 알림: 판 위 가운데에 잠깐 */
@@ -746,8 +747,11 @@ input,select,textarea{font-size:16px}
 .admrow i{width:10px;height:10px;border-radius:50%;background:var(--faint)}.admrow i.on{background:#3ecf8e}
 .admrow b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}.admrow .tg{font-size:11px;font-weight:800;padding:2px 6px;border-radius:6px;background:var(--raise);color:var(--mute);white-space:nowrap}
 .admrow .tg.g{color:#6b98ec}.admrow .tg.e{color:#e0a82e}.admrow span{color:var(--mute);white-space:nowrap;font-size:12px;text-align:right}
-.rkin .rklg{display:block;margin-top:12px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--jade) 14%,transparent);color:var(--jadeink);font-weight:800;font-size:14px;text-align:center;white-space:nowrap}
+.rkin .rklg{display:flex;flex-direction:column;gap:3px;margin-top:12px;padding:11px 12px;border-radius:12px;background:color-mix(in srgb,var(--jade) 14%,transparent);color:var(--jadeink);text-align:center}.rkin .rklg b{font-size:14px;font-weight:800;white-space:nowrap}.rkin .rklg small{font-size:12px;font-weight:700;opacity:.85;white-space:nowrap}
 .rkin .rklgem{display:flex;margin:2px auto 0;font-size:13px}
+.rkin .rklgb{display:flex;flex-direction:column;gap:8px;margin-top:10px}.rkin .rklgb .btn{width:100%;min-height:46px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;white-space:nowrap}.rkin .rklgb .btn svg{width:20px;height:20px;flex:none}.rkin .rkem svg{fill:none;stroke:currentColor;stroke-width:2}.rkin .rkgoo svg{background:#fff;border-radius:50%;padding:2px;width:22px;height:22px}
+.rkin .rklater-t{display:block;margin-top:10px;text-align:center;font-size:12px;font-weight:700;color:var(--mute);white-space:nowrap}#dlg .rklater{flex:1}
+.rkin .rknk{display:block;margin-top:10px;padding:9px 12px;border-radius:12px;border:1.5px dashed color-mix(in srgb,var(--jade) 55%,transparent);color:var(--ink);font-size:13px;font-weight:800;text-align:center;white-space:nowrap}.rkin .rknote{display:block;font-size:13px;font-weight:700;color:var(--mute);white-space:nowrap}
 /* ===== 랭크 탭: 잠김 표시·시상대(1~3위)·순위 줄 ===== */
 .tabbar .tlk{display:none;position:absolute;top:7px;left:calc(50% + 5px);width:14px;height:14px;padding:2px;border-radius:50%;background:var(--raise);fill:none;stroke:var(--mute);stroke-width:2.6}
 .tabbar button.lk{color:var(--faint)}.tabbar button.lk .tlk{display:block}.tabbar button.lk .pip{display:none}
@@ -3745,11 +3749,11 @@ const RANK_MAINT=false;
 function mmStart(){
  if(RANK_MAINT){dialog('랭크 게임은 지금 점검 중이에요.<br>점검이 끝나면 다시 열려요.','확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
  if(!rankOpen()){rankLockDlg();return}
- if(!needNick(mmStart))return;
+ if(!rkNickAsk(mmStart))return;
  if(!UI.ready){toast('연결 확인 중');return}
  if(!db||!room){toast('랭크 게임 이용 불가');return}
  if(canWrite===false){toast('관전 전용 · 랭크 게임 불가');return}
- if(user&&user.firebase&&!(user.google&&user.google())){dialog('랭크 게임은 구글이나 이메일 계정을 연결하면 할 수 있어요.<br>지금까지 기록은 그대로 남아요.','계정 연결',()=>openAcct(mmStart));return}
+
  ensureSecret();mmSub();renderTiers();MM.on=true;MM.busy=false;MM.since=Date.now();MM.botAt=MM.since+MM_BOT+Math.floor(Math.random()*MM_BOTJ);
  room.presence({mm:mmMe()}).catch(()=>{});mmPeers(true);renderMM();
 }
@@ -3758,10 +3762,19 @@ function rankLockDlg(){let top=0;LEVELS.forEach((_,x)=>{if(lvOpen(x)&&x<=1)top=x
 // 랭크가 처음 열리면 한 번: 열렸다는 안내 + 티어표 간단 설명
 function rankIntro(){if(!rankOpen())return;if(!(user&&user.firebase)&&window.__BO_FB!==false&&(rankIntro.n=(rankIntro.n||0)+1)<5){clearTimeout(rankIntro.t);rankIntro.t=setTimeout(rankIntro,2000);return}const seen=lget('bo-rkintro')==='1',fb=!!(user&&user.firebase),lk=!!(user&&user.google&&user.google()),needLg=fb&&!lk&&lget('bo-rklg')!=='1';
  if(seen&&!needLg)return;if(shOpen||!$('#dlg').classList.contains('hide')||!$('#welcome').classList.contains('hide')){clearTimeout(rankIntro.t);rankIntro.t=setTimeout(rankIntro,4000);return}lset('bo-rkintro','1');if(needLg)lset('bo-rklg','1');
- const toRank=()=>{goLobby();setTab('rank')},lg=needLg?`<span class="rklg">랭크 게임은 로그인하면 할 수 있어요</span><button class="linkbtn rklgem" data-act="rkacc">이메일로 로그인</button>`:'';
- const go=needLg?()=>{googleLink().then(r=>{if(r==='linked')toRank()})}:toRank,ok=needLg?'구글로 로그인':'랭크로 가기';
- if(seen){dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}랭크 게임 로그인</h3>${lg}</span>`,ok,go,'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH');return}
- dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}랭크 게임이 열렸어요</h3><span class="sub" style="display:block">비슷한 점수끼리 겨뤄 티어를 올려요</span><span class="tiers" style="display:grid">${tierRows()}</span><ul><li>처음 5판은 배치 · 시즌은 3달마다</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li></ul>${lg}</span>`,ok,go,'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH')}
+ const toRank=()=>{goLobby();setTab('rank')},lg=needLg?rkLoginBox():'';
+ const nk=rkNickLine();
+ // 게스트: 로그인(구글·이메일)은 권유만, '나중에 하기'를 누르면 그대로 랭크 탭으로
+ const lgFix=()=>{if(!needLg)return;const d=$('#dlg'),no=d.querySelector('[data-act=dlgno]'),ok=d.querySelector('[data-act=dlgok]');if(no)no.remove();if(ok){ok.textContent='나중에 하기';ok.className='btn ghost rklater'}const g=d.querySelector('[data-act=rkgoo]');if(g)try{g.focus()}catch(e){}};
+ if(seen){dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}계정 연결</h3>${lg}${nk}</span>`,'나중에 하기',toRank,'닫기');$('#dlg').setAttribute('aria-labelledby','rkinH');lgFix();return}
+ dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}랭크 게임이 열렸어요</h3><span class="sub" style="display:block">비슷한 점수끼리 겨뤄 티어를 올려요</span><span class="tiers" style="display:grid">${tierRows()}</span><ul><li>처음 5판은 배치 · 시즌은 3달마다</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li></ul>${lg}${nk}</span>`,'랭크로 가기',toRank,'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH');lgFix()}
+const rkHasNick=()=>!!(lget('bo-nick')||($('#nick')||{}).value||'').trim();
+const rkNickLine=()=>rkHasNick()?'':'<span class="rknk">랭크 게임 전에 닉네임을 정해 주세요</span>';
+// 랭크 매칭 전: 닉네임이 없으면 안내 창 → 닉네임 정하기(처음 한 번은 무료)
+function rkNickAsk(then){if(rkHasNick())return true;dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}닉네임을 정해 주세요</h3><span class="sub" style="display:block">순위표와 상대 화면에 보이는 이름이에요</span><span class="rknote">처음 한 번은 무료로 정할 수 있어요</span></span>`,'닉네임 정하기',()=>{UI.afterNick=then||null;openSheet('nick')},'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH');return false}
+// 랭크 게임 로그인 권유(구글·이메일 + 나중에 하기)
+const G_LOGO='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2-1.9 3.2-4.7 3.2-8"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23"/><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.1a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3 .6 4.2 1.6l3.1-3.1A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4"/></svg>';
+function rkLoginBox(){return `<span class="rklg"><b>로그인하면 기록이 안전해요</b><small>점수·옥돌이 사라지지 않고 폰을 바꿔도 이어져요</small></span><span class="rklgb"><button class="btn rkgoo" data-act="rkgoo">${G_LOGO}구글로 로그인</button><button class="btn ghost rkem" data-act="rkacc"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>이메일로 로그인</button></span><span class="rklater-t">원치 않으면 나중에 해도 돼요</span>`}
 function mmSub(){if(!db||MM.inboxSeat===SEAT)return;if(MM.inbox)try{MM.inbox()}catch(e){}MM.inboxSeat=SEAT;let first=true;MM.inbox=db.doc('mm/'+SEAT).onSnapshot(x=>{const f=first;first=false;if(!x.exists)return;
   // 구독 시점에 이미 있던 초대는 지난 것 → 지움. 이후 새로 온 초대만 받음(기기 시계 비교 안 함)
   if(f&&!MM.on){db.doc('mm/'+SEAT).delete().catch(()=>{});return}mmInvite(x.data())},()=>{})}
@@ -4767,6 +4780,7 @@ document.addEventListener('click',e=>{
  else if(a==='glink')googleLink();
  else if(a==='acc')openAcct();
  else if(a==='rkacc'){dialogClose();openAcct(()=>{goLobby();setTab('rank')})}
+ else if(a==='rkgoo'){dialogClose();googleLink().then(r=>{if(r==='linked'){goLobby();setTab('rank')}})}
  else if(a==='wemail'){$('#welcome').classList.add('hide');openAcct()}
  else if(a==='emlink')accRun('link');
  else if(a==='emlogin')accRun('login');

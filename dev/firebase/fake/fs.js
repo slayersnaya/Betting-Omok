@@ -51,7 +51,7 @@ function check(op,p,raw,merge){const me=uid();if(!me)deny(op+' '+p);const seg=p.
     ||('first' in next&&next.first!==me&&next.first!==next.guest)||('ranked' in next&&typeof next.ranked!=='boolean')
     ||(next.ranked&&!(next.status==='playing'&&next.rv===2&&next.td===20&&next.tb===30&&!('first' in next)))
     ||!int(next.td)||next.td<0||next.td>600||!int(next.tb)||next.tb<0||next.tb>600||!['open','playing'].includes(next.status)
-    ||(next.ranked&&!google()))deny('g create '+p+' '+JSON.stringify(raw));return}
+    ||(next.ranked&&!me))deny('g create '+p+' '+JSON.stringify(raw));return}
   if(upd){const df=diff(cur,next);const a=df.aff;
    const ok=only(a,['guest','guestNick','status','next','ab','lob'])&&(!a.includes('lob')||(cur.host===me&&next.lob===0))&&(cur.host===me||(cur.guest===me&&only(a,['status','ab'])))
     &&(!a.includes('guest')||(cur.guest==null&&seatId(next.guest)&&next.status==='playing'&&next.guest!==cur.host&&!!store[`g/${gid}/p/${next.guest}`]))
@@ -72,12 +72,12 @@ function check(op,p,raw,merge){const me=uid();if(!me)deny(op+' '+p);const seg=p.
   if(!g||(g.status==='open'&&(seat===me||g.host===me))||(seat===me&&g.status==='playing'&&(g.guest==null||!store[`g/${gid}/p/${g.guest}`])))return;
   deny('p del '+p)}
  if(seg[0]==='res'){if(op!=='set'||cur)deny(op+' '+p);const r=next,g=store['g/'+r.gid];
-  const ok=google()&&only(Object.keys(r),['gid','A','B','na','nb','ended','w','by','why','turns'])&&r.by===me&&typeof r.gid==='string'&&/^g[0-9a-f]{8}$/.test(r.gid)&&seg[1]===r.gid+'-'+me
+  const ok=!!me&&only(Object.keys(r),['gid','A','B','na','nb','ended','w','by','why','turns'])&&r.by===me&&typeof r.gid==='string'&&/^g[0-9a-f]{8}$/.test(r.gid)&&seg[1]===r.gid+'-'+me
    &&nick(r.na)&&nick(r.nb)&&typeof r.why==='string'&&r.why.length<=20&&int(r.turns)&&near(r.ended,6e5,12e4)&&g&&g.ranked===true&&g.host===r.A&&g.guest===r.B
    &&(me===r.A||me===r.B)&&[r.A,r.B,'draw','void'].includes(r.w)&&!!store[`g/${r.gid}/p/${r.A}`]&&!!store[`g/${r.gid}/p/${r.B}`]&&(r.why!=='상대 부재'||'ab' in g);
   if(!ok)deny('res '+p+' '+JSON.stringify(r));return}
  if(seg[0]==='bres'){if(op!=='set'||cur)deny(op+' '+p);const r=next;
-  const ok=google()&&only(Object.keys(r),['by','gid','bot','na','w','turns','why','ended'])&&r.by===me&&typeof r.gid==='string'&&/^k[0-9a-f]{8}$/.test(r.gid)&&seg[1]===me+'_'+r.gid
+  const ok=!!me&&only(Object.keys(r),['by','gid','bot','na','w','turns','why','ended'])&&r.by===me&&typeof r.gid==='string'&&/^k[0-9a-f]{8}$/.test(r.gid)&&seg[1]===me+'_'+r.gid
    &&typeof r.bot==='string'&&/^b[0-9]{2}$/.test(r.bot)&&nick(r.na)&&['me','bot','draw'].includes(r.w)&&int(r.turns)&&r.turns>=0&&r.turns<=400&&typeof r.why==='string'&&r.why.length<=20&&near(r.ended,6e5,12e4);
   if(!ok)deny('bres '+p+' '+JSON.stringify(r));return}
  if(seg[0]==='cfg'){if(op==='del')deny('del '+p);const r=next;

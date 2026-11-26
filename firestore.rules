@@ -67,9 +67,9 @@ service cloud.firestore {
         && (!('lob' in request.resource.data) || request.resource.data.lob == 0
             || (request.resource.data.lob == request.resource.data.created && request.resource.data.status == 'open'
                 && request.resource.data.get('private', false) == false))
-        // 랭크 방: 구글 계정, 진행 중 + 손님 지정 + 엄격 판정(rv 2) + 20·30초, 선 지정 없음
+        // 랭크 방: 로그인(게스트 포함), 진행 중 + 손님 지정 + 엄격 판정(rv 2) + 20·30초, 선 지정 없음
         && (request.resource.data.get('ranked', false) == false
-            || (google() && request.resource.data.status == 'playing' && request.resource.data.get('rv', 0) == 2
+            || (signedIn() && request.resource.data.status == 'playing' && request.resource.data.get('rv', 0) == 2
                 && request.resource.data.td == 20 && request.resource.data.tb == 30 && !('first' in request.resource.data)))
         && request.resource.data.td is int && request.resource.data.td >= 0 && request.resource.data.td <= 600
         && request.resource.data.tb is int && request.resource.data.tb >= 0 && request.resource.data.tb <= 600
@@ -163,12 +163,12 @@ service cloud.firestore {
       }
     }
 
-    // ===== 랭크 결과: 구글 계정, 실제 랭크 방의 두 사람, 본인 이름으로 한 번, 수정 불가.
+    // ===== 랭크 결과: 로그인(게스트 포함), 실제 랭크 방의 두 사람, 본인 이름으로 한 번, 수정 불가.
     //       삭제는 관리자만: 지난 시즌 점수표(cfg/s{n}) 기록 뒤 지난 시즌 결과 정리(하루 넘은 것만) =====
     match /res/{id} {
       allow read: if signedIn();
       allow delete: if isAdmin() && resource.data.ended is int && resource.data.ended < nowMs() - 86400000;
-      allow create: if google()
+      allow create: if signedIn()
         && request.resource.data.keys().hasOnly(['gid','A','B','na','nb','ended','w','by','why','turns','eq'])
         && (!('eq' in request.resource.data) || eqPub(request.resource.data.eq))
         && request.resource.data.by == me()
@@ -188,11 +188,11 @@ service cloud.firestore {
         && (request.resource.data.why != '상대 부재' || 'ab' in gdoc(request.resource.data.gid));
     }
 
-    // ===== AI 상대 랭크전 결과: 구글 계정, 본인 이름으로 한 판에 한 번, 수정 불가. 삭제는 관리자만(위 res와 같음) =====
+    // ===== AI 상대 랭크 게임 결과: 로그인(게스트 포함), 본인 이름으로 한 판에 한 번, 수정 불가. 삭제는 관리자만(위 res와 같음) =====
     match /bres/{id} {
       allow read: if signedIn();
       allow delete: if isAdmin() && resource.data.ended is int && resource.data.ended < nowMs() - 86400000;
-      allow create: if google()
+      allow create: if signedIn()
         && request.resource.data.keys().hasOnly(['by','gid','bot','na','w','turns','why','ended','st','eq'])
         && (!('eq' in request.resource.data) || eqPub(request.resource.data.eq))
         && request.resource.data.by == me()
