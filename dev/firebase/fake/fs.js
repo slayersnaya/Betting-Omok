@@ -416,3 +416,46 @@ export const documentId=()=>'__name__';
   if(JSON.stringify(spOf(n))!==JSON.stringify(a))no('sp changed by '+raw.k);
   const r2=Object.assign({},raw);delete r2.sp;return strip(r2)};
  window.__stgRulesOn=()=>STG===true}
+
+// ---- (공개 랭크 관전·AI 방 팀 덧붙임) firestore.rules 의 공개 관전 흉내: lvb 목록, pubOk(색인 살아 있음·관전 허용)이면 친구 아니어도 lv 읽기·lv/*/w 등록(게스트 포함),
+//      (lvb: 시간마다 문서 하나 · 각자 자기 칸만) 게스트 랭크 중계(k 'r') 쓰기, 중계 k 'c', on.gi 'c', rt presence.np. 같은 폴더 firestore.rules 에 pubOk 가 있을 때만 켜짐(예전 웹 폴더 테스트는 그대로)
+{const _check6=check,_canRead6=canRead;let PUB=null;
+ try{const x=new XMLHttpRequest();x.open('GET','firestore.rules',false);x.send();PUB=x.status===200&&x.responseText.includes('function pubOk(')}catch(e){PUB=false}
+ const on=()=>PUB===true,pidOf=(x,y)=>x<y?x+'_'+y:y+'_'+x;
+ const watchOk=u=>{const me=uid();if(typeof u!=='string'||!u||u===me)return false;const f=store['fp/'+pidOf(u,me)];if(!f||f.st!=='ok')return false;const o=store['on/'+u];return !o||(o.sp!==false&&o.hs!==true)};
+ const lbNow=()=>Math.floor(Date.now()/3600000),lbAct=(u,h)=>{const d=store['lvb/'+h];const e=d&&d.p&&d.p[u];return !!e&&e.exp>Date.now()};
+ const pubOk=u=>{const me=uid();if(typeof u!=='string'||!u||u===me)return false;if(!(lbAct(u,lbNow())||lbAct(u,lbNow()-1)))return false;const o=store['on/'+u];return !o||(o.sp!==false&&o.hs!==true)};
+ const lvOk=d=>{const K=['v','id','k','at','na','nb','me','al','t','ph','sun','c','h','b','w','why'];
+  return !!d&&only(Object.keys(d),K)&&['v','id','k','at','na','nb','me','t','ph','h'].every(k=>k in d)&&d.v===1&&typeof d.id==='string'&&/^[0-9a-f]{8}$/.test(d.id)&&['a','r','c'].includes(d.k)
+   &&nick(d.na)&&nick(d.nb)&&['A','B'].includes(d.me)&&int(d.t)&&d.t>=0&&d.t<=400&&['designate','bet','live','over'].includes(d.ph)&&typeof d.h==='string'&&d.h.length<=4400&&/^[A-Ba-s,]*$/.test(d.h)
+   &&(!('al' in d)||(d.k==='a'&&typeof d.al==='string'&&/^[a-z]{0,12}$/.test(d.al)))&&(!('sun' in d)||(['a','c'].includes(d.k)&&['A','B'].includes(d.sun)))
+   &&(!('c' in d)||(['a','c'].includes(d.k)&&typeof d.c==='string'&&/^[a-s]{6}$/.test(d.c)))&&(!('b' in d)||(typeof d.b==='string'&&d.b.length<=8000&&/^[0-9.,-]*$/.test(d.b)))&&(!('w' in d)||['A','B','D',''].includes(d.w))&&(!('why' in d)||(typeof d.why==='string'&&d.why.length<=20))};
+ const lbOk=d=>{const K=['v','id','na','nb','ra','rb','at','exp'];return !!d&&typeof d==='object'&&only(Object.keys(d),K)&&K.every(k=>k in d)&&d.v===1&&typeof d.id==='string'&&/^[0-9a-f]{8}$/.test(d.id)&&nick(d.na)&&nick(d.nb)
+   &&int(d.ra)&&d.ra>=0&&d.ra<=5000&&int(d.rb)&&d.rb>=0&&d.rb<=5000&&int(d.at)&&d.at>Date.now()-10800000&&d.at<Date.now()+120000&&int(d.exp)&&d.exp>Date.now()&&d.exp<=Date.now()+3600000};
+ window.__lxWrites=0;window.__lxReads=0;window.__lxDeny=[];
+ check=function(op,p,raw,merge){if(!on())return _check6(op,p,raw,merge);const seg=p.split('/'),me=uid(),cur=store[p];
+  if(seg[0]==='lvb'){if(!me||seg.length!==2)deny(op+' '+p);const h=seg[1],hr=/^[0-9]{6,8}$/.test(h)?+h:-1;
+   if(op==='del'){if(window.__fakeAdmin===true&&google()&&hr>=0&&hr<lbNow()-24)return;deny('lvb del '+p)}
+   const n=merge?deep(clone(cur)||{},clone(raw)):clone(raw),P=n&&n.p,P0=cur&&cur.p||{};
+   const keys=P&&typeof P==='object'?[...new Set([...Object.keys(P),...Object.keys(P0)])].filter(k=>JSON.stringify(P[k])!==JSON.stringify(P0[k])):null;
+   const ok=hr>=lbNow()-1&&hr<=lbNow()+1&&n&&only(Object.keys(n),['p'])&&keys&&keys.every(k=>k===me)&&(cur||only(Object.keys(P),[me]))&&(P[me]==null||lbOk(P[me]));
+   if(!ok){window.__lxDeny.push(JSON.stringify(raw).slice(0,200));deny('lvb '+p+' '+JSON.stringify(raw).slice(0,200))}window.__lxWrites++;return}
+  if(seg[0]==='lv'){if(!me)deny(op+' '+p);
+   if(seg.length===2){if(op==='del'){if(seg[1]===me)return;deny('lv del '+p)}
+    const d=fillST(raw,Date.now());if(!(seg[1]===me&&isST(raw&&raw.at)&&!merge&&lvOk(d)&&(google()||d.k==='r')))deny('lv '+p+' '+JSON.stringify(raw).slice(0,200));window.__lvWrites++;return}
+   if(seg.length===4&&seg[2]==='w'){const u=seg[1],x=seg[3];if(op==='del'){if(x===me||u===me)return;deny('lv w del '+p)}
+    const ok=x===me&&(watchOk(u)||pubOk(u))&&raw&&only(Object.keys(raw),['at'])&&isST(raw.at)&&(!cur||(int(cur.at)&&cur.at<Date.now()-30000));
+    if(!ok)deny('lv w '+p+' '+JSON.stringify(raw));window.__lvwWrites++;return}
+   deny('lv '+p)}
+  if(seg[0]==='on'&&seg.length===2&&op!=='del'&&raw&&typeof raw==='object'&&(raw.gi==='c'||(cur&&cur.gi==='c'))){
+   const r2=Object.assign({},raw);if(r2.gi==='c')r2.gi='';const sv=cur&&cur.gi==='c';if(sv)cur.gi='';try{return _check6(op,p,r2,merge)}finally{if(sv&&store[p]===cur&&cur.gi==='')cur.gi='c'}}
+  if(seg[0]==='rt'&&op!=='del'&&raw&&raw.presence&&typeof raw.presence==='object'&&('np' in raw.presence||(cur&&cur.presence&&'np' in cur.presence))){const P=raw.presence;
+   if('np' in P&&typeof P.np!=='boolean')deny('rt np '+p+' '+JSON.stringify(raw));
+   const r2=Object.assign({},raw,{presence:Object.fromEntries(Object.entries(P).filter(([k])=>k!=='np'))});const sv=cur&&cur.presence&&'np' in cur.presence?cur.presence.np:undefined;if(sv!==undefined)delete cur.presence.np;
+   try{return _check6(op,p,r2,merge)}finally{if(sv!==undefined&&cur.presence&&!('np' in cur.presence))cur.presence.np=sv}}
+  return _check6(op,p,raw,merge)};
+ canRead=function(path,data){if(!on())return _canRead6(path,data);const me=uid(),seg=path.split('/');if(!me)return false;
+  if(seg[0]==='lvb'){window.__lxReads++;return true}
+  if(seg[0]==='lv'&&seg.length===2)return seg[1]===me||watchOk(seg[1])||(pubOk(seg[1])&&(!data||data.k==='r'));
+  return _canRead6(path,data)};
+ window.__pubOk=pubOk;window.__pubRulesOn=()=>on()}
