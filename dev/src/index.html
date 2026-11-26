@@ -3555,6 +3555,10 @@ function mmTick(){
 const ULT_WS=5;
 function curWs(){let ws=rkP(SEAT).ws||0;const seen=new Set((RK.bdocs||[]).filter(d=>d&&d.by===SEAT).map(d=>d.gid));
  for(const r of botQ())if(!seen.has(r.gid))ws=r.w==='me'?ws+1:0;return ws}
+// 연패 보호: 연패가 이어지면 그 판의 AI 실력을 낮춤(원래 더 약한 AI면 그대로). 2~3연패 고수까지 · 4연패 중수까지 · 5연패 이상 초보
+function curLs(){let ls=rkP(SEAT).ls||0;const seen=new Set((RK.bdocs||[]).filter(d=>d&&d.by===SEAT).map(d=>d.gid));
+ for(const r of botQ())if(!seen.has(r.gid))ls=r.w==='bot'?ls+1:0;return ls}
+const lsCap=ls=>ls>=5?'beginner':ls>=4?'mid':ls>=2?'pro':null;
 function mmBot(){
  const my=Math.round(rkP(SEAT).r);let recent=[];try{recent=JSON.parse(lget('bo-blast')||'[]')}catch(e){}if(!Array.isArray(recent))recent=[];
  const cand=BOTS.map(b=>({b,r:Math.round(rkP(BOTPRE+b.id).r)})).map(x=>({...x,d:Math.abs(x.r-my)})).sort((a,b)=>a.d-b.d);
@@ -3562,7 +3566,7 @@ function mmBot(){
  const x=pool.slice(0,6)[Math.floor(Math.random()*Math.min(6,pool.length))];
  lset('bo-blast',JSON.stringify([x.b.id,...recent.filter(i=>i!==x.b.id)].slice(0,4)));
  MM.on=false;MM.busy=false;MM.botAt=0;if(room)room.presence({mm:null}).catch(()=>{});mmPeers(false);
- const lv=curWs()>=ULT_WS?'ultimate':x.b.lv;
+ let lv=curWs()>=ULT_WS?'ultimate':x.b.lv;{const cap=lsCap(curLs());if(cap&&LVN.indexOf(lv)>LVN.indexOf(cap))lv=cap}
  closeSheet();leaveGame();UI.mode='local';UI.review=false;L.start(null,lv,{bot:{id:x.b.id,nick:x.b.nick,r:x.r}});show('game');$('#cover').classList.add('hide');toast(`vs ${x.b.nick}`+(isAdmin()?' · '+lvName(lv):''));renderAll()}
 function renderMM(){
  const b=$('#mmBtn'),st=$('#mmSt');if(!b)return;renderPips();b.disabled=!MM.on&&UI.ready&&(!db||!room);
