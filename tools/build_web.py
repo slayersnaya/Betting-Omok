@@ -1,6 +1,8 @@
 # 아티팩트용 index.html에서 웹(Firebase) 버전 index.html을 만든다
 import json,re,os,time
-VER=time.strftime('%y%m%d.%H%M',time.gmtime(time.time()+9*3600))
+# 화면에 보이는 버전: 1.01부터 배포할 때마다 0.01씩(deploy.sh가 ver.txt를 올림). 크게 바뀌면 2.00
+import os
+VER=open('/home/claude/firebase/ver.txt').read().strip() if os.path.exists('/home/claude/firebase/ver.txt') else '1.00'
 src=open('/home/claude/betting-omok/index.html').read()
 cfg={"apiKey":"AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck","authDomain":"betting-omok-5e0c2.firebaseapp.com","projectId":"betting-omok-5e0c2","storageBucket":"betting-omok-5e0c2.firebasestorage.app","messagingSenderId":"1058641815494","appId":"1:1058641815494:web:c32dccf8188df54b69b4c7"}
 adapter=open('/home/claude/firebase/fb-adapter.js').read()
