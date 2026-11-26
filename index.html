@@ -1605,7 +1605,7 @@ ul.rknote li{text-wrap:balance}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1837';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1858';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3684,7 +3684,7 @@ function renderMM(){
  const n=mmList().filter(x=>x.seat!==SEAT).length,lb=b.querySelector('span');
  if(MM.on){const w=Date.now()-MM.since,win=mmWin(w),s=Math.floor(w/1000);
   lb.textContent='매칭 취소';b.classList.add('ghost');b.classList.add('mmon');
-  const k=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · ±${win}점 · 대기 ${n}`;
+  const k=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · ±${win}점`;
   if(st.dataset.k!==k){st.dataset.k=k;st.textContent=k}}
  else{const ro=rankOpen();lb.textContent=RANK_MAINT?'랭크전 점검 중':'랭크전';b.classList.toggle('rlock',RANK_MAINT);b.classList.remove('ghost');b.classList.remove('mmon');b.classList.toggle('rlock',RANK_MAINT||!ro);st.dataset.k='';st.textContent=RANK_MAINT?'':!ro?'AI 중수를 이기면 열려요':!UI.ready?'연결 중':off?'':n?`대기 ${n}`:''}
 }

@@ -3570,7 +3570,7 @@ function renderMM(){
  const n=mmList().filter(x=>x.seat!==SEAT).length,lb=b.querySelector('span');
  if(MM.on){const w=Date.now()-MM.since,win=mmWin(w),s=Math.floor(w/1000);
   lb.textContent='매칭 취소';b.classList.add('ghost');b.classList.add('mmon');
-  const k=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · ±${win}점 · 대기 ${n}`;
+  const k=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · ±${win}점`;
   if(st.dataset.k!==k){st.dataset.k=k;st.textContent=k}}
  else{const ro=rankOpen();lb.textContent=RANK_MAINT?'랭크전 점검 중':'랭크전';b.classList.toggle('rlock',RANK_MAINT);b.classList.remove('ghost');b.classList.remove('mmon');b.classList.toggle('rlock',RANK_MAINT||!ro);st.dataset.k='';st.textContent=RANK_MAINT?'':!ro?'AI 중수를 이기면 열려요':!UI.ready?'연결 중':off?'':n?`대기 ${n}`:''}
 }
