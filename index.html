@@ -1865,7 +1865,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.04';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.05';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3692,7 +3692,9 @@ function rankEngine(SS,LT){
  const play=(a,b,sa,w)=>{
   // 한쪽만 배치 중이면 배치를 마친 쪽 점수는 바꾸지 않음(AI는 처음부터 배치 완료). AI는 AI끼리 판에서만 점수가 바뀜
   const pa=!a.bot&&a.g<PLACE,pb=!b.bot&&b.g<PLACE,hb=!a.bot||!b.bot;
-  const da=(pb&&!pa)||(hb&&a.bot)?0:gainOf(a,b,sa,w),db_=(pa&&!pb)||(hb&&b.bot)?0:gainOf(b,a,1-sa,w);a.r=r6(a.r+da);b.r=r6(b.r+db_);if(!(hb&&a.bot))a.g++;if(!(hb&&b.bot))b.g++;
+  // 사람 대 AI(11/27): 사람 점수 계산에 쓰는 AI 점수는 '내 점수'보다 낮게 보지 않음 → AI 점수대(최고 약 1500)보다 위에서도 이기면 제대로 오름(마스터까지 열림)
+  const fl=(h,q)=>h.bot||!q.bot||q.r>=h.r?q:Object.assign({},q,{r:h.r});
+  const da=(pb&&!pa)||(hb&&a.bot)?0:gainOf(a,fl(a,b),sa,w),db_=(pa&&!pb)||(hb&&b.bot)?0:gainOf(b,fl(b,a),1-sa,w);a.r=r6(a.r+da);b.r=r6(b.r+db_);if(!(hb&&a.bot))a.g++;if(!(hb&&b.bot))b.g++;
   if(sa===1){a.w++;b.l++;a.ws=(a.ws||0)+1;a.ls=0;b.ls=(b.ls||0)+1;b.ws=0}else if(sa===0){a.l++;b.w++;b.ws=(b.ws||0)+1;b.ls=0;a.ls=(a.ls||0)+1;a.ws=0}else{a.d++;b.d++;a.ws=b.ws=a.ls=b.ls=0}};
  // AI끼리 판 일정: BOT_EPOCH부터 시간 번호 h, 그 시간의 j번째 판. 첫날은 BOT_GPH0판, 그 뒤 BOT_GPH판을 한 시간에 고르게
  const H=3600e3,t0=Math.max(BOT_EPOCH,SS.start);let h=Math.round((t0-BOT_EPOCH)/H),t=t0,j=0,x=0,hook=null;
@@ -3716,7 +3718,7 @@ function rankEngine(SS,LT){
   load:z=>{M=dup(z.M);pairs=dup(z.pairs);BS=BOTS.map(b=>M.get(BOTPRE+b.id));ord=z.ord.slice();ord.forEach((i,p)=>pos[i]=p);h=z.h;t=z.t;j=z.j;x=z.x;rs=!!z.rs}}}
 // 중간 저장을 폰에도 남김(앱을 새로 열어도 시즌 처음부터 다시 계산하지 않게. 저사양 폰에서 첫 계산 300ms대 → 수십 ms).
 // 시즌·지난 시즌 티어표가 같고, 저장한 지점 앞의 판 목록이 그대로일 때만 씀(rankCalc가 확인). 아니면 처음부터 계산해서 결과는 같음
-function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v2:'+SS.n+':'+JSON.stringify(RK.sx||{})+':'+(LT?LT.size+':'+h:'-')}
+function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v3:'+SS.n+':'+JSON.stringify(RK.sx||{})+':'+(LT?LT.size+':'+h:'-')}
 function ckLoad(ck,SS,LT){try{const v=JSON.parse(lget('bo-rkck')||'null');if(!v||v.k!==ckKey(SS,LT))return;const e=v.e;
  if(e.M.some(([id,p])=>p.bot&&!BOTMAP.has(p.bot)))return;const M=new Map(e.M.map(([id,p])=>[id,p.bot?{...p,bot:BOTMAP.get(p.bot),t:Infinity}:p]));
  ck.st={LT,tc:v.tc,gi:v.gi,sig:v.sig,e:{M,pairs:new Map(e.pairs),ord:e.ord,h:e.h,t:e.t,j:e.j,x:e.x}}}catch(e){}}
@@ -4119,14 +4121,14 @@ function curLs(){let ls=rkP(SEAT).ls||0;const seen=new Set((RK.bdocs||[]).filter
  for(const r of botQ())if(!seen.has(r.gid))ls=r.w==='bot'?ls+1:0;return ls}
 const lsCap=ls=>ls>=5?'beginner':ls>=4?'mid':ls>=2?'pro':null;
 // 랭크 AI 실력(11/27): 상대 AI의 이름·점수는 그대로, 실제로 두는 실력은 '내 점수 구간'에서 뽑음(높은 티어일수록 Godlike가 벽)
-//  브론즈 Easy70·Normal30 / 실버 Easy30·Normal60·Hard10 / 골드 Normal30·Hard60·Godlike10 / 플래티넘 Hard60·Godlike40 / 다이아 이상 Hard20·Godlike80
-//  승률 보정: 최근 AI 상대 10판(5판 이상일 때) 승률 40% 미만이면 한 단계 낮게, 60% 초과면 한 단계 높게(다이아 이상은 보정 없음)
+//  브론즈 Easy70·Normal30 / 실버 Easy30·Normal60·Hard10 / 골드 Normal30·Hard60·Godlike10 / 플래티넘 Normal10·Hard70·Godlike20 / 다이아 Hard80·Godlike20 / 마스터 Hard50·Godlike50
+//  승률 보정: 최근 AI 상대 10판(5판 이상일 때) 승률 40% 미만이면 한 단계 낮게, 60% 초과면 한 단계 높게(마스터 점수대는 보정 없음)
 //  그 뒤 5연승 Godlike·연패 보호는 예전 그대로
-const RK_LVMIX=[[0,900,[70,30,0,0]],[900,1100,[30,60,10,0]],[1100,1300,[0,30,60,10]],[1300,1500,[0,0,60,40]],[1500,1e9,[0,0,20,80]]],RK_WRN=10,RK_WRMIN=5;
+const RK_LVMIX=[[0,900,[70,30,0,0]],[900,1100,[30,60,10,0]],[1100,1300,[0,30,60,10]],[1300,1500,[0,10,70,20]],[1500,1700,[0,0,80,20]],[1700,1e9,[0,0,50,50]]],RK_WRN=10,RK_WRMIN=5;
 function rkRecentWr(){const mine=(RK.bdocs||[]).filter(d=>d&&d.by===SEAT).sort((a,b)=>(a.ended||0)-(b.ended||0)),seen=new Set(mine.map(d=>d.gid));
  const L=mine.map(d=>d.w).concat(botQ().filter(r=>!seen.has(r.gid)).map(r=>r.w)).slice(-RK_WRN);if(L.length<RK_WRMIN)return null;return L.filter(w=>w==='me').length/L.length}
 function rkLvFor(r,rnd,wr){const row=(RK_LVMIX.find(x=>r>=x[0]&&r<x[1])||RK_LVMIX[0])[2];let t=(rnd==null?Math.random():rnd)*100,k=0;for(;k<3;k++){t-=row[k];if(t<0)break}
- const w=wr===undefined?rkRecentWr():wr;if(r<1500&&w!=null){if(w<.4)k=Math.max(0,k-1);else if(w>.6)k=Math.min(3,k+1)}return LVN[k]}
+ const w=wr===undefined?rkRecentWr():wr;if(r<1700&&w!=null){if(w<.4)k=Math.max(0,k-1);else if(w>.6)k=Math.min(3,k+1)}return LVN[k]}
 function mmBot(){
  const my=Math.round(rkP(SEAT).r);let recent=[];try{recent=JSON.parse(lget('bo-blast')||'[]')}catch(e){}if(!Array.isArray(recent))recent=[];
  const cand=BOTS.map(b=>({b,r:Math.round(rkP(BOTPRE+b.id).r)})).map(x=>({...x,d:Math.abs(x.r-my)})).sort((a,b)=>a.d-b.d);
