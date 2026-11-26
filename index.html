@@ -1603,7 +1603,7 @@ ul.rknote li{text-wrap:balance}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1801';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1818';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3147,6 +3147,12 @@ const kOf=g=>g<10?40:32,expOf=(a,b)=>1/(1+Math.pow(10,(b-a)/400));
 // 결과는 실제 승률(BOT_WIN)과 고정 씨앗으로 정해져서 서버 없이도 모든 폰이 같은 결과를 계산함
 // AI의 시즌 처음 BOT_KG판은 K=BOT_K0(빨리 제자리를 찾게) → 시뮬레이션에서 첫날부터 항아리 모양
 const BOT_GPH=10,BOT_GPH0=400,BOT_K0=100,BOT_KG=80,BOT_NN=6,BOT_NN0=60,BOT_EPOCH=Date.UTC(2026,10,25,15);
+// AI 점수 재배치(2026-11-26 18:00 한국 시각, 시즌 1에 한 번): 그때까지의 AI끼리 판 결과를 지우고 실력별로 최고 1300점 안에 고르게 나눔.
+// 초보 700~900 · 중수 850~1050 · 고수 1000~1200 · Ultimate 1100~1300. 그 뒤로는 첫날 빠른 배치(시간당 400판)를 끄고 시간당 BOT_GPH판만
+const BOT_RESET=Date.UTC(2026,10,26,9),BOT_RRANGE=[[700,900],[850,1050],[1000,1200],[1100,1300]];
+const BOT_R0=(()=>{const m=new Map(),by=[[],[],[],[]];BOTS.forEach(b=>by[b.k].push(b));
+ by.forEach((L,k)=>{const [lo,hi]=BOT_RRANGE[k],n=L.length;let y=0x13000+k;const r2=()=>{y=y+0x6D2B79F5|0;let t=Math.imul(y^y>>>15,1|y);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+  const o=L.map((b,i)=>[b,r2()]).sort((a,b)=>a[1]-b[1]);o.forEach(([b],i)=>m.set(b.id,Math.round(n>1?lo+(hi-lo)*i/(n-1):hi)))});return m})();
 const kOfB=g=>g<BOT_KG?BOT_K0:32,r6=x=>Math.round(x*1e6)/1e6; // r6: 기기마다 소수 끝자리가 달라지지 않게 점수를 백만분의 1점에서 반올림
 const RK={docs:[],bdocs:[],map:new Map(),list:[],loaded:false,snap:{},snapSt:{},live:{}};
 // ===== 시즌: 3달마다 새로 시작. 시즌 1은 2026-11-26 ~ 2027-03-01(한국 시각), 그 뒤 3·6·9·12월 1일 =====
@@ -3157,6 +3163,13 @@ const RK={docs:[],bdocs:[],map:new Map(),list:[],loaded:false,snap:{},snapSt:{},
 const KST=324e5,SEASON1=Date.UTC(2026,10,25,15);
 const RESET=[900,900,900,1100,1300,1500,1500],SOFT0=900,SNAP_WAIT=20*60e3,SNAP_MAX=14000; // RESET[지난 티어 0브론즈~5마스터, 6챌린저]
 const startOf=(SS,lt)=>SS.n===1?START:lt==null?SOFT0:RESET[lt];
+// 시즌 1 시작 점수 예외: 관리자가 cfg/start {s:{자리:점수}}에 적은 계정만(모든 폰이 같은 문서를 읽음). 관리자 계정은 1250에서 시작
+const ADMIN_START=1250;
+const stx=(SS,id,lt)=>SS.n===1&&RK.sx&&Number.isInteger(RK.sx[id])?RK.sx[id]:startOf(SS,lt);
+function startSub(){if(!db||RK.sxSub)return;RK.sxSub=1;
+ db.doc('cfg/start').onSnapshot(x=>{const d=x.exists?x.data():null,o={};if(d&&d.s&&typeof d.s==='object')for(const [k,v] of Object.entries(d.s))if(okSeat(k)&&Number.isInteger(v)&&v>=0&&v<=3000)o[k]=v;
+  if(JSON.stringify(o)!==JSON.stringify(RK.sx||{})){RK.sx=o;RK.ck=null;clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)}
+  if(isAdmin()&&SEAT&&o[SEAT]!==ADMIN_START&&!RK.sxW){RK.sxW=1;db.doc('cfg/start').set({s:Object.assign({},o,{[SEAT]:ADMIN_START}),at:Date.now()}).catch(e=>{RK.sxW=0;console.warn('cfg start',e&&e.code)})}},()=>{})}
 function seasonOf(now){const s2=Date.UTC(2027,2,1)-KST;if(now<s2)return{n:1,start:SEASON1,end:s2};
  const d=new Date(now+KST);let y=d.getUTCFullYear(),m=d.getUTCMonth(),sm=m>=2?m-((m-2)%3):11;if(m<2)y--;
  return{n:2+((y-2027)*12+sm-2)/3,start:Date.UTC(y,sm,1)-KST,end:Date.UTC(y,sm+3,1)-KST}}
@@ -3224,7 +3237,7 @@ function rankCalc(SS,LT,docs,bdocs,ck,at){
 // 한 시즌 점수 엔진: 사람이 낀 판(game)을 시간순으로 넣으면, 그 사이의 AI끼리 판을 알아서 둠(adv). 시뮬레이션도 이 엔진을 그대로 씀
 function rankEngine(SS,LT){
  let M=new Map(),pairs=new Map();
- const st=id=>startOf(SS,LT&&LT.has(id)?LT.get(id):null);
+ const st=id=>stx(SS,id,LT&&LT.has(id)?LT.get(id):null);
  const P=(id,nk,t)=>{let p=M.get(id);if(!p){const r0=st(id);p={seat:id,nick:'',r:r0,r0,g:0,w:0,l:0,d:0,t:0};M.set(id,p)}if(nk&&t>=p.t){p.nick=nk;p.t=t}return p};
  // AI: 시즌 시작 점수(시즌 1은 1000, 그 뒤 소프트 초기화)에서 출발해 AI끼리 둔 판으로만 점수가 정해짐(사람과 둔 판은 사람 점수만 바뀜).
  //  → AI 점수는 사람 기록과 무관하게 모든 폰에서 똑같고, 사람 실력 분포와 상관없이 AI 쪽 항아리 모양이 유지됨(사람에게는 고정된 눈금 역할)
@@ -3242,22 +3255,26 @@ function rankEngine(SS,LT){
   if(sa===1){a.w++;b.l++;a.ws=(a.ws||0)+1;a.ls=0;b.ls=(b.ls||0)+1;b.ws=0}else if(sa===0){a.l++;b.w++;b.ws=(b.ws||0)+1;b.ls=0;a.ls=(a.ls||0)+1;a.ws=0}else{a.d++;b.d++;a.ws=b.ws=a.ls=b.ls=0}};
  // AI끼리 판 일정: BOT_EPOCH부터 시간 번호 h, 그 시간의 j번째 판. 첫날은 BOT_GPH0판, 그 뒤 BOT_GPH판을 한 시간에 고르게
  const H=3600e3,t0=Math.max(BOT_EPOCH,SS.start);let h=Math.round((t0-BOT_EPOCH)/H),t=t0,j=0,x=0;
- const gph=()=>t-SS.start<864e5?BOT_GPH0:BOT_GPH,seed=()=>{x=(Math.imul(h+1,2654435761)^0x9e3779b9)>>>0};seed();
+ const fast=()=>t-SS.start<864e5&&!(SS.n===1&&t>=BOT_RESET),gph=()=>fast()?BOT_GPH0:BOT_GPH,seed=()=>{x=(Math.imul(h+1,2654435761)^0x9e3779b9)>>>0};seed();
  const rnd=()=>{x=x+0x6D2B79F5|0;let q=Math.imul(x^x>>>15,1|x);q=q+Math.imul(q^q>>>7,61|q)^q;return((q^q>>>14)>>>0)/4294967296};
  // tt보다 앞선 AI끼리 판을 모두 둠(같은 시각이면 사람이 낀 판이 먼저)
- const adv=tt=>{for(;;){const n=gph();if(j>=n){h++;t+=H;j=0;seed();continue}const bt=t+Math.floor(j*H/n);if(bt>=tt||bt>=SS.end)return;
-   const i=Math.floor(rnd()*nb),k=near(i,Math.floor(rnd()*(t-SS.start<864e5?BOT_NN0:BOT_NN))),a=BS[i],b=BS[k],u=rnd(),pw=BOT_WIN[a.bot.k][b.bot.k]*.99,sa=u<pw?1:u<.99?0:.5;
+ let rs=!(SS.n===1&&BOT_RESET>SS.start&&BOT_RESET<SS.end);
+ // 재배치 시각을 지나면 AI 점수를 실력별 배치로(기록 판수는 두되 K는 보통 값으로)
+ const reset=()=>{rs=true;for(const q of BS){q.r=BOT_R0.get(q.bot.id);q.r0=q.r;q.g=Math.max(q.g,BOT_KG);q.ws=q.ls=0}ord.sort((a,b)=>lt(a,b)?-1:1);ord.forEach((i,p)=>pos[i]=p)};
+ const adv=tt=>{if(!rs&&tt>BOT_RESET){adv0(BOT_RESET);reset()}adv0(tt)};
+ const adv0=tt=>{for(;;){const n=gph();if(j>=n){h++;t+=H;j=0;seed();continue}const bt=t+Math.floor(j*H/n);if(bt>=tt||bt>=SS.end)return;
+   const i=Math.floor(rnd()*nb),k=near(i,Math.floor(rnd()*(fast()?BOT_NN0:BOT_NN))),a=BS[i],b=BS[k],u=rnd(),pw=BOT_WIN[a.bot.k][b.bot.k]*.99,sa=u<pw?1:u<.99?0:.5;
    play(a,b,sa,1);fix(i);fix(k);j++}};
  const game=y=>{adv(y.t);const a=P(y.A,y.na,y.t),b=P(y.B,y.nb,y.t),sa=y.w==='draw'?.5:y.w===y.A?1:0;
   // 같은 두 사람(사람·AI)이 24시간 안에 다시 두면 반영을 1 → ½ → ¼ → 0 으로 줄임
   const pk=[y.A,y.B].sort().join('|'),pt=(pairs.get(pk)||[]).filter(q=>y.t-q<864e5);pairs.set(pk,pt.concat([y.t]));play(a,b,sa,PAIRW[Math.min(pt.length,3)])};
  const dup=m=>new Map([...m].map(([k,v])=>[k,Array.isArray(v)?v.slice():{...v}]));
  return {get M(){return M},get pairs(){return pairs},P,adv,game,
-  save:()=>({M:dup(M),pairs:dup(pairs),ord:ord.slice(),h,t,j,x}),
-  load:z=>{M=dup(z.M);pairs=dup(z.pairs);BS=BOTS.map(b=>M.get(BOTPRE+b.id));ord=z.ord.slice();ord.forEach((i,p)=>pos[i]=p);h=z.h;t=z.t;j=z.j;x=z.x}}}
+  save:()=>({M:dup(M),pairs:dup(pairs),ord:ord.slice(),h,t,j,x,rs}),
+  load:z=>{M=dup(z.M);pairs=dup(z.pairs);BS=BOTS.map(b=>M.get(BOTPRE+b.id));ord=z.ord.slice();ord.forEach((i,p)=>pos[i]=p);h=z.h;t=z.t;j=z.j;x=z.x;rs=!!z.rs}}}
 // 중간 저장을 폰에도 남김(앱을 새로 열어도 시즌 처음부터 다시 계산하지 않게. 저사양 폰에서 첫 계산 300ms대 → 수십 ms).
 // 시즌·지난 시즌 티어표가 같고, 저장한 지점 앞의 판 목록이 그대로일 때만 씀(rankCalc가 확인). 아니면 처음부터 계산해서 결과는 같음
-function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v1:'+SS.n+':'+(LT?LT.size+':'+h:'-')}
+function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v2:'+SS.n+':'+JSON.stringify(RK.sx||{})+':'+(LT?LT.size+':'+h:'-')}
 function ckLoad(ck,SS,LT){try{const v=JSON.parse(lget('bo-rkck')||'null');if(!v||v.k!==ckKey(SS,LT))return;const e=v.e;
  if(e.M.some(([id,p])=>p.bot&&!BOTMAP.has(p.bot)))return;const M=new Map(e.M.map(([id,p])=>[id,p.bot?{...p,bot:BOTMAP.get(p.bot),t:Infinity}:p]));
  ck.st={LT,tc:v.tc,gi:v.gi,sig:v.sig,e:{M,pairs:new Map(e.pairs),ord:e.ord,h:e.h,t:e.t,j:e.j,x:e.x}}}catch(e){}}
@@ -3265,7 +3282,7 @@ function ckSave(ck,SS,LT){try{const c=ck.st,e=c.e,old=c.tc-864e5;
  lset('bo-rkck',JSON.stringify({k:ckKey(SS,LT),tc:c.tc,gi:c.gi,sig:c.sig,e:{M:[...e.M].map(([id,p])=>[id,p.bot?{...p,bot:p.bot.id,t:0}:p]),
   pairs:[...e.pairs].map(([k,a])=>[k,a.filter(t=>t>old)]).filter(x=>x[1].length),ord:e.ord,h:e.h,t:e.t,j:e.j,x:e.x}}))}catch(e){}}
 function rankCompute(at){
- const SS=seasonOf(at||Date.now());RK.season=SS;try{seasonSub()}catch(e){}
+ const SS=seasonOf(at||Date.now());RK.season=SS;try{seasonSub()}catch(e){}try{startSub()}catch(e){}
  const LT=seasonLT(SS);if(!RK.ck||RK.ck.n!==SS.n){RK.ck={n:SS.n};ckLoad(RK.ck,SS,LT)}const st0=RK.ck.st,R=rankCalc(SS,LT,RK.docs,RK.bdocs||[],RK.ck,at);
  if(RK.ck.st&&RK.ck.st!==st0)ckSave(RK.ck,SS,LT);
  RK.lt=LT;RK.pairs=R.pairs;RK.map=R.M;RK.list=R.list;RK.loaded=true;
@@ -3345,12 +3362,12 @@ function seasonClean(){const SS=RK.season;if(!db||!RK.snapOn||!isAdmin()||SS.n<2
    for(const x of qs.docs){if(!GIDRE.test(x.id))continue;try{const ps=await db.collection('g/'+x.id+'/p').get();await del(ps.docs.map(y=>'g/'+x.id+'/p/'+y.id));await del(['g/'+x.id])}catch(e){}}}catch(e){}
   lset(k,String(Date.now()));if(n)toast(`지난 시즌 기록 ${n}건 정리`)})()}
 // 이 자리의 이번 시즌 시작 점수(아직 이번 시즌에 둔 판이 없어도)
-function rkStart(id){const SS=RK.season||seasonOf(Date.now());return startOf(SS,RK.lt&&RK.lt.has(id)?RK.lt.get(id):null)}
+function rkStart(id){const SS=RK.season||seasonOf(Date.now());return stx(SS,id,RK.lt&&RK.lt.has(id)?RK.lt.get(id):null)}
 const rkP=id=>RK.map.get(id)||{seat:id,r:rkStart(id),r0:rkStart(id),g:0,w:0,l:0,d:0};
 // 챌린저는 매일 0시(한국) 기준 마스터 이상 상위 5명으로 하루 동안 고정(그 사이 점수가 바뀌어도 그날은 그대로)
 function tierOf(p){
  if(!p||(!p.bot&&p.g<PLACE))return null;
- if(RK.chal&&RK.chal.has(p.seat))return CHAL;
+ if(RK.chal&&RK.chal.has(p.seat)&&p.r>=TIERS[TIERS.length-1].min)return CHAL;
  let t=TIERS[0];for(const x of TIERS)if(p.r>=x.min)t=x;return t;
 }
 // 색 밝기 조절(티어 문양 그라데이션용)
@@ -3580,7 +3597,7 @@ function mmPairs(list,now){
  return out;
 }
 // 랭크전 점검: true면 새 매칭을 막음(진행 중인 판은 끝까지 둘 수 있음, 랭킹 보기는 그대로)
-const RANK_MAINT=true;
+const RANK_MAINT=false;
 function mmStart(){
  if(RANK_MAINT){dialog('랭크전은 지금 점검 중이에요.<br>점검이 끝나면 다시 열려요.','확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
  if(!rankOpen()){rankLockDlg();return}

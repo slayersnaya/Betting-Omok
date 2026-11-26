@@ -216,8 +216,11 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['n','at','v','p','final','top','amt','rw'])
         && request.resource.data.n is int && id == 'season' + string(request.resource.data.n)
         && request.resource.data.at is int && request.resource.data.p is map; }
-      allow create: if isAdmin() && seasonDoc(id);
-      allow update: if isAdmin() && seasonDoc(id) && resource.data.at is int && resource.data.at > nowMs() - 86400000;
+      // cfg/start: 시즌 1 시작 점수 예외 {s:{자리:점수}} (관리자 계정 1250 등, 10명까지)
+      function startDoc(id) { return id == 'start' && request.resource.data.keys().hasOnly(['s','at'])
+        && request.resource.data.s is map && request.resource.data.s.size() <= 10 && request.resource.data.at is int; }
+      allow create: if isAdmin() && (seasonDoc(id) || startDoc(id));
+      allow update: if isAdmin() && ((seasonDoc(id) && resource.data.at is int && resource.data.at > nowMs() - 86400000) || startDoc(id));
       allow delete: if isAdmin();
     }
 
