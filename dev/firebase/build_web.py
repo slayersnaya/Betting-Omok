@@ -16,9 +16,9 @@ BASE='https://slayersnaya.github.io/Betting-Omok/'
 head=(# 글꼴은 한 곳에서, 화면 그리기를 막지 않게(먼저 기본 글꼴로 보이고 받아지면 바뀜)
  '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n'
  '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media=\'all\'">\n'
- '<meta name="description" content="세 칸을 고르고 점수를 몰래 걸어 돌을 놓는 2인 전략 오목. 일반 게임, 랭크전, AI 대국.">\n'
+ '<meta name="description" content="베팅 승자가 착수하는 2인 전략 오목. 일반 게임, 랭크전, AI 대국.">\n'
  '<meta property="og:site_name" content="베팅 오목">\n<meta property="og:locale" content="ko_KR">\n'
- '<meta property="og:title" content="베팅 오목">\n<meta property="og:description" content="세 칸을 고르고 점수를 몰래 걸어 돌을 놓는 2인 전략 오목">\n'
+ '<meta property="og:title" content="베팅 오목">\n<meta property="og:description" content="베팅 승자가 착수하는 2인 전략 오목">\n'
  '<meta property="og:type" content="website">\n<meta property="og:url" content="'+BASE+'">\n'
  '<meta property="og:image" content="'+BASE+'thumb.jpg">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n'
  '<meta property="og:image:alt" content="베팅 오목 대국 화면">\n<meta name="twitter:card" content="summary_large_image">\n'
@@ -31,7 +31,7 @@ inst=open('/home/claude/firebase/web-install.js').read()
 k=out.rindex('</body>');out=out[:k]+'<script>'+inst+'</script>\n'+out[k:]
 os.makedirs('/home/claude/web',exist_ok=True)
 open('/home/claude/web/index.html','w').write(out)
-man={"id":"./","name":"베팅 오목","short_name":"베팅 오목","description":"세 칸을 고르고 점수를 몰래 걸어 돌을 놓는 2인 전략 오목","lang":"ko","start_url":"./","scope":"./","display":"standalone","background_color":"#0f1716","theme_color":"#0f1716",
+man={"id":"./","name":"베팅 오목","short_name":"베팅 오목","description":"베팅 승자가 착수하는 2인 전략 오목","lang":"ko","start_url":"./","scope":"./","display":"standalone","background_color":"#0f1716","theme_color":"#0f1716",
  "screenshots":[{"src":"shots/s1.png","sizes":"1080x1920","type":"image/png","form_factor":"narrow","label":"홈"},{"src":"shots/s2.png","sizes":"1080x1920","type":"image/png","form_factor":"narrow","label":"베팅"},{"src":"shots/s3.png","sizes":"1080x1920","type":"image/png","form_factor":"narrow","label":"개봉"},{"src":"shots/s4.png","sizes":"1080x1920","type":"image/png","form_factor":"narrow","label":"결과"}],
  "categories":["games"],"icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icons/maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
 open('/home/claude/web/manifest.json','w').write(json.dumps(man,ensure_ascii=False,indent=1))
