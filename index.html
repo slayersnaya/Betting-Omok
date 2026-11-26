@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, interactive-widget=resizes-content">
 <meta name="color-scheme" content="dark light">
 <title>베팅 오목</title>
 <style>
@@ -975,6 +975,8 @@ body.palguest #palFind,body.palguest #palReq,body.palguest #palList,body.palgues
 .pfnote{text-align:center;margin-top:10px}
 /* 대화 */
 .chatsh{display:flex;flex-direction:column;height:86vh;height:86dvh;overflow:hidden}
+/* 폰 키보드가 올라오면 시트를 키보드 위 보이는 영역 안으로(머리글이 위로 밀려 안 보이던 문제) */
+@media (max-width:599px){html.kbon .lsheet{bottom:var(--kb,0px);max-height:calc(var(--vvh,86dvh) - 8px)}html.kbon .chatsh{height:calc(var(--vvh,86dvh) - 8px)}}
 .chatsh>*+*:not(.shh){margin-top:0}
 .chh{gap:4px;margin-bottom:6px!important}
 .chwho{flex:1;min-width:0;display:flex;align-items:center;gap:10px;background:none;border:0;padding:4px;border-radius:12px;cursor:pointer;text-align:left;min-height:44px}
@@ -1700,7 +1702,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.2130';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.2154';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -4765,6 +4767,10 @@ document.addEventListener('change',e=>{const id=e.target&&e.target.id;if(id!=='f
  // 관전을 끄면 중계 문서도 지움(새로 보는 사람·이미 보던 사람 모두 막힘). 일반 게임은 서버 규칙이 새 관전 입장을 막음
  if(K==='sp'&&!on){lvOff();if(LV.wrote){LV.wrote=false;db.doc('lv/'+SEAT).delete().catch(()=>{})}}
  const g=frGame();db.doc('on/'+SEAT).update(Object.assign({at:SRV_TS,st:frStNow(),gi:g&&g.gi||'',al:g&&g.al||''},patch)).then(()=>{FR.onW={st:frStNow(),at:Date.now()};toast({nr:on?'친구 요청을 받아요':'친구 요청을 받지 않아요',hs:on?'접속 상태를 친구에게 보여요':'접속 상태를 숨겼어요',sp:on?'친구가 내 대국을 볼 수 있어요':'친구 관전을 껐어요'}[K])},()=>{toast('바꾸지 못했어요');Object.assign(FR.mine,{[K]:K==='sp'?!on:on});frRender()})});
+// 폰 키보드: 보이는 영역(visualViewport) 기준으로 시트 위치·높이 맞춤
+{const vv=window.visualViewport;if(vv){const R=document.documentElement;let raf=0;const fit=()=>{raf=0;const kb=Math.max(0,Math.round(innerHeight-vv.height-vv.offsetTop)),on=innerWidth<600&&(kb>60||innerHeight-vv.height>60);
+ R.classList.toggle('kbon',on);if(on){R.style.setProperty('--kb',kb+'px');R.style.setProperty('--vvh',Math.round(vv.height)+'px');if(vv.offsetTop>0&&!document.querySelector('.lsheet:not(.hide) input:focus,.lsheet:not(.hide) textarea:focus'))scrollTo(0,0);const l=$('#chLog');if(l&&!$('#sh-chat').classList.contains('hide'))l.scrollTop=l.scrollHeight}else{R.style.removeProperty('--kb');R.style.removeProperty('--vvh')}};
+ const q=()=>{if(!raf)raf=requestAnimationFrame(fit)};vv.addEventListener('resize',q);vv.addEventListener('scroll',q)}}
 {const f=$('#chForm');if(f)f.addEventListener('submit',e=>{e.preventDefault();const i=$('#chIn');if(frSend(i.value))i.value=''})}
 window.addEventListener('hashchange',()=>{if(/^#f-/.test(location.hash))try{frHash()}catch(e){}});
 
