@@ -41,7 +41,7 @@ RKP="""(()=>{const rc=rankCompute,X={uF1aaaaaaaaaaaaaaaa1:[1342,24,15,8,1,3,0],u
 GAMES="""()=>{const H=(t,sun,a,b,w)=>({t,sun,cells:[[9,8+t%3],[9,9+t%3],[9,10+t%3]],win:w,bets:{a,b}});
 const g=(w,l,t,first)=>({key:'k'+l+t,label:l,at:Date.now()-t*60e3,d:{A:'a',B:'b',me:'a',names:{a:'나',b:l},winner:w,reason:'오목',
  hist:[H(1,first?'a':'b',[4,3,3],[3,3,4],['a','a','b']),H(2,first?'b':'a',[1,1,1],[5,2,3],['b','b','b']),H(3,first?'a':'b',[2,6,2],[4,4,4],['b','a','b']),H(4,first?'b':'a',[3,3,8],[6,6,2],['b','b','a'])]}});
-localStorage.setItem('bo-games',JSON.stringify([g('a','AI 고수',3,1),g('b','새벽감자',9,0),g('a','랭크전 · Dodo2',20,1),g(null,'한 폰',40,0),g('a','AI 중수',60,1),g('b','랭크전 · Teo9',90,0),g('b','AI 고수',120,1)]));return 1}"""
+localStorage.setItem('bo-games',JSON.stringify([g('a','AI 고수',3,1),g('b','새벽감자',9,0),g('a','랭크 게임 · Dodo2',20,1),g(null,'한 폰',40,0),g('a','AI 중수',60,1),g('b','랭크 게임 · Teo9',90,0),g('b','AI 고수',120,1)]));return 1}"""
 ROOMS="""lobbyRooms=[{id:'g1a2b3c4d',host:'x1',hostNick:'새벽감자',guest:null,guestNick:'',created:Date.now()-120e3,td:20,tb:30,status:'open',ranked:false},
 {id:'g2a2b3c4d',host:'x2',hostNick:'민트초코',guest:null,guestNick:'',created:Date.now()-600e3,td:0,tb:0,status:'open',ranked:false}];lobbyState='ok';renderRooms()"""
 RECAP="recapShow({n:1,start:Date.UTC(2026,8,1),end:Date.UTC(2026,11,1),r:1388,g:42,w:25,l:16,d:1,ix:3,rank:12,best:6,top:{nk:'새벽감자',n:7},next:1150})"

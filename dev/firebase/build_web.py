@@ -16,7 +16,7 @@ BASE='https://slayersnaya.github.io/Betting-Omok/'
 head=(# 글꼴은 한 곳에서, 화면 그리기를 막지 않게(먼저 기본 글꼴로 보이고 받아지면 바뀜)
  '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n'
  '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media=\'all\'">\n'
- '<meta name="description" content="베팅 승자가 착수하는 2인 전략 오목. 일반 게임, 랭크전, AI 대국.">\n'
+ '<meta name="description" content="베팅 승자가 착수하는 2인 전략 오목. 일반 게임, 랭크 게임, AI 대국.">\n'
  '<meta property="og:site_name" content="베팅 오목">\n<meta property="og:locale" content="ko_KR">\n'
  '<meta property="og:title" content="베팅 오목">\n<meta property="og:description" content="베팅 승자가 착수하는 2인 전략 오목">\n'
  '<meta property="og:type" content="website">\n<meta property="og:url" content="'+BASE+'">\n'

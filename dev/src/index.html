@@ -1430,7 +1430,7 @@ html{scroll-padding-top:64px}
   <div id="rkResume"></div>
   <div class="card rank" id="rankCard">
    <div id="rkMe"></div>
-   <button class="btn wide" data-act="mm" id="mmBtn"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg><span>랭크전</span></button>
+   <button class="btn wide" data-act="mm" id="mmBtn"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg><span>랭크 게임</span></button>
    <p class="status" id="mmSt"></p>
   </div>
   <div class="card" id="rkBoardC">
@@ -1442,7 +1442,7 @@ html{scroll-padding-top:64px}
   <div class="card" id="rkTierC">
    <div class="chead"><h2>티어</h2></div>
    <div class="tiers" id="rkTiers"></div>
-   <details class="rules rkhelp"><summary><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01"/></svg>랭크전 규칙</summary><ul class="rknote"><li>고르기 20초 · 베팅 30초 · 처음 5판은 배치</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li><li>2연승부터 더 오르고 2연패부터 더 내려가요</li><li>시즌은 3달마다 · 새 시즌은 한 단계 아래 최저점부터</li><li>챌린저는 매일 0시 마스터 상위 5명</li><li>점수 차 150점 안에서 매칭</li><li>상대가 없으면 AI가 대신 들어올 수 있어요</li></ul></details>
+   <details class="rules rkhelp"><summary><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01"/></svg>랭크 게임 규칙</summary><ul class="rknote"><li>고르기 20초 · 베팅 30초 · 처음 5판은 배치</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li><li>2연승부터 더 오르고 2연패부터 더 내려가요</li><li>시즌은 3달마다 · 새 시즌은 한 단계 아래 최저점부터</li><li>챌린저는 매일 0시 마스터 상위 5명</li><li>점수 차 150점 안에서 매칭</li><li>상대가 없으면 AI가 대신 들어올 수 있어요</li></ul></details>
   </div>
  </div>
 
@@ -1500,7 +1500,7 @@ html{scroll-padding-top:64px}
      <li>정확히 5개면 승리. 6개 이상은 무효예요. 3·3,&nbsp;4·4는 괜찮아요.</li>
      <li>한 턴에 둘 다 오목이면 줄이 많은 쪽, 같으면 그 턴의 후 플레이어가 이겨요.</li>
      <li data-ptu>시간을 넘기면 세 칸은 자동, 베팅은 칸마다 1{P}. <span class="nw">3턴 연속이면</span> 기권패.</li>
-     <li>랭크전은 점수 차 150점 안에서 짝지어요. 20초쯤 기다려도 짝이 없으면 AI가 대신 들어와요.</li>
+     <li>랭크 게임은 점수 차 150점 안에서 짝지어요. 20초쯤 기다려도 짝이 없으면 AI가 대신 들어와요.</li>
      <li>랭크 점수는 티어가 낮을수록 많이 오르고 덜 깎여요. 높을수록 덜 오르고 더 깎여요. 2연승·2연패부터는 더 오르고 더 내려가요.</li>
      <li>시즌은 3달마다 새로 시작해요(시즌 1은 모두 1000점). 지난 시즌 티어의 한 단계 아래 최저점에서 배치 5판부터 다시 해요. 골드 이하와 기록이 없으면 900점이에요.</li>
     </ol>
@@ -2339,7 +2339,7 @@ const seatOf=sec=>'s'+sha256('seat|'+sec).slice(0,16);
 let SEAT=lget('bo-seat'),SECRET=lget('bo-secret');
 if(!SEAT){SECRET=rhex(16);SEAT=seatOf(SECRET);lset('bo-secret',SECRET);lset('bo-seat',SEAT)}
 const myCode=()=>SECRET&&seatOf(SECRET)===SEAT?'K'+SECRET:null;
-// 예전 방식 자리 id는 랭크전을 처음 시작할 때 비밀값 방식으로 바꿈(랭크 기록은 그때부터 쌓임)
+// 예전 방식 자리 id는 랭크 게임을 처음 시작할 때 비밀값 방식으로 바꿈(랭크 기록은 그때부터 쌓임)
 function ensureSecret(){if(user&&user.firebase)return;if(myCode())return;lset('bo-old-seat',SEAT);SECRET=rhex(16);SEAT=seatOf(SECRET);lset('bo-secret',SECRET);lset('bo-seat',SEAT)}
 function toastPos(t){t.style.top='';t.style.bottom='';const sh=[...document.querySelectorAll('.lsheet:not(.hide),#dlg:not(.hide) .card')].find(e=>e.getClientRects().length);
  if(sh){const h=sh.getBoundingClientRect().height,top=sh.classList.contains('lsheet')&&window.innerWidth<600?window.innerHeight-h:(window.innerHeight-h)/2;t.style.bottom='auto';t.style.top=Math.max(8,top-(t.offsetHeight||40)-10)+'px';return}
@@ -2437,7 +2437,7 @@ function oppStatus(vs,id){
  return ''}
 // 상대 연결 끊김: 8초 넘게 안 보일 때만 표시(잠깐 끊기는 건 무시)
 function oppOff(id){if(UI.mode!=='online'||!G.room||!id)return false;G.offSince=G.offSince||{};if(G.online.has(id)){delete G.offSince[id];return false}if(!G.offSince[id])G.offSince[id]=Date.now();return Date.now()-G.offSince[id]>8000}
-// 관리자만: 랭크전 AI 상대의 실제 모델(연승으로 Ultimate가 붙은 경우 원래 모델도)
+// 관리자만: 랭크 게임 AI 상대의 실제 모델(연승으로 Ultimate가 붙은 경우 원래 모델도)
 const lvName=k=>(AI_LEVELS[k]&&AI_LEVELS[k].name)||k;
 function botModelTag(s){if(!s||!s.bot||!s.ai)return'';const base=(BOTMAP.get(s.bot.id)||{}).lv;return ' · '+lvName(s.ai)+(base&&base!==s.ai?` (원래 ${lvName(base)})`:'')}
 function renderPlayers(){
@@ -2450,7 +2450,7 @@ function renderPlayers(){
   const off=!mine&&!over&&oppOff(id);
   let tags=live&&!rv?`<span class="tag${isSun?' j':''}">${isSun?'선':'후'}<span class="tl"> 플레이어</span></span>`:'';
   if(!mine){const os=rv?'':oppStatus(vs,id);if(os&&os[0]&&os[0].split(' ')[0]==='j'&&vs.phase==='bet'){const sk=(UI.mode==='online'?G.gid:L.s&&L.s.id)+':'+vs.t;if(UI.oppSealK!==sk){UI.oppSealK=sk;if(UI.view==='game')snd('oppSeal')}}tags+=`<span class="tag${os&&os[0]?' '+os[0]:''}${os?'':' hide'}" id="oppTag"${os&&os[0].includes('sealtag')?' data-act="peek" role="button" aria-label="AI 봉인 코드"':''}>${os?os[1]:''}</span>`}
-  // 관리자만: 랭크전 AI 상대의 실제 모델 표시(연승·연패로 바뀐 경우 원래 모델도)
+  // 관리자만: 랭크 게임 AI 상대의 실제 모델 표시(연승·연패로 바뀐 경우 원래 모델도)
   if(!mine&&UI.mode==='local'&&L.s&&L.s.bot&&L.s.ai&&isAdmin()){const base=(BOTMAP.get(L.s.bot.id)||{}).lv;tags=`<span class="tag j" id="admModel">${lvName(L.s.ai)}${base&&base!==L.s.ai?' · 원래 '+lvName(base):''}</span>`+tags}
   if(off)tags+='<span class="tag w">연결 끊김</span>';
   if(timed&&w)tags+=`<span class="tag w">시간 초과 ${w}/3</span>`;
@@ -2614,7 +2614,7 @@ function sndFile(k){const buf=SNDF[k],c=sndCtx();if(!buf||!c)return false;const 
 let SG=1;const SNDG={tap:2.79,soft:2.5,tab:2.73,pick:2.5,toggleOn:2.67,toggleOff:2.75,page:4.67,open:7.0,close:4.29,tick:2.55,chipUp:5.81,chipDown:5.56,chipStack:4.76,chipReset:4.57,stone:1.08,seal:1.65,crack:2.63,over:4.17,oppSeal:2.8,coinFlip:3.57,coinLand:1.3,five:1.81,voidLine:1.71,win:1.86,lose:3.61,draw:3.6,tickLate:2.46,timeout:2.94,turn:2.63,reward:2.37,coin1:2.78,buy:3.06,equip:2.63,error:2.54,notify:2.42,msg:3.5,match:2.41,pop:2.41,correct:2.44,wrong:3.05,tierUp:1.86,tierPiece:2.69,tierDown:3.75};
 function snd(k,...a){try{if(SND[k]||SNDF[k]){if(!sndFile(k)){SG=SNDG[k]||1;SND[k](...a);SG=1}if(k==='win'||k==='lose'||k==='five'||k==='tierUp')bgmDuck(SNDF[k]?SNDF[k].duration*1000+600:3000)}}catch(e){SG=1}}
 function beep(){snd('tick')} // 예전 호출 호환
-// ===== 배경음(파일): 은은하게(음량 낮게·천천히 커짐), 장면별로 바뀔 때 부드럽게 넘어감, 곡 끝에서 겹쳐 이어 붙여 끊김 없이 반복 =====
+// ===== 배경음(파일): 은은하게(음량 낮게·2.5초에 걸쳐 커짐), 장면별로 바뀔 때 부드럽게 넘어감, 곡 끝에서 겹쳐 이어 붙여 끊김 없이 반복 =====
 // 파일은 sounds/ 에 두고 아래 표에 등록. 없는 장면은 조용히(로비 곡을 대국 중에 틀지 않음). 설정 '배경음'(bo-bgm, 기본 켬)
 const BGM_FILES={lobby:'sounds/bgm_lobby.mp3',game:'sounds/bgm_game.mp3',tense:'sounds/bgm_tense.mp3',puzzle:'sounds/bgm_puzzle.mp3',match:'sounds/bgm_match.mp3'};
 const BGM_VOL={lobby:.24,game:.15,tense:.18,match:.22,puzzle:.18};
@@ -2636,7 +2636,7 @@ function bgmPlay(k,fade,loop){if(!BG.u.length){const a=bgmUnit(),b=bgmUnit();if(
  if(!k){BG.cur=-1;BG.scene='';return}
  nu.k=k;nu.x=0;if(!nu.el.src.endsWith(BGM_FILES[k]))nu.el.src=BGM_FILES[k];try{nu.el.currentTime=0}catch(e){}
  nu.g.gain.value=0;const pr=nu.el.play();if(pr&&pr.catch)pr.catch(()=>{});BG.cur=ni;BG.scene=k;bgmGain(nu,(BGM_VOL[k]||.2)*BG.duck,fade)}
-function bgmUpdate(){try{const k=bgmScene();if(k===BG.scene)return;bgmPlay(k,BG.scene?2.5:6,false)}catch(e){}}
+function bgmUpdate(){try{const k=bgmScene();if(k===BG.scene)return;bgmPlay(k,2.5,false)}catch(e){}}
 // 연출(승리·패배·오목·승급) 동안 잠깐 줄였다가 되돌림
 function bgmDuck(ms){const u=BG.u[BG.cur];if(!u)return;BG.duck=.35;bgmGain(u,(BGM_VOL[BG.scene]||.2)*.35,.3);clearTimeout(bgmDuck.t);bgmDuck.t=setTimeout(()=>{BG.duck=1;const v=BG.u[BG.cur];if(v)bgmGain(v,BGM_VOL[BG.scene]||.2,1.5)},ms)}
 setInterval(bgmUpdate,800);document.addEventListener('visibilitychange',bgmUpdate);
@@ -2789,7 +2789,7 @@ function renderPanel2(){
   if(vs.spect)h=overSheet(vs,{home:'lobby'});
   else if(m.ranked){const dl=rankDelta(vs),pw=G.rkSnap&&G.rkSnap.pw.n,frz=G.rkSnap&&vs.me&&G.rkSnap[oppId].g<PLACE&&G.rkSnap[vs.me].g>=PLACE;
    const took=vs.hist.reduce((a,x)=>a+x.win.filter(w=>w===me).length,0),cells=vs.hist.reduce((a,x)=>a+x.cells.length,0);
-   h=overSheet(vs,{vs:'랭크전 · '+op,home:'leave',stats:[[took,'가져간 칸'],[cells-took,'내준 칸'],[dl==null?'–':(dl>=0?'+':'')+dl,'랭크 점수',dl==null?'':dl>=0?'up':'dn']],
+   h=overSheet(vs,{vs:'랭크 게임 · '+op,home:'leave',stats:[[took,'가져간 칸'],[cells-took,'내준 칸'],[dl==null?'–':(dl>=0?'+':'')+dl,'랭크 점수',dl==null?'':dl>=0?'up':'dn']],
     note:rankMove(vs)+(G.rkSnap&&vs.me&&dl!=null&&!(G.rkSnap[oppId].g<PLACE&&G.rkSnap[vs.me].g>=PLACE)?streakNote(G.rkSnap[vs.me],vs.winner==null?.5:vs.winner===vs.me?1:0,G.rkSnap.pw.w):'')+(snNew(G.rkSnap)?'<p class="note" style="margin:0;text-align:center">시즌이 바뀌어 새 시즌 점수에 반영돼요</p>':'')+(vs.reason==='상대 부재'?'<p class="note" style="margin:0;text-align:center">부재승은 확인 뒤 랭크에 반영돼요(최대 10분)</p>':'')+(pw?`<p class="note" style="margin:0;text-align:center">같은 상대 ${pw+1}번째 · 반영 ${['','½','¼','없음'][Math.min(pw,3)]}</p>`:'')+(frz?'<p class="note" style="margin:0;text-align:center">상대 배치 중 · 내 점수 그대로</p>':''),
     primary:'<button class="btn wide" data-act="remm">다시 매칭</button>'});
   }else h=overSheet(vs,{vs:op,home:'leave',primary:`<button class="btn wide" data-act="again" ${mine.again?'disabled':''}>${mine.again?'상대 기다리는 중':'한 판 더'}</button>`,status:od.again?'상대 준비 완료':''});
@@ -2921,7 +2921,7 @@ function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.re
 // 관리자: 연결된 구글 계정이 관리자 이메일일 때만 관리자 버튼이 보임(실제 권한은 서버 규칙이 다시 확인)
 const ADMIN_EMAILS=['slayersnaya@gmail.com'];
 const isAdmin=()=>{try{const g=user&&user.firebase&&user.google&&user.google()&&(!user.provider||user.provider()==='google')&&user.google();return !!g&&ADMIN_EMAILS.includes(String(g).toLowerCase())}catch(e){return false}};
-// 관리자 폰을 열면 하루 한 번: 학습에 안 쓰는 예전 AI 연습판(초보·중수·고수, 랭크전 아님)을 서버에서 지움(한 번에 최대 300건)
+// 관리자 폰을 열면 하루 한 번: 학습에 안 쓰는 예전 AI 연습판(초보·중수·고수, 랭크 게임 아님)을 서버에서 지움(한 번에 최대 300건)
 function adminClean(){if(!db||!isAdmin()||adminClean.done)return;adminClean.done=1;const k='bo-admclean';if(Date.now()-(+lget(k)||0)<864e5)return;
  (async()=>{let n=0;for(const lv of ['beginner','mid','pro']){try{const qs=await db.collection('aigames').where('level','==',lv).limit(100).get();
    for(const x of qs.docs){const d=x.data()||{};if(d.rk)continue;try{await db.doc('aigames/'+x.id).delete();n++}catch(e){}}}catch(e){}}
@@ -3014,7 +3014,7 @@ function renderAll(){document.body.classList.toggle('rvmode',!!UI.review);{const
  {const v=vstate();if(v&&v.first&&v.t===1&&!v.hist.length&&['designate','bet','reveal'].includes(v.phase))showCoin(v,'bo-coin-'+(UI.mode==='local'?'L'+L.s.id:G.gid))}
  const vs=vstate();if(vs&&vs.phase==='over'&&!revealing())$('#turnres').classList.add('hide');$('#resignBtn').classList.toggle('hide',!(vs&&vs.me&&['designate','bet','reveal','seed'].includes(vs.phase)&&(UI.mode==='online'||(UI.mode==='local'&&L.s&&L.s.bot))&&!UI.review));
  $('#skipBtn').classList.toggle('hide',UI.mode!=='tut'||!!(T.s&&TUT[T.s.step].end));
- $('#gttl').textContent=UI.review?'복기':G.meta&&G.meta.ranked&&UI.mode==='online'?'랭크전':UI.mode==='tut'?'튜토리얼':UI.mode==='local'?(L.s&&L.s.bot?'랭크전'+(isAdmin()?botModelTag(L.s):''):L.s&&L.s.ai?(`${AI_LEVELS[L.s.ai].name} AI`):'한 폰 대국'):(G.meta?`${G.meta.hostNick||''}의 방`:'베팅 오목');
+ $('#gttl').textContent=UI.review?'복기':G.meta&&G.meta.ranked&&UI.mode==='online'?'랭크 게임':UI.mode==='tut'?'튜토리얼':UI.mode==='local'?(L.s&&L.s.bot?'랭크 게임'+(isAdmin()?botModelTag(L.s):''):L.s&&L.s.ai?(`${AI_LEVELS[L.s.ai].name} AI`):'한 폰 대국'):(G.meta?`${G.meta.hostNick||''}의 방`:'베팅 오목');
 }
 
 // ===== 온라인: 저장·자동 처리 =====
@@ -3044,11 +3044,11 @@ function effects(){
   const c=Object.entries(G.docs).filter(([id,d])=>d.seat===id&&id!==me&&typeof d.joined==='number').map(([,d])=>d).sort((x,y)=>x.joined-y.joined)[0];
   if(c){G.inflight.add('guest');db.doc('g/'+G.gid).update({guest:c.seat,guestNick:String(c.nick||'').slice(0,12),status:'playing'}).then(()=>{if(user&&user.firebase)db.doc('lob/'+SEAT).delete().catch(()=>{})}).catch(()=>G.inflight.delete('guest'))}
  }
- // 랭크전: 매칭된 상대가 20초 안에 안 들어오면 방을 지우고 다시 찾기
+ // 랭크 게임: 매칭된 상대가 20초 안에 안 들어오면 방을 지우고 다시 찾기
  if(m.ranked&&m.host===me&&m.guest&&!G.docs[m.guest]&&st.phase!=='over'&&m.status!=='done'&&Date.now()-(m.created||0)>20e3&&!G.inflight.has('mmto')){G.inflight.add('mmto');const gid=G.gid,gs=m.guest;
   (async()=>{for(const id of Object.keys(G.docs))await db.doc(`g/${gid}/p/${id}`).delete().catch(()=>{});await db.doc('g/'+gid).delete().catch(()=>{});await db.doc('mm/'+gs).delete().catch(()=>{});if(G.gid===gid){goLobby();toast('상대 미입장 · 다시 찾는 중');mmStart()}})();return}
  if(st.phase==='over'){
-  // 랭크전 결과: 베팅은 남기지 않고 '누가 이겼는지'만 각자 기록
+  // 랭크 게임 결과: 베팅은 남기지 않고 '누가 이겼는지'만 각자 기록
   if(m.ranked&&(m.host===me||m.guest===me)&&st.A&&st.B&&!G.inflight.has('res')){G.inflight.add('res');const id=G.gid+'-'+me,nk=u=>String(((G.docs[u]||{}).nick)||(u===m.host?m.hostNick:m.guestNick)||'').slice(0,12);
    const rec={gid:G.gid,A:st.A,B:st.B,na:nk(st.A),nb:nk(st.B),ended:Date.now(),w:st.winner||(st.reason==='확인 불일치'?'void':'draw'),by:me,why:String(st.reason||'').slice(0,20),turns:st.t};/* ECO */Object.assign(rec,ecoPeObj());
    db.doc('res/'+id).get().then(x=>x.exists?null:db.doc('res/'+id).set(rec)).catch(e=>{if(!(e&&e.code==='invalid_argument'))setTimeout(()=>G.inflight.delete('res'),5000)})}
@@ -3095,8 +3095,8 @@ function effects(){
 }
 function recompute(){
  if(G.meta){try{G.st=replay(G.gid,G.meta,G.docs)}catch(e){console.error(e);G.st=null}}
- if(G.st&&G.st.phase==='over'){markDone(G.gid);const sv=UI.review;UI.review=false;let v=null;try{v=vstate()}finally{UI.review=sv}if(v&&!(G.lastOver&&G.lastOver.hist.length>v.hist.length)){G.lastOver={hist:v.hist,A:v.A,B:v.B,names:v.names,me:v.me,winner:v.winner,reason:v.reason};if(v.me)archiveGame(G.lastOver,G.gid,(G.meta&&G.meta.ranked?'랭크전':'친구 대국')+' · '+(v.names[v.me===v.A?v.B:v.A]||''));aiLearnAfter(G.lastOver,'G'+G.gid)}}
- // 랭크전: 끝나기 전 두 사람 점수를 기억해 두었다가 끝나면 변동을 보여줌
+ if(G.st&&G.st.phase==='over'){markDone(G.gid);const sv=UI.review;UI.review=false;let v=null;try{v=vstate()}finally{UI.review=sv}if(v&&!(G.lastOver&&G.lastOver.hist.length>v.hist.length)){G.lastOver={hist:v.hist,A:v.A,B:v.B,names:v.names,me:v.me,winner:v.winner,reason:v.reason};if(v.me)archiveGame(G.lastOver,G.gid,(G.meta&&G.meta.ranked?'랭크 게임':'친구 대국')+' · '+(v.names[v.me===v.A?v.B:v.A]||''));aiLearnAfter(G.lastOver,'G'+G.gid)}}
+ // 랭크 게임: 끝나기 전 두 사람 점수를 기억해 두었다가 끝나면 변동을 보여줌
  if(G.meta&&G.meta.ranked&&G.st&&G.st.A&&G.st.B&&G.st.phase!=='over'&&!G.rkSnap&&RK.loaded){const P=rkP,Q=id=>({r:P(id).r,g:P(id).g,ws:P(id).ws||0,ls:P(id).ls||0});G.rkSnap={[G.st.A]:Q(G.st.A),[G.st.B]:Q(G.st.B),pw:pairWeight(G.st.A,G.st.B),sn:(RK.season||seasonOf(Date.now())).n}}
  if(G.st&&G.st.phase!=='designate')UI.sel=null;
  renderAll();effects();
@@ -3265,7 +3265,7 @@ const BOTS=(()=>{
  return out})();
 const BOTMAP=new Map(BOTS.map(b=>[b.id,b])),BOTPRE='bot:',isBot=id=>typeof id==='string'&&id.startsWith(BOTPRE);
 const kOf=g=>g<10?40:32,expOf=(a,b)=>1/(1+Math.pow(10,(b-a)/400));
-// AI 상대끼리의 랭크전: 시즌 첫날은 '배치 기간'으로 1시간에 BOT_GPH0판(매칭 점수가 가까운 60명 중 한 명), 그 뒤 BOT_GPH판(가까운 6명 중 한 명).
+// AI 상대끼리의 랭크 게임: 시즌 첫날은 '배치 기간'으로 1시간에 BOT_GPH0판(매칭 점수가 가까운 60명 중 한 명), 그 뒤 BOT_GPH판(가까운 6명 중 한 명).
 // 결과는 실제 승률(BOT_WIN)과 고정 씨앗으로 정해져서 서버 없이도 모든 폰이 같은 결과를 계산함
 // AI의 시즌 처음 BOT_KG판은 K=BOT_K0(빨리 제자리를 찾게) → 시뮬레이션에서 첫날부터 항아리 모양
 const BOT_GPH=20,BOT_GPH0=400,BOT_K0=100,BOT_KG=80,BOT_NN=6,BOT_NN0=60,BOT_EPOCH=Date.UTC(2026,10,25,15);
@@ -3673,14 +3673,14 @@ function renderRank(){
  $('#rkMe').innerHTML=`<div class="rkme">${emblem(t,58)}<div style="flex:1;min-width:0"><div class="lbl">${t?t.n:'배치 중'}<span class="tag">시즌 ${(RK.season||seasonOf(Date.now())).n}</span>${me.ws>=2?`<span class="tag strk w">${me.ws}연승</span>`:me.ls>=2?`<span class="tag strk l">${me.ls}연패</span>`:''}${UI.ready&&(!db||!room)?'<span class="tag">오프라인</span>':''}</div><div class="score num">${Math.round(me.r)}</div>${bar}${rec&&t?`<div class="rec">${rec}</div>`:''}${startLine(me)}${(()=>{const n=botQ().length;return n?`<div class="rec">서버 반영 대기 ${n}판</div>`:''})()}</div></div>`;
  // 상대가 상태를 '끝남'으로 바꿔도, 이 기기에서 끝난 것을 본 적이 없는 판은 이어하기로 보여 줌
  const now=Date.now(),act=lobbyRooms.filter(r=>r.ranked&&(r.status!=='done'||!gDone(r.id))&&(r.host===SEAT||r.guest===SEAT)&&r.guest&&now-(r.created||0)<24*3600e3&&!gDone(r.id))[0];
- $('#rkResume').innerHTML=act?`<div class="card resume"><div class="rt"><b>진행 중인 랭크전</b><span>vs ${esc(act.host===SEAT?act.guestNick:act.hostNick)} · ${ago(act.created)}</span></div><button class="go" data-act="enter" data-g="${esc(act.id)}" aria-label="이어하기"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>`:'';
+ $('#rkResume').innerHTML=act?`<div class="card resume"><div class="rt"><b>진행 중인 랭크 게임</b><span>vs ${esc(act.host===SEAT?act.guestNick:act.hostNick)} · ${ago(act.created)}</span></div><button class="go" data-act="enter" data-g="${esc(act.id)}" aria-label="이어하기"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>`:'';
  renderMM();
  const top=RK.list.slice(0,50),row=(p,i)=>{const tt=tierOf(p);return `<div class="rkrow${p.seat===SEAT?' me':''}${i<3?' r'+(i+1):''}" data-act="prof" data-u="${esc(p.seat)}" role="button" tabindex="0" aria-label="${esc(rkNick(p))} 프로필"><span class="n">${i<3?`<i>${i+1}</i>`:i+1}</span>${cosFrame(p.seat,emblem(tt,22),22)}${ecoRkNk(p)}<span class="sc">${tt.n} · ${Math.round(p.r)}</span></div>`};
  const off=UI.ready&&!db,pod=top.length>=3?`<div class="pod">${[1,0,2].map(i=>{const p=top[i],tt=tierOf(p),nk=esc(rkNick(p));return `<div class="pc p${i+1}${p.seat===SEAT?' me':''}" data-act="prof" data-u="${esc(p.seat)}" role="button" tabindex="0" aria-label="${i+1}위 ${nk} ${tt.n} ${Math.round(p.r)}점">${i===0&&tt!==CHAL?CROWN:''}${cosFrame(p.seat,emblem(tt,i===0?58:46),i===0?58:46)}<div class="pn" aria-hidden="true">${cosName(p.seat,nk)}${p.seat===SEAT?' (나)':''}</div><div class="ps" aria-hidden="true">${tt.n} · ${Math.round(p.r)}</div><div class="base" aria-hidden="true">${i+1}</div></div>`}).join('')}</div>`:'';
  {const pe=$('#rkPod');if(pe)pe.innerHTML=off||!RK.loaded?'':pod}
- {const lim=UI.rkAll?50:10,more=$('#rkMore');$('#rkBoard').innerHTML=off?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.slice(0,lim).map(row).slice(pod?3:0).join('')+(idx>=lim?`<div class="rkrow gap" aria-hidden="true"><span class="n">⋮</span></div>`+row(me,idx):''):'<p class="sub">랭크전 5판 후 등록</p>'):'<p class="sub">불러오는 중</p>';
+ {const lim=UI.rkAll?50:10,more=$('#rkMore');$('#rkBoard').innerHTML=off?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.slice(0,lim).map(row).slice(pod?3:0).join('')+(idx>=lim?`<div class="rkrow gap" aria-hidden="true"><span class="n">⋮</span></div>`+row(me,idx):''):'<p class="sub">랭크 게임 5판 후 등록</p>'):'<p class="sub">불러오는 중</p>';
   if(more){const on=!off&&RK.loaded&&top.length>10;more.classList.toggle('hide',!on);more.textContent=UI.rkAll?'접기':`11~${top.length}위 보기`;more.setAttribute('aria-expanded',UI.rkAll?'true':'false')}}
- {const tl=$('#rkTopL');if(tl)tl.innerHTML=off?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.slice(0,10).map(row).join('')+(idx>=10?`<div class="rkrow"><span class="n">…</span></div>`+row(me,idx):''):`<p class="sub">랭크전 5판 후 등록</p><div class="tiers">${tierRows()}</div>`):'<p class="sub">불러오는 중</p>'}
+ {const tl=$('#rkTopL');if(tl)tl.innerHTML=off?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.slice(0,10).map(row).join('')+(idx>=10?`<div class="rkrow"><span class="n">…</span></div>`+row(me,idx):''):`<p class="sub">랭크 게임 5판 후 등록</p><div class="tiers">${tierRows()}</div>`):'<p class="sub">불러오는 중</p>'}
 }
 // 내 줄은 지금 닉네임으로(서버 기록에 닉네임이 아직 없어도)
 const rkNick=p=>(p.seat===SEAT?myNick():p.nick)||'플레이어';
@@ -3690,7 +3690,7 @@ const tierPts=i=>[Math.round(kOf(PLACE*2)*.5*TUP[i]),Math.round(kOf(PLACE*2)*.5*
 const tierRows=pts=>[...TIERS,CHAL].map((t,i)=>{const [u,d]=tierPts(Math.min(i,TIERS.length-1));return `<div>${emblem(t,22)}<b>${t.n}</b><span>${t===CHAL?`매일 0시 마스터 상위 ${CHAL.top}명`:i===0?'900 미만':`${t.min} 이상`}</span>${pts?`<em class="tpts" aria-label="이기면 ${u}점 오르고 지면 ${d}점 내려감"><i class="u">+${u}</i><i class="d">−${d}</i></em>`:''}</div>`}).join('');
 function renderTiers(){
  $('#rkTiers').innerHTML=`<div class="thd"><span>같은 점수끼리 한 판</span><em class="tpts"><i>이기면</i><i>지면</i></em></div>`+tierRows(1);
- const c=myCode();$('#myCode').textContent=c?(UI.showCode?c:'K'+'•'.repeat(10)+c.slice(-4)):'랭크전 1판 후 생성';const sb=$('#showCode');if(sb){sb.classList.toggle('hide',!c);sb.textContent=UI.showCode?'숨김':'보기'}
+ const c=myCode();$('#myCode').textContent=c?(UI.showCode?c:'K'+'•'.repeat(10)+c.slice(-4)):'랭크 게임 1판 후 생성';const sb=$('#showCode');if(sb){sb.classList.toggle('hide',!c);sb.textContent=UI.showCode?'숨김':'보기'}
 }
 function renderAiRec(){
  let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}
@@ -3718,16 +3718,16 @@ function mmPairs(list,now){
   if(best){used.add(p.seat);used.add(best.seat);out.push([p,best])}}
  return out;
 }
-// 랭크전 점검: true면 새 매칭을 막음(진행 중인 판은 끝까지 둘 수 있음, 랭킹 보기는 그대로)
+// 랭크 게임 점검: true면 새 매칭을 막음(진행 중인 판은 끝까지 둘 수 있음, 랭킹 보기는 그대로)
 const RANK_MAINT=false;
 function mmStart(){
- if(RANK_MAINT){dialog('랭크전은 지금 점검 중이에요.<br>점검이 끝나면 다시 열려요.','확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
+ if(RANK_MAINT){dialog('랭크 게임은 지금 점검 중이에요.<br>점검이 끝나면 다시 열려요.','확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
  if(!rankOpen()){rankLockDlg();return}
  if(!needNick(mmStart))return;
  if(!UI.ready){toast('연결 확인 중');return}
- if(!db||!room){toast('랭크전 이용 불가');return}
- if(canWrite===false){toast('관전 전용 · 랭크전 불가');return}
- if(user&&user.firebase&&!(user.google&&user.google())){dialog('랭크전은 구글이나 이메일 계정을 연결하면 할 수 있어요.<br>지금까지 기록은 그대로 남아요.','계정 연결',()=>openAcct(mmStart));return}
+ if(!db||!room){toast('랭크 게임 이용 불가');return}
+ if(canWrite===false){toast('관전 전용 · 랭크 게임 불가');return}
+ if(user&&user.firebase&&!(user.google&&user.google())){dialog('랭크 게임은 구글이나 이메일 계정을 연결하면 할 수 있어요.<br>지금까지 기록은 그대로 남아요.','계정 연결',()=>openAcct(mmStart));return}
  ensureSecret();mmSub();renderTiers();MM.on=true;MM.busy=false;MM.since=Date.now();MM.botAt=MM.since+MM_BOT+Math.floor(Math.random()*MM_BOTJ);
  room.presence({mm:mmMe()}).catch(()=>{});mmPeers(true);renderMM();
 }
@@ -3736,10 +3736,10 @@ function rankLockDlg(){let top=0;LEVELS.forEach((_,x)=>{if(lvOpen(x)&&x<=1)top=x
 // 랭크가 처음 열리면 한 번: 열렸다는 안내 + 티어표 간단 설명
 function rankIntro(){if(!rankOpen())return;if(!(user&&user.firebase)&&window.__BO_FB!==false&&(rankIntro.n=(rankIntro.n||0)+1)<5){clearTimeout(rankIntro.t);rankIntro.t=setTimeout(rankIntro,2000);return}const seen=lget('bo-rkintro')==='1',fb=!!(user&&user.firebase),lk=!!(user&&user.google&&user.google()),needLg=fb&&!lk&&lget('bo-rklg')!=='1';
  if(seen&&!needLg)return;if(shOpen||!$('#dlg').classList.contains('hide')||!$('#welcome').classList.contains('hide')){clearTimeout(rankIntro.t);rankIntro.t=setTimeout(rankIntro,4000);return}lset('bo-rkintro','1');if(needLg)lset('bo-rklg','1');
- const toRank=()=>{goLobby();setTab('rank')},lg=needLg?`<span class="rklg">랭크전은 로그인하면 할 수 있어요</span><button class="linkbtn rklgem" data-act="rkacc">이메일로 로그인</button>`:'';
+ const toRank=()=>{goLobby();setTab('rank')},lg=needLg?`<span class="rklg">랭크 게임은 로그인하면 할 수 있어요</span><button class="linkbtn rklgem" data-act="rkacc">이메일로 로그인</button>`:'';
  const go=needLg?()=>{googleLink().then(r=>{if(r==='linked')toRank()})}:toRank,ok=needLg?'구글로 로그인':'랭크로 가기';
- if(seen){dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}랭크전 로그인</h3>${lg}</span>`,ok,go,'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH');return}
- dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}랭크전이 열렸어요</h3><span class="sub" style="display:block">비슷한 점수끼리 겨뤄 티어를 올려요</span><span class="tiers" style="display:grid">${tierRows()}</span><ul><li>처음 5판은 배치 · 시즌은 3달마다</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li></ul>${lg}</span>`,ok,go,'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH')}
+ if(seen){dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}랭크 게임 로그인</h3>${lg}</span>`,ok,go,'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH');return}
+ dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}랭크 게임이 열렸어요</h3><span class="sub" style="display:block">비슷한 점수끼리 겨뤄 티어를 올려요</span><span class="tiers" style="display:grid">${tierRows()}</span><ul><li>처음 5판은 배치 · 시즌은 3달마다</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li></ul>${lg}</span>`,ok,go,'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH')}
 function mmSub(){if(!db||MM.inboxSeat===SEAT)return;if(MM.inbox)try{MM.inbox()}catch(e){}MM.inboxSeat=SEAT;let first=true;MM.inbox=db.doc('mm/'+SEAT).onSnapshot(x=>{const f=first;first=false;if(!x.exists)return;
   // 구독 시점에 이미 있던 초대는 지난 것 → 지움. 이후 새로 온 초대만 받음(기기 시계 비교 안 함)
   if(f&&!MM.on){db.doc('mm/'+SEAT).delete().catch(()=>{});return}mmInvite(x.data())},()=>{})}
@@ -3807,7 +3807,7 @@ function renderMM(){
   lb.textContent='매칭 취소';b.classList.add('ghost');b.classList.add('mmon');
   const k=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · ±${win}점`;
   if(st.dataset.k!==k){st.dataset.k=k;st.textContent=k}}
- else{const ro=rankOpen();lb.textContent=RANK_MAINT?'랭크전 점검 중':'랭크전';b.classList.toggle('rlock',RANK_MAINT);b.classList.remove('ghost');b.classList.remove('mmon');b.classList.toggle('rlock',RANK_MAINT||!ro);st.dataset.k='';st.textContent=RANK_MAINT?'':!ro?'AI Normal을 이기면 열려요':!UI.ready?'연결 중':''}
+ else{const ro=rankOpen();lb.textContent=RANK_MAINT?'랭크 게임 점검 중':'랭크 게임';b.classList.toggle('rlock',RANK_MAINT);b.classList.remove('ghost');b.classList.remove('mmon');b.classList.toggle('rlock',RANK_MAINT||!ro);st.dataset.k='';st.textContent=RANK_MAINT?'':!ro?'AI Normal을 이기면 열려요':!UI.ready?'연결 중':''}
 }
 function loadCode(){
  const v=($('#codeIn').value||'').trim();let seat=null,sec=null;
@@ -3846,10 +3846,10 @@ function setTheme(v){v=v==='light'?'light':'dark';document.documentElement.datas
 const LEVELS=[['beginner','Easy'],['mid','Normal'],['pro','Hard'],['ultimate','Godlike']];
 // 난이도 한 줄 소개(고른 난이도 아래)
 const LV_LINE={beginner:'처음이라면 여기서',mid:'기본기를 익히는 단계',pro:'본격적인 심리전',ultimate:'불패의 신급 AI'};
-// 단계 열기: 앞 단계(또는 그 위 단계)를 한 번이라도 이기면 다음 단계가 열림. 랭크전은 고수 이상을 이겨야 열림
+// 단계 열기: 앞 단계(또는 그 위 단계)를 한 번이라도 이기면 다음 단계가 열림. 랭크 게임은 고수 이상을 이겨야 열림
 function aiWinsMap(){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}return r&&typeof r==='object'&&!Array.isArray(r)?r:{}}
 function aiTopWin(){const r=aiWinsMap();let top=-1;LEVELS.forEach(([k],i)=>{const x=r[k];if(x&&typeof x==='object'&&int(x.w)>0)top=i});return top}
-const lvOpen=i=>i<=aiTopWin()+1,rankOpen=()=>aiTopWin()>=1; // 랭크전: AI 중수를 이기면 열림
+const lvOpen=i=>i<=aiTopWin()+1,rankOpen=()=>aiTopWin()>=1; // 랭크 게임: AI 중수를 이기면 열림
 function lvFix(){const i=LEVELS.findIndex(([k])=>k===UI.aiLevel);if(i<0||!lvOpen(i)){let j=0;LEVELS.forEach((_,x)=>{if(lvOpen(x))j=x});UI.aiLevel=LEVELS[j][0]}}
 function renderAiTime(){const on=lget('bo-aitime')==='1';$('#aitime').innerHTML=`<button data-act="aitime" data-v="0" aria-pressed="${!on}"><svg viewBox="0 0 24 24"><path d="M12 12c-2-2.6-3.6-4-5.5-4a4 4 0 0 0 0 8c1.9 0 3.5-1.4 5.5-4zm0 0c2 2.6 3.6 4 5.5 4a4 4 0 0 0 0-8c-1.9 0-3.5 1.4-5.5 4z"/></svg>무제한</button><button data-act="aitime" data-v="1" aria-pressed="${on}"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>20·30초</button>`}
 function renderFirst(){}
@@ -3889,7 +3889,7 @@ function renderRooms(){try{renderDiag()}catch(e){}
 const L={
  s:null,
  start(first,ai,opt){const bot=opt&&opt.bot||null;this.savedK='';if(ai==='ultimate'){lrnApply();lrnLoadShared()}const timed=!!bot||(!!ai&&lget('bo-aitime')==='1');const nmA=(($('#nameA')||{}).value||'').trim().slice(0,8),nmB=(($('#nameB')||{}).value||'').trim().slice(0,8);this.s={bot,td:timed?20:0,tb:timed?30:0,ph0:0,toThis:false,names:ai?null:{A:nmA||'흑',B:nmB||'백'},ai:ai||null,mem:ai?aiNewMem(crypto.getRandomValues(new Uint32Array(1))[0]):null,id:rhex(4),firstBy:first?'loser':'coin',bd:emptyBoard(),t:0,first:first||(crypto.getRandomValues(new Uint8Array(1))[0]&1?'A':'B'),pts:{A:0,B:0},warn:{A:0,B:0},hist:[],last:null,phase:'',stage:0,bets:{},cells:null,winner:null,reason:''};
-  // AI 상대 랭크전: 시작할 때 두 점수를 적어 두고(결과 화면의 점수 변동용), 끝나기 전에 앱을 닫으면 다음에 열 때 패로 기록
+  // AI 상대 랭크 게임: 시작할 때 두 점수를 적어 두고(결과 화면의 점수 변동용), 끝나기 전에 앱을 닫으면 다음에 열 때 패로 기록
   // 시작할 때 점수를 새로 계산해 두고(st), 결과 문서에도 st를 남김 → 예상치 = 실제 반영치
   if(bot){const st=Date.now();try{rankCompute(st-1)}catch(e){}const P=rkP,o=BOTPRE+bot.id;this.s.rk={st,me:{r:P(SEAT).r,g:P(SEAT).g,ws:P(SEAT).ws||0,ls:P(SEAT).ls||0},op:{r:P(o).r,g:P(o).g,bot:1},pw:pairWeight(SEAT,o),sn:(RK.season||seasonOf(Date.now())).n};lset('bo-bplay',JSON.stringify({gid:'k'+this.s.id,bot:bot.id}))}
   this.next()},
@@ -3918,16 +3918,16 @@ const L={
    else if(s.phase==='bet'&&s.stage===4)p.innerHTML=waitBox('상대 봉인 기다리는 중');
    else if(s.phase==='bet'){UI.bet=[1,1,1];UI.bcol=0;p.innerHTML=`${hint(betTip(s.t,s.bd,s.cells,1))}${betRows(s.cells,s.pts.A)}${betFoot('lsubmit','봉인')}`;updateBetSum(s.pts.A)}
    else if(s.phase==='over'&&s.bot){const dl=botDelta(s),pw=s.rk&&s.rk.pw.n,took=s.hist.reduce((a,x)=>a+x.win.filter(w=>w==='A').length,0),cells=s.hist.reduce((a,x)=>a+x.cells.length,0);
-    p.innerHTML=overSheet(v,{vs:'랭크전 · '+esc(s.bot.nick),stats:[[took,'가져간 칸'],[cells-took,'내준 칸'],[dl==null?'–':(dl>=0?'+':'')+dl,'랭크 점수',dl==null?'':dl>=0?'up':'dn']],
+    p.innerHTML=overSheet(v,{vs:'랭크 게임 · '+esc(s.bot.nick),stats:[[took,'가져간 칸'],[cells-took,'내준 칸'],[dl==null?'–':(dl>=0?'+':'')+dl,'랭크 점수',dl==null?'':dl>=0?'up':'dn']],
      note:(s.rk&&dl!=null?tierMove(s.rk.me,dl)+streakNote(s.rk.me,s.winner==null?.5:s.winner==='A'?1:0,s.rk.pw.w):'')+(snNew(s.rk)?'<p class="note" style="margin:0;text-align:center">시즌이 바뀌어 새 시즌 점수에 반영돼요</p>':'')+(pw?`<p class="note" style="margin:0;text-align:center">같은 상대 ${pw+1}번째 · 반영 ${['','½','¼','없음'][Math.min(pw,3)]}</p>`:''),primary:'<button class="btn wide" data-act="remm">다시 매칭</button>'})}
    else if(s.phase==='over'){const u=s.unl,nx=u&&u.next?LEVELS.find(([k])=>k===u.next):null;
     // 열린 단계·랭크는 한 줄에 하나씩(가운데 점으로 이어 붙이면 좁은 화면에서 어색하게 끊김)
-    const note=u?`<p class="unl">${IC.unlock}<span>${[nx?`${nx[1]} 단계가 열렸어요`:'',u.rank?'랭크전이 열렸어요':''].filter(Boolean).join('<br>')}</span></p>`:'';
+    const note=u?`<p class="unl">${IC.unlock}<span>${[nx?`${nx[1]} 단계가 열렸어요`:'',u.rank?'랭크 게임이 열렸어요':''].filter(Boolean).join('<br>')}</span></p>`:'';
     // 처음 판을 졌으면 다음에 할 일을 짧게
     const first=!u&&s.winner==='B'&&s.ai==='beginner'&&gamesPlayed()<=2?'<p class="note" style="text-align:center;margin:0 0 8px">'+ptT('요령: 승부 칸에 몰아 걸고 나머지는 1{P}씩')+'</p>':'';
-    const ag='<button class="btn ghost" data-act="lagain">한 판 더</button>',rk='<button class="btn ghost" data-act="lrank">랭크전</button>';
+    const ag='<button class="btn ghost" data-act="lagain">한 판 더</button>',rk='<button class="btn ghost" data-act="lrank">랭크 게임</button>';
     const o=nx?{primary:`<button class="btn wide" data-act="lnext" data-k="${nx[0]}">${nx[1]} 도전</button>`,extra:ag+(u.rank?rk:''),extraN:u.rank?2:1}
-     :u&&u.rank?{primary:'<button class="btn wide" data-act="lrank">랭크전 하러 가기</button>',extra:ag,extraN:1}:{primary:'<button class="btn wide" data-act="lagain">한 판 더</button>'};
+     :u&&u.rank?{primary:'<button class="btn wide" data-act="lrank">랭크 게임 하러 가기</button>',extra:ag,extraN:1}:{primary:'<button class="btn wide" data-act="lagain">한 판 더</button>'};
     p.innerHTML=overSheet(v,Object.assign({vs:esc(v.names.B),note:note+first},o))}
    setSheet((s.phase==='designate'&&s.sun==='A')||(s.phase==='bet'&&s.stage!==4));return}
   const key=['L',s.phase,s.t,s.stage,JSON.stringify(UI.sel)].join('|');if(key===UI.panelKey){if(s.phase==='bet')updateBetSum(s.pts[this.actor()]);return}UI.panelKey=key;
@@ -3941,7 +3941,7 @@ const L={
   else if(s.phase==='over')p.innerHTML=overSheet(v,{title:s.winner?nm(s.winner)+' 승':'무승부',primary:'<button class="btn wide" data-act="lagain">한 판 더</button>'});
   setSheet(s.phase==='designate'||(s.phase==='bet'&&(s.stage===1||s.stage===3)));
  },
- save(){const s=this.s;if(!s)return;if(s.phase==='over'&&!s.arch){s.arch=1;const v=this.vs();archiveGame({hist:s.hist,A:'A',B:'B',names:v.names,me:v.me,winner:s.winner,reason:s.reason,ai:!!s.ai&&!s.bot},'L'+s.id,s.bot?'랭크전 · '+s.bot.nick:s.ai?(AI_LEVELS[s.ai].name+' AI'):'한 폰 대국')}if(!s.ai||s.bot)return;if(s.phase==='over'){try{localStorage.removeItem('bo-local')}catch(e){}delete mem['bo-local']}else{const k=s.phase+'|'+s.t;if(this.savedK===k)return;this.savedK=k;
+ save(){const s=this.s;if(!s)return;if(s.phase==='over'&&!s.arch){s.arch=1;const v=this.vs();archiveGame({hist:s.hist,A:'A',B:'B',names:v.names,me:v.me,winner:s.winner,reason:s.reason,ai:!!s.ai&&!s.bot},'L'+s.id,s.bot?'랭크 게임 · '+s.bot.nick:s.ai?(AI_LEVELS[s.ai].name+' AI'):'한 폰 대국')}if(!s.ai||s.bot)return;if(s.phase==='over'){try{localStorage.removeItem('bo-local')}catch(e){}delete mem['bo-local']}else{const k=s.phase+'|'+s.t;if(this.savedK===k)return;this.savedK=k;
   // AI의 봉인된 베팅은 저장하지 않음(이어 둘 때 새로 봉인)
   const c=Object.assign({},s);delete c.aiBet;delete c.aiSalt;delete c.aiSeal;delete c.aiTok;lset('bo-local',JSON.stringify(c))}},
  resume(){const s=loadLocal();if(!s||!s.ai){toast('이어 둘 판 없음');renderAiResume();return}if(s.td&&s.phase!=='over'){s.ph0=Date.now();s.toThis=false}
@@ -3956,7 +3956,7 @@ const L={
  cover(who){const c=$('#cover'),n=esc((this.s.names||{})[who]||(who==='A'?'흑':'백'));c.innerHTML=`<button class="btn ghost small" data-act="lobby" style="position:absolute;left:16px;top:calc(14px + env(safe-area-inset-top));background:rgba(255,255,255,.08);color:#e9f0ee">나가기</button><div><h2><span class="st ${who==='A'?'k':'w'}"></span>${n} 차례</h2><p>${n}에게 폰을 넘겨 주세요</p><button class="btn" data-act="uncover" style="margin-top:16px;min-width:200px">${n} 베팅 보기</button></div>`;c.classList.remove('hide')},
  submit(){const s=this.s,who=this.actor();if(!validBets(UI.bet,s.pts[who]))return;s.bets[who]=UI.bet.slice();
   if(s.ai){this.aiPrep(true);s.bets.B=s.aiBet;
-   // AI 상대 랭크전: 상대가 아직 '고민 중'이면 봉인될 때까지 기다렸다가 개봉(사람과 같은 흐름)
+   // AI 상대 랭크 게임: 상대가 아직 '고민 중'이면 봉인될 때까지 기다렸다가 개봉(사람과 같은 흐름)
    if(s.bot&&Date.now()<s.botAt){s.stage=4;UI.panelKey='';const t=s.t;setTimeout(()=>{if(this.s===s&&s.t===t&&s.phase==='bet'&&s.stage===4)this.resolve()},s.botAt-Date.now());renderAll();return}}
   else if(s.stage===1){s.stage=2;UI.panelKey='';renderAll();return}
   this.resolve()},
@@ -4007,11 +4007,11 @@ function aiLearnAfter(d,key){try{
  clearTimeout(lrnT);lrnT=setTimeout(()=>{const doc=aiLearnDoc(agg);if(doc&&db&&SEAT)(user&&user.firebase?db.doc('ailearn/'+SEAT).set(lrnOut(doc)):db.doc('ailearn/'+SEAT).update(doc)).catch(()=>{})},1500)
 }catch(e){}}
 // ===== AI 대국 기록 모으기: 끝난 판(공개된 베팅)을 닉네임 없이 서버에 저장 → Ultimate 개선 자료 =====
-// 학습 자료로 쌓는 판: Ultimate 대국 전부 + 랭크전 AI 상대 대국 전부(초보·중수·고수 연습판은 안 쌓음)
+// 학습 자료로 쌓는 판: Ultimate 대국 전부 + 랭크 게임 AI 상대 대국 전부(초보·중수·고수 연습판은 안 쌓음)
 function aiGameUpload(s){try{if(!(db&&SEAT&&user&&user.firebase)||!s||!s.ai||!(s.bot||s.ai==='ultimate')||!Array.isArray(s.hist)||!s.hist.length)return;
  const hist=s.hist.slice(0,300).map(x=>({t:x.t|0,sun:x.sun,cells:x.cells,bA:x.bets.A,bB:x.bets.B,win:x.win}));
  db.doc('aigames/'+SEAT+'_'+s.id).set(Object.assign({by:SEAT,at:Date.now(),level:s.ai,winner:s.winner||null,reason:String(s.reason||'').slice(0,12),first:s.first==='B'?'B':'A',timed:!!s.td,v:2,hj:JSON.stringify(hist)},s.bot?{rk:true,bot:s.bot.id}:{})).catch(()=>{})}catch(e){}}
-// ===== AI 상대 랭크전 결과: 끝나면 서버 bres에 한 번 저장(실패하면 폰에 두었다가 다음에 다시) =====
+// ===== AI 상대 랭크 게임 결과: 끝나면 서버 bres에 한 번 저장(실패하면 폰에 두었다가 다음에 다시) =====
 function botDelta(s){const k=s&&s.rk;if(!k||snNew(k))return null;const S=s.winner==null?.5:s.winner==='A'?1:0,raw=gainOf(k.me,k.op,S,k.pw.w);return Math.round(k.me.r+raw)-Math.round(k.me.r)}
 function botFinish(s){if(!s||!s.bot||s.bdone)return;s.bdone=1;lrm('bo-bplay');botQueue({gid:'k'+s.id,st:s.rk&&typeof s.rk.st==='number'?s.rk.st:undefined,bot:s.bot.id,w:s.winner==='A'?'me':s.winner==='B'?'bot':'draw',turns:s.t|0,why:String(s.reason||'').slice(0,20)})}
 const botQ=()=>{let q=[];try{q=JSON.parse(lget('bo-bpend')||'[]')}catch(e){}return Array.isArray(q)?q.filter(x=>x&&typeof x==='object'&&typeof x.gid==='string'):[]};
@@ -4136,7 +4136,7 @@ function agoF(ms){if(!ms)return '';const d=Math.max(0,Date.now()-ms),m=6e4;if(d<
 const frHM=ms=>{const d=new Date(ms);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
 // 접속 표시: 친구만(모르는 사람·AI는 늘 '정보 없음'으로 같게 보임)
 function frStat(u){if(!frIsF(u))return null;const o=FR.ons.get(u);if(!o||o.hs)return null;const fresh=o.at&&Date.now()-o.at<FR_FRESH;
- if(fresh&&o.st==='r')return{c:'g',t:'랭크전 중'};if(fresh&&o.st==='g')return{c:'g',t:'대국 중'};if(fresh&&o.st==='on')return{c:'on',t:'접속 중'};
+ if(fresh&&o.st==='r')return{c:'g',t:'랭크 게임 중'};if(fresh&&o.st==='g')return{c:'g',t:'대국 중'};if(fresh&&o.st==='on')return{c:'on',t:'접속 중'};
  return o.at?{c:'',t:agoF(o.at)+' 접속'}:null}
 // 글 거르기(앱에서만 하는 간단한 거름): 욕설은 별표, 링크·전화번호는 보내지 않음(받은 글도 가려서 보여 줌)
 const FR_BAD=['시발','씨발','씨빨','시바','ㅅㅂ','ㅆㅂ','병신','븅신','ㅂㅅ','개새끼','개색','지랄','좆','존나','졸라','닥쳐','꺼져','미친놈','미친년','엠창','느금','니애미','애미','fuck','shit','bitch'];
@@ -4200,7 +4200,7 @@ function frCounts(){let un=0,rq=0,iv=0;if(frOk())for(const p of FR.pairs.values(
 function frBadges(){const c=frCounts(),txt=c.n>99?'99+':String(c.n);
  document.querySelectorAll('.tabbar [data-k=pal]').forEach(b=>{const e=b.querySelector('.tbn');if(e){e.textContent=c.n?txt:'';e.classList.toggle('on',c.n>0)}b.setAttribute('aria-label',c.n?`친구 · 새 소식 ${txt}`:'친구')});
  const gb=$('#frBadge');if(gb){const show=c.n>0&&lget('bo-frgame')!=='off'&&UI.view==='game'&&UI.mode!=='tut';gb.classList.toggle('hide',!show);
-  // 랭크전 중에는 숫자 없이 점만
+  // 랭크 게임 중에는 숫자 없이 점만
   const rk=UI.mode==='online'&&G.meta&&G.meta.ranked;gb.querySelector('b').textContent=rk?'':txt;gb.setAttribute('aria-label',`친구 소식 ${txt}`)}}
 
 // ----- 친구 탭 -----
@@ -4343,8 +4343,8 @@ async function frLink(P){let d=null;try{const x=await db.doc('fc/'+P.c).get();d=
 function frH2H(u){const g=new Map(),rk=new Set();
  for(const x of archList()){const d=x.d;if(!d||d.me!==SEAT)continue;let res=null;
   if(GIDRE.test(x.key)&&(d.A===u||d.B===u)&&d.A!==d.B)res=d.winner==null?'d':d.winner===SEAT?'w':'l';
-  else if(isBot(u)&&/^L/.test(x.key)&&x.label==='랭크전 · '+frNameOf(u))res=d.winner==null?'d':d.winner===d.me?'w':'l';
-  if(res){const k=GIDRE.test(x.key)?x.key:'k'+x.key.slice(1);g.set(k,res);if(String(x.label).startsWith('랭크전'))rk.add(k)}}
+  else if(isBot(u)&&/^L/.test(x.key)&&x.label==='랭크 게임 · '+frNameOf(u))res=d.winner==null?'d':d.winner===d.me?'w':'l';
+  if(res){const k=GIDRE.test(x.key)?x.key:'k'+x.key.slice(1);g.set(k,res);if(String(x.label).startsWith('랭크 게임'))rk.add(k)}}
  if(isBot(u)){const id=u.slice(BOTPRE.length);for(const d of RK.bdocs||[])if(d&&d.by===SEAT&&d.bot===id&&typeof d.gid==='string'&&['me','bot','draw'].includes(d.w)){g.set(d.gid,d.w==='me'?'w':d.w==='bot'?'l':'d');rk.add(d.gid)}}
  else{const by=new Map();for(const d of RK.docs||[])if(d&&typeof d.gid==='string'&&((d.A===SEAT&&d.B===u)||(d.A===u&&d.B===SEAT))){const o=by.get(d.gid);if(!o||d.by===SEAT)by.set(d.gid,d)}
   for(const [gid,d] of by){if(d.w==='void')continue;g.set(gid,d.w===SEAT?'w':d.w===u?'l':'d');rk.add(gid)}}
@@ -4367,9 +4367,9 @@ function frRenderProf(){if(shOpen!=='prof'||!FR.prof)return;const u=FR.prof,me=u
   if(!bk)links+=`<button class="linkbtn" data-act="frbk" data-u="${U}" data-n="${N}">차단</button>`;links+=`<button class="linkbtn" data-act="frrepo" data-u="${U}" data-n="${N}">신고</button>`}
  $('#pfBody').innerHTML=`<div class="pfh">${cosFrame(u,emblem(t,64),64)}<div class="pft"><b id="pfNick">${cosName(u,N)}</b>${cosTitle(u)}${stat}</div></div>
   <div class="pfg"><div><small>티어</small><b>${t?t.n:'배치 중'}</b></div><div><small>점수</small><b class="num">${Math.round(P.r)}</b></div><div><small>순위</small><b class="num">${t&&idx>=0?idx+1+'위':'—'}</b></div>
-  <div class="w2"><small>시즌 ${(RK.season||seasonOf(Date.now())).n} 랭크전</small><b class="num">${rec}</b></div><div><small>연속</small><b>${streak}</b></div></div>
-  ${vs?`<div class="pfvs"><span class="lbl">나와의 전적</span><b class="num">${vs.n?`${vs.w}승 ${vs.l}패${vs.d?` ${vs.d}무`:''}`:'아직 없음'}</b><span>${vs.n?(vs.rk===vs.n?'랭크전':vs.rk?`랭크 ${vs.rk} · 일반 ${vs.n-vs.rk}`:'일반 게임'):''}</span></div>`:''}
-  ${!P.g&&!t?`<p class="note pfnote">랭크전 ${PLACE}판을 마치면 티어가 정해져요</p>`:''}
+  <div class="w2"><small>시즌 ${(RK.season||seasonOf(Date.now())).n} 랭크 게임</small><b class="num">${rec}</b></div><div><small>연속</small><b>${streak}</b></div></div>
+  ${vs?`<div class="pfvs"><span class="lbl">나와의 전적</span><b class="num">${vs.n?`${vs.w}승 ${vs.l}패${vs.d?` ${vs.d}무`:''}`:'아직 없음'}</b><span>${vs.n?(vs.rk===vs.n?'랭크 게임':vs.rk?`랭크 ${vs.rk} · 일반 ${vs.n-vs.rk}`:'일반 게임'):''}</span></div>`:''}
+  ${!P.g&&!t?`<p class="note pfnote">랭크 게임 ${PLACE}판을 마치면 티어가 정해져요</p>`:''}
   ${acts?`<div class="pfa">${acts}</div>`:me&&UI.view==='lobby'?'<div class="pfa"><button class="btn" data-act="ecoopen" data-v="inv">내 보관함</button></div>':''}${links?`<div class="pfm">${links}</div>`:''}`}
 
 // ----- 1:1 대화 -----
@@ -4378,7 +4378,7 @@ function frOpenChat(u){if(!frIsF(u)){frOpenProf(u);return}FR.chat=u;FR.rx=null;F
 function frRenderChat(scroll){if(shOpen!=='chat'||!FR.chat)return;const u=FR.chat,p=frPair(u),log=$('#chLog');
  if(!p||p.st!=='ok'){closeSheet();toast('친구가 아니에요');return}
  const s=frS(p),o=frO(p),st=frStat(u),nk=frNick(p),ro=int(p['r'+o]);
- $('#chEmb').innerHTML=frEmb(u,34);$('#chNick').textContent=nk;$('#chSt').textContent=st?(st.t==='랭크전 중'?'랭크전 중 · 답이 늦을 수 있어요':st.t):frRankTxt(u);
+ $('#chEmb').innerHTML=frEmb(u,34);$('#chNick').textContent=nk;$('#chSt').textContent=st?(st.t==='랭크 게임 중'?'랭크 게임 중 · 답이 늦을 수 있어요':st.t):frRankTxt(u);
  const atBot=log.scrollHeight-log.scrollTop-log.clientHeight<60,ms=frMsgs(p),byI=new Map(ms.map(x=>[x.i,x])),rx=new Map();
  for(const x of ms)if(x.e&&byI.has(x.e)&&FR_RX.includes(x.t)){const a=rx.get(x.e)||[];a.push(x.t);rx.set(x.e,a)}
  let h='<div class="chsafe"><span>개인정보는 나누지 마세요 · 신고는 ⋯</span></div>',day='';
@@ -4600,7 +4600,7 @@ document.addEventListener('click',e=>{
  else if(a==='tabback')setTab(UI.backTab||'home');
  else if(a==='remm'){leaveRoom().then(()=>{setTab('rank',true);mmStart()})}
  else if(a==='showcode'){UI.showCode=!UI.showCode;renderTiers()}
- else if(a==='copycode'){const c=myCode();if(!c){toast('랭크전 1판 후 생성');return}(navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).then(()=>toast('복사됨'),()=>{UI.showCode=true;renderTiers();const r=document.createRange();r.selectNodeContents($('#myCode'));const se=getSelection();se.removeAllRanges();se.addRange(r);toast('길게 눌러 복사')})}
+ else if(a==='copycode'){const c=myCode();if(!c){toast('랭크 게임 1판 후 생성');return}(navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).then(()=>toast('복사됨'),()=>{UI.showCode=true;renderTiers();const r=document.createRange();r.selectNodeContents($('#myCode'));const se=getSelection();se.removeAllRanges();se.addRange(r);toast('길게 눌러 복사')})}
  else if(a==='loadcode')loadCode();
  else if(a==='review')RV.open();
  else if(a==='rvprev')RV.go(RV.i-1);
@@ -4778,7 +4778,7 @@ const use=n=>window.claude&&typeof window.claude.use==='function'?Promise.resolv
    // 새로 생긴 결과만 읽음(앱을 열 때마다 300건씩 읽지 않게)
    db.collection('res').where('ended','>',since).orderBy('ended','desc').limit(1000).onSnapshot(qs=>{if(!(qs.metadata&&qs.metadata.fromCache))RK.live.res=1;qs.docs.forEach(x=>{const v=x.data();if(v&&typeof v==='object'&&typeof v.ended==='number')map.set(x.id,{...v,id:x.id})});
     const all=[...map.values()].sort((a,b)=>a.ended-b.ended).slice(-3000);RK.docs=all;try{lset('bo-res',JSON.stringify(all))}catch(e){}clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)},()=>{RK.loaded=true;renderRank()});
-   // AI 상대와 둔 랭크전 결과(bres)도 같은 방식으로(폰에 저장해 두고 새로 생긴 것만 읽음)
+   // AI 상대와 둔 랭크 게임 결과(bres)도 같은 방식으로(폰에 저장해 두고 새로 생긴 것만 읽음)
    {let bc=[];try{bc=JSON.parse(lget('bo-bres')||'[]')}catch(e){}if(!Array.isArray(bc))bc=[];bc=bc.filter(x=>x&&typeof x==='object'&&typeof x.id==='string'&&typeof x.ended==='number');
     const bs=bc.length?Math.max(...bc.map(x=>x.ended))-120e3:0,bm=new Map(bc.map(x=>[x.id,x]));RK.bdocs=[...bm.values()];
     db.collection('bres').where('ended','>',bs).orderBy('ended','desc').limit(1000).onSnapshot(qs=>{if(!(qs.metadata&&qs.metadata.fromCache))RK.live.bres=1;qs.docs.forEach(x=>{const v=x.data();if(v&&typeof v==='object'&&typeof v.ended==='number')bm.set(x.id,{...v,id:x.id})});
@@ -5040,7 +5040,7 @@ function renderAna(){const box=$('#anaBody');if(!box)return;const R=anaCalc(arch
   const lz=Object.entries(R.lose).sort((a,b)=>b[1]-a[1]),lt=lz.reduce((a,b)=>a+b[1],0);
   if(lt){h+=`<p class="lbl">자주 지는 장면</p>`+lz.slice(0,2).map(([k,v])=>row(ANA_LOSE[k],v+'판',anaPct(v,lt)+'%',bar(v,lz[0][1],'var(--warn)'))).join('')}
   if(R.n<5)h+='<p class="note anote">판 수가 적어 참고용이에요</p>'}
- h+=`<p class="lbl">랭크전</p>`+(rk&&rk.g?row(`${rk.w}승 ${rk.l}패${rk.d?' '+rk.d+'무':''}`,anaPct(rk.w,rk.g)+'%',rk.g+'판',bar(anaPct(rk.w,rk.g),100)):'<p class="sub" style="margin:0">이번 시즌 기록 없음</p>');
+ h+=`<p class="lbl">랭크 게임</p>`+(rk&&rk.g?row(`${rk.w}승 ${rk.l}패${rk.d?' '+rk.d+'무':''}`,anaPct(rk.w,rk.g)+'%',rk.g+'판',bar(anaPct(rk.w,rk.g),100)):'<p class="sub" style="margin:0">이번 시즌 기록 없음</p>');
  box.innerHTML=h;const n=$('#anaN');if(n)n.textContent=R.n?`이 기기 ${R.n}판`:''}
 
 // ===== 5. 대국 중 이모트: 보낸 사람의 돌(흑·백) 캐릭터 그림 12종. 인라인 SVG로 직접 그림(외부 이미지 없음) =====
@@ -5072,7 +5072,7 @@ function emoSVG(k,col){const ink=col===1?'#F6EEDD':'#2a2420',body=`url(#fxs${col
   case 11:face=happy(24,30)+happy(40,30)+`<path d="M26 37.5q6 6 12 0z" fill="${ink}"/>`;over=hand(27,50)+hand(37,50)+st('M20 45l-5-3M19 52h-6M44 45l5-3M45 52h6',2.2,Lm);break}
  return `<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="32" cy="36.6" r="22.4" fill="#2a1806" opacity=".18"/><circle cx="32" cy="35" r="22" fill="${body}" stroke="${rim}" stroke-opacity="${col===1?.35:.55}" stroke-width="1.2"/>${under}${face}${over}</svg>`}
 const emoMuted=()=>lget('bo-emomute')==='1';
-// 이모트를 쓸 수 있는 대국: 온라인(내가 둔 판) · AI 대국(AI 상대 랭크전 포함). 복기·튜토리얼·한 폰 대국 제외
+// 이모트를 쓸 수 있는 대국: 온라인(내가 둔 판) · AI 대국(AI 상대 랭크 게임 포함). 복기·튜토리얼·한 폰 대국 제외
 function emoCtx(){if(UI.view!=='game'||UI.review)return null;const vs=vstate();if(!vs||!vs.A)return null;
  if(UI.mode==='online'){if(!vs.me||!G.room||!G.meta||!G.meta.guest)return null;return{kind:'online',vs,me:vs.me,op:vs.me===vs.A?vs.B:vs.A}}
  if(UI.mode==='local'&&L.s&&L.s.ai)return{kind:L.s.bot?'bot':'ai',vs,me:'A',op:'B'};return null}
@@ -5097,7 +5097,7 @@ function emoPeers(c){if(FX.emo.gid!==G.gid){FX.emo={seen:{},gid:G.gid,sent:FX.em
   if(p.you||pr.seat===SEAT){if(!FX.emo.last||FX.emo.last.t<e.t)FX.emo.last={k:e.k,t:e.t};continue}
   if(pr.seat!==vs.A&&pr.seat!==vs.B)continue;const old=FX.emo.seen[pr.seat];FX.emo.seen[pr.seat]=e.t;
   if(old===undefined?Math.abs(Date.now()-e.t)<15000:e.t!==old)emoShow(pr.seat,e.k,false)}}
-// AI 반응(아주 가끔): 사람이 보낸 이모트에 답(25%, 랭크전 AI 20%) · 대국이 끝났을 때(이기면 20%, 지면 30%) · 판당 최대 3번, 반응끼리 20초 이상
+// AI 반응(아주 가끔): 사람이 보낸 이모트에 답(25%, 랭크 게임 AI 20%) · 대국이 끝났을 때(이기면 20%, 지면 30%) · 판당 최대 3번, 반응끼리 20초 이상
 const EMO_REPLY={0:[0],1:[10,0],2:[8,7],3:[8,4,7],4:[8,4],5:[6,10],6:[10,1],7:[7,2],8:[8,3],9:[8,7],10:[10,0],11:[10,11]};
 function emoAiState(){const s=L.s;if(!s)return null;if(!FX.emo.ai||FX.emo.ai.id!==s.id)FX.emo.ai={id:s.id,n:0,at:0,over:false,q:null};return FX.emo.ai}
 function emoAiSay(k,delay){const st=emoAiState();if(!st||st.n>=3||Date.now()-st.at<20000)return;st.n++;st.at=Date.now()+delay;const id=L.s.id;
@@ -5116,7 +5116,7 @@ function emoPick(on){const pk=$('#emoPick');if(!pk)return;const b=$('#emoBtn');i
  const r=b.getBoundingClientRect();pk.style.top=Math.round(r.bottom+6)+'px';pk.style.right='auto';pk.classList.remove('hide');{const w=pk.offsetWidth||312;pk.style.left=Math.max(8,Math.min(innerWidth-w-8,Math.round(r.right-w)))+'px'}b.setAttribute('aria-expanded','true');
  setTimeout(()=>{const f=pk.querySelector('.emoi:not([disabled])')||pk.querySelector('input');if(f)f.focus({preventScroll:true})},30)}
 
-// ===== 7. 시즌 결산: 시즌이 바뀐 뒤 처음 앱을 열면 한 번(랭크전을 둔 사람만) =====
+// ===== 7. 시즌 결산: 시즌이 바뀐 뒤 처음 앱을 열면 한 번(랭크 게임을 둔 사람만) =====
 // FEAT-MERGE(rank3): 랭크 개편팀 사본의 rankCalc(SS,LT,docs,bdocs)·RESET·cfg/season{n}(시즌 n 최종 기록 {n,at,v,p:{자리:[티어,점수,판수]}})이 있으면 그것을 씀.
 //  지금 코드(base)에는 없어서: ① rankCompute를 '그 시즌 마지막 순간'으로 시계를 돌려 한 번 계산(끝나면 원래대로) ② 다음 시즌 시작 점수는 rank3 회의 결정값(FX_RESET)
 const FX_RESET=[900,900,900,1100,1300,1500,1500]; // 지난 시즌 티어(0브론즈~5마스터, 6챌린저) → 다음 시즌 시작 점수(한 단계 아래 티어 최저점, 브론즈·기록 없음 900)
@@ -5314,7 +5314,7 @@ function ecoBoot(){if(ECO.boot)return;ECO.boot=1;ecoDefs();ecoLoad().catch(()=>{
 function ecoAfterLoad(){ECO.at=Date.now();ecoLook();ecoPaint();ecoSyncPub();setTimeout(()=>{try{attAuto()}catch(e){}},1500);setTimeout(()=>{ecoAch();ecoSeasonCheck()},800)}
 function ecoTick(){if(!ECO.ok)return;try{attAuto()}catch(e){}try{ecoPromoCheck()}catch(e){}try{ecoSyncPub()}catch(e){}if(UI.view==='lobby'){try{ecoSeasonCheck()}catch(e){}const c=$('#rwdBody');if(c&&c.dataset.d!==String(ecoDay()))ecoPaint()}}
 // ----- 오늘의 과제: 날짜마다 고정 목록에서 3개(모든 기기 같음). 진행은 이 기기에 저장 -----
-const ECO_MIS=[{id:'g3',t:'대국 3판',n:3},{id:'aw',t:'AI 대국 1승',n:1},{id:'fr',t:'일반 게임 1판',n:1},{id:'rk',t:'랭크전 1판',n:1},{id:'pz',t:'오늘의 묘수 풀이',n:1},{id:'rv',t:'복기 1번 보기',n:1},{id:'w2',t:'아무 대국 2승',n:2},{id:'am',t:'AI 중수 이상 1판',n:1}];
+const ECO_MIS=[{id:'g3',t:'대국 3판',n:3},{id:'aw',t:'AI 대국 1승',n:1},{id:'fr',t:'일반 게임 1판',n:1},{id:'rk',t:'랭크 게임 1판',n:1},{id:'pz',t:'오늘의 묘수 풀이',n:1},{id:'rv',t:'복기 1번 보기',n:1},{id:'w2',t:'아무 대국 2승',n:2},{id:'am',t:'AI 중수 이상 1판',n:1}];
 function ecoMis(day){day=day||ecoDay();const pool=ECO_MIS.filter(m=>!(m.id==='rk'&&RANK_MAINT));let x=(Math.imul(day,2654435761)^0x5bd1e995)>>>0;const r=()=>{x=Math.imul(x^x>>>15,1|x)+0x6D2B79F5>>>0;return x/4294967296};
  const a=pool.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,3)}
 function ecoProgGet(){let v=null;try{v=JSON.parse(lget('bo-ecom')||'null')}catch(e){}if(!v||v.d!==ecoDay()||typeof v.p!=='object')v={d:ecoDay(),p:{},gd:0,f:{}};v.gd=v.gd|0;v.f=v.f&&typeof v.f==='object'?v.f:{};return v}
@@ -5368,7 +5368,7 @@ function ecoPromoCheck(){if(!ECO.ok||!ECO.w||!ECO.auto||!(user&&user.firebase))r
 // 승급 축하 창에 한 줄(tupShow 훅)
 function ecoTupNote(el){try{if(!el||el.querySelector('.tgem'))return;const P=ecoPromoKey();if(!P)return;const k=P.keys[P.keys.length-1];if(!ECO.w||!(ECO.w.cl.includes(k)||ECO.promoAt[k]))return;
  const ix=+k.split('_')[1],b=el.querySelector('.tcard .btn');if(!b)return;const p=document.createElement('p');p.className='tgem';p.innerHTML=`<span class="gdot" aria-hidden="true"></span>옥돌 +${ECO_PAMT[ix]}`;b.before(p)}catch(e){}}
-// 시즌 종료 보상: 관리자 기록 cfg/season{n}(최종 티어·판 수)으로. 랭크전 10판 이상, 사람 계정만(문서 키가 uid)
+// 시즌 종료 보상: 관리자 기록 cfg/season{n}(최종 티어·판 수)으로. 랭크 게임 10판 이상, 사람 계정만(문서 키가 uid)
 async function ecoSeasonCheck(force){if(!ECO.ok||!ECO.w||!ecoSrv())return;const SS=seasonOf(Date.now());if(SS.n<2)return;const pn=SS.n-1,key='s'+pn;
  if(ECO.w.cl.includes(key)){if(ECO.sr&&ECO.sr.n===pn){ECO.sr=null;ecoPaint()}return}
  const c=ECO.sz[pn];if(c&&!force&&(c.st==='ok'||c.st==='no'||Date.now()-c.at<30*60e3))return;if(ECO.szBusy)return;ECO.szBusy=1;
@@ -5384,7 +5384,7 @@ function ecoRecap(R,again){try{const c=$('#rcCard');if(!c||!R)return;{const o=c.
  // 결산 창이 지갑·시즌 기록 확인보다 먼저 뜨면, 확인이 끝난 뒤 이 줄만 다시 그림
  if(!again&&!(s&&s.n===R.n)&&!(ECO.w&&ECO.w.cl.includes('s'+R.n)))ECO.ready&&ECO.q.then(()=>ecoSeasonCheck(true)).then(()=>{const el=$('#recap');if(el&&!el.classList.contains('hide')&&FX.rc===R)ecoRecap(R,1)});
  if(s&&s.n===R.n&&s.st==='ok')box.innerHTML=`<span class="gdot" aria-hidden="true"></span><span>시즌 보상 · 옥돌 ${ecoFmt(s.amt)} · ${esc(ecoTierN(s.t))} 테두리</span><button class="btn small" data-act="ecosz">받기</button>`;
- else if(s&&s.n===R.n&&s.st==='few')box.innerHTML=`<span>시즌 보상은 랭크전 10판부터 받아요</span>`;
+ else if(s&&s.n===R.n&&s.st==='few')box.innerHTML=`<span>시즌 보상은 랭크 게임 10판부터 받아요</span>`;
  else if(ECO.w&&ECO.w.cl.includes('s'+R.n))box.innerHTML=`<span>시즌 ${R.n} 보상을 받았어요</span>`;
  else box.innerHTML=`<span>시즌 보상은 집계가 끝나면 받을 수 있어요</span>`;
  const b=c.querySelector('.rcbtn');if(b)b.before(box);else c.appendChild(box)}catch(e){}}
@@ -5542,8 +5542,8 @@ function ecoPaint(){try{const c=$('#rwdBody');if(c){const w=ECO.w,ms=ecoMis(),v=
   c.innerHTML=`<section class="card rwc rwtoday"><div class="chead"><h2>오늘</h2></div>${szc}${today}</section>
    ${w?`<section class="card rwc"><div class="chead"><h2>업적</h2><span class="num">${na}/${ECO_ACH.length}</span></div><div class="eqs">${ach}</div></section>`:''}
    <section class="card rwc rwinfo"><details class="rules"><summary>보상 기준</summary>
-    <div class="eh"><h3>대국 끝</h3></div><div class="etab"><span>랭크전</span><b>이기면 12 · 지면 6</b><span>일반 게임</span><b>이기면 10 · 지면 5</b><span>AI 대국</span><b>이기면 6 · 지면 3</b></div>
-    <div class="eh"><h3>티어</h3></div><div class="etab"><span>시즌 끝</span><b>옥돌 200~2,500 · 티어 테두리</b><span>처음 승급</span><b>옥돌 50~300</b></div><p class="note">시즌 보상은 랭크전 10판 이상</p></details></section>
+    <div class="eh"><h3>대국 끝</h3></div><div class="etab"><span>랭크 게임</span><b>이기면 12 · 지면 6</b><span>일반 게임</span><b>이기면 10 · 지면 5</b><span>AI 대국</span><b>이기면 6 · 지면 3</b></div>
+    <div class="eh"><h3>티어</h3></div><div class="etab"><span>시즌 끝</span><b>옥돌 200~2,500 · 티어 테두리</b><span>처음 승급</span><b>옥돌 50~300</b></div><p class="note">시즌 보상은 랭크 게임 10판 이상</p></details></section>
    ${ecoSrv()&&!(user.google&&user.google())?`<p class="note enote"><span>게스트 옥돌은 이 기기에만 남아요</span><button class="linkbtn" data-act="acc">계정 연결</button></p>`:''}`}
  if(UI.tab==='shop')ecoRender();if(shOpen==='prof'){try{frRenderProf()}catch(e){}}}catch(e){console.warn('ecoPaint',e)}}
 // 계정 삭제(설정): 지갑은 지우지 않고 비움(1회성 보상 기록 cl만 남김 → 지웠다 다시 만들어 보상을 또 받지 못하게. 개인정보 없음)

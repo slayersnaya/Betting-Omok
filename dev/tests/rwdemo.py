@@ -2,7 +2,7 @@
 import asyncio,os
 os.environ.setdefault('GPORT','8837')
 exec(open('/home/claude/eval/gd2/tests/gshots.py').read().split('async def main():')[0])
-DEMO="rwAdd({id:'demo',order:0,items:()=>[{id:'m0',t:'대국 3판',st:'ready',g:10},{id:'p2',t:'골드 첫 도달',st:'ready',g:50},{id:'m2',t:'랭크전 1판',st:'prog',p:'0/1'}],claim:async()=>{RW.prov.delete('demo');toast('보상 받기 · 구슬 +60')}})"
+DEMO="rwAdd({id:'demo',order:0,items:()=>[{id:'m0',t:'대국 3판',st:'ready',g:10},{id:'p2',t:'골드 첫 도달',st:'ready',g:50},{id:'m2',t:'랭크 게임 1판',st:'prog',p:'0/1'}],claim:async()=>{RW.prov.delete('demo');toast('보상 받기 · 구슬 +60')}})"
 async def main():
     async with async_playwright() as pw:
         b=await pw.chromium.launch(executable_path='/usr/bin/google-chrome',args=['--no-sandbox'])

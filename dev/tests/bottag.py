@@ -43,6 +43,6 @@ async def main():
         m=await a.evaluate("()=>{const e=document.querySelector('#admModel');return e?[e.textContent,e.getBoundingClientRect().width>0]:null}");chk('관리자 PC: 상대 이름 옆 모델',m and m[1],m)
         await a.screenshot(path='/tmp/bt/admmodel.png')
         p=await newpage(b,errs,'일반');await asyncio.sleep(3);await ev(p,"mmBot()");await asyncio.sleep(1)
-        t=await p.evaluate("()=>document.querySelector('#gttl').textContent");chk('일반: 모델 안 보임',t=='랭크전' and not await p.evaluate("()=>!!document.querySelector('#admModel')"),t)
+        t=await p.evaluate("()=>document.querySelector('#gttl').textContent");chk('일반: 모델 안 보임',t=='랭크 게임' and not await p.evaluate("()=>!!document.querySelector('#admModel')"),t)
         print('errors',[e for e in errs if 'ERR_' not in e]);print('RESULT',sum(1 for _,o in RES if o),'/',len(RES));await b.close()
 asyncio.run(main())

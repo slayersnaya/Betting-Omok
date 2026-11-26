@@ -14,7 +14,7 @@ async def main():
         await p.fill('#accEm','me@test.com');await p.fill('#accPw','123');await p.click('#emLink');await asyncio.sleep(0.3);print('err2',await txt(p,'#accErr'))
         await p.fill('#accPw','secret12');await p.click('#emLink');await asyncio.sleep(1.5)
         print('after link acct',await txt(p,'#acct'),'| sheet open',await p.evaluate("()=>!document.querySelector('#sh-acc').classList.contains('hide')"))
-        # 랭크전 가능해졌는지(관문 다이얼로그 없이 매칭)
+        # 랭크 게임 가능해졌는지(관문 다이얼로그 없이 매칭)
         await p.evaluate("()=>{const s=document.querySelector('#sh-set');}");
         await p.keyboard.press('Escape');await asyncio.sleep(0.3)
         await p.evaluate("()=>document.querySelector('.tabbar:not(.tbw) [data-k=rank]').click()");await asyncio.sleep(0.3)

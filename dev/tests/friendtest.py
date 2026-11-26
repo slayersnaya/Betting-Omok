@@ -177,7 +177,7 @@ async def main():
         await p1.evaluate("()=>document.querySelector('#shbg').click()");await p2.evaluate("()=>document.querySelector('#shbg').click()");await asyncio.sleep(0.3)
         # 3) 대국 신청 → 수락 → 같은 방 → 대국 → 끝
         await p1.click(f'#palFr [data-act=frprof][data-u="{u2}"]');await asyncio.sleep(0.4)
-        pf=await txt(p1,'#pfBody');chk('친구 프로필(티어·전적·나와의 전적·대국 신청)',all(x in pf for x in ['티어','점수','순위','랭크전','나와의 전적','대국 신청']),pf)
+        pf=await txt(p1,'#pfBody');chk('친구 프로필(티어·전적·나와의 전적·대국 신청)',all(x in pf for x in ['티어','점수','순위','랭크 게임','나와의 전적','대국 신청']),pf)
         await p1.click('#pfBody [data-act=frinv]');await asyncio.sleep(0.4)
         chk('신청 전 시간 고르기',('제한 시간' in await txt(p1,'#dlg')),await txt(p1,'#dlg'))
         await p1.click('#dlg [data-act=frinvp][data-i="0"]');await asyncio.sleep(1.8)

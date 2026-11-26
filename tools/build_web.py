@@ -16,7 +16,7 @@ BASE='https://slayersnaya.github.io/Betting-Omok/'
 head=(# 글꼴은 한 곳에서, 화면 그리기를 막지 않게(먼저 기본 글꼴로 보이고 받아지면 바뀜)
  '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n'
  '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media=\'all\'">\n'
- '<meta name="description" content="베팅 승자가 착수하는 2인 전략 오목. 일반 게임, 랭크전, AI 대국.">\n'
+ '<meta name="description" content="베팅 승자가 착수하는 2인 전략 오목. 일반 게임, 랭크 게임, AI 대국.">\n'
  '<meta property="og:site_name" content="베팅 오목">\n<meta property="og:locale" content="ko_KR">\n'
  '<meta property="og:title" content="베팅 오목">\n<meta property="og:description" content="베팅 승자가 착수하는 2인 전략 오목">\n'
  '<meta property="og:type" content="website">\n<meta property="og:url" content="'+BASE+'">\n'
@@ -47,4 +47,6 @@ self.addEventListener('fetch',e=>{const u=new URL(e.request.url);
   .catch(()=>caches.match(e.request,{ignoreSearch:true}).then(r=>r||(e.request.mode==='navigate'&&!/privacy\\.html$/.test(u.pathname)?caches.match('index.html'):null)).then(r=>r||new Response('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><body style="margin:0;height:100vh;display:grid;place-items:center;background:#0f1716;color:#e9f0ee;font-family:sans-serif"><div style="text-align:center">인터넷에 연결되면 다시 열어 주세요<br><br><button onclick="location.reload()" style="font:inherit;padding:10px 18px;border-radius:12px;border:0;background:#009999;color:#fff">다시 시도</button></div></body>',{headers:{'Content-Type':'text/html; charset=utf-8'}}))))});
 '''
 open('/home/claude/web/sw.js','w').write(sw)
+import shutil as _sh,os as _os
+if _os.path.isdir('/home/claude/betting-omok/sounds'):_sh.copytree('/home/claude/betting-omok/sounds','/home/claude/web/sounds',dirs_exist_ok=True)
 print('built',len(out),'ver',VER)

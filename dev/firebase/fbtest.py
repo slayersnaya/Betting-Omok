@@ -111,7 +111,7 @@ async def main():
         await asyncio.sleep(0.3)
         for p in (p1,p2): await p.evaluate("()=>document.querySelector('.tabbar:not(.tbw) [data-k=rank]').click()")
         await asyncio.sleep(0.3);print('rank tab p1:',await txt(p1,'#tab-rank'))
-        # 랭크전 관문
+        # 랭크 게임 관문
         await p1.click('#mmBtn');await asyncio.sleep(0.4)
         print('gate dlg:',await txt(p1,'#dlg'))
         await p1.click('[data-act=dlgok]');await asyncio.sleep(0.4);await p1.click('#sh-acc [data-act=glink]');await asyncio.sleep(0.6)

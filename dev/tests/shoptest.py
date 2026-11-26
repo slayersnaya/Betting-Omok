@@ -147,7 +147,7 @@ async def main():
         w=await wal(u1);chk('시즌 보상 수령: +1000 · 시즌 1 플래티넘 테두리',w['g']-g0==1000 and 'z1_3' in w['own'] and 's1' in w['cl'],(w['g']-g0,w['own'][-2:]))
         r=await forge(p1,"n.k='claim';n.cl.push('s1');n.g+=1000;n.own.push('z1_3x')");chk('규칙: 시즌 보상 두 번 거부',r=='denied',r)
         await reload_w(p2)
-        r=await forge(p2,"n.k='claim';n.cl.push('s1');n.g+=1800;n.own.push('z1_5','zt1_5')");chk('규칙: 랭크전 10판 미만 시즌 보상 거부',r=='denied',r)
+        r=await forge(p2,"n.k='claim';n.cl.push('s1');n.g+=1800;n.own.push('z1_5','zt1_5')");chk('규칙: 랭크 게임 10판 미만 시즌 보상 거부',r=='denied',r)
         cfg['p'][u2]=[5,1750,14];await push('cfg/season1',cfg)
         r=await forge(p2,"n.k='claim';n.cl.push('s1');n.g+=2500;n.own.push('z1_6','zt1_6')");chk('규칙: 관리자 기록과 다른 티어·금액 거부',r=='denied',r)
         r=await forge(p2,"n.k='claim';n.cl.push('s1');n.g+=1800;n.own.push('z1_5','zt1_5')");chk('규칙: 관리자 기록과 같은 보상 허용',r=='ok',r)
