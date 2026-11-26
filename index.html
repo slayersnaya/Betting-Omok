@@ -76,6 +76,7 @@ input[type=text]:focus,input[type=email]:focus,input[type=password]:focus{border
 .lxrow .rt{min-width:0}.room .rt b.lxvs{display:flex;align-items:center;gap:6px;min-width:0}.lxp{display:inline-flex;align-items:center;gap:4px;min-width:0;max-width:calc(50% - 12px)}.lxp>svg{flex:none;width:18px;height:18px}.lxn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.lxvs>i{font-style:normal;font-size:11px;font-weight:600;color:var(--mute);flex:none}
 .lxgo{display:inline-flex;align-items:center;gap:4px;flex:none}.lxgo svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.rbusy{flex:none;font-size:12px;color:var(--mute);padding:0 6px;white-space:nowrap}
 #lxCard .chead .tag{margin-left:auto}
+#lxCard .lxph .lxgo{visibility:hidden}#lxCard .lxph .lxn{color:var(--mute);font-weight:700}#lxCard .lxph{background:transparent;border:1.5px dashed color-mix(in srgb,var(--mute) 22%,transparent)}#lxCard .lxmph{visibility:hidden;pointer-events:none}
 details.rules summary{cursor:pointer;font-weight:800;min-height:46px;display:flex;align-items:center;gap:8px;list-style:none;font-size:14px}details.rules summary::-webkit-details-marker{display:none}
 details.rules summary::after{content:'';width:8px;height:8px;margin-left:auto;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);transition:transform .2s}details.rules[open] summary::after{transform:rotate(225deg)}
 .acct{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:var(--soft)}.acct .at{flex:1;min-width:0}.acct .at b{display:block;font-size:15px}.acct .at span{font-size:13px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
@@ -1869,7 +1870,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.09';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.10';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -5063,11 +5064,14 @@ function lxParse(u,d){if(!okSeat(u)||u===SEAT||!d||typeof d!=='object'||d.v!==1|
 function lxItems(now){const H=LX.list.filter(x=>x.exp>now).map(x=>({k:'u'+x.u,u:x.u,na:x.na,nb:x.nb,ra:x.ra,rb:x.rb,st:x.st}));
  const B=blList(now).map(g=>{const S=BL.res.get(g.key).S,sw=S.sw;return{k:'b'+g.key,g,na:blNick(sw?g.b:g.a),nb:blNick(sw?g.a:g.b),ra:sw?g.rb:g.ra,rb:sw?g.ra:g.rb,st:S.ln.st}});
  return H.concat(B).sort((a,b)=>b.st-a.st).slice(0,10)}
-function lxRender(){const card=$('#lxCard');if(!card)return;const now=Date.now(),it=db&&SEAT&&RK.loaded&&!(UI.ready&&!db)?lxItems(now):[];card.classList.toggle('hide',!it.length);if(!it.length){LX.more=false;return}
+function lxRender(){const card=$('#lxCard');if(!card)return;const now=Date.now(),on=!!(db&&SEAT),it=on&&RK.loaded?lxItems(now):[];card.classList.toggle('hide',!on);if(!on)return;if(it.length<=2)LX.more=false;
+ // 접힌 상태는 늘 두 줄 + 아래 한 줄 자리를 차지(판이 생기고 끝나도 아래 칸이 오르내리지 않게)
  const lim=LX.more?10:2,row=x=>{const ta=tierByR(x.ra),tb=tierByR(x.rb),m=Math.floor((now-x.st)/60e3);
   return `<div class="room lxrow"><div class="rt"><b class="lxvs"><span class="lxp">${emblem(ta,18)}<span class="lxn">${esc(x.na)}</span></span><i>vs</i><span class="lxp">${emblem(tb,18)}<span class="lxn">${esc(x.nb)}</span></span></b><span>${ta===tb?ta.n:ta.n+' · '+tb.n} · ${m>=1?m+'분째':'방금 시작'}</span></div><button class="btn small ghost lxgo" data-act="lxwatch" data-k="${esc(x.k)}" aria-label="${esc(x.na)} 대 ${esc(x.nb)} 관전">${FR_ICO_W}<span>관전</span></button></div>`};
- const h=it.slice(0,lim).map(row).join('')+(it.length>2?`<button class="linkbtn more" data-act="lxmore" aria-expanded="${LX.more?'true':'false'}">${LX.more?'접기':`${it.length}개 모두 보기`}</button>`:'');
- const L2=$('#lxList');if(L2.dataset.h!==h){L2.dataset.h=h;L2.innerHTML=h}const n=$('#lxN');if(n)n.textContent=String(it.length)}
+ const ph=t=>`<div class="room lxrow lxph"${t?'':' aria-hidden="true"'}><div class="rt"><b class="lxvs"><span class="lxn">${t||'&nbsp;'}</span></b><span>&nbsp;</span></div><span class="btn small ghost lxgo" aria-hidden="true">${FR_ICO_W}<span>관전</span></span></div>`;
+ const rows=it.slice(0,lim).map(row);while(rows.length<2)rows.push(ph(!it.length&&!rows.length?(RK.loaded?'지금 진행 중인 게임이 없어요':'불러오는 중'):''));
+ const h=rows.join('')+(it.length>2?`<button class="linkbtn more" data-act="lxmore" aria-expanded="${LX.more?'true':'false'}">${LX.more?'접기':`${it.length}개 모두 보기`}</button>`:'<span class="linkbtn more lxmph" aria-hidden="true">&nbsp;</span>');
+ const L2=$('#lxList');if(L2.dataset.h!==h){L2.dataset.h=h;L2.innerHTML=h}const n=$('#lxN');if(n){n.textContent=String(it.length);n.classList.toggle('hide',!it.length)}}
 function lxWatch(k){const it=lxItems(Date.now()).find(x=>x.k===k);if(!it){toast('끝난 대국이에요');lxRender();return}
  if(MM.on){mmStop();toast('랭크 매칭 취소됨')}closeSheet(true);if(it.g)wBot(it.g);else wRelay(it.u,'r',true)}
 setInterval(()=>{try{if(UI.view==='lobby'&&UI.tab==='rank'&&document.visibilityState==='visible'){lxLoad();lxRender();blPump()}
