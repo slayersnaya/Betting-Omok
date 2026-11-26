@@ -948,7 +948,7 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1318';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1331';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2122,8 +2122,13 @@ function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.re
 // 관리자: 연결된 구글 계정이 관리자 이메일일 때만 관리자 버튼이 보임(실제 권한은 서버 규칙이 다시 확인)
 const ADMIN_EMAILS=['slayersnaya@gmail.com'];
 const isAdmin=()=>{try{const g=user&&user.firebase&&user.google&&user.google();return !!g&&ADMIN_EMAILS.includes(String(g).toLowerCase())}catch(e){return false}};
+// 관리자 폰을 열면 하루 한 번: 학습에 안 쓰는 예전 AI 연습판(초보·중수·고수, 랭크전 아님)을 서버에서 지움(한 번에 최대 300건)
+function adminClean(){if(!db||!isAdmin()||adminClean.done)return;adminClean.done=1;const k='bo-admclean';if(Date.now()-(+lget(k)||0)<864e5)return;
+ (async()=>{let n=0;for(const lv of ['beginner','mid','pro']){try{const qs=await db.collection('aigames').where('level','==',lv).limit(100).get();
+   for(const x of qs.docs){const d=x.data()||{};if(d.rk)continue;try{await db.doc('aigames/'+x.id).delete();n++}catch(e){}}}catch(e){}}
+  lset(k,String(Date.now()));if(n)toast(`예전 연습판 기록 ${n}건 정리`)})()}
 function cfgMaster(){if(!db||!isAdmin()||!SEAT||(RK.master||[]).includes(SEAT)||cfgMaster.done)return;cfgMaster.done=1;db.doc('cfg/master').set({seats:[...(RK.master||[]),SEAT].slice(-5),at:Date.now()}).catch(()=>{cfgMaster.done=0})}
-function renderAcct(){try{cfgMaster()}catch(e){}try{nickCheck()}catch(e){}const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!isAdmin());const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
+function renderAcct(){try{cfgMaster()}catch(e){}try{adminClean()}catch(e){}try{nickCheck()}catch(e){}const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!isAdmin());const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
  const g=user.google&&user.google();a.innerHTML=g?`<div class="at"><b>구글 계정 연결됨</b><span>${esc(g)}</span></div>`:`<div class="at"><b>게스트로 플레이 중</b><span>기록을 지키려면 구글 연결</span></div><button class="btn small" data-act="glink">구글 연결</button>`}
 // ===== 웹(Firebase): 앱을 지웠다 다시 깔아도 구글 계정으로 기록 복원. 닉네임·AI 전적은 본인만 읽는 prof/{uid}, 학습 집계는 ailearn/{uid} =====
 let profT=0;
@@ -2766,7 +2771,7 @@ const L={
    if(s.bot&&Date.now()<s.botAt){s.stage=4;UI.panelKey='';const t=s.t;setTimeout(()=>{if(this.s===s&&s.t===t&&s.phase==='bet'&&s.stage===4)this.resolve()},s.botAt-Date.now());renderAll();return}}
   else if(s.stage===1){s.stage=2;UI.panelKey='';renderAll();return}
   this.resolve()},
- resign(){const s=this.s;if(!s||s.phase==='over')return;s.phase='over';s.winner='B';s.reason='기권';UI.panelKey='';if(s.bot)botFinish(s);else if(s.ai)addAiRec(s.ai,'l');this.save();renderAll()},
+ resign(){const s=this.s;if(!s||s.phase==='over')return;s.phase='over';s.winner='B';s.reason='기권';UI.panelKey='';if(s.bot)botFinish(s);else if(s.ai)addAiRec(s.ai,'l');if(s.ai)aiGameUpload(s);this.save();renderAll()},
  resolve(){const s=this.s;
   const win=settle(s.bd,s.cells,s.bets[s.sun],s.bets[s.hu],s.sun==='A'?1:2,s.hu==='A'?1:2).map(w=>w==='sun'?s.sun:s.hu);
   for(const x of ['A','B'])s.pts[x]-=s.bets[x][0]+s.bets[x][1]+s.bets[x][2];
@@ -2813,9 +2818,10 @@ function aiLearnAfter(d,key){try{
  clearTimeout(lrnT);lrnT=setTimeout(()=>{const doc=aiLearnDoc(agg);if(doc&&db&&SEAT)(user&&user.firebase?db.doc('ailearn/'+SEAT).set(lrnOut(doc)):db.doc('ailearn/'+SEAT).update(doc)).catch(()=>{})},1500)
 }catch(e){}}
 // ===== AI 대국 기록 모으기: 끝난 판(공개된 베팅)을 닉네임 없이 서버에 저장 → Ultimate 개선 자료 =====
-function aiGameUpload(s){try{if(!(db&&SEAT&&user&&user.firebase)||!s||!s.ai||!Array.isArray(s.hist)||!s.hist.length)return;
+// 학습 자료로 쌓는 판: Ultimate 대국 전부 + 랭크전 AI 상대 대국 전부(초보·중수·고수 연습판은 안 쌓음)
+function aiGameUpload(s){try{if(!(db&&SEAT&&user&&user.firebase)||!s||!s.ai||!(s.bot||s.ai==='ultimate')||!Array.isArray(s.hist)||!s.hist.length)return;
  const hist=s.hist.slice(0,300).map(x=>({t:x.t|0,sun:x.sun,cells:x.cells,bA:x.bets.A,bB:x.bets.B,win:x.win}));
- db.doc('aigames/'+SEAT+'_'+s.id).set({by:SEAT,at:Date.now(),level:s.ai,winner:s.winner||null,reason:String(s.reason||'').slice(0,12),first:s.first==='B'?'B':'A',timed:!!s.td,v:2,hj:JSON.stringify(hist)}).catch(()=>{})}catch(e){}}
+ db.doc('aigames/'+SEAT+'_'+s.id).set(Object.assign({by:SEAT,at:Date.now(),level:s.ai,winner:s.winner||null,reason:String(s.reason||'').slice(0,12),first:s.first==='B'?'B':'A',timed:!!s.td,v:2,hj:JSON.stringify(hist)},s.bot?{rk:true,bot:s.bot.id}:{})).catch(()=>{})}catch(e){}}
 // ===== AI 상대 랭크전 결과: 끝나면 서버 bres에 한 번 저장(실패하면 폰에 두었다가 다음에 다시) =====
 function botDelta(s){const k=s&&s.rk;if(!k)return null;const S=s.winner==null?.5:s.winner==='A'?1:0,raw=gainOf(k.me,k.op,S,k.pw.w);return Math.round(k.me.r+raw)-Math.round(k.me.r)}
 function botFinish(s){if(!s||!s.bot||s.bdone)return;s.bdone=1;lrm('bo-bplay');botQueue({gid:'k'+s.id,bot:s.bot.id,w:s.winner==='A'?'me':s.winner==='B'?'bot':'draw',turns:s.t|0,why:String(s.reason||'').slice(0,20)})}
