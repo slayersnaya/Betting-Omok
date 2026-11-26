@@ -1609,7 +1609,7 @@ img,svg,a{-webkit-user-drag:none}
   <div class="card" id="rkTierC">
    <div class="chead"><h2>티어</h2></div>
    <div class="tiers" id="rkTiers"></div>
-   <details class="rules rkhelp"><summary><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01"/></svg>랭크 게임 규칙</summary><ul class="rknote"><li>고르기 20초 · 베팅 30초 · 처음 5판은 배치</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li><li>2연승부터 더 오르고 2연패부터 더 내려가요</li><li>시즌은 3달마다 · 새 시즌은 한 단계 아래 최저점부터</li><li>챌린저는 매일 0시 마스터 상위 5명</li><li>골드까지는 상대 칩 최대치를 계산해 보여 줘요</li><li>점수 차 150점 안에서 매칭</li><li>상대가 없으면 AI가 대신 들어올 수 있어요</li></ul></details>
+   <details class="rules rkhelp"><summary><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01"/></svg>랭크 게임 규칙</summary><ul class="rknote"><li>고르기 20초 · 베팅 30초 · 처음 5판은 배치</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li><li>2연승부터 더 오르고 2연패부터 더 내려가요</li><li>시즌은 3달마다 · 새 시즌은 한 단계 아래 최저점부터</li><li>챌린저는 매일 0시 마스터 상위 5명</li><li>골드까지는 상대 칩 예상 범위를 보여 줘요</li><li>점수 차 150점 안에서 매칭</li><li>상대가 없으면 AI가 대신 들어올 수 있어요</li></ul></details>
   </div>
  </div>
 
@@ -1898,14 +1898,20 @@ function validTriple(bd,cs){
 }
 function overLines(bd,col){const out=[];for(const [dr,dc] of DIRS)for(let r=0;r<N;r++)for(let c=0;c<N;c++){if(bd[r][c]!==col)continue;const pr=r-dr,pc=c-dc;if(inB(pr,pc)&&bd[pr][pc]===col)continue;let L=0,y=r,x=c;while(inB(y,x)&&bd[y][x]===col){L++;y+=dr;x+=dc}if(L>=6)out.push([[r,c],[r+(L-1)*dr,c+(L-1)*dc]])}return out}
 function fiveLines(bd,col){const out=[];for(const [dr,dc] of DIRS)for(let r=0;r<N;r++)for(let c=0;c<N;c++){if(bd[r][c]!==col)continue;const pr=r-dr,pc=c-dc;if(inB(pr,pc)&&bd[pr][pc]===col)continue;let L=0,y=r,x=c;while(inB(y,x)&&bd[y][x]===col){L++;y+=dr;x+=dc}if(L===5)out.push([[r,c],[r+4*dr,c+4*dc]])}return out}
-// 상대 칩 계산 도움(11/27): 랭크 점수 1300(플래티넘) 미만이면 상대 남은 칩의 '최대치'를 계산해 보여 줌(대국 중인 본인 화면만)
+// 상대 칩 계산 도움(11/27): 랭크 점수 1300(플래티넘) 미만이면 상대 남은 칩의 '예상 범위'를 계산해 보여 줌(대국 중인 본인 화면만)
 //  상대 수입(턴마다 10) − 확실히 쓴 칩: 내가 이긴 칸은 상대가 최소 1, 상대가 이긴 칸은 내 칩 이상(상대가 선 플레이어면 +1)
 const CNT_MAX_R=1300;
 function cntOn(){try{if(UI.mode==='tut'||UI.review)return false;if(UI.mode==='local'&&L.s&&L.s.ai==='ultimate'&&!L.s.bot)return false;/* Godlike AI 대국은 도움 없음(랭크 상대는 실력이 드러나지 않게 그대로) */const P=rkP(SEAT);return !(P&&P.r>=CNT_MAX_R)}catch(e){return false}}
-function cntMax(vs,opp){if(!vs||!vs.me||!opp||opp===vs.me||!cntOn())return null;const me=vs.me;let lb=0,n=0;
- for(const h of vs.hist||[]){if(h.t>=vs.t&&vs.phase!=='over')continue;const mb=h.bets&&h.bets[me];if(!Array.isArray(mb))return null;n++;
-  for(let i=0;i<3;i++)lb+=h.win[i]===me?1:(h.sun===opp?mb[i]+1:mb[i])}
- const inc=10*(vs.phase==='over'?n:Math.max(vs.t||0,n));return Math.max(0,inc-lb)}
+// 범위 [작은 쪽, 큰 쪽]: 턴마다 +10. 큰 쪽은 '확실히 쓴 칩'만큼, 작은 쪽은 '쓸 수 있었던 최대'만큼 뺌
+//  내가 이긴 칸: 상대 칩 1 ~ (상대가 선이면 내 칩, 후면 내 칩−1) / 상대가 이긴 칸: (상대가 선이면 내 칩+1, 후면 내 칩) ~ 제한 없음
+function cntRange(vs,opp){if(!vs||!vs.me||!opp||opp===vs.me||!cntOn())return null;const me=vs.me;let lo=0,hi=0,n=0;
+ const H=(vs.hist||[]).filter(h=>!(h.t>=vs.t&&vs.phase!=='over')).sort((a,b)=>a.t-b.t);
+ for(const h of H){const mb=h.bets&&h.bets[me];if(!Array.isArray(mb))return null;n++;lo+=10;hi+=10;let smin=0,smax=0;
+  for(let i=0;i<3;i++){if(h.win[i]===me){smin+=1;smax+=Math.max(1,h.sun===opp?mb[i]:mb[i]-1)}else{smin+=h.sun===opp?mb[i]+1:mb[i];smax=Infinity}}
+  hi=Math.max(0,hi-smin);lo=Math.max(0,lo-smax);if(lo>hi)lo=hi}
+ if(vs.phase!=='over'){const k=Math.max(0,(vs.t||0)-n);lo+=10*k;hi+=10*k}
+ return[lo,hi]}
+function cntMax(vs,opp){const r=cntRange(vs,opp);return r?r[1]:null}
 const validBets=(b,pts)=>Array.isArray(b)&&b.length===3&&b.every(v=>Number.isInteger(v)&&v>=1)&&b[0]+b[1]+b[2]<=pts;
 const betHash=(gid,t,seat,key,b,r)=>sha256(`${gid}|${t}|${seat}|${key}|${b.join(',')}|${r}`);
 const seedHash=(gid,seat,seed)=>sha256(`${gid}|${seat}|${seed}`);
@@ -2664,8 +2670,8 @@ function renderPlayers(){
     if(rr){const el=(Date.now()-rr.at)/1000,{a,sp,gain}=rr;
      pp=`<div class="pp num">${sp?`<span class="dl m" style="animation-delay:${(-el).toFixed(3)}s">−${sp}</span>`:''}${gain?`<span class="dl ${gain>0?'p':'m'}" style="animation-delay:${((sp?.55:0)-el).toFixed(3)}s">${gain>0?'+':'−'}${Math.abs(gain)}</span>`:''}<span class="coin"></span><span class="ch" data-from="${a}" data-mid="${sp&&gain?a-sp:''}" data-to="${v}" data-at="${rr.at}">${a}</span></div>`}
     else pp=`<div class="pp num"><span class="coin"></span><span class="ch">${v}</span></div>`}}
-  else if(!over||rv||late){const cm=!mine&&!rv&&!over?cntMax(vs,id):null;
-   pp=cm!=null?`<div class="pp q cnt" role="button" tabindex="0" data-act="cnthelp" aria-label="상대 ${PTU} 최대 ${cm} · 설명 보기"><span class="coin"></span><small>최대</small>${cm}<span class="cntq" aria-hidden="true">?</span></div>`
+  else if(!over||rv||late){const cr=!mine&&!rv&&!over?cntRange(vs,id):null,cm=cr?(cr[0]===cr[1]?String(cr[1]):cr[0]+'~'+cr[1]):null;
+   pp=cm!=null?`<div class="pp q cnt" role="button" tabindex="0" data-act="cnthelp" aria-label="상대 ${PTU} 예상 ${cm} · 설명 보기"><span class="coin"></span><small>예상</small>${cm}<span class="cntq" aria-hidden="true">?</span></div>`
     :`<div class="pp q" role="button" tabindex="0" data-act="qinfo" aria-label="${ptT('상대 {P} 비공개')}"><span class="coin"></span>?</div>`}
   const ring=mine?`<div class="ring hide" id="ring"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" stroke="var(--raise)" stroke-width="5" fill="none"/><circle id="ringArc" cx="24" cy="24" r="20" stroke="var(--jadeink)" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="125.7" stroke-dashoffset="0"/></svg><b id="ringTxt"></b></div>`:'';
   return `<div class="pbar${!coining&&!rv&&actorOf(vs,id)?' turn':''}${tags?'':' notag'}">${ecoPbar(vs,id)}</div>${tags?`<div class="pt">${tags}</div>`:''}</div>${pp}${ring}</div>`};
@@ -3973,7 +3979,7 @@ const rkHasNick=()=>!!(lget('bo-nick')||($('#nick')||{}).value||'').trim();
 const rkNickLine=()=>rkHasNick()?'':'<span class="rknk">랭크 게임 전에 닉네임을 정해 주세요</span>';
 // 랭크 시작 전: 상대 칩 계산 도움 안내(골드까지). [확인]은 다음에도 보여 주고, [다시 보지 않기]는 이 기기에서 그만
 function rkCntAsk(){if(UI.cntPass){UI.cntPass=false;return true}if(!cntOn()||lget('bo-cntok'))return true;
- dialog(`<span class="rkin cntin"><h3 id="rkinH">상대 칩 계산 도움</h3><span class="cntdemo" aria-hidden="true"><span class="pp q cnt"><span class="coin"></span><small>최대</small>14</span></span><ul><li>골드까지는 상대 칩 자리에 <b>최대치</b>가 보여요</li><li>지금까지 결과로 계산한 값이에요</li><li>실제 상대 칩은 이 숫자와 같거나 적어요</li><li>플래티넘부터는 사라져요 · 실력으로 승부!</li></ul></span>`,'확인',()=>{UI.cntPass=true;mmStart()},'다시 보지 않기');
+ dialog(`<span class="rkin cntin"><h3 id="rkinH">상대 칩 계산 도움</h3><span class="cntdemo" aria-hidden="true"><span class="pp q cnt"><span class="coin"></span><small>예상</small>12~23</span></span><ul><li>골드까지는 상대 칩의 <b>예상 범위</b>가 보여요</li><li>지금까지 결과로 계산한 값이에요</li><li>실제 상대 칩은 꼭 이 범위 안에 있어요</li><li>플래티넘부터는 사라져요 · 실력으로 승부!</li></ul></span>`,'확인',()=>{UI.cntPass=true;mmStart()},'다시 보지 않기');
  const d=$('#dlg'),no=d.querySelector('[data-act=dlgno]');if(no)no.dataset.act='cntnever';d.setAttribute('aria-labelledby','rkinH');return false}
 // 랭크 매칭 전: 닉네임이 없으면 안내 창 → 닉네임 정하기(처음 한 번은 무료)
 function rkNickAsk(then){if(rkHasNick())return true;dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}닉네임을 정해 주세요</h3><span class="sub" style="display:block">순위표와 상대 화면에 보이는 이름이에요</span><span class="rknote">처음 한 번은 무료로 정할 수 있어요</span></span>`,'닉네임 정하기',()=>{UI.afterNick=then||null;openSheet('nick')},'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH');return false}
@@ -5159,8 +5165,8 @@ document.addEventListener('click',e=>{
  else if(a==='emlink')accRun('link');
  else if(a==='emlogin')accRun('login');
  else if(a==='emreset')accRun('reset');
- else if(a==='cnthelp'){dialog(`<span class="rkin cntin"><h3 id="rkinH">상대 칩 최대치</h3><ul><li>상대가 지금 가질 수 있는 가장 많은 칩이에요</li><li>턴마다 받는 10칩에서 확실히 쓴 칩을 뺐어요</li><li>실제 상대 칩은 이 숫자와 같거나 적어요</li><li>골드까지만 보여요</li></ul></span>`,'확인',null,'');{const d=$('#dlg'),no=d.querySelector('[data-act=dlgno]');if(no)no.remove();d.setAttribute('aria-labelledby','rkinH')}}
- else if(a==='qinfo')toast(b.classList.contains('cnt')?ptT('지금까지 결과로 계산한 상대 {P}의 최대치예요 · 플래티넘부터는 꺼져요'):ptT('상대 {P은} 대국이 끝나면 공개돼요'));
+ else if(a==='cnthelp'){dialog(`<span class="rkin cntin"><h3 id="rkinH">상대 칩 예상 범위</h3><ul><li>상대가 지금 가질 수 있는 칩의 범위예요</li><li>큰 쪽: 받은 칩 − 확실히 쓴 칩</li><li>작은 쪽: 내가 이긴 칸으로 덜 쓴 게 확인된 만큼</li><li>골드까지만 보여요</li></ul></span>`,'확인',null,'');{const d=$('#dlg'),no=d.querySelector('[data-act=dlgno]');if(no)no.remove();d.setAttribute('aria-labelledby','rkinH')}}
+ else if(a==='qinfo')toast(b.classList.contains('cnt')?ptT('지금까지 결과로 계산한 상대 {P}의 범위예요 · 플래티넘부터는 꺼져요'):ptT('상대 {P은} 대국이 끝나면 공개돼요'));
  else if(a==='hintx'){lset('bo-hint','0');b.closest('.hint').remove();syncSettings();toast('설정에서 다시 켤 수 있어요')}
  else if(a==='tskip')T.skip();
  else if(a==='tdone'){UI.mode='online';goLobby()}
