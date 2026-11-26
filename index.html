@@ -386,8 +386,8 @@ body.big .bfoot .qchip{font-size:17px}
 #welcome p{margin:0 0 16px;color:var(--mute);font-size:15px;line-height:1.5}
 #welcome p span{white-space:nowrap}
 #welcome .btn+.btn{margin-top:8px}
-@media (min-width:600px),(max-height:520px){#welcome{align-items:center}}
-@media (max-height:520px){#welcome .wcard{display:grid;grid-template-columns:44% 1fr;gap:16px;align-items:center;text-align:left;width:min(100%,640px);padding:16px}#welcome .wart{margin:0}}
+@media (min-width:600px),(max-height:520px) and (min-width:560px){#welcome{align-items:center}}
+@media (max-height:520px) and (min-width:560px){#welcome .wcard{display:grid;grid-template-columns:44% 1fr;gap:16px;align-items:center;text-align:left;width:min(100%,640px);padding:16px}#welcome .wart{margin:0}}
 @media (prefers-reduced-motion:reduce){#welcome,#welcome .wcard,#welcome .wart *{animation:none!important}}
 #dlg{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:20px}
 #dlg .card{max-width:340px;width:100%;padding:18px}#dlg p{font-size:15px;font-weight:700}
@@ -422,7 +422,7 @@ body.big .rline{font-size:15px}body.big h1{font-size:21px}body.big h2{font-size:
  #panel.sheet .btn{min-height:46px}.bfoot .ibtn{height:46px}
 }
 /* 가로로 눕힌 폰: 판 왼쪽, 바·패널 오른쪽 */
-@media (max-width:899px) and (max-height:520px){
+@media (max-width:899px) and (max-height:520px) and (min-width:560px){
  .ggrid{grid-template-columns:auto minmax(280px,1fr);grid-template-areas:"bd op" "bd me" "bd sd";grid-template-rows:auto auto minmax(0,1fr);align-items:start;column-gap:12px;row-gap:6px}
  .bdcol{display:contents}.bwbox{grid-area:bd}#oppbar{grid-area:op}#mebar{grid-area:me}.side{grid-area:sd}
  .side{align-self:stretch;min-height:0;display:flex;flex-direction:column}.side>:not(#panel){display:none}
@@ -471,7 +471,7 @@ body.shopen .tabbar{visibility:hidden}
 .tips{margin:10px 0 4px;padding:10px 12px;border-radius:12px;background:var(--soft,var(--raise));font-size:14px}.tips b{display:block;margin-bottom:4px}.tips ul{margin:0;padding-left:18px;line-height:1.6}.tips li{text-wrap:pretty}
 .hint.warn{color:#f0a35e;background:color-mix(in srgb,#CC6600 18%,transparent)}
 :root[data-theme=light] .hint{color:#006666}:root[data-theme=light] .hint.warn{color:#8f4700;background:color-mix(in srgb,#CC6600 14%,transparent)}
-@media (orientation:landscape) and (max-height:520px){#panel .bbtn button{min-height:36px}}
+@media (orientation:landscape) and (max-height:520px) and (min-width:560px){#panel .bbtn button{min-height:36px}}
 /* 작은 누름 영역을 보이는 크기는 그대로 두고 44px 가까이 넓힘 */
 .pp.q,[data-act=peek]{position:relative}.pp.q::after,[data-act=peek]::after{content:'';position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
 .tmove{display:flex;align-items:center;justify-content:center;gap:10px;margin:2px 0 4px;font-size:15px}.tmove.up b{color:var(--pri)}
@@ -507,6 +507,89 @@ body.shopen .tabbar{visibility:hidden}
 @media (max-width:270px){#levels{grid-auto-flow:row;grid-template-columns:1fr 1fr}#aitime{grid-auto-flow:row}.tiles{grid-template-columns:1fr}.ltop{flex-wrap:wrap}}
 .hint button,.ibtn{min-width:44px;min-height:44px}
 input,select,textarea{font-size:16px}
+/* ===== 넓은 화면(PC·태블릿) — 폰과 같은 카드·색·글꼴을 쓰고 배치만 넓힘 ===== */
+/* 마우스: 버튼 hover, 얇은 스크롤바 */
+@media (hover:hover) and (pointer:fine){
+ html{scrollbar-width:thin;scrollbar-color:var(--raise) transparent}
+ ::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--raise);border-radius:10px;border:2px solid var(--bg)}::-webkit-scrollbar-track{background:transparent}
+ .btn:not(.ghost):not(:disabled):hover{background:#007070}
+ .btn.ghost:not(:disabled):hover{background:color-mix(in srgb,var(--raise) 82%,var(--ink))}
+ .ibtn:not(:disabled):hover{background:var(--raise);color:var(--ink)}
+ .seg button:not([aria-pressed=true]):not(:disabled):hover{background:color-mix(in srgb,var(--soft) 70%,var(--raise));color:var(--ink)}
+ .tile:hover,.rgrid button:hover,.room:hover{background:color-mix(in srgb,var(--card) 90%,var(--jade))}
+ .tabbar button:not([aria-current=page]):hover{color:var(--ink)}
+ .nickchip:hover{background:var(--raise)}
+ .bbtn button:hover{background:color-mix(in srgb,var(--raise) 82%,var(--ink))}
+ .bcol:not(.sel):hover{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--k) 45%,transparent)}
+ .rules summary:hover{color:var(--jadeink)}
+ #board.hovpick{cursor:pointer}
+}
+#board .hov circle{fill:rgba(0,153,153,.16);stroke:var(--jade);stroke-width:2.4;stroke-dasharray:5 4}
+/* 가운데 창으로 뜨는 시트: 안쪽 여백을 고정(4vw면 1920에서 77px로 너무 넓음) */
+@media (min-width:600px){.lsheet{padding:18px 24px 22px}}
+/* 머리줄 안 탭(넓은 화면 전용 사본)은 평소엔 숨김 */
+.tabbar.tbw{display:none}
+/* 태블릿 세로·작은 창: 탭바를 떠 있는 막대로, 홈 2단 */
+@media (min-width:700px){.tabbar{left:50%;right:auto;transform:translateX(-50%);width:min(560px,94vw);bottom:14px;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,.25)}}
+@media (min-width:700px) and (max-width:1023px) and (orientation:portrait){
+ #lobby>*{max-width:760px}
+ #tab-home:not(.hide){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+ #tab-home>*+*{margin-top:0}#aiResume,#rkResume{grid-column:1/-1}#rkResume:empty{display:none}
+ #tab-home .recent{display:block;grid-column:1/-1}
+ #tab-rec:not(.hide){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}#tab-rec>*+*{margin-top:0}#tab-rec>.card:nth-child(3){grid-column:1/-1}
+ .rcards{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+/* PC·태블릿 가로 로비: 탭은 머리줄 가운데, 홈은 3단(1024~1279는 2단) */
+@media (min-width:1024px){
+ #lobby{max-width:1240px;margin:0 auto;padding-bottom:40px}
+ #lobby>*{max-width:none}
+ .ltop{min-height:56px;margin-bottom:16px}
+ .ltop{position:relative}
+ .tabbar:not(.tbw){display:none}
+ .tabbar.tbw{display:flex;position:absolute;top:50%;bottom:auto;left:50%;right:auto;transform:translate(-50%,-50%);width:auto;gap:4px;padding:4px;border-radius:16px;box-shadow:none;z-index:5}
+ .tabbar.tbw button{flex-direction:row;gap:8px;min-height:44px;padding:0 20px;font-size:14px;border-radius:12px}
+ .tabbar.tbw button svg{width:20px;height:20px}
+ .tabbar.tbw button[aria-current=page]{background:var(--sel)}
+ :root[data-theme=light] .tabbar.tbw button[aria-current=page]{color:#006b6b}
+ .tabbar.tbw button[aria-current=page]::before{display:none}
+ .tabbar.tbw .pip{top:6px;left:28px}
+ .tab>*+*{margin-top:16px}
+ #tab-home:not(.hide){display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:auto auto auto 1fr;column-gap:16px;row-gap:0;align-items:start}
+ #tab-home>*+*{margin-top:0}#tab-home>*{margin-bottom:16px}
+ #aiResume{grid-column:1/-1;grid-row:1}#rkResume{grid-column:1/-1;grid-row:2}#rkResume:empty{display:none}
+ #rankCard{grid-column:1;grid-row:3/span 2}#aiCard{grid-column:2;grid-row:3/span 2}
+ #tab-home .tiles{grid-column:3;grid-row:3}#tab-home .recent{display:block;grid-column:3;grid-row:4}
+ #tab-rec:not(.hide){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+ #tab-rec>*+*{margin-top:0}#tab-rec>.card:nth-child(2){grid-column:2;grid-row:1/span 2}
+ #tab-rule{max-width:1000px;margin-left:auto;margin-right:auto}
+ #tab-rule .rcards{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+}
+@media (min-width:1024px) and (max-width:1279px){
+ #tab-home:not(.hide){grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto auto auto 1fr}
+ #rankCard{grid-column:1;grid-row:3}#aiCard{grid-column:2;grid-row:3/span 2}
+ #tab-home .tiles{grid-column:1;grid-row:4}#tab-home .recent{grid-column:1/-1;grid-row:5}
+}
+/* PC·태블릿 가로 대국: 판은 화면 높이에 꽉, 오른쪽 열에 상대·나 → 패널·지난 턴·턴 기록(이 묶음만 스크롤) */
+@media (min-width:900px) and (min-aspect-ratio:5/4) and (min-height:412px){
+ .wrap:has(#game:not(.hide)){max-width:none;padding:10px 24px 10px}
+ #game{--side:clamp(340px,27vw,420px);--bd:min(calc(100vh - 92px),calc(100vw - 72px - var(--side)),980px)}
+ #game .gtop{width:calc(var(--bd) + 24px + var(--side));max-width:100%;margin:0 auto 8px}
+ #game .ggrid{grid-template-columns:var(--bd) var(--side);grid-template-rows:auto auto auto minmax(0,1fr);grid-template-areas:"bd op" "bd me" "bd ab" "bd sd";column-gap:24px;row-gap:10px;justify-content:center;align-items:start;height:var(--bd)}
+ #game .bdcol{display:contents}
+ #game .bwbox{grid-area:bd;width:var(--bd)}
+ #game .boardwrap{width:var(--bd)!important;height:var(--bd)!important;max-height:none}
+ #oppbar{grid-area:op}#mebar{grid-area:me}#absBar{grid-area:ab}
+ #game .side{grid-area:sd;position:static;align-self:stretch;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}
+ #game .side>*{flex:none}#logcard{flex:1 0 auto!important}
+ #game #oppbar,#game #mebar{width:auto;max-width:none;margin-inline:0;justify-self:stretch}
+ #lastchip{display:none!important}
+}
+/* 큰 모니터(1600×900 이상): 오른쪽 열·로비·창 글자를 판 크기에 맞춰 키움 */
+@media (min-width:1600px) and (min-height:900px){
+ #game{--side:clamp(400px,25vw,480px)}
+ #oppbar,#mebar,#game .side{zoom:1.15}
+ #lobby,.lsheet,#dlg .card{zoom:1.1}
+}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -701,7 +784,7 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.0837';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.0927';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -1327,6 +1410,14 @@ function aiBid0(v){
   if(lv.resv&&v.aiSun&&Math.max(...V)<AI_WIN&&Math.min(...V)>-AI_WIN){const th=aiThreat(bd,3-v.aiCol);
    if(th<=3){const R=lv.resvU!=null?aiReserve(th,om,om2,lv):(()=>{const Bo=om2.oppEst+10,need=th===1?Bo:th===2?Bo-1:Math.ceil((Bo-3)/3);return Math.max(0,Math.round((need-10+2)*lv.resv))})();
     const cap=Math.max(3,v.aiPts-R);if(cap<v.aiPts){AI_MIX=lv.mixT||0;const r=aiBRsamples(V,smp,cap,v.aiSun,lam,rnd,0);AI_MIX=0;return r.b}}}
+  // 확실한 상한 보험: 이번 턴에 지면 끝나는 판이면, 상대 점수의 '확실한 최대'(om.oppMax: 지난 턴 최소 지출로 계산)로도 못 뚫게 막을 수 있으면 막음.
+  // 못 막으면(hardIns 2) 남은 점수로 '상대가 이기는 데 드는 최소 점수'를 최대화. (실제 기록: 점수를 모았다가 세 칸 오목에 전부 거는 사람에게 짐)
+  if(lv.hardIns&&Math.min(...V)<=-AI_WIN){const r0=aiBRsamples(V,smp,v.aiPts,v.aiSun,lam,rnd,0);
+   if(aiSafe(V,r0.b,v.aiSun,om.oppMax))return r0.b;const rh=aiInsure(V,smp,v.aiPts,v.aiSun,lam,om.oppMax,r0);if(rh!==r0)return rh.b;
+   // hardF: 상대가 직접 고른 세 칸이면 '확실한 최대'의 hardF 비율까지는 막아 둠(상대가 모아 둔 점수를 낮게 보지 않게)
+   if(lv.hardF&&!v.aiSun){const Bf=Math.ceil(lv.hardF*om.oppMax);if(!aiSafe(V,r0.b,v.aiSun,Bf)){const rf=aiInsure(V,smp,v.aiPts,v.aiSun,lam,Bf,r0);if(rf!==r0)return rf.b}}
+   // 상대가 직접 고른 세 칸(상대가 선)에서 오목 위협이면 노리고 건 것 → 남은 점수로 최대한 막음
+   if(lv.hardIns>=2&&(lv.hardIns>=3||!v.aiSun)){const mm=aiMaximin(V,smp,v.aiPts,v.aiSun,lam);if(mm)return mm.b}}
   if(lv.crit3){const cb=aiCrit3(V,v,om,rnd,lv);if(cb)return cb}
   if(lv.crit4){const cb=aiCrit4(V,v,lv,rnd);if(cb)return cb}
   const crit=Math.min(...V)<=-AI_WIN||(lv.smoothWin&&Math.max(...V)>=AI_WIN);
@@ -1752,7 +1843,7 @@ function renderPanel2(){
  setSheet((vs.phase==='designate'&&vs.sun===me)||(vs.phase==='bet'&&vs.pending.includes(me)));
 }
 // 폰에서는 입력 패널을 화면 아래에 띄워 판·타이머가 계속 보이게
-const isPhone=()=>window.innerWidth<900&&window.innerHeight>520,isLand=()=>window.innerWidth<900&&window.innerHeight<=520;
+const isPhone=()=>window.innerWidth<900&&(window.innerHeight>520||window.innerWidth<560),isLand=()=>window.innerWidth<900&&window.innerWidth>=560&&window.innerHeight<=520;
 function setSheet(on){
  on=isPhone()?(on||UI.view==='game'):(isLand()&&on);
  const p=$('#panel');p.classList.toggle('sheet',!!on);document.body.classList.toggle('sheeton',!!on);
@@ -1774,7 +1865,7 @@ function fitBoard(){
  const off=Math.max(0,(w.parentElement.clientWidth-size)/2);if(z)z.style.right=(off+8)+'px';
  const prev=UI.boardSize;UI.boardSize=size;if((prev<420)!==(size<420)&&prev)renderBoard();
 }
-window.addEventListener('resize',()=>{if(UI.view==='game'){setSheet(false)}});
+{let rz=0;window.addEventListener('resize',()=>{if(UI.view==='game'&&!rz)rz=requestAnimationFrame(()=>{rz=0;setSheet(false)})})}
 function dynPanel(vs){
  const o=$('#oppTag');
  if(o&&vs.phase==='bet'&&UI.mode==='online'){const opp=vs.me===vs.A?vs.B:vs.A,pend=vs.pending.includes(opp),k=pend?'p':'s';
@@ -2764,6 +2855,24 @@ const use=n=>window.claude&&typeof window.claude.use==='function'?Promise.resolv
  if(room&&!(user&&user.firebase)){try{room.onPeers(c=>{MM.peers=(c&&c.peers)||[];renderMM()})}catch(e){}}
  renderRooms();renderRank();
 })();
+// 마우스: 판 위에 올리면 누르면 고를 세 칸을 점선으로 미리 보여 줌(터치에는 없음)
+{const bd=$('#board');let hv=null;
+ const clear=()=>{if(hv){hv.remove();hv=null}bd.classList.remove('hovpick')};
+ bd.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse'||e.buttons)return clear();const vs=vstate();
+  if(!vs||vs.phase!=='designate'||(revealing()&&UI.mode!=='tut')||!(UI.mode==='local'||UI.mode==='tut'||vs.sun===vs.me))return clear();
+  const pt=bd.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const ctm=bd.getScreenCTM();if(!ctm)return;const q=pt.matrixTransform(ctm.inverse());
+  const r=Math.round((q.y-M)/CELL),c=Math.round((q.x-M)/CELL);
+  if(!inB(r,c)||vs.board[r][c]||(UI.sel&&UI.sel.cells&&UI.sel.cells.some(([y,x])=>y===r&&x===c)))return clear();
+  const ok=DIRS.map(([dr,dc])=>[[r-dr,c-dc],[r,c],[r+dr,c+dc]].every(([y,x])=>inB(y,x)&&!vs.board[y][x]));
+  const dir=UI.sel&&ok[UI.sel.dir]?UI.sel.dir:ok.indexOf(true);if(dir<0)return clear();
+  const [dr,dc]=DIRS[dir];
+  if(!hv){hv=document.createElementNS('http://www.w3.org/2000/svg','g');hv.setAttribute('class','hov');hv.setAttribute('pointer-events','none');hv.setAttribute('aria-hidden','true')}
+  hv.innerHTML=[[r-dr,c-dc],[r,c],[r+dr,c+dc]].map(([y,x])=>`<circle cx="${M+x*CELL}" cy="${M+y*CELL}" r="${CELL*.38}"/>`).join('');
+  if(hv.parentNode!==bd)bd.appendChild(hv);bd.classList.add('hovpick')});
+ bd.addEventListener('pointerleave',clear);bd.addEventListener('pointerdown',clear);bd.addEventListener('click',()=>setTimeout(clear,0))}
+// 넓은 화면: 로비 탭을 머리줄 안(제목과 닉네임 사이)에 따로 둠 → Tab 순서가 보이는 순서와 같음
+{const nav=$('#lobby .tabbar');const h=$('#lobby .ltop h1');if(nav&&h){const w=nav.cloneNode(true);w.classList.add('tbw');w.querySelectorAll('[id]').forEach(e=>{e.dataset.src=e.id;e.removeAttribute('id')});h.after(w);
+ const src=$('#pipRank'),dst=w.querySelector('[data-src=pipRank]');if(src&&dst)new MutationObserver(()=>{dst.className=src.className}).observe(src,{attributes:true,attributeFilter:['class']})}}
 }
 </script>
 <script>// 웹으로 열었을 때 '앱 설치' 카드 (설치된 앱으로 열면 안 보임)
