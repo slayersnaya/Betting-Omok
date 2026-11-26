@@ -1603,7 +1603,7 @@ ul.rknote li{text-wrap:balance}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1737';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1753';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -4267,7 +4267,9 @@ async function frFlush(){if(FR.busy)return;FR.busy=true;
    const wait=1150-(Date.now()-FR.lastSend);if(wait>0)await new Promise(r=>setTimeout(r,wait));p=FR.pairs.get(it.pid)||p;
    const s=frS(p),q=int(p.q)+1,msg={i:q,s,t:it.t,a:Date.now()};if(it.e)msg.e=it.e;if(it.k)msg.k=it.k;const m=frMsgs(p).concat([msg]).slice(-FR_MAX);
    try{await db.doc('fp/'+it.pid).update({m,q,['w'+s]:SRV_TS,['r'+s]:q});FR.lastSend=Date.now();FR.out.shift();FR.sent.push({pid:it.pid,a:msg.a,t:msg.t,s,i:q,at:Date.now(),src:it})}
-   catch(err){FR.lastSend=Date.now();if(++it.n>=5){FR.out.shift();toast('메시지를 보내지 못했어요')}else await new Promise(r=>setTimeout(r,400+it.n*350))}}}
+   catch(err){FR.lastSend=Date.now();const c=String((err&&err.code)||(err&&err.message)||'').slice(0,40);console.warn('fr send',c);FR.lastErr=c;
+    if(/permission|denied/i.test(c)&&it.n>=2){FR.out.shift();toast('메시지를 보내지 못했어요 · 서버 규칙 게시가 필요해요 ('+c+')');continue}
+    if(++it.n>=5){FR.out.shift();toast('메시지를 보내지 못했어요'+(c?' ('+c+')':''))}else await new Promise(r=>setTimeout(r,400+it.n*350))}}}
  finally{FR.busy=false;frRenderChat()}}
 function frMarkRead(){const u=FR.chat,p=u&&frPair(u);if(!p||p.st!=='ok'||shOpen!=='chat'||document.visibilityState!=='visible')return;const s=frS(p),r=int(p['r'+s]);
  if(r>=p.q||!frMsgs(p).some(x=>x.s===frO(p)&&x.i>r)||FR.readW[p.id]===p.q)return;if(Date.now()-(FR.readAt[p.id]||0)<10e3&&FR.readOpen===p.id)return;FR.readW[p.id]=p.q;FR.readAt[p.id]=Date.now();FR.readOpen=p.id;db.doc('fp/'+p.id).update({['r'+s]:p.q}).catch(()=>{delete FR.readW[p.id]})}
