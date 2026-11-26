@@ -356,7 +356,8 @@ service cloud.firestore {
     function eqPub(v) { return v is string && v.size() <= 64 && v.matches('^[a-z0-9_.]*$')
       && (v == '' || get(walPath(me())).data.own.hasAll(v.split('[.]'))); }
     function slotOk(e, k, re) { return !(k in e) || e[k] == '' || e[k].matches(re); }
-    function walShape(n) { return n.keys().hasOnly(['g','d','dc','dq','own','eq','cl','k','at','ck'])
+    function walShape(n) { return n.keys().hasOnly(['g','d','dc','dq','own','eq','cl','k','at','ck','nc'])
+      && (!('nc' in n) || (n.nc is int && n.nc >= 0 && n.nc <= 9999))
       && (!('ck' in n) || (n.ck is int && n.ck >= 0 && n.ck <= 6))
       && n.keys().hasAll(['g','d','dc','dq','own','eq','cl','k','at'])
       && n.g is int && n.g >= 0 && n.g <= 99999 && n.d == kday() && n.dc is int && n.dc >= 0 && n.dc <= 150
@@ -386,6 +387,11 @@ service cloud.firestore {
       return !('c' in dqOld(o)) && n.dq == dqOld(o).concat(['c']) && n.dc == dcOld(o)
         && n.ck == (c0 == 6 ? 0 : c0 + 1) && n.g == o.g + (c0 == 6 ? 50 : 10)
         && n.own == o.own && n.cl == o.cl && n.eq == o.eq; }
+    // 닉네임 변경: nc(변경 횟수) +1. 첫 변경 무료, 두 번째부터 옥돌 500(관리자는 무료). 남이 먼저 쓰는 이름이라 바꾸는 경우는 지갑에 쓰지 않음
+    function walNick(o, n) {
+      let c0 = o.get('nc', 0);
+      return n.nc == c0 + 1 && n.g == o.g - (c0 >= 1 && !isAdmin() ? 500 : 0)
+        && n.own == o.own && n.cl == o.cl && n.eq == o.eq && sameDay(o, n); }
     function rwItems(sn, t) { return t == 4 ? ['z' + string(sn) + '_4', 'zn' + string(sn)]
       : t >= 5 ? ['z' + string(sn) + '_' + string(t), 'zt' + string(sn) + '_' + string(t)] : ['z' + string(sn) + '_' + string(t)]; }
     // 시즌 보상: 관리자 기록 cfg/season{n}의 내 최종 티어·판 수(10판 이상)·금액표(없으면 기본표)와 같아야 함
@@ -420,7 +426,9 @@ service cloud.firestore {
             || (request.resource.data.k == 'buy' && walBuy(resource.data, request.resource.data))
             || (request.resource.data.k == 'equip' && walEquip(resource.data, request.resource.data))
             || (request.resource.data.k == 'reset' && walReset(resource.data, request.resource.data))
-            || (request.resource.data.k == 'att' && walAtt(resource.data, request.resource.data)))
+            || (request.resource.data.k == 'att' && walAtt(resource.data, request.resource.data))
+            || (request.resource.data.k == 'nick' && walNick(resource.data, request.resource.data)))
+        && (request.resource.data.k == 'nick' || request.resource.data.get('nc', 0) == resource.data.get('nc', 0))
         && (request.resource.data.k == 'att' || request.resource.data.get('ck', 0) == resource.data.get('ck', 0));
       allow delete: if false;
     }
