@@ -176,6 +176,9 @@ body.fbmode .xfer,body.fbmode .xferC{display:none}body:not(.fbmode) .wgl{display
 .gtop{display:grid;grid-template-columns:minmax(44px,1fr) auto minmax(44px,1fr);align-items:center;gap:6px;min-height:44px;margin-bottom:6px}
 .gmid{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:800;white-space:nowrap}
 .gmid .tn{color:var(--mute);font-weight:700}
+/* 관전 수(대국 중인 사람에게만): 눈 + 숫자 */
+.gmid .wcnt{display:inline-flex;align-items:center;gap:3px;flex:none;padding:2px 7px 2px 6px;border-radius:999px;background:color-mix(in srgb,var(--jadeink) 14%,transparent);color:var(--jadeink);font-size:12px;line-height:1}
+.gmid .wcnt svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .gmid .steps{display:flex;gap:3px}.gmid .steps i{width:16px;height:4px;border-radius:2px;background:var(--raise)}.gmid .steps i.on{background:var(--jadeink)}.gmid .steps i.done{background:color-mix(in srgb,var(--jadeink) 45%,var(--raise))}
 .gtop .right{display:flex;justify-content:flex-end;align-items:center;gap:4px;min-width:44px}
 .ggrid{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"bd" "sd";gap:8px}
@@ -934,6 +937,7 @@ body:not(.fbmode) .tabbar [data-k=pal]{display:none}
 .frow .fx{display:flex;gap:6px;flex:none;align-items:center}
 .frow .btn.small{min-height:40px;padding:0 12px;font-size:13px}
 .frow .ibtn{position:relative;width:44px;height:44px}
+.frow .ibtn.wb{background:color-mix(in srgb,var(--jadeink) 16%,var(--raise));color:var(--jadeink)}
 .fbd{position:absolute;top:3px;right:2px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#d9534f;color:#fff;font-size:10.5px;font-weight:800;line-height:17px;text-align:center;font-style:normal}
 .ftag{font-size:11px;font-weight:800;padding:3px 7px;border-radius:7px;background:color-mix(in srgb,var(--jade) 20%,transparent);color:var(--jadeink);white-space:nowrap}
 .fsec{font-size:12px;font-weight:800;color:var(--mute);margin:2px 2px 6px}.fsec+.flist{margin-bottom:10px}
@@ -965,7 +969,7 @@ body.palguest #palFind,body.palguest #palReq,body.palguest #palList,body.palgues
 .pfvs{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:12px;padding:10px 12px;margin-top:6px}
 .pfvs .lbl{margin:0;font-size:12px;font-weight:800;color:var(--mute);white-space:nowrap}
 .pfvs b{font-size:15px;white-space:nowrap}.pfvs span{margin-left:auto;font-size:11px;color:var(--faint);white-space:nowrap}
-.pfa{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.pfa .btn{min-width:0}.pfa .btn:only-child{grid-column:1/-1}
+.pfa{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.pfa .btn{min-width:0}.pfa .btn:only-child{grid-column:1/-1}.pfa .pfw{grid-column:1/-1}
 .pfm{display:flex;justify-content:center;gap:18px;margin-top:6px}
 .pfm .linkbtn{font-size:13px}
 .pfnote{text-align:center;margin-top:10px}
@@ -1677,6 +1681,7 @@ html{scroll-padding-top:64px}
   <div id="palSet">
    <label class="sw">친구 요청 받기<input type="checkbox" id="frSetReq"></label>
    <label class="sw">접속 상태 보이기<input type="checkbox" id="frSetSt"></label>
+   <label class="sw">친구 관전 허용<input type="checkbox" id="frSetSp"></label>
    <div class="sw frsw"><span>대국 중 친구 알림</span><div class="seg" id="frSetGame"><button data-act="frsetg" data-v="badge">배지만</button><button data-act="frsetg" data-v="off">끄기</button></div></div>
    <div class="sw frsw"><span>차단한 사용자 <b id="frBkN" class="num">0</b>명</span><button class="btn ghost small" data-act="frbklist">보기</button></div>
   </div>
@@ -1695,7 +1700,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.2115';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.2130';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2544,6 +2549,7 @@ function actorOf(vs,id){
  return false}
 function oppStatus(vs,id){
  if(vs.phase!=='bet')return '';
+ if(UI.mode==='online'&&G.watch&&G.watch.k!=='g')return ''; // 중계 관전: 봉인 여부는 싣지 않음(AI 상대 티·생각 시간이 드러나지 않게)
  if(UI.mode==='online')return (vs.pending||[]).includes(id)?['','고민 중']:['j',ecoSealIc(id)+'봉인'];
  if(UI.mode==='local'&&L.s&&L.s.bot)return L.s.stage!==4&&(Date.now()<(L.s.botAt||0)||!L.s.aiSeal)?['','고민 중']:['j',IC.wax+'봉인'];
  if(UI.mode==='local'&&L.s&&L.s.ai&&!L.s.aiSeal)return ['','생각 중'];
@@ -2589,7 +2595,7 @@ function renderPlayers(){
  else if(vs.phase==='review')gm.innerHTML=`<span class="phase">복기</span><span class="tn">${RV.i+1}/${RV.d.hist.length}</span>`;
  else{const k=rv?2:['designate','bet','reveal'].indexOf(vs.phase),t=rv?UI.rv.t:vs.t;
   gm.innerHTML=`${t?`<span class="tn">${t}턴</span>`:''}${k>=0?`<span class="steps">${[0,1,2].map(i=>`<i class="${i===k?'on':i<k?'done':''}"></i>`).join('')}</span>`:''}<span class="phase">${rv?'개봉':phaseName(vs.phase)}</span>`}
- renderTimer();
+ renderTimer();try{lvBadge()}catch(e){}
 }
 // 점수 숫자: 개봉이 끝난 뒤 이전 값에서 새 값으로 세어 감
 // 두 단계: 쓴 점수만큼 내려갔다가(−칩) 새 점수까지 올라감(+칩)
@@ -2878,7 +2884,7 @@ function overSheet(vs,o){
  const stats=o.stats||(me?[[took,'가져간 칸'],[cells-took,'내준 칸'],[spent,'쓴 '+PTU]]:[[took,esc(vs.names[vs.A])+' 칸'],[cells-took,esc(vs.names[vs.B])+' 칸'],[vs.t,'턴']]);
  return `<div class="result"><div class="rhead"><span class="st ${stone}"></span><div><div class="big${won?' w':lost?' l':''}">${title}</div><div class="rs">${o.vs?`<span class="tag">${o.vs}</span>`:''}<span class="tag">${esc(vs.reason||'')}</span></div></div></div>
  <div class="rstats">${stats.map(([v,l,c])=>`<div><b class="num${c?' '+c:''}">${v}</b><span>${l}</span></div>`).join('')}</div>${ecoResLine(vs)}${o.note||''}${o.primary||''}
- <div class="rbtns"${o.extra?` style="grid-template-columns:repeat(${(o.extraN||1)+(vs.hist.length?2:1)},minmax(0,1fr))"`:''}>${o.extra||''}${vs.hist.length?`<button class="btn ghost" data-act="review">${IC.replay}복기</button>`:''}<button class="btn ghost" data-act="${o.home||'lobby'}"${vs.hist.length||o.extra?'':' style="grid-column:1/-1"'}>${IC.home}나가기</button></div>${o.status?`<p class="status">${o.status}</p>`:''}</div>`;
+ <div class="rbtns"${o.extra?` style="grid-template-columns:repeat(${(o.extraN||1)+(vs.hist.length&&!o.norv?2:1)},minmax(0,1fr))"`:''}>${o.extra||''}${vs.hist.length&&!o.norv?`<button class="btn ghost" data-act="review">${IC.replay}복기</button>`:''}<button class="btn ghost" data-act="${o.home||'lobby'}"${(vs.hist.length&&!o.norv)||o.extra?'':' style="grid-column:1/-1"'}>${IC.home}나가기</button></div>${o.status?`<p class="status">${o.status}</p>`:''}</div>`;
 }
 
 // ===== 온라인 패널 =====
@@ -2891,7 +2897,10 @@ function renderPanel(){
 function renderPanel2(){
  if(UI.mode==='local')return L.panel();
  if(UI.mode==='tut')return T.panel();
+ if(G.watch&&G.watch.k!=='g')return wPanel();
  const p=$('#panel'),m=G.meta;
+ // 관전 권한이 없는 진행 중 방(친구가 아니거나 관전을 끔): 봉인 기록을 읽지 못함
+ if(m&&G.pDenied&&m.host!==SEAT&&m.guest!==SEAT){setSheet(false);if(UI.panelKey!=='pden'){UI.panelKey='pden';p.innerHTML='<h3>관전할 수 없는 대국</h3><p class="note">친구가 관전을 허용한 일반 게임만 볼 수 있어요</p><button class="btn wide" data-act="lobby" style="margin-top:8px">나가기</button>'}return}
  if(!m){setSheet(false);p.innerHTML=G.missing?(G.hadMeta?'<h3>상대 나감</h3>'+(G.lastOver&&G.lastOver.hist.length?`<button class="btn ghost wide" data-act="review">${IC.replay}복기</button>`:'')+'<button class="btn wide" style="margin-top:8px" data-act="lobby">나가기</button>':'<h3>없는 방</h3><button class="btn wide" data-act="lobby">나가기</button>'):waitBox('불러오는 중','<p class="sub" id="slow"></p>');UI.panelKey='';return}
  const vs=vstate(),me=SEAT,mine=G.docs[me]||{},oppId=vs.me?(vs.me===vs.A?vs.B:vs.A):null,od=(oppId&&G.docs[oppId])||{};
  const key=[vs.phase,vs.t,vs.me,vs.phase==='bet'?(vs.pending.includes(me)?'p':'s')+(vs.key||''):'',vs.phase==='designate'?JSON.stringify(UI.sel):'',vs.phase==='wait'?(G.docs[me]?'j':'n'):'',vs.phase==='over'?vs.winner+(mine.again?'a':'')+(od.again?'b':''):''].join('|');
@@ -2956,7 +2965,7 @@ function fitBoard(){
 {let rz=0;window.addEventListener('resize',()=>{if(UI.view==='game'&&!rz)rz=requestAnimationFrame(()=>{rz=0;setSheet(false)})})}
 function dynPanel(vs){
  const o=$('#oppTag');
- if(o&&vs.phase==='bet'&&UI.mode==='online'){const opp=vs.me===vs.A?vs.B:vs.A,pend=vs.pending.includes(opp),k=pend?'p':'s';
+ if(o&&vs.phase==='bet'&&UI.mode==='online'&&!(G.watch&&G.watch.k!=='g')){const opp=vs.me===vs.A?vs.B:vs.A,pend=vs.pending.includes(opp),k=pend?'p':'s';
   if(o.dataset.k!==k){o.dataset.k=k;o.className='tag'+(pend?'':' j');o.innerHTML=pend?'고민 중':ecoSealIc(opp)+'봉인';o.classList.remove('hide')}}
  if(vs.phase==='bet'&&vs.pending.includes(SEAT)){const ck=phaseClock(vs),late=ck&&ck.el>ck.dur+1;updateBetSum(vs.pts[SEAT]);if(late&&$('#bsub'))$('#bsub').disabled=true}
 }
@@ -3149,7 +3158,7 @@ function wmine(key,patch){
  }catch(e){G.inflight.delete(key);toast(e&&e.code==='invalid_argument'?'저장 권한 없음':'저장 실패 · 다시 시도 중')}});
 }
 function saveSec(){lset('bo-sec-'+G.gid,JSON.stringify(G.sec))}
-function openAt(k,v){G.open[k]=v;lset('bo-open-'+G.gid,JSON.stringify(G.open))}
+function openAt(k,v){G.open[k]=v;if(G.gid)lset('bo-open-'+G.gid,JSON.stringify(G.open))}
 function effects(){
  const st=G.st,m=G.meta;if(!st||!m||!db)return;
  if(!G.ready.m||!G.ready.p)return; // 방 정보와 두 사람 기록을 모두 서버에서 받은 뒤에만 자동 처리
@@ -3172,7 +3181,7 @@ function effects(){
    const rec={gid:G.gid,A:st.A,B:st.B,na:nk(st.A),nb:nk(st.B),ended:Date.now(),w:st.winner||(st.reason==='확인 불일치'?'void':'draw'),by:me,why:String(st.reason||'').slice(0,20),turns:st.t};/* ECO */Object.assign(rec,ecoPeObj());
    db.doc('res/'+id).get().then(x=>x.exists?null:db.doc('res/'+id).set(rec)).catch(e=>{if(!(e&&e.code==='invalid_argument'))setTimeout(()=>G.inflight.delete('res'),5000)})}
   if((m.host===me||m.guest===me)&&m.status!=='done'&&!G.inflight.has('done')){G.inflight.add('done');db.doc('g/'+G.gid).update({status:'done'}).catch(()=>{})}
-  if(m.next){if(G.gid!==m.next){const nx=m.next;setTimeout(()=>{if(G.meta&&G.meta.next===nx)enterGame(nx)},50)}return}
+  if(m.next){if(G.gid!==m.next){const nx=m.next,wo=G.watch?{watch:G.watch.u}:undefined;setTimeout(()=>{if(G.meta&&G.meta.next===nx)enterGame(nx,wo)},50)}return}
   // 둘 다 다시 하기를 누르면 방장이 같은 두 사람으로 새 판을 만들고, 옛 방에 새 판 주소를 남김
   const oppId=m.host===me?m.guest:m.host;
   if(!m.ranked&&m.host===me&&(G.docs[me]||{}).again&&(G.docs[oppId]||{}).again&&!G.inflight.has('rematch')){
@@ -3244,6 +3253,7 @@ async function nickCommit(){const inp=$('#nick'),err=$('#nickErr'),btn=$('#nickO
  const done=()=>{UI.nickOk=true;closeSheet()};
  if(nickKey(v)===nickKey(old)){if(v!==old){lset('bo-nick',v);syncNick()}done();return}
  if(!v){err.textContent='닉네임을 입력해 주세요';inp.focus();return}
+ if(frClean(v)!==v){err.textContent='쓸 수 없는 말이 들어 있어요';inp.focus();return}
  const chg=!!old,pr=chg?nickPrice():0;
  if(chg&&!(ECO.ok&&ECO.w)){err.textContent='옥돌 지갑을 불러오는 중이에요 · 잠시 뒤 다시';return}
  if(pr>ecoBal()){err.textContent=`옥돌 ${ecoFmt(pr)}개가 필요해요 · 지금 ${ecoFmt(ecoBal())}개`;return}
@@ -3280,16 +3290,19 @@ async function leaveRoom(){
  }
  goLobby();
 }
-function leaveGame(){G.unsubs.forEach(u=>{try{u()}catch(e){}});G.unsubs=[];if(G.room){G.room.leave().catch(()=>{});G.room=null}G.online=new Set()}
-function enterGame(gid){
+function leaveGame(keepW){G.unsubs.forEach(u=>{try{u()}catch(e){}});G.unsubs=[];if(G.room){G.room.leave().catch(()=>{});G.room=null}G.online=new Set();if(!keepW)try{wUnreg()}catch(e){}G.watch=null;G.oppWn=0}
+function enterGame(gid,opt){
  if(typeof gid!=='string'||!GIDRE.test(gid))return;
  if(!db){toast('오프라인');return}
- leaveGame();UI.mode='online';UI.review=false;RV.d=null;if(MM.on)mmStop();
- Object.assign(G,{gid,meta:null,docs:Object.create(null),st:null,open:{},inflight:new Set(),q:Promise.resolve(),created:false,missing:false,lostSecret:false,hadMeta:false,ready:{m:false,p:false},rkSnap:null,lastOver:null,sent:{},pj:{},chg:{},pDenied:false,enterAt:Date.now()});
+ // 관전(opt.watch=친구 uid): 내 방 목록에 남기지 않고, 대국 접속 표시(rt)에도 들어가지 않음
+ const wu=opt&&opt.watch||null,keepW=!!wu&&WT.u===wu;
+ leaveGame(keepW);UI.mode='online';UI.review=false;RV.d=null;if(MM.on)mmStop();
+ Object.assign(G,{gid,meta:null,docs:Object.create(null),st:null,open:{},inflight:new Set(),q:Promise.resolve(),created:false,missing:false,lostSecret:false,hadMeta:false,ready:{m:false,p:false},rkSnap:null,lastOver:null,sent:{},pj:{},chg:{},pDenied:false,enterAt:Date.now(),oppWn:0});
+ if(wu){G.watch={u:wu,k:'g'};if(!keepW)wReg(wu)}
  try{G.sec=JSON.parse(lget('bo-sec-'+gid)||'{}')}catch(e){G.sec={}}if(!G.sec.t)G.sec.t={};
  try{G.open=JSON.parse(lget('bo-open-'+gid)||'{}')||{}}catch(e){G.open={}}
  UI.sel=null;UI.panelKey='';UI.animT=-1;
- if(location.hash!=='#g-'+gid)location.hash='g-'+gid;try{rememberGame(gid)}catch(e){}
+ if(location.hash!=='#g-'+gid)location.hash='g-'+gid;if(!wu)try{rememberGame(gid)}catch(e){}
  show('game');
  const slow=setTimeout(()=>{const s=$('#slow');if(s)s.textContent='연결 지연 · 새로고침 필요'},10000);
  G.unsubs.push(db.doc('g/'+gid).onSnapshot(s=>{clearTimeout(slow);const fresh=!(s.metadata&&s.metadata.fromCache);if(fresh)G.ready.m=true;G.meta=s.exists?normMeta(s.data()):null;if(G.meta)G.hadMeta=true;G.missing=!G.meta&&fresh;if(!G.meta)G.st=null;recompute()},()=>{G.missing=true;renderAll()}));
@@ -3301,7 +3314,7 @@ function enterGame(gid){
   if(!G.ready.m)db.doc('g/'+gid).get().then(s=>{if(G.gid!==gid||(s.metadata&&s.metadata.fromCache))return;G.ready.m=true;G.meta=s.exists?normMeta(s.data()):null;if(G.meta)G.hadMeta=true;G.missing=!G.meta;recompute()}).catch(()=>{});
   if(!G.ready.p)db.collection(`g/${gid}/p`).get().then(qs=>{if(G.gid!==gid||(qs.metadata&&qs.metadata.fromCache))return;G.ready.p=true;const d=Object.create(null);qs.docs.forEach(x=>{const v=x.data();if(okSeat(x.id)&&v&&typeof v==='object'&&!Array.isArray(v))d[x.id]=v});if(!Object.keys(G.docs).length)G.docs=d;if(d[SEAT])G.created=true;recompute()}).catch(()=>{});
   chk(n+1)},4000)})(0);
- if(room)room.join('g-'+gid).then(r=>{if(G.gid!==gid){r.leave();return}G.room=r;r.presence(Object.assign({seat:SEAT},ecoPresX())).catch(()=>{});G.peq={};ECO.peRoom=gid+'|'+(ecoPresX().eq||'');G.unsubs.push(r.onPeers(c=>{try{ecoPeers(c)}catch(e){}G.online=new Set(c.peers.map(p=>p.presence&&p.presence.seat).filter(x=>typeof x==='string'));renderPlayers();try{emoPeers(c)}catch(e){}/* FEAT */}))}).catch(()=>{});
+ if(room&&!wu)room.join('g-'+gid).then(r=>{if(G.gid!==gid){r.leave();return}G.room=r;r.presence(Object.assign({seat:SEAT},ecoPresX())).catch(()=>{});G.peq={};ECO.peRoom=gid+'|'+(ecoPresX().eq||'');G.unsubs.push(r.onPeers(c=>{try{ecoPeers(c)}catch(e){}G.online=new Set(c.peers.map(p=>p.presence&&p.presence.seat).filter(x=>typeof x==='string'));try{lvPeers(c)}catch(e){}renderPlayers();try{emoPeers(c)}catch(e){}/* FEAT */}))}).catch(()=>{});
  renderAll();
 }
 async function createRoom(){
@@ -4256,15 +4269,30 @@ function agoF(ms){if(!ms)return '';const d=Math.max(0,Date.now()-ms),m=6e4;if(d<
  if(dd<=0)return Math.floor(d/36e5)+'시간 전';if(dd===1)return '어제';if(dd<7)return dd+'일 전';const a=new Date(ms);return (a.getMonth()+1)+'월 '+a.getDate()+'일'}
 const frHM=ms=>{const d=new Date(ms);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
 // 접속 표시: 친구만(모르는 사람·AI는 늘 '정보 없음'으로 같게 보임)
+// 대국 중이면 종류별 글(랭크는 사람·AI 상대 같은 글) + 관전 가능 여부 w(관전 허용·일반 방 id 있음)
 function frStat(u){if(!frIsF(u))return null;const o=FR.ons.get(u);if(!o||o.hs)return null;const fresh=o.at&&Date.now()-o.at<FR_FRESH;
- if(fresh&&o.st==='r')return{c:'g',t:'랭크 게임 중'};if(fresh&&o.st==='g')return{c:'g',t:'대국 중'};if(fresh&&o.st==='on')return{c:'on',t:'접속 중'};
+ if(fresh&&['g','r','a'].includes(o.st)){const lv=o.st==='a'&&AI_LEVELS[o.al]?' · '+AI_LEVELS[o.al].name:'';
+  return{c:'g',k:o.st,gi:o.gi||'',w:o.sp!==false&&(o.st!=='g'||GIDRE.test(o.gi||'')),t:o.st==='r'?'랭크 게임 중':o.st==='g'?'일반 게임 중':'AI 대전 중'+lv}}
+ if(fresh&&o.st==='on')return{c:'on',t:'접속 중'};
  return o.at?{c:'',t:agoF(o.at)+' 접속'}:null}
 // 글 거르기(앱에서만 하는 간단한 거름): 욕설은 별표, 링크·전화번호는 보내지 않음(받은 글도 가려서 보여 줌)
-const FR_BAD=['시발','씨발','씨빨','시바','ㅅㅂ','ㅆㅂ','병신','븅신','ㅂㅅ','개새끼','개색','지랄','좆','존나','졸라','닥쳐','꺼져','미친놈','미친년','엠창','느금','니애미','애미','fuck','shit','bitch'];
-const FR_BADRE=new RegExp(FR_BAD.map(w=>[...w].map(c=>c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('[\\s._\\-]*')).join('|'),'gi');
+// ===== 욕설 거르기(보낼 때 + 받은 메시지를 보일 때 한 번 더): 사이에 띄어쓰기·숫자·기호 넣기, 한글 자판 영타(tlqkf), 긴 욕 먼저 =====
+const FR_BAD=['시발','씨발','씨빨','씨팔','시팔','씨바','시바','씹','썅','쌍놈','쌍년','ㅅㅂ','ㅆㅂ','ㅅ발','시ㅂ','병신','븅신','빙신','병싄','ㅂㅅ','ㅄ','개새끼','개새기','개색기','개색히','개세끼','개쉐끼','개섀끼','개색','새끼','새기','색히','섀끼','쉐끼','ㅅㄲ','지랄','ㅈㄹ','좆','좃','존나','졸라','존내','졸나','ㅈㄴ','닥쳐','닥치','ㄷㅊ','꺼져','ㄲㅈ','미친놈','미친년','미친새','미친','ㅁㅊ','미띤','엠창','느금','느그','니애미','니애비','애미','애비','에미','에비','니미','엄창','창녀','창년','걸레','등신','또라이','똘아이','돌아이','찐따','김치녀','메갈','일베','틀딱','급식충','맘충','애자','정신병자','씹년','개년','개놈','개같','개소리','좆같','좆까','엿먹','뒤져','뒤질','디져','디질','보지','자지','섹스','니기미','니기','시벌','씨벌','십새','십새끼','씨댕','시댕','쓰레기','fuck','fuk','fck','shit','bitch','asshole','dick','pussy','cunt','motherfucker','wtf','stfu','nigger','nigga','retard','bastard','damn'];
+const FR_SEP='[\\s._\\-0-9~!@#$%^&*()+=|\\\\/\'"`,<>?;:\\[\\]{}ㆍ·…]*';
+const FR_BADRE=new RegExp(FR_BAD.slice().sort((a,b)=>b.length-a.length).map(w=>[...w].map(c=>c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join(FR_SEP)).join('|'),'gi');
+// 한글 자판으로 영어를 친 욕(예: tlqkf=시발) 잡기: 영문 묶음을 자판 자모로, 욕은 자모로 풀어 비교
+const FR_CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ',FR_JUNG=['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅗㅏ','ㅗㅐ','ㅗㅣ','ㅛ','ㅜ','ㅜㅓ','ㅜㅔ','ㅜㅣ','ㅠ','ㅡ','ㅡㅣ','ㅣ'],FR_JONG=['','ㄱ','ㄲ','ㄱㅅ','ㄴ','ㄴㅈ','ㄴㅎ','ㄷ','ㄹ','ㄹㄱ','ㄹㅁ','ㄹㅂ','ㄹㅅ','ㄹㅌ','ㄹㅍ','ㄹㅎ','ㅁ','ㅂ','ㅂㅅ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+const frJamo=t=>[...t].map(c=>{const k=c.charCodeAt(0)-0xAC00;if(k<0||k>11171)return c;return FR_CHO[Math.floor(k/588)]+FR_JUNG[Math.floor(k%588/28)]+FR_JONG[k%28]}).join('');
+const FR_KEY={q:'ㅂ',w:'ㅈ',e:'ㄷ',r:'ㄱ',t:'ㅅ',y:'ㅛ',u:'ㅕ',i:'ㅑ',o:'ㅐ',p:'ㅔ',a:'ㅁ',s:'ㄴ',d:'ㅇ',f:'ㄹ',g:'ㅎ',h:'ㅗ',j:'ㅓ',k:'ㅏ',l:'ㅣ',z:'ㅋ',x:'ㅌ',c:'ㅊ',v:'ㅍ',b:'ㅠ',n:'ㅜ',m:'ㅡ',Q:'ㅃ',W:'ㅉ',E:'ㄸ',R:'ㄲ',T:'ㅆ',O:'ㅒ',P:'ㅖ'};
+const frKeyJamo=w=>[...w].map(c=>FR_KEY[c]||FR_KEY[c.toLowerCase()]||'').join('');
+const FR_BADJ=FR_BAD.filter(w=>/[가-힣]/.test(w)).map(frJamo).filter(j=>j.length>=4);
+// 욕과 겹치지만 괜찮은 말(먼저 보호했다가 되돌림)
+const FR_OK=['시바견','시바이누','새끼손가락','새끼발가락','새끼고양이','새끼 고양이','새끼강아지','새끼 강아지','보지 마','보지마','디져트','미친듯이','미친 듯이','미친듯','dickens','scunthorpe'];
+const FR_OKRE=new RegExp(FR_OK.map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'gi');
+const frClean0=t=>String(t||'').replace(FR_BADRE,m=>'*'.repeat([...m].length)).replace(/[A-Za-z]{3,}/g,w=>{const j=frKeyJamo(w);return FR_BADJ.some(b=>j.includes(b))?'*'.repeat(w.length):w});
 const FR_LINKS='(?:https?:\\/\\/|www\\.|open\\.kakao|t\\.me\\/|discord\\.gg)\\S*|\\b[a-z0-9-]{2,}\\.(?:com|net|kr|io|me|ly|gg|xyz|co|org|app|link|site|shop)\\b\\S*',FR_TELS='01[016789][\\s.\\-]?\\d{3,4}[\\s.\\-]?\\d{4}|\\b\\d{2,3}-\\d{3,4}-\\d{4}\\b';
 const FR_LINK=new RegExp(FR_LINKS,'i'),FR_TEL=new RegExp(FR_TELS);
-const frClean=t=>String(t||'').replace(FR_BADRE,m=>'*'.repeat([...m].length));
+const frClean=t=>{const keep=[];const p=String(t||'').replace(FR_OKRE,m=>{keep.push(m);return '\u0001'+(keep.length-1)+'\u0002'});return frClean0(p).replace(/\u0001(\d+)\u0002/g,(_,i)=>keep[+i])};
 const frShow=t=>frClean(t).replace(new RegExp(FR_LINKS,'gi'),'(링크)').replace(new RegExp(FR_TELS,'g'),'(번호)');
 const FR_EMO=/^(?:\p{Extended_Pictographic}[\u{1F3FB}-\u{1F3FF}️]?(?:‍\p{Extended_Pictographic}️?)*){1,3}$/u;
 function frAlert(msg){dialog(msg,'확인',null);const n=$('#dlg [data-act=dlgno]');if(n)n.remove()}
@@ -4283,20 +4311,20 @@ function frStart(){if(!frOk()||FR.started===SEAT)return;FR.started=SEAT;FR.subs.
  frOnMine();setTimeout(frHash,600)}
 async function frOnMine(){if(!frOk())return;try{const x=await db.doc('on/'+SEAT).get();FR.mine=x.exists?(x.data()||{}):{}}catch(e){FR.mine={}}
  FR.mineLoaded=true;FR.code=typeof FR.mine.fc==='string'?FR.mine.fc:'';frRender();frPresence()}
-function frStNow(){if(FR.mine&&FR.mine.hs)return 'off';if(document.visibilityState==='hidden')return 'off';
- if(UI.view==='game'&&UI.mode==='online'&&G.meta&&G.meta.status!=='done'&&(G.meta.host===SEAT||G.meta.guest===SEAT))return G.meta.ranked?'r':'g';return 'on'}
-// 내 접속 표시: 바뀔 때 바로, 그대로면 10분마다(친구가 있을 때만)
-// 쓰기 아끼기: 상태가 15초 이상 그대로일 때만 씀(대국 들고 날 때 깜빡임 방지), 다른 앱으로 잠깐 갔다 오면(60초 안) 안 씀, 앱을 닫을 때는 바로
+// 접속 상태: off 나감 · on 접속 · g 일반 게임 · r 랭크 게임(사람·AI 상대 같음) · a AI 대전. AI 판은 폰 안에서만 진행돼 예전에는 '접속 중'으로 남았음
+function frStNow(){if(FR.mine&&FR.mine.hs)return 'off';if(document.visibilityState==='hidden')return 'off';const g=frGame();return g?g.st:'on'}
+// 내 접속 표시: 바뀔 때 바로, 그대로면 10분마다(친구가 있을 때만). 대국 종류(st)·일반 방 id(gi)·AI 난이도(al)를 같이 실음
+// 쓰기 아끼기: 대국 시작·끝은 2초 그대로일 때 한 번(들고 날 때 겹친 변화는 한 번에), 다른 앱으로 잠깐 갔다 오면(60초 안) 안 씀, 앱을 닫을 때는 바로
 function frPresence(now0){if(!frOk()||!FR.mineLoaded||!FR.base)return;if(![...FR.pairs.values()].some(p=>p.st==='ok'))return;
- const st=frStNow(),w=FR.onW,now=Date.now(),wt=FR.want||(FR.want={st,at:now});if(wt.st!==st){wt.st=st;wt.at=now}
- if(st===w.st&&(st==='off'||now-w.at<FR_HB))return;
- if(w.at&&!now0&&now-wt.at<(st==='off'?60e3:w.st==='off'||!w.st?0:15e3))return;
- w.st=st;w.at=now;db.doc('on/'+SEAT).update({at:SRV_TS,st}).catch(()=>{w.at=0;w.st=''})}
+ const st=frStNow(),g=st==='off'?null:frGame(),gi=g&&g.gi||'',al=g&&g.al||'',k=st+'|'+gi+'|'+al,w=FR.onW,now=Date.now(),wt=FR.want||(FR.want={k,at:now});if(wt.k!==k){wt.k=k;wt.at=now}
+ if(k===w.k&&(st==='off'||now-w.at<FR_HB))return;
+ if(w.at&&!now0&&now-wt.at<(st==='off'?60e3:2e3))return;
+ w.st=st;w.k=k;w.at=now;db.doc('on/'+SEAT).update({at:SRV_TS,st,gi,al}).catch(()=>{w.at=0;w.st='';w.k=''})}
 function frWatch(){const want=new Set();
  if(frOk()&&document.visibilityState==='visible'){if(UI.view==='lobby'&&UI.tab==='pal')for(const p of FR.pairs.values())if(p.st==='ok')want.add(frU(p));
-  if(shOpen==='prof'&&FR.prof&&frIsF(FR.prof))want.add(FR.prof);if(shOpen==='chat'&&FR.chat&&frIsF(FR.chat))want.add(FR.chat)}
+  if(shOpen==='prof'&&FR.prof&&frIsF(FR.prof))want.add(FR.prof);if(shOpen==='chat'&&FR.chat&&frIsF(FR.chat))want.add(FR.chat);if(UI.view==='game'&&G.watch&&frIsF(G.watch.u))want.add(G.watch.u)}
  for(const u of want){if(FR.onDrop.has(u)){clearTimeout(FR.onDrop.get(u));FR.onDrop.delete(u)}
-  if(!FR.onSubs.has(u)&&!(Date.now()-(FR.onDen.get(u)||0)<5*60e3))FR.onSubs.set(u,db.doc('on/'+u).onSnapshot(x=>{const d=x.exists?(x.data()||{}):null;FR.ons.set(u,d?{at:+d.at||0,st:d.st,hs:d.hs===true,eq:typeof d.eq==='string'?d.eq:''}:{at:0});frSoft()},()=>{FR.onDen.set(u,Date.now());const f=FR.onSubs.get(u);FR.onSubs.delete(u)}))}
+  if(!FR.onSubs.has(u)&&!(Date.now()-(FR.onDen.get(u)||0)<5*60e3))FR.onSubs.set(u,db.doc('on/'+u).onSnapshot(x=>{const d=x.exists?(x.data()||{}):null;FR.ons.set(u,d?{at:+d.at||0,st:d.st,hs:d.hs===true,eq:typeof d.eq==='string'?d.eq:'',gi:typeof d.gi==='string'?d.gi:'',al:typeof d.al==='string'?d.al:'',sp:d.sp!==false}:{at:0});frSoft();if(UI.view==='game'&&G.watch&&G.watch.u===u&&G.watch.k!=='g')try{renderPanel()}catch(e){}},()=>{FR.onDen.set(u,Date.now());const f=FR.onSubs.get(u);FR.onSubs.delete(u)}))}
  for(const u of [...FR.onSubs.keys()])if(!want.has(u)&&!FR.onDrop.has(u))FR.onDrop.set(u,setTimeout(()=>{const f=FR.onSubs.get(u);if(f)try{f()}catch(e){}FR.onSubs.delete(u);FR.onDrop.delete(u)},30e3))}
 let frSoftQ=0;function frSoft(){if(frSoftQ)return;frSoftQ=requestAnimationFrame(()=>{frSoftQ=0;frRender();frRenderChat();frRenderProf()})}
 
@@ -4347,9 +4375,9 @@ function frRender(){frBadges();const tab=$('#tab-pal');if(!tab)return;if((UI.tab
  const onl=fl.filter(p=>{const s=frStat(frU(p));return s&&s.c}).length;$('#palCnt').textContent=fl.length?`${fl.length}명`:'';
  let grp=-1;const sec=fl.length>=4&&onl&&onl<fl.length;
  $('#palFr').innerHTML=FR.err&&!fl.length?'<p class="sub empty">불러오지 못했어요 · 잠시 뒤 다시</p>':!(FR.got.a&&FR.got.b)?'<p class="sub empty">불러오는 중</p>':fl.length?fl.map(p=>{const u=frU(p),nk=frNick(p),s=frStat(u),un=frUnread(p),iv=frInvOf(p),g=s&&s.c?0:1,hd=sec&&g!==grp&&!iv?`<p class="fsec">${g?'그 밖':`접속 중 <b class="num">${onl}</b>`}</p>`:'';if(!iv)grp=g;
-   return hd+frRow(u,nk,frStatHtml(u)+esc(frRankTxt(u)),(iv?'<span class="ftag">대국 신청</span>':'')+`<button class="ibtn f" data-act="frinv" data-u="${esc(u)}" aria-label="${esc(nk)}에게 대국 신청" title="대국 신청">${FR_ICO_G}</button><button class="ibtn f" data-act="frchat" data-u="${esc(u)}" title="대화" aria-label="${esc(nk)}와 대화${un?` · 안 읽음 ${un}`:''}"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>${un?`<i class="fbd">${un>99?'99+':un}</i>`:''}</button>`,s?s.c:'')}).join('')
+   return hd+frRow(u,nk,frStatHtml(u)+esc(frRankTxt(u)),(iv?'<span class="ftag">대국 신청</span>':'')+(s&&s.w?`<button class="ibtn f wb" data-act="frwatch" data-u="${esc(u)}" aria-label="${esc(nk)} 대국 관전" title="관전">${FR_ICO_W}</button>`:`<button class="ibtn f" data-act="frinv" data-u="${esc(u)}" aria-label="${esc(nk)}에게 대국 신청" title="대국 신청">${FR_ICO_G}</button>`)+`<button class="ibtn f" data-act="frchat" data-u="${esc(u)}" title="대화" aria-label="${esc(nk)}와 대화${un?` · 안 읽음 ${un}`:''}"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>${un?`<i class="fbd">${un>99?'99+':un}</i>`:''}</button>`,s?s.c:'')}).join('')
   :'<div class="fempty empty"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M18 8v6M15 11h6"/></svg><b>아직 친구가 없어요</b><button class="btn small" data-act="sheet" data-k="fadd">친구 추가</button></div>';
- {const r=$('#frSetReq'),s=$('#frSetSt');r.disabled=s.disabled=!FR.mineLoaded;r.checked=!(FR.mine&&FR.mine.nr);s.checked=!(FR.mine&&FR.mine.hs);
+ {const r=$('#frSetReq'),s=$('#frSetSt'),w=$('#frSetSp');r.disabled=s.disabled=!FR.mineLoaded;r.checked=!(FR.mine&&FR.mine.nr);s.checked=!(FR.mine&&FR.mine.hs);if(w){w.disabled=!FR.mineLoaded;w.checked=!(FR.mine&&FR.mine.sp===false)}
   const g=lget('bo-frgame')==='off'?'off':'badge';document.querySelectorAll('#frSetGame button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===g)));
   $('#frBkN').textContent=String(FR.bk.size+FR.bkBot.size)}
  if(FR.srch.last)frSearchPaint();
@@ -4480,7 +4508,7 @@ function frRenderProf(){if(shOpen!=='prof'||!FR.prof)return;const u=FR.prof,me=u
  let acts='',links='';const U=esc(u),N=esc(nk);
  if(!me&&frFb()){
   if(bk){acts=`<button class="btn ghost" data-act="frunbk" data-u="${U}">차단 해제</button>`}
-  else if(p&&p.st==='ok'){const un=frUnread(p);acts=`<button class="btn" data-act="frchat" data-u="${U}"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>대화${un?` ${un}`:''}</button><button class="btn ghost" data-act="frinv" data-u="${U}">${FR_ICO_G}대국 신청</button>`;
+  else if(p&&p.st==='ok'){const un=frUnread(p);acts=(st&&st.w&&UI.view==='lobby'?`<button class="btn wide pfw" data-act="frwatch" data-u="${U}">${FR_ICO_W}관전</button>`:'')+`<button class="btn${st&&st.w&&UI.view==='lobby'?' ghost':''}" data-act="frchat" data-u="${U}"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>대화${un?` ${un}`:''}</button><button class="btn ghost" data-act="frinv" data-u="${U}">${FR_ICO_G}대국 신청</button>`;
    links=`<button class="linkbtn" data-act="frdel" data-u="${U}">친구 끊기</button>`}
   else if(p&&p.st==='req'&&p.by!==SEAT)acts=`<button class="btn ghost" data-act="frno" data-u="${U}">거절</button><button class="btn" data-act="frok" data-u="${U}">수락</button>`;
   else if(p&&p.by===SEAT&&(p.st==='req'||Date.now()-p.sa<7*864e5))acts=`<button class="btn ghost" ${p.st==='req'?`data-act="frcancel" data-u="${U}"`:'disabled'}>요청함${p.st==='req'?' · 취소':''}</button>`;
@@ -4499,7 +4527,7 @@ function frOpenChat(u){if(!frIsF(u)){frOpenProf(u);return}FR.chat=u;FR.rx=null;F
 function frRenderChat(scroll){if(shOpen!=='chat'||!FR.chat)return;const u=FR.chat,p=frPair(u),log=$('#chLog');
  if(!p||p.st!=='ok'){closeSheet();toast('친구가 아니에요');return}
  const s=frS(p),o=frO(p),st=frStat(u),nk=frNick(p),ro=int(p['r'+o]);
- $('#chEmb').innerHTML=frEmb(u,34);$('#chNick').textContent=nk;$('#chSt').textContent=st?(st.t==='랭크 게임 중'?'랭크 게임 중 · 답이 늦을 수 있어요':st.t):frRankTxt(u);
+ $('#chEmb').innerHTML=frEmb(u,34);$('#chNick').textContent=nk;$('#chSt').textContent=st?(st.k==='r'?'랭크 게임 중 · 답이 늦을 수 있어요':st.t):frRankTxt(u);
  const atBot=log.scrollHeight-log.scrollTop-log.clientHeight<60,ms=frMsgs(p),byI=new Map(ms.map(x=>[x.i,x])),rx=new Map();
  for(const x of ms)if(x.e&&byI.has(x.e)&&FR_RX.includes(x.t)){const a=rx.get(x.e)||[];a.push(x.t);rx.set(x.e,a)}
  let h='<div class="chsafe"><span>개인정보는 나누지 마세요 · 신고는 ⋯</span></div>',day='';
@@ -4519,7 +4547,7 @@ function frRenderChat(scroll){if(shOpen!=='chat'||!FR.chat)return;const u=FR.cha
  ci.innerHTML=iv&&!FR.invSeen.has(iv.gid)?`<div class="chinv"><div class="rt"><b>대국 신청이 왔어요</b><span>${presetText((PRESETS[int(iv.t)]||PRESETS[0]).d,(PRESETS[int(iv.t)]||PRESETS[0]).b)} · ${Math.max(1,Math.ceil((FR_INV-(Date.now()-int(iv.at)))/60e3))}분 안에</span></div><button class="btn ghost small" data-act="frinvno" data-u="${esc(u)}">거절</button><button class="btn small" data-act="frinvok" data-u="${esc(u)}">수락</button></div>`
   :mi&&typeof mi==='object'&&GIDRE.test(mi.gid||'')&&Date.now()-int(mi.at)<FR_INV?`<div class="chinv"><div class="rt"><b>대국 신청 · 기다리는 중</b><span>친구가 들어오면 시작해요</span></div><button class="btn ghost small" data-act="frinvcan" data-u="${esc(u)}">취소</button></div>`:''}
 function frSend(t,e){const u=FR.chat,p=u&&frPair(u);if(!p||p.st!=='ok')return false;t=String(t||'').trim().slice(0,FR_TXT);if(!t)return false;
- if(!e){if(FR_LINK.test(t)){toast('링크는 보낼 수 없어요');return false}if(FR_TEL.test(t)){toast('전화번호는 보낼 수 없어요');return false}t=frClean(t)}
+ if(!e){if(FR_LINK.test(t)){toast('링크는 보낼 수 없어요');return false}if(FR_TEL.test(t)){toast('전화번호는 보낼 수 없어요');return false}{const c=frClean(t);if(c!==t)toast('거친 말은 ***로 바뀌어요');t=c}}
  if(FR.out.filter(x=>!x.k).length>=5){toast('천천히 보내 주세요');return false}
  {const d=new Date().toDateString();let c={};try{c=JSON.parse(lget('bo-frday')||'{}')||{}}catch(e){}if(c.d!==d)c={d,n:0};if(c.n>=300){toast('오늘은 메시지를 더 보낼 수 없어요');return false}c.n++;lset('bo-frday',JSON.stringify(c))}
  frQueue(p.id,t,e);frRenderChat(true);return true}
@@ -4592,21 +4620,116 @@ function frInvHost(){if(!frOk())return;for(const p of FR.pairs.values()){const s
   FR.invClr.add(v.gid);FR.invClr.add(v.gid+'|w');db.doc('fp/'+p.id).update({['g'+s]:null}).catch(()=>{FR.invClr.delete(v.gid+'|w')});
   if(here&&G.meta&&G.meta.status==='open'&&age>=FR_INV){frSys(frU(p),'exp');toast('응답이 없어 대국 신청을 닫았어요');leaveRoom()}
   else if(!here&&age<FR_INV&&!(G.meta&&G.gid===v.gid&&G.meta.status!=='open'))frSys(frU(p),'can')}}
-function frTick(){try{frConfirm();frInvBanner();frInvHost();frPresence();frWatch();frBadges();frMarkRead();
+function frTick(){try{frPresence()}catch(e){}try{lvTick()}catch(e){}try{frConfirm();frInvBanner();frInvHost();frWatch();frBadges();frMarkRead();
  if(FR.auto){const a=FR.auto;if(G.gid!==a.gid||Date.now()-a.t>15e3)FR.auto=null;else if(G.missing){FR.auto=null;toast('방이 닫혔어요')}
   else if(G.meta&&G.meta.status!=='open'){FR.auto=null}else{const j=document.querySelector('[data-act=join]');if(j&&!j.disabled&&G.meta&&!G.docs[SEAT]){FR.auto=null;j.click()}}}}catch(e){}}
 setInterval(frTick,1000);
 document.addEventListener('visibilitychange',()=>{try{frPresence();frWatch();if(document.visibilityState==='visible'){frMarkRead();frRenderChat()}}catch(e){}});
-addEventListener('pagehide',()=>{try{frPresence(1)}catch(e){}});
+addEventListener('pagehide',()=>{try{frPresence(1)}catch(e){}try{wUnreg()}catch(e){}});
+// ===== 관전: 친구가 두는 판 보기 =====
+// · 일반 게임(사람끼리): 방 기록(g/*/p)을 바로 구독(서버 규칙: 두 사람·관전 허용한 친구만). 봉인은 해시라 개봉 전 칩은 안 보임
+// · AI 대전·랭크 게임(사람·AI 상대 같음): 두는 사람 폰이 공개 정보만 lv/{나}에 중계. 관전자가 있을 때만 씀. 랭크는 2턴 늦게, 끝나면 전체
+// · 관전자 표시: 관전 화면을 연 친구가 lv/{친구}/w/{나}에 시각만(2분마다). 두는 사람은 대국 중에만 이 목록을 구독해 '관전 n명'
+const LV_D=2,LV_HB=120e3,LV_FRESH=300e3,LVC='abcdefghijklmnopqrs';
+const lvCell=([r,c])=>LVC[r]+LVC[c];
+const FR_ICO_W='<svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+const WT={u:null,hb:0,last:0};
+const LV={unsub:null,docs:new Map(),n:0,ids:'',key:'',wn:-1,wnRoom:'',wrote:false,on:false,err:0};
+// 지금 내가 두는 판(대국 화면). 끝난 판도 결과를 한 번 보내려고 포함
+function lvCtx(){if(UI.view!=='game')return null;
+ if(UI.mode==='local'&&L.s&&L.s.ai)return{src:'L',k:L.s.bot?'r':'a',over:L.s.phase==='over'};
+ if(UI.mode==='online'&&!G.watch&&G.gid&&G.meta&&G.st&&G.meta.guest&&(G.meta.host===SEAT||G.meta.guest===SEAT)&&G.meta.status!=='open')return{src:'G',k:G.meta.ranked?'r':'g',over:G.st.phase==='over'};
+ return null}
+// 접속 표시용: 대국 중이면 {st, gi(일반 방), al(AI 난이도)}. 랭크 게임은 방 id를 싣지 않음(AI 상대 판에는 방이 없어 드러남)
+function frGame(){const c=lvCtx();if(!c||c.over||UI.review)return null;
+ if(c.src==='L')return L.s.bot?{st:'r'}:{st:'a',al:L.s.ai};
+ if(G.meta.status!=='playing')return null;return G.meta.ranked?{st:'r'}:{st:'g',gi:G.gid}}
+const lvAllow=()=>!!(frOk()&&FR.mineLoaded&&FR.mine&&FR.mine.sp!==false&&!FR.mine.hs&&[...FR.pairs.values()].some(p=>p.st==='ok'));
+// 중계 한 장(공개 정보만): 턴마다 '선 1자 + 세 칸 6자 + 칸 주인 3자'. 베팅·남은 칩·봉인 값은 넣지 않음
+function lvSnap(c){let o;
+ if(c.src==='L'){const s=L.s;if(!s.t)return null;
+  o={id:s.id,na:myNick(),nb:s.bot?str12(s.bot.nick):AI_LEVELS[s.ai].name+' AI',me:'A',al:s.bot?'':s.ai,t:s.t,ph:s.phase,sun:s.sun,cells:s.cells,
+   H:s.hist.map(h=>h.sun+h.cells.map(lvCell).join('')+h.win.join('')),w:s.winner,why:s.reason}}
+ else{const m=G.meta,st=G.st,A=m.host,ab=u=>u===A?'A':'B';if(!st.t&&!c.over)return null;
+  const nk=u=>str12((G.docs[u]||{}).nick)||str12(u===A?m.hostNick:m.guestNick)||'플레이어';
+  o={id:sha256('lv|'+G.gid).slice(0,8),na:nk(A),nb:nk(m.guest),me:ab(SEAT),t:st.t,ph:st.phase,sun:st.sun?ab(st.sun):'',cells:st.cells,
+   H:st.hist.map(h=>ab(h.sun)+h.cells.map(lvCell).join('')+h.win.map(ab).join('')),w:st.winner?ab(st.winner):null,why:st.reason}}
+ const d={v:1,id:/^[0-9a-f]{8}$/.test(o.id)?o.id:sha256(String(o.id)).slice(0,8),k:c.k,na:str12(o.na)||'플레이어',nb:str12(o.nb)||'플레이어',me:o.me,t:Math.max(0,Math.min(400,o.t|0))};let H=o.H;
+ if(c.over){d.ph='over';d.w=o.w==='A'||o.w==='B'?o.w:'D';d.why=String(o.why||'').slice(0,20)}
+ else if(c.k==='r'){d.ph='live';H=H.slice(0,Math.max(0,H.length-LV_D))}
+ else{d.ph=o.ph==='bet'?'bet':'designate';if(o.sun==='A'||o.sun==='B')d.sun=o.sun;if(o.ph==='bet'&&o.cells)d.c=o.cells.map(lvCell).join('')}
+ if(c.k==='a')d.al=o.al||'';d.h=H.join(',');return d}
+// 두는 사람 쪽: 1초마다(frTick) 관전자 목록 구독·중계 쓰기·상대에게 관전 수 알림
+function lvTick(){const c=lvCtx(),want=!!(c&&lvAllow()&&db);
+ if(want&&!LV.unsub&&Date.now()-LV.err>30e3){LV.docs=new Map();LV.unsub=db.collection('lv/'+SEAT+'/w').onSnapshot(qs=>{const m=new Map();qs.docs.forEach(x=>{const v=x.data()||{};if(okSeat(x.id)&&x.id!==SEAT)m.set(x.id,+v.at||0)});LV.docs=m;lvCount()},()=>{LV.err=Date.now();lvOff()})}
+ else if(!want&&LV.unsub)lvOff();
+ if(!want){if(LV.n){LV.n=0;lvBadge()}return}
+ lvCount();
+ // 일반 게임(사람끼리)은 상대 화면에도 '관전 n명'(내 친구로 들어온 수)을 알림: 접속 표시(rt) 문서에 같이 실음
+ if(c.src==='G'&&G.room&&(LV.wnRoom!==G.gid||LV.wn!==LV.n)){LV.wnRoom=G.gid;LV.wn=LV.n;G.room.presence({wn:LV.n||null}).catch(()=>{LV.wn=-1})}
+ if(c.k==='g'||!LV.n)return;
+ const d=lvSnap(c);if(!d)return;const key=JSON.stringify(d);if(key===LV.key)return;LV.key=key;LV.wrote=true;
+ db.doc('lv/'+SEAT).set(Object.assign(d,{at:SRV_TS})).catch(()=>{LV.key=''})}
+function lvCount(){const now=Date.now(),ids=[...LV.docs].filter(([,at])=>now-at<LV_FRESH).map(([u])=>u).sort(),j=ids.join();
+ if(j!==LV.ids){const added=ids.some(u=>!LV.ids.split(',').includes(u));LV.ids=j;LV.n=ids.length;if(added)LV.key='';lvBadge()}}
+function lvOff(){if(LV.unsub)try{LV.unsub()}catch(e){}LV.unsub=null;LV.docs=new Map();LV.ids='';LV.key='';LV.wn=-1;if(LV.n){LV.n=0;lvBadge()}}
+// 상대가 알린 관전 수(일반·랭크 사람끼리)
+function lvPeers(c){const m=G.meta;if(!m)return;const op=m.host===SEAT?m.guest:m.host;let n=0;for(const p of c.peers||[])if(p.presence&&p.presence.seat===op&&Number.isInteger(p.presence.wn))n=Math.max(0,Math.min(50,p.presence.wn));if(n!==(G.oppWn||0)){G.oppWn=n;lvBadge()}}
+// 대국 화면 위 가운데: 눈 + 관전 수
+function lvBadge(){const gm=$('#gmid');if(!gm)return;let e=gm.querySelector('.wcnt');const c=lvCtx(),n=c&&!c.over?LV.n+(c.src==='G'?(G.oppWn||0):0):0;
+ if(!n){if(e)e.remove();return}if(!e){e=document.createElement('span');e.className='wcnt';gm.appendChild(e)}
+ const h=FR_ICO_W+`<b class="num">${n}</b>`;if(e.dataset.n!==String(n)){e.dataset.n=String(n);e.innerHTML=h;e.setAttribute('aria-label',`관전 ${n}명`);e.title=`관전 ${n}명`;e.setAttribute('role','img')}else if(!e.isConnected)gm.appendChild(e)}
+
+// ----- 관전자 쪽 -----
+function wReg(u){wUnreg();if(!db||!frOk())return;WT.u=u;const go=()=>{if(WT.u!==u||document.hidden)return;WT.last=Date.now();db.doc(`lv/${u}/w/${SEAT}`).set({at:SRV_TS}).catch(()=>{})};go();WT.hb=setInterval(go,LV_HB)}
+function wUnreg(){if(WT.hb)clearInterval(WT.hb);WT.hb=0;if(WT.u&&db)db.doc(`lv/${WT.u}/w/${SEAT}`).delete().catch(()=>{});WT.u=null}
+function wGo(u){const s=frStat(u);if(!s||!s.w){toast('지금은 관전할 수 없어요');frRender();return}
+ if(MM.on){mmStop();toast('랭크 매칭 취소됨')}closeSheet(true);
+ if(s.k==='g')enterGame(s.gi,{watch:u});else wRelay(u,s.k)}
+function wRelay(u,k){if(!db)return;leaveGame();UI.mode='online';UI.review=false;RV.d=null;
+ Object.assign(G,{gid:null,meta:null,docs:Object.create(null),st:null,open:{},inflight:new Set(),q:Promise.resolve(),created:false,missing:false,lostSecret:false,hadMeta:false,ready:{m:false,p:false},rkSnap:null,lastOver:null,sent:{},pj:{},chg:{},pDenied:false,enterAt:Date.now(),oppWn:0,
+  watch:{u,k,rl:null,ok:false,den:false}});
+ UI.sel=null;UI.panelKey='';UI.animT=-1;if(location.hash)history.replaceState(null,'',location.pathname+location.search);show('game');wReg(u);
+ G.unsubs.push(db.doc('lv/'+u).onSnapshot(x=>{const w=G.watch;if(!w||w.u!==u)return;const d=x.exists?lvParse(x.data()):null;
+  // 처음 받은 것이 지난 판 기록이면(끝난 판·오래된 것) 친구 폰이 새로 보낼 때까지 기다림
+  if(!w.ok){if(!d||d.ph==='over'||Date.now()-d.at>45e3)return renderAll();w.ok=true}
+  if(!d)return;if(w.rl&&w.rl.id!==d.id){UI.animT=-1;UI.panelKey=''}w.rl=d;w.k=d.k;
+  G.meta={host:'A',guest:'B',hostNick:d.na,guestNick:d.nb,td:0,tb:0,status:d.ph==='over'?'done':'playing',ranked:d.k==='r',rv:2,created:0};G.docs={A:{nick:d.na},B:{nick:d.nb}};G.hadMeta=true;G.st=lvState(d);renderAll()},
+  ()=>{if(G.watch&&G.watch.u===u){G.watch.den=true;renderAll()}}));
+ renderAll()}
+// 받은 중계 확인(친구 폰이 쓴 것이라 모양을 다시 검사)
+function lvParse(d){if(!d||typeof d!=='object'||d.v!==1||!['a','r'].includes(d.k)||typeof d.h!=='string'||d.h.length>4400||!/^[0-9a-f]{8}$/.test(d.id||''))return null;
+ const H=d.h?d.h.split(','):[];if(!H.every(x=>/^[AB][a-s]{6}[AB]{3}$/.test(x)))return null;
+ return{id:d.id,k:d.k,at:+d.at||0,na:str12(d.na)||'흑',nb:str12(d.nb)||'백',me:d.me==='B'?'B':'A',t:int(d.t),ph:['designate','bet','live','over'].includes(d.ph)?d.ph:'live',sun:d.sun==='B'?'B':d.sun==='A'?'A':'',
+  c:typeof d.c==='string'&&/^[a-s]{6}$/.test(d.c)?d.c:'',H,w:['A','B'].includes(d.w)?d.w:null,why:str12(String(d.why||'')),al:typeof d.al==='string'?d.al:''}}
+const lvXY=s=>[LVC.indexOf(s[0]),LVC.indexOf(s[1])];
+function lvState(d){const bd=emptyBoard(),hist=[];
+ for(let i=0;i<d.H.length;i++){const x=d.H[i],sun=x[0],hu=sun==='A'?'B':'A',cells=[lvXY(x.slice(1,3)),lvXY(x.slice(3,5)),lvXY(x.slice(5,7))],win=[x[7],x[8],x[9]];
+  cells.forEach(([r,c],j)=>{bd[r][c]=win[j]==='A'?1:2});hist.push({t:i+1,sun,hu,cells,win,bets:{},auto:{}})}
+ const over=d.ph==='over',live=d.ph==='live',ph=over?'over':live?'live':d.ph,cells=ph==='bet'&&d.c?[lvXY(d.c.slice(0,2)),lvXY(d.c.slice(2,4)),lvXY(d.c.slice(4,6))]:null;
+ const sun=!over&&!live?d.sun||null:null;
+ return{phase:ph,t:live?hist.length:over?hist.length:Math.max(d.t,hist.length+1),board:bd,pts:{},warn:{A:0,B:0},hist,A:'A',B:'B',last:hist[hist.length-1]||null,
+  sun,hu:sun?(sun==='A'?'B':'A'):null,cells,key:cells?cellsKey(cells):'',sealed:{},auto:{},pending:[],winner:over?d.w:null,reason:over?d.why:'',waitOn:[]}}
+// 친구가 대국 화면을 나갔는지(접속 표시 기준)
+function wGone(){const w=G.watch;if(!w)return false;const o=FR.ons.get(w.u);if(!o)return false;const fresh=o.at&&Date.now()-o.at<FR_FRESH;return !(fresh&&['g','r','a'].includes(o.st))}
+function wPanel(){const p=$('#panel'),w=G.watch,vs=vstate();setSheet(false);let key,h;
+ if(w.den){key='den';h='<h3>관전할 수 없어요</h3><button class="btn wide" data-act="lobby">나가기</button>'}
+ else if(!vs||!w.rl){key='load'+wGone();h=wGone()?'<h3>지금은 대국 중이 아니에요</h3><button class="btn wide" data-act="lobby">나가기</button>':waitBox('불러오는 중')}
+ else if(vs.phase==='over'){key='over|'+w.rl.id+'|'+vs.winner+'|'+vs.hist.length;h=overSheet(vs,{home:'lobby',norv:true,vs:w.k==='r'?'랭크 게임':'AI 대전'})}
+ else{const gone=wGone();key=[w.rl.id,vs.phase,vs.t,vs.hist.length,w.rl.t,(vs.cells||[]).join(),gone].join('|');
+  h=waitBox(gone?'친구가 대국 화면을 나갔어요':w.k==='r'?`2턴 늦게 보는 중 · 지금 ${w.rl.t}턴`:`관전 중 · ${phaseName(vs.phase)}`,lastLine(vs))}
+ if(UI.panelKey===key)return;UI.panelKey=key;p.innerHTML=h}
 function frBoot(){if(!frFb()&&UI.tab==='pal')setTab('home',true);frStart();frRender();setTimeout(frHash,800)}
 // 계정 삭제 때 친구 문서도 정리(지울 수 없는 남의 요청은 그대로 둠)
 async function frWipe(){if(!db||!SEAT)return;for(const p of FR.pairs.values())await db.doc('fp/'+p.id).delete().catch(()=>{});
- for(const u of FR.bk.keys())await db.doc('bk/'+SEAT+'_'+u).delete().catch(()=>{});if(FR.code)await db.doc('fc/'+FR.code).delete().catch(()=>{});await db.doc('on/'+SEAT).delete().catch(()=>{})}
+ for(const u of FR.bk.keys())await db.doc('bk/'+SEAT+'_'+u).delete().catch(()=>{});if(FR.code)await db.doc('fc/'+FR.code).delete().catch(()=>{});await db.doc('on/'+SEAT).delete().catch(()=>{});
+ try{lvOff();const q=await db.collection('lv/'+SEAT+'/w').get();for(const x of q.docs)await db.doc('lv/'+SEAT+'/w/'+x.id).delete().catch(()=>{})}catch(e){}await db.doc('lv/'+SEAT).delete().catch(()=>{})}
 
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,u=b.dataset.u;
  if(!/^(fr|prof$)/.test(a))return;
  if(a==='prof'||a==='frprof'){e.preventDefault();frOpenProf(u,b.dataset.n);return}
  if(a==='frchat'){frOpenChat(u)}
+ else if(a==='frwatch'){wGo(u);return}
  else if(a==='fradd')frRequest(u,b.dataset.n);
  else if(a==='frok')frAccept(u);
  else if(a==='frno')frDecline(u);
@@ -4637,9 +4760,11 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
  if(b.closest('#dlg')&&!['frrep','frunbk','frcopylink'].includes(a))dialogClose()});
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.matches&&e.target.matches('[role=button][data-act=prof]')){e.preventDefault();e.target.click()}});
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='palQ')frSearch(e.target.value)});
-document.addEventListener('change',e=>{const id=e.target&&e.target.id;if(id!=='frSetReq'&&id!=='frSetSt')return;if(!frOk()||!FR.mineLoaded){e.target.checked=!e.target.checked;return}
- const patch=id==='frSetReq'?{nr:!e.target.checked}:{hs:!e.target.checked};Object.assign(FR.mine,patch);FR.onW={st:'',at:0};
- db.doc('on/'+SEAT).update(Object.assign({at:SRV_TS,st:frStNow()},patch)).then(()=>{FR.onW={st:frStNow(),at:Date.now()};toast(id==='frSetReq'?(e.target.checked?'친구 요청을 받아요':'친구 요청을 받지 않아요'):(e.target.checked?'접속 상태를 친구에게 보여요':'접속 상태를 숨겼어요'))},()=>{toast('바꾸지 못했어요');Object.assign(FR.mine,id==='frSetReq'?{nr:e.target.checked}:{hs:e.target.checked});frRender()})});
+document.addEventListener('change',e=>{const id=e.target&&e.target.id;if(id!=='frSetReq'&&id!=='frSetSt'&&id!=='frSetSp')return;if(!frOk()||!FR.mineLoaded){e.target.checked=!e.target.checked;return}
+ const K={frSetReq:'nr',frSetSt:'hs',frSetSp:'sp'}[id],on=e.target.checked,val=K==='sp'?on:!on,patch={[K]:val};Object.assign(FR.mine,patch);FR.onW={st:'',at:0};
+ // 관전을 끄면 중계 문서도 지움(새로 보는 사람·이미 보던 사람 모두 막힘). 일반 게임은 서버 규칙이 새 관전 입장을 막음
+ if(K==='sp'&&!on){lvOff();if(LV.wrote){LV.wrote=false;db.doc('lv/'+SEAT).delete().catch(()=>{})}}
+ const g=frGame();db.doc('on/'+SEAT).update(Object.assign({at:SRV_TS,st:frStNow(),gi:g&&g.gi||'',al:g&&g.al||''},patch)).then(()=>{FR.onW={st:frStNow(),at:Date.now()};toast({nr:on?'친구 요청을 받아요':'친구 요청을 받지 않아요',hs:on?'접속 상태를 친구에게 보여요':'접속 상태를 숨겼어요',sp:on?'친구가 내 대국을 볼 수 있어요':'친구 관전을 껐어요'}[K])},()=>{toast('바꾸지 못했어요');Object.assign(FR.mine,{[K]:K==='sp'?!on:on});frRender()})});
 {const f=$('#chForm');if(f)f.addEventListener('submit',e=>{e.preventDefault();const i=$('#chIn');if(frSend(i.value))i.value=''})}
 window.addEventListener('hashchange',()=>{if(/^#f-/.test(location.hash))try{frHash()}catch(e){}});
 

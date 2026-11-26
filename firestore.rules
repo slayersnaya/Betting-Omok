@@ -1,6 +1,7 @@
 rules_version = '2';
 // 베팅 오목 — Firestore 보안 규칙 (2026-11 강화판)
 // 2026-11 재화·상점 1단계: wal(옥돌 지갑·꾸미기) 추가, res·bres·rt·on에 공개 장착 eq
+// 2026-11 관전: g/*/p 읽기는 두 사람·끝난 판·관전 허용한 친구만, lv(AI·랭크 중계, 관전자 표시) 추가, on에 대국 종류·관전 허용, rt에 관전 수 wn
 // 2026-11 친구 기능: fp(친구·대화)·on(접속)·fc(친구 코드)·bk(차단)·rep(신고) 추가, nicks에 표시용 n
 // 핵심: ① 대국 기록은 '추가만'(이미 쓴 값 수정·삭제 금지) ② 시각은 서버 시각으로 검사
 //       ③ 랭크 결과는 실제 랭크 방·구글 계정에만 묶음 ④ 키·크기·시각 범위 제한
@@ -118,11 +119,14 @@ service cloud.firestore {
             || !exists(pPath(gid, resource.data.guest))
             || (resource.data.get('ranked', false) != true && resource.data.created < nowMs() - 86400000));
 
-      // 각자 자리 문서: 누구나 읽기(관전). 쓰기는 본인 것만, 기록은 '추가만'
+      // 각자 자리 문서(봉인 기록): 진행 중에는 그 방의 두 사람과, 일반 게임이면 '관전 허용'한 플레이어의 친구만 읽기.
+      //   참가 전(열린 방)·끝난 판(결과 확인·복기)은 누구나. 랭크 방은 진행 중 관전 불가(lv 지연 중계로만 봄). 쓰기는 본인 것만, 기록은 '추가만'
       match /p/{seat} {
-        // 랭크 방은 진행 중에는 두 사람만 읽기(끝나면 결과 확인을 위해 누구나)
-        allow read: if signedIn() && (gdoc(gid).get('ranked', false) != true || gdoc(gid).status == 'done'
-          || me() == gdoc(gid).host || me() == gdoc(gid).get('guest', ''));
+        allow read: if signedIn() && (gdoc(gid).status in ['open', 'done']
+          || me() == gdoc(gid).host || me() == gdoc(gid).get('guest', '')
+          || (isAdmin() && gdoc(gid).get('created', nowMs()) < nowMs() - 86400000)
+          || (gdoc(gid).get('ranked', false) != true
+              && (watchOk(gdoc(gid).host) || watchOk(gdoc(gid).get('guest', '')))));
         // 열린 방이면 참가 신청, 진행 중인 방이면 그 방의 두 사람만
         allow create: if signedIn() && seat == me()
           && request.resource.data.seat == me()
@@ -299,7 +303,9 @@ service cloud.firestore {
       return signedIn() && uid == me()
         && room.matches('^(lobby|g-g[0-9a-f]{8})$')
         && request.resource.data.keys().hasOnly(['presence','at'])
-        && request.resource.data.presence is map && request.resource.data.presence.keys().hasOnly(['seat','mm','emo','eq'])
+        && request.resource.data.presence is map && request.resource.data.presence.keys().hasOnly(['seat','mm','emo','eq','wn'])
+        // 관전 수(내 친구로 들어온 관전자 수): 상대에게 '관전 n명'을 같이 보여 줌
+        && (!('wn' in request.resource.data.presence) || (request.resource.data.presence.wn is int && request.resource.data.presence.wn >= 0 && request.resource.data.presence.wn <= 50))
         && (!('seat' in request.resource.data.presence) || seatId(request.resource.data.presence.seat))
         && (!('mm' in request.resource.data.presence)
             || (request.resource.data.presence.mm is map && request.resource.data.presence.mm.keys().hasOnly(['seat','r','since','nick'])
@@ -539,11 +545,16 @@ service cloud.firestore {
     }
 
     // on/{uid}: 접속 상태(앱을 열 때·10분마다·닫을 때). 본인과 친구만 읽음(모르는 사람이 접속 시각을 보지 못하게)
-    //   st: on 접속 · off 나감 · g 일반 대국 중 · r 랭크전 중 / fc 친구 코드 / tk·tka 초대 링크 토큰 / nr 요청 안 받기 / hs 상태 숨김
-    function onFields(r) { return r.keys().hasOnly(['at','st','fc','tk','tka','nr','hs','eq'])
-      && r.at == request.time && r.st in ['on','off','g','r']
+    //   st: on 접속 · off 나감 · g 일반 게임 중 · r 랭크 게임 중(사람·AI 상대 같음) · a AI 대전 중 / fc 친구 코드 / tk·tka 초대 링크 토큰 / nr 요청 안 받기 / hs 상태 숨김
+    //   gi: 일반 게임 방 id(관전 입장용, 아니면 '') · al: AI 대전 난이도(아니면 '') · sp: 관전 허용(없으면 허용)
+    //   랭크 게임은 방 id를 싣지 않음(AI 상대 판에는 방이 없어서, 실으면 AI 상대인지 드러남)
+    function onFields(r) { return r.keys().hasOnly(['at','st','fc','tk','tka','nr','hs','eq','gi','al','sp'])
+      && r.at == request.time && r.st in ['on','off','g','r','a']
       && (!('tk' in r) || (r.tk is string && r.tk.matches('^[0-9a-f]{16}$')))
-      && (!('nr' in r) || r.nr is bool) && (!('hs' in r) || r.hs is bool); }
+      && (!('nr' in r) || r.nr is bool) && (!('hs' in r) || r.hs is bool)
+      && (!('gi' in r) || (r.gi is string && r.gi.matches('^(g[0-9a-f]{8})?$')))
+      && (!('al' in r) || (r.al is string && r.al.matches('^[a-z]{0,12}$')))
+      && (!('sp' in r) || r.sp is bool); }
     function fcMine(c) { return c is string && c.matches('^[A-HJ-NP-Z2-9]{8}$')
       && get(/databases/$(database)/documents/fc/$(c)).data.by == me(); }
     match /on/{uid} {
@@ -557,6 +568,39 @@ service cloud.firestore {
         && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['tka']) || nearNow(request.resource.data.tka, 120000, 120000))
         && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['eq']) || !('eq' in request.resource.data) || eqPub(request.resource.data.eq));
       allow delete: if signedIn() && uid == me();
+    }
+
+    // ===== 관전 =====
+    // u의 대국을 내가 볼 수 있는지: 친구이고, u가 관전을 끄지 않았고(sp), 접속 상태를 숨기지 않았음(hs)
+    function watchOk(u) { return u is string && u != '' && u != me()
+      && exists(fpPath(pid(u, me()))) && get(fpPath(pid(u, me()))).data.st == 'ok'
+      && (!exists(onPath(u)) || (get(onPath(u)).data.get('sp', true) != false && get(onPath(u)).data.get('hs', false) != true)); }
+    // 중계 한 판 기록(공개 정보만): 판의 돌·턴별 세 칸과 칸 주인·차례·끝난 결과. 베팅·남은 칩·봉인 값 칸은 아예 없음
+    //   k: a AI 대전(실시간) · r 랭크(2턴 늦게, 끝나면 전체) / h: 턴 기록 문자열(턴당 10자) / me: 주인이 흑(A)·백(B) 중 어느 쪽
+    function lvOk(d) { return d.keys().hasOnly(['v','id','k','at','na','nb','me','al','t','ph','sun','c','h','w','why'])
+      && d.keys().hasAll(['v','id','k','at','na','nb','me','t','ph','h'])
+      && d.v == 1 && d.id is string && d.id.matches('^[0-9a-f]{8}$') && d.k in ['a','r'] && d.at == request.time
+      && nick(d.na) && nick(d.nb) && d.me in ['A','B'] && d.t is int && d.t >= 0 && d.t <= 400
+      && d.ph in ['designate','bet','live','over'] && d.h is string && d.h.size() <= 4400 && d.h.matches('^[A-Ba-s,]*$')
+      && (!('al' in d) || (d.k == 'a' && d.al is string && d.al.matches('^[a-z]{0,12}$')))
+      // 랭크 중계는 지금 턴 정보(선·세 칸)를 싣지 않음
+      && (!('sun' in d) || (d.k == 'a' && d.sun in ['A','B']))
+      && (!('c' in d) || (d.k == 'a' && d.c is string && d.c.matches('^[a-s]{6}$')))
+      && (!('w' in d) || d.w in ['A','B','D','']) && (!('why' in d) || (d.why is string && d.why.size() <= 20)); }
+    match /lv/{u} {
+      allow read: if signedIn() && (u == me() || watchOk(u));
+      allow create, update: if google() && u == me() && lvOk(request.resource.data);
+      allow delete: if signedIn() && u == me();
+      // 관전자 표시: 관전 화면을 연 친구가 lv/{u}/w/{나}에 시각만(2분마다 갱신, 닫으면 지움). 주인과 본인만 읽음
+      match /w/{x} {
+        allow read: if signedIn() && (u == me() || x == me());
+        allow create: if google() && x == me() && watchOk(u)
+          && request.resource.data.keys().hasOnly(['at']) && request.resource.data.at == request.time;
+        allow update: if google() && x == me() && watchOk(u)
+          && request.resource.data.keys().hasOnly(['at']) && request.resource.data.at == request.time
+          && resource.data.at < request.time - duration.value(30, 's');
+        allow delete: if signedIn() && (x == me() || u == me());
+      }
     }
 
     // fc/{코드}: 친구 코드 → 주인 uid(+ 보여 줄 닉네임 n). 코드는 먼저 만든 사람 것, 주인만 닉네임을 고침

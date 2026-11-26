@@ -266,3 +266,50 @@ export const documentId=()=>'__name__';
    if(has||sv!==undefined){const r2=Object.assign({},raw);delete r2.eq;if(sv!==undefined)delete cur.eq;try{return _check2(op,p,r2,merge)}finally{if(sv!==undefined&&store[p]===cur)cur.eq=sv}}}
   return _check2(op,p,raw,merge)};
  canRead=function(path,data){const seg=path.split('/');if(seg[0]==='wal')return !!uid()&&seg[1]===uid();return _canRead2(path,data)}}
+
+// ---- (관전 기능팀 덧붙임) firestore.rules 의 관전 규칙 흉내: g/*/p 읽기 강화(두 사람·끝난 판·관전 허용 친구), lv 중계·lv/*/w 관전자,
+//      on 의 st 'a'·gi·al·sp, rt presence.wn. 같은 폴더의 firestore.rules 에 관전 규칙(watchOk)이 있을 때만 켜짐(예전 웹 폴더 테스트는 그대로)
+{const _check3=check,_canRead3=canRead,_onSnap3=onSnapshot;let SPEC=null;
+ // 첫 쓰기(앱을 열자마자 쓰는 접속 표시)보다 먼저 정해지도록 동기로 읽음
+ try{const x=new XMLHttpRequest();x.open('GET','firestore.rules',false);x.send();SPEC=x.status===200&&x.responseText.includes('function watchOk(')}catch(e){SPEC=false}
+ const on=()=>SPEC===true,pidOf=(x,y)=>x<y?x+'_'+y:y+'_'+x;
+ const watchOk=u=>{const me=uid();if(typeof u!=='string'||!u||u===me)return false;const f=store['fp/'+pidOf(u,me)];if(!f||f.st!=='ok')return false;const o=store['on/'+u];return !o||(o.sp!==false&&o.hs!==true)};
+ const lvOk=d=>{const K=['v','id','k','at','na','nb','me','al','t','ph','sun','c','h','w','why'];
+  return !!d&&only(Object.keys(d),K)&&['v','id','k','at','na','nb','me','t','ph','h'].every(k=>k in d)&&d.v===1&&typeof d.id==='string'&&/^[0-9a-f]{8}$/.test(d.id)&&['a','r'].includes(d.k)
+   &&nick(d.na)&&nick(d.nb)&&['A','B'].includes(d.me)&&int(d.t)&&d.t>=0&&d.t<=400&&['designate','bet','live','over'].includes(d.ph)&&typeof d.h==='string'&&d.h.length<=4400&&/^[A-Ba-s,]*$/.test(d.h)
+   &&(!('al' in d)||(d.k==='a'&&typeof d.al==='string'&&/^[a-z]{0,12}$/.test(d.al)))&&(!('sun' in d)||(d.k==='a'&&['A','B'].includes(d.sun)))
+   &&(!('c' in d)||(d.k==='a'&&typeof d.c==='string'&&/^[a-s]{6}$/.test(d.c)))&&(!('w' in d)||['A','B','D',''].includes(d.w))&&(!('why' in d)||(typeof d.why==='string'&&d.why.length<=20))};
+ window.__lvWrites=0;window.__lvwWrites=0;window.__onWrites=0;
+ check=function(op,p,raw,merge){if(!on())return _check3(op,p,raw,merge);const seg=p.split('/'),me=uid(),cur=store[p];
+  if(seg[0]==='lv'){if(!me)deny(op+' '+p);const G2=google();
+   if(seg.length===2){if(op==='del'){if(seg[1]===me)return;deny('lv del '+p)}
+    if(!(G2&&seg[1]===me&&isST(raw&&raw.at)&&!merge&&lvOk(fillST(raw,Date.now()))))deny('lv '+p+' '+JSON.stringify(raw).slice(0,200));window.__lvWrites++;return}
+   if(seg.length===4&&seg[2]==='w'){const u=seg[1],x=seg[3];if(op==='del'){if(x===me||u===me)return;deny('lv w del '+p)}
+    const ok=G2&&x===me&&watchOk(u)&&raw&&only(Object.keys(raw),['at'])&&isST(raw.at)&&(!cur||(int(cur.at)&&cur.at<Date.now()-30000));
+    if(!ok)deny('lv w '+p+' '+JSON.stringify(raw));window.__lvwWrites++;return}
+   deny('lv '+p)}
+  if(seg[0]==='on'&&seg.length===2&&op!=='del'&&raw&&typeof raw==='object'){const n=Object.assign({},cur||{},raw);
+   if(!['on','off','g','r','a'].includes(n.st)||('gi' in n&&!(typeof n.gi==='string'&&/^(g[0-9a-f]{8})?$/.test(n.gi)))||('al' in n&&!(typeof n.al==='string'&&/^[a-z]{0,12}$/.test(n.al)))||('sp' in n&&typeof n.sp!=='boolean'))deny('on spec '+p+' '+JSON.stringify(raw));
+   const r2=Object.assign({},raw);delete r2.gi;delete r2.al;delete r2.sp;if(r2.st==='a')r2.st='on';
+   const sv={};if(cur)for(const k of ['gi','al','sp','st'])if(k in cur)sv[k]=cur[k];if(cur){delete cur.gi;delete cur.al;delete cur.sp;if(cur.st==='a')cur.st='on'}
+   try{const r=_check3(op,p,r2,merge);window.__onWrites++;return r}finally{if(cur&&store[p]===cur)Object.assign(cur,sv)}}
+  if(seg[0]==='rt'&&op!=='del'&&raw&&raw.presence&&typeof raw.presence==='object'&&('wn' in raw.presence||(cur&&cur.presence&&'wn' in cur.presence))){const P=raw.presence;
+   if('wn' in P&&!(int(P.wn)&&P.wn>=0&&P.wn<=50))deny('rt wn '+p+' '+JSON.stringify(raw));
+   const r2=Object.assign({},raw,{presence:Object.fromEntries(Object.entries(P).filter(([k])=>k!=='wn'))});const sv=cur&&cur.presence&&'wn' in cur.presence?cur.presence.wn:undefined;if(sv!==undefined)delete cur.presence.wn;
+   try{return _check3(op,p,r2,merge)}finally{if(sv!==undefined&&cur.presence&&!('wn' in cur.presence))cur.presence.wn=sv}}
+  return _check3(op,p,raw,merge)};
+ canRead=function(path,data){if(!on())return _canRead3(path,data);const me=uid(),seg=path.split('/');if(!me)return false;
+  if(seg[0]==='lv'){if(seg.length===2)return seg[1]===me||watchOk(seg[1]);if(seg[2]==='w')return seg[1]===me||seg[3]===me;return false}
+  if(seg[0]==='g'&&seg[2]==='p'&&seg.length===4){const g=store['g/'+seg[1]];if(!g)return false;
+   return ['open','done'].includes(g.status)||g.host===me||g.guest===me||(window.__fakeAdmin===true&&google()&&(g.created??Date.now())<Date.now()-864e5)||(g.ranked!==true&&(watchOk(g.host)||watchOk(g.guest||'')))}
+  return _canRead3(path,data)};
+ onSnapshot=function(ref,a,b,c){const isQ=!!(ref.col||ref.cons);
+  if(on()){const err=typeof a==='function'?b:c,fail=pp=>{setTimeout(()=>{(err||(()=>{}))(rdeny(pp))},0);return()=>{}};
+   if(!isQ&&/^lv\//.test(ref.p)&&store[ref.p]&&!canRead(ref.p,store[ref.p]))return fail(ref.p);
+   // 실제 Firestore 처럼 문서가 없어도 규칙으로 막히는 구독은 거부(방이 있는데 관전 권한 없는 g/*/p, 남의 lv/*/w)
+   if(isQ&&/^g\/g[0-9a-f]{8}\/p$/.test(ref.p)&&store[ref.p.slice(0,-2)]&&!canRead(ref.p+'/x',null))return fail(ref.p);
+   if(isQ&&/^lv\/[^/]+\/w$/.test(ref.p)&&ref.p.split('/')[1]!==uid())return fail(ref.p)}
+  return _onSnap3(ref,a,b,c)};
+ // 문서가 없어도 규칙 검사(실제 Firestore와 같게): lv·g/*/p 단건 읽기
+ const _getDoc3=getDoc;getDoc=async function(r){await ready;if(on()&&(/^lv\//.test(r.p)||/^g\/[^/]+\/p\//.test(r.p))&&!store[r.p]&&!canRead(r.p,null))throw rdeny(r.p);return _getDoc3(r)};
+ window.__specRulesOn=()=>on()}
