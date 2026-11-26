@@ -1695,7 +1695,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.2018';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.2020';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2725,12 +2725,16 @@ function snd(k,...a){try{if(SND[k]){SG=SNDG[k]||1;SND[k](...a);SG=1;if(k==='win'
 function beep(){snd('tick')} // 예전 호출 호환
 // ===== 배경음(파일): 은은하게(음량 낮게·천천히 커짐), 장면별로 바뀔 때 부드럽게 넘어감, 곡 끝에서 겹쳐 이어 붙여 끊김 없이 반복 =====
 // 파일은 sounds/ 에 두고 아래 표에 등록. 없는 장면은 조용히(로비 곡을 대국 중에 틀지 않음). 설정 '배경음'(bo-bgm, 기본 켬)
-const BGM_FILES={lobby:'sounds/bgm_lobby.mp3',game:'sounds/bgm_game.mp3'};
+const BGM_FILES={lobby:'sounds/bgm_lobby.mp3',game:'sounds/bgm_game.mp3',tense:'sounds/bgm_tense.mp3'};
 const BGM_VOL={lobby:.24,game:.15,tense:.18,match:.22,puzzle:.18};
 const BG={u:[],cur:-1,scene:'',duck:1,ok:false};
 const bgmOn=()=>lget('bo-bgm')!=='0';
+// 긴장 구간: 어느 쪽이든 한 수만 더 놓으면 오목(5칸 창에 같은 돌 4개 + 빈칸 1개)인 판. 판이 바뀔 때만 다시 셈
+function bgmTense(){try{const vs=vstate();if(!vs||!vs.board||vs.phase==='over'||vs.phase==='review')return false;const bd=vs.board,key=vs.t+':'+(vs.phase||'');if(bgmTense.k===key)return bgmTense.v;let v=false;
+ for(const [dr,dc] of DIRS){for(let r=0;r<N&&!v;r++)for(let c=0;c<N&&!v;c++){const er=r+dr*4,ec=c+dc*4;if(er<0||er>=N||ec<0||ec>=N)continue;let a=0,b=0,e=0;for(let k=0;k<5;k++){const x=bd[r+dr*k][c+dc*k];if(x===1)a++;else if(x===2)b++;else e++}if(e===1&&(a===4||b===4))v=true}if(v)break}
+ bgmTense.k=key;bgmTense.v=v;return v}catch(e){return false}}
 function bgmScene(){if(!bgmOn()||document.hidden||!BG.ok)return'';let k='lobby';
- if(UI.view==='game')k=UI.mode==='tut'?'':'game';else if(shOpen==='puz')k='puzzle';else if(typeof MM!=='undefined'&&MM.on)k='match';
+ if(UI.view==='game')k=UI.mode==='tut'?'':bgmTense()?'tense':'game';else if(shOpen==='puz')k='puzzle';else if(typeof MM!=='undefined'&&MM.on)k='match';
  return BGM_FILES[k]?k:(k==='puzzle'||k==='match')&&BGM_FILES.lobby?'lobby':''}
 function bgmUnit(){const c=aCtx();if(!c)return null;const el=new Audio();el.preload='auto';el.loop=false;const g=c.createGain();g.gain.value=0;try{c.createMediaElementSource(el).connect(g).connect(c.destination)}catch(e){return null}
  const u={el,g,k:''};el.addEventListener('timeupdate',()=>{if(BG.u[BG.cur]!==u||!el.duration||u.x)return;if(el.duration-el.currentTime<4){u.x=1;bgmPlay(u.k,4,true)}});return u}
@@ -2749,7 +2753,7 @@ setInterval(bgmUpdate,800);document.addEventListener('visibilitychange',bgmUpdat
 ['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{aCtx();BG.ok=true;bgmUpdate()}catch(e){}},{once:true,capture:true}));
 // 버튼마다 기본 소리: 특별한 소리가 나는 버튼은 그 함수에서 냄(아래 표는 탭 소리를 생략할 버튼)
 const SND_SKIP=new Set(['fxpzgo','rwclaim','ecoatt']);
-const SND_ACT={bp:'chipUp',b5:'chipStack',bq:'chipStack',bm:'chipDown',breset:'chipReset',beven:'chipReset',bsubmit:'seal',lsubmit:'seal',tsubmit:'seal',dconfirm:'stone',tab:'tab',sheet:'open',shclose:'close',ecoopen:'open',ecocat:'open',fxpuz:'open',frchat:'open',prof:'open',frprof:'open',rvprev:'page',rvnext:'page',level:'soft',preset:'soft',aitime:'soft',bcol:'soft',theme:'soft',dlgno:'soft',fxemo:'pop',fxemobtn:'soft'};
+const SND_ACT={bp:'chipUp',b5:'chipUp',bq:'chipUp',bm:'chipDown',breset:'chipReset',beven:'chipReset',bsubmit:'seal',lsubmit:'seal',tsubmit:'seal',dconfirm:'stone',tab:'tab',sheet:'open',shclose:'close',ecoopen:'open',ecocat:'open',fxpuz:'open',frchat:'open',prof:'open',frprof:'open',rvprev:'page',rvnext:'page',level:'soft',preset:'soft',aitime:'soft',bcol:'soft',theme:'soft',dlgno:'soft',fxemo:'pop',fxemobtn:'soft'};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled||b.getAttribute('aria-disabled')==='true')return;const a=b.dataset.act;if(SND_SKIP.has(a))return;snd(SND_ACT[a]||'tap')},true);
 document.addEventListener('change',e=>{const t=e.target;if(t&&t.type==='checkbox'&&t.id!=='setSnd')snd(t.checked?'toggleOn':'toggleOff')},true);
 // 개봉 시작: 약 2초 동안 다음 턴 화면을 미루고, 다음 턴 시간도 그만큼 늦게 시작(양쪽 같은 연출이라 공평)
