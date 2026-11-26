@@ -252,7 +252,7 @@ body.fbmode .xfer,body.fbmode .xferC{display:none}body:not(.fbmode) .wgl{display
 .rv{position:relative;border-radius:16px;background:var(--soft);padding:10px 4px 8px;height:100%;display:grid;grid-template-rows:auto 1fr auto;justify-items:center;align-items:center;gap:6px;animation:rvin .2s cubic-bezier(.2,.8,.2,1) both,cur .38s cubic-bezier(.2,.8,.2,1);animation-delay:calc(var(--i)*.04s),calc(var(--pre,0s) + var(--i)*.38s + .12s)}
 @keyframes rvin{from{opacity:0;transform:translateY(8px)}}
 @keyframes cur{20%,80%{transform:translateY(-3px);box-shadow:0 8px 16px rgba(0,0,0,.3)}}
-.rv.me::after{content:'';position:absolute;inset:0;border-radius:16px;box-shadow:inset 0 0 0 2px var(--k);opacity:0;animation:fin .2s ease-out forwards;animation-delay:calc(var(--i)*.38s + .57s)}
+.rv.me::after{content:'';position:absolute;inset:0;border-radius:16px;box-shadow:inset 0 0 0 2px var(--k);opacity:0;animation:fin .2s ease-out forwards;animation-delay:calc(var(--pre,0s) + var(--i)*.38s + .57s)}
 .rv .lab{width:24px;height:24px;font-size:13px}
 .rv .seal{width:52px;height:52px;position:relative}
 .rv .seal .st{position:absolute;inset:3px;width:46px;height:46px;animation:drop .25s both;animation-delay:calc(var(--pre,0s) + var(--i)*.38s + .42s)}
@@ -260,7 +260,7 @@ body.fbmode .xfer,body.fbmode .xferC{display:none}body:not(.fbmode) .wgl{display
 .rv .wx.l{clip-path:inset(0 50% 0 0)}.rv .wx.r{clip-path:inset(0 0 0 50%);animation-name:wob,splitR}
 @keyframes wob{50%{transform:scale(1.06)}}
 @keyframes splitL{40%{opacity:1}70%,to{opacity:0}to{transform:translateX(-8px) rotate(-16deg)}}@keyframes splitR{40%{opacity:1}70%,to{opacity:0}to{transform:translateX(8px) rotate(16deg)}}
-.rv .sh{position:absolute;left:calc(50% - 2.5px);top:calc(50% - 2.5px);width:5px;height:5px;clip-path:polygon(0 0,100% 30%,40% 100%);background:currentColor;opacity:0;animation:shard .24s ease-out;animation-delay:calc(var(--i)*.38s + .34s)}
+.rv .sh{position:absolute;left:calc(50% - 2.5px);top:calc(50% - 2.5px);width:5px;height:5px;clip-path:polygon(0 0,100% 30%,40% 100%);background:currentColor;opacity:0;animation:shard .24s ease-out;animation-delay:calc(var(--pre,0s) + var(--i)*.38s + .34s)}
 @keyframes shard{0%{opacity:1;transform:translate(0,0)}40%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(60deg)}}
 .rv small{font-size:13px;color:var(--mute);font-weight:700;white-space:nowrap}.rv small b{color:var(--ink)}
 .rvcards.spec .rv small .wbp{font-size:16px;gap:4px}.rvcards.spec .rv small .wbp b{font-weight:800;color:var(--ink)}.rvcards.spec .rv small .wbp b:not(.on){animation:rvdim .3s both;animation-delay:calc(var(--pre,0s) + var(--i)*.38s + .42s)}@keyframes rvdim{to{color:var(--mute);font-weight:600}}.rvcards.spec .rv small .wbp .mini{width:12px;height:12px}
@@ -1874,7 +1874,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.12';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.13';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2998,10 +2998,10 @@ function startReveal(vs){
 // 개봉 카드(시트 안): A→B→C 차례로 도장이 깨지고 돌이 놓임. 칸마다 누구 돌인지 + 내가 건 점수(내 것)만
 const WAXD0=['#007A7A','#244F9E','#A35200'],WAXD1=['#16a39c','#4f7fd6','#d0772c'];let WAXD=WAXD0;
 function revealCards(vs){WAXD=document.documentElement.dataset.theme==='light'?WAXD0:WAXD1;
- const h=vs.last,me=vs.me,mine=me&&h.bets[me],sp=!me&&vs.spect&&wBets(vs,h),pre=UI.rv&&UI.rv.t===h.t?(UI.rv.pre||0)/1000:0;
+ const h=vs.last,me=vs.me,mine=me&&h.bets[me],sp=!me&&vs.spect&&wBets(vs,h),pre=UI.rv&&UI.rv.t===h.t?(UI.rv.at-Date.now())/1000:0; /* 다시 그려도 연출이 이어지게(지난 시간만큼 앞당김) */
  const six=h.cells.some(([r,c])=>{const v=vs.board[r][c];return v&&DIRS.some(([dr,dc])=>aiRun(vs.board,r,c,dr,dc,v)>=6)});
  const who=u=>u===me?'나':(vs.names&&vs.names[u])||'상대';
- return `<div class="rvcards${sp?' spec':''}" style="--pre:${pre}s">${h.cells.map((c,i)=>`<div class="rv${me&&h.win[i]===me?' me':''}" style="--i:${i};--k:${HEX[i]};color:${WAXD[i]}"><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span><span class="seal"><b class="sh" style="--dx:-16px;--dy:-9px;width:4px;height:5px"></b><b class="sh" style="--dx:15px;--dy:-11px;width:5px;height:3px;rotate:40deg"></b><b class="sh" style="--dx:3px;--dy:17px;width:3px;height:4px;rotate:-25deg"></b><span class="st ${h.win[i]===vs.A?'k':'w'}" role="img" aria-label="${LBL[i]} 칸 ${esc(who(h.win[i]))} 돌"></span><svg class="wx l" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg><svg class="wx r" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg></span><small>${mine?`내 <b>${h.bets[me][i]}</b>`:sp?wBetPair(vs,h,i):'&nbsp;'}</small></div>`).join('')}</div>${six?'<p class="note" style="text-align:center;margin:6px 0 0">6목 무효</p>':''}${me&&h.auto&&h.auto[me]?`<p class="note" style="text-align:center;margin:6px 0 0">${ptT('시간 초과 · 칸마다 1{P}씩 걸림')}</p>`:''}`;
+ return `<div class="rvcards${sp?' spec':''}" style="--pre:${pre.toFixed(3)}s">${h.cells.map((c,i)=>`<div class="rv${me&&h.win[i]===me?' me':''}" style="--i:${i};--k:${HEX[i]};color:${WAXD[i]}"><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span><span class="seal"><b class="sh" style="--dx:-16px;--dy:-9px;width:4px;height:5px"></b><b class="sh" style="--dx:15px;--dy:-11px;width:5px;height:3px;rotate:40deg"></b><b class="sh" style="--dx:3px;--dy:17px;width:3px;height:4px;rotate:-25deg"></b><span class="st ${h.win[i]===vs.A?'k':'w'}" role="img" aria-label="${LBL[i]} 칸 ${esc(who(h.win[i]))} 돌"></span><svg class="wx l" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg><svg class="wx r" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg></span><small>${mine?`내 <b>${h.bets[me][i]}</b>`:sp?wBetPair(vs,h,i):'&nbsp;'}</small></div>`).join('')}</div>${six?'<p class="note" style="text-align:center;margin:6px 0 0">6목 무효</p>':''}${me&&h.auto&&h.auto[me]?`<p class="note" style="text-align:center;margin:6px 0 0">${ptT('시간 초과 · 칸마다 1{P}씩 걸림')}</p>`:''}`;
 }
 function renderLast(){
  const vs=vstate(),box=$('#last');box.classList.toggle('hide',UI.mode==='tut'||!!UI.review||!vs||!vs.last||revealing());$('#logcard').classList.toggle('hide',UI.mode==='tut'||!vs||!vs.hist.length);
@@ -4973,8 +4973,8 @@ function lvState(d){const bd=emptyBoard(),hist=[];
   sun,hu:sun?(sun==='A'?'B':'A'):null,cells,key:cells?cellsKey(cells):'',sealed:{},auto:{},pending:[],winner:over?d.w:null,reason:over?d.why:'',waitOn:[]}}
 // 관전 재생(11/27): 받은 기록에 새 턴이 있으면 한 턴씩 ① 세 칸 표시 ② 개봉 카드(두 사람 칩 → 깨짐 → 돌) 순서로 보여 줌(처음 들어올 때는 바로)
 const WS_A=()=>window.__wsFast?0:1500,WS_B=()=>window.__wsFast?0:1900,WS_C=()=>window.__wsFast?0:450;
-function wShow(d){const w=G.watch;if(!w)return;w.full=d;if(w.shown==null||w.shownId!==d.id){w.shownId=d.id;w.shown=d.H.length;clearTimeout(w.tm);w.tm=null;w.stg=null;wApply(d)}
- else if(!w.tm)wStep();else if(w.stg==null)wApply(d)}
+function wShow(d){const w=G.watch;if(!w)return;w.full=d;if(w.shown==null||w.shownId!==d.id){w.shownId=d.id;w.shown=d.H.length;clearTimeout(w.tm);w.tm=null;w.stg=null;wApply(d);if(UI.animT===-1)UI.animT=0} // 아직 둔 턴이 없을 때도 다음 턴부터 개봉 연출이 나오게
+ else if(!w.tm)wStep()} // 재생 중이면 새 자료는 w.full에만 두고 차례가 오면 보여 줌(중간에 덮어써서 돌이 먼저 놓이던 문제)
 function wDisp(d,n,stg){const x=Object.assign({},d,{H:d.H.slice(0,n),Bt:d.Bt?d.Bt.slice(0,n):null,pend:null});
  if(n<d.H.length){const e=d.H[n];if(stg!=null){x.ph='bet';x.c=e.slice(1,7);x.sun=e[0];x.t=n+1;if(stg===1&&d.Bt&&d.Bt[n])x.pend={bets:{A:d.Bt[n][0],B:d.Bt[n][1]},win:[e[7],e[8],e[9]],cells:[lvXY(e.slice(1,3)),lvXY(e.slice(3,5)),lvXY(e.slice(5,7))],t:n+1}}else{x.ph='live';x.t=n}}
  return x}
@@ -4987,7 +4987,8 @@ function wStep(){const w=G.watch;if(!w||!w.full)return;const d=w.full;
  w.stg=null;w.shown++;wApply(wDisp(d,w.shown,w.shown<d.H.length?null:undefined));w.tm=setTimeout(wStep,WS_C()?(1100+RV_MS+600):0)}
 // 친구가 대국 화면을 나갔는지(접속 표시 기준)
 function wGone(){const w=G.watch;if(!w)return false;if(w.pub)return !!(!w.bot&&w.rl&&w.rl.ph!=='over'&&Date.now()-w.rl.at>180e3);const o=FR.ons.get(w.u);if(!o)return false;const fresh=o.at&&Date.now()-o.at<FR_FRESH;return !(fresh&&['g','r','a'].includes(o.st))}
-function wPanel(){const p=$('#panel'),w=G.watch,vs=vstate();setSheet(false);let key,h;
+function wPanel(){if(revealing()&&UI.panelKey&&UI.panelKey.startsWith('REV'))return; /* 개봉 카드 연출 중엔 덮어쓰지 않음 */
+ const p=$('#panel'),w=G.watch,vs=vstate();setSheet(false);let key,h;
  if(w.den){key='den';h='<h3>관전할 수 없어요</h3><button class="btn wide" data-act="lobby">나가기</button>'}
  else if(!vs||!w.rl){const late=w.pub&&!w.bot&&Date.now()-G.enterAt>20e3;key='load'+wGone()+late;h=wGone()||late?`<h3>${late?'지금은 볼 수 없어요':'지금은 대국 중이 아니에요'}</h3><button class="btn wide" data-act="lobby">나가기</button>`:waitBox('불러오는 중')}
  else if(vs.phase==='over'){key='over|'+w.rl.id+'|'+vs.winner+'|'+vs.hist.length;h=overSheet(vs,{home:'lobby',norv:true,vs:w.k==='r'?'랭크 게임':w.k==='c'?'일반 게임':'AI 대전'})}

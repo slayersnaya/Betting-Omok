@@ -175,7 +175,7 @@ async def main():
         await ev(p3,"(window.__wsFast=true,G.watch.bot=window.__gb,G.watch.k2='',G.watch.shown=null,0)")
         # 끝 화면: 시각을 앞당겨 바로 끝나게 해서 승자 확인
         await ev(p3,"(()=>{const w=G.watch,g=w.bot;g.t=Date.now()+2500;w.S.ln=blLine(g,w.S.r);w.k2='';return 0})()")
-        await asyncio.sleep(8)
+        await asyncio.sleep(16)
         pl=await txt(p3,'#panel');d=json.loads(await ev(p3,"JSON.stringify({ph:vstate().phase,w:vstate().winner,na:G.meta.hostNick,nb:G.meta.guestNick,sw:G.watch.S.sw,exp:blNick(G.watch.bot.sa===1?G.watch.bot.a:G.watch.bot.b),n:vstate().hist.length,T:G.watch.S.r.H.length})"))
         chk('AI끼리 판 끝: 전체 공개·승자 이름 = 점수표 승자',d['ph']=='over' and d['n']==d['T'] and (d['na'] if d['w']=='A' else d['nb'])==d['exp'] and '랭크 게임' in pl,(d,pl))
         await p3.screenshot(path='/home/claude/eval/live/shots/t_botover_360.png')
