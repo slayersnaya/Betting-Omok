@@ -1605,7 +1605,7 @@ ul.rknote li{text-wrap:balance}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1858';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1906';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2443,6 +2443,9 @@ function oppStatus(vs,id){
  return ''}
 // 상대 연결 끊김: 8초 넘게 안 보일 때만 표시(잠깐 끊기는 건 무시)
 function oppOff(id){if(UI.mode!=='online'||!G.room||!id)return false;G.offSince=G.offSince||{};if(G.online.has(id)){delete G.offSince[id];return false}if(!G.offSince[id])G.offSince[id]=Date.now();return Date.now()-G.offSince[id]>8000}
+// 관리자만: 랭크전 AI 상대의 실제 모델(연승으로 Ultimate가 붙은 경우 원래 모델도)
+const lvName=k=>k==='ultimate'?'Ultimate':(AI_LEVELS[k]&&AI_LEVELS[k].name)||k;
+function botModelTag(s){if(!s||!s.bot||!s.ai)return'';const base=(BOTMAP.get(s.bot.id)||{}).lv;return ' · '+lvName(s.ai)+(base&&base!==s.ai?` (원래 ${lvName(base)})`:'')}
 function renderPlayers(){
  const vs=vstate(),ob=$('#oppbar'),mb=$('#mebar'),gm=$('#gmid');if(!ob)return;
  if(!vs||!vs.A){ob.innerHTML=mb.innerHTML=gm.innerHTML='';return}
@@ -2897,7 +2900,7 @@ function renderAll(){document.body.classList.toggle('rvmode',!!UI.review);{const
  {const v=vstate();if(v&&v.first&&v.t===1&&!v.hist.length&&['designate','bet','reveal'].includes(v.phase))showCoin(v,'bo-coin-'+(UI.mode==='local'?'L'+L.s.id:G.gid))}
  const vs=vstate();if(vs&&vs.phase==='over'&&!revealing())$('#turnres').classList.add('hide');$('#resignBtn').classList.toggle('hide',!(vs&&vs.me&&['designate','bet','reveal','seed'].includes(vs.phase)&&(UI.mode==='online'||(UI.mode==='local'&&L.s&&L.s.bot))&&!UI.review));
  $('#skipBtn').classList.toggle('hide',UI.mode!=='tut'||!!(T.s&&TUT[T.s.step].end));
- $('#gttl').textContent=UI.review?'복기':G.meta&&G.meta.ranked&&UI.mode==='online'?'랭크전':UI.mode==='tut'?'튜토리얼':UI.mode==='local'?(L.s&&L.s.bot?'랭크전':L.s&&L.s.ai?(L.s.ai==='ultimate'?'Ultimate':`${AI_LEVELS[L.s.ai].name} AI`):'한 폰 대국'):(G.meta?`${G.meta.hostNick||''}의 방`:'베팅 오목');
+ $('#gttl').textContent=UI.review?'복기':G.meta&&G.meta.ranked&&UI.mode==='online'?'랭크전':UI.mode==='tut'?'튜토리얼':UI.mode==='local'?(L.s&&L.s.bot?'랭크전'+(isAdmin()?botModelTag(L.s):''):L.s&&L.s.ai?(L.s.ai==='ultimate'?'Ultimate':`${AI_LEVELS[L.s.ai].name} AI`):'한 폰 대국'):(G.meta?`${G.meta.hostNick||''}의 방`:'베팅 오목');
 }
 
 // ===== 온라인: 저장·자동 처리 =====
@@ -3674,7 +3677,7 @@ function mmBot(){
  lset('bo-blast',JSON.stringify([x.b.id,...recent.filter(i=>i!==x.b.id)].slice(0,4)));
  MM.on=false;MM.busy=false;MM.botAt=0;if(room)room.presence({mm:null}).catch(()=>{});mmPeers(false);
  const lv=curWs()>=ULT_WS?'ultimate':x.b.lv;
- closeSheet();leaveGame();UI.mode='local';UI.review=false;L.start(null,lv,{bot:{id:x.b.id,nick:x.b.nick,r:x.r}});show('game');$('#cover').classList.add('hide');toast(`vs ${x.b.nick}`);renderAll()}
+ closeSheet();leaveGame();UI.mode='local';UI.review=false;L.start(null,lv,{bot:{id:x.b.id,nick:x.b.nick,r:x.r}});show('game');$('#cover').classList.add('hide');toast(`vs ${x.b.nick}`+(isAdmin()?' · '+lvName(lv):''));renderAll()}
 function renderMM(){
  const b=$('#mmBtn'),st=$('#mmSt');if(!b)return;renderPips();b.disabled=!MM.on&&UI.ready&&(!db||!room);
  // 오프라인이면 랭크 버튼을 접고 AI 시작을 주 버튼으로
