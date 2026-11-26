@@ -76,6 +76,7 @@ input[type=text]:focus,input[type=email]:focus,input[type=password]:focus{border
 .lxrow .rt{min-width:0}.room .rt b.lxvs{display:flex;align-items:center;gap:6px;min-width:0}.lxp{display:inline-flex;align-items:center;gap:4px;min-width:0;max-width:calc(50% - 12px)}.lxp>svg{flex:none;width:18px;height:18px}.lxn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.lxvs>i{font-style:normal;font-size:11px;font-weight:600;color:var(--mute);flex:none}
 .lxgo{display:inline-flex;align-items:center;gap:4px;flex:none}.lxgo svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.rbusy{flex:none;font-size:12px;color:var(--mute);padding:0 6px;white-space:nowrap}
 #lxCard .chead .tag{margin-left:auto}
+.pbar .tag.rkt{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.pbar .tag.rkt svg{width:16px;height:16px;flex:none}
 #lxCard .lxph .lxgo{visibility:hidden}#lxCard .lxph .lxn{color:var(--mute);font-weight:700}#lxCard .lxph{background:transparent;border:1.5px dashed color-mix(in srgb,var(--mute) 22%,transparent)}#lxCard .lxmph{visibility:hidden;pointer-events:none}
 details.rules summary{cursor:pointer;font-weight:800;min-height:46px;display:flex;align-items:center;gap:8px;list-style:none;font-size:14px}details.rules summary::-webkit-details-marker{display:none}
 details.rules summary::after{content:'';width:8px;height:8px;margin-left:auto;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);transition:transform .2s}details.rules[open] summary::after{transform:rotate(225deg)}
@@ -248,20 +249,21 @@ body.fbmode .xfer,body.fbmode .xferC{display:none}body:not(.fbmode) .wgl{display
 #panel.sheet>:first-child{margin-top:auto}#panel.sheet.rvs>:first-child{margin-top:0}
 #panel.sheet>.wait:first-child{margin-top:auto;margin-bottom:auto}#panel.sheet>.rvcards:first-child{margin-top:auto;margin-bottom:auto}
 .pstat{font-size:13px;font-weight:800;color:var(--mute);margin:0 2px 8px;white-space:nowrap}
-.rv{position:relative;border-radius:16px;background:var(--soft);padding:10px 4px 8px;height:100%;display:grid;grid-template-rows:auto 1fr auto;justify-items:center;align-items:center;gap:6px;animation:rvin .2s cubic-bezier(.2,.8,.2,1) both,cur .38s cubic-bezier(.2,.8,.2,1);animation-delay:calc(var(--i)*.04s),calc(var(--i)*.38s + .12s)}
+.rv{position:relative;border-radius:16px;background:var(--soft);padding:10px 4px 8px;height:100%;display:grid;grid-template-rows:auto 1fr auto;justify-items:center;align-items:center;gap:6px;animation:rvin .2s cubic-bezier(.2,.8,.2,1) both,cur .38s cubic-bezier(.2,.8,.2,1);animation-delay:calc(var(--i)*.04s),calc(var(--pre,0s) + var(--i)*.38s + .12s)}
 @keyframes rvin{from{opacity:0;transform:translateY(8px)}}
 @keyframes cur{20%,80%{transform:translateY(-3px);box-shadow:0 8px 16px rgba(0,0,0,.3)}}
 .rv.me::after{content:'';position:absolute;inset:0;border-radius:16px;box-shadow:inset 0 0 0 2px var(--k);opacity:0;animation:fin .2s ease-out forwards;animation-delay:calc(var(--i)*.38s + .57s)}
 .rv .lab{width:24px;height:24px;font-size:13px}
 .rv .seal{width:52px;height:52px;position:relative}
-.rv .seal .st{position:absolute;inset:3px;width:46px;height:46px;animation:drop .25s both;animation-delay:calc(var(--i)*.38s + .42s)}
-.rv .wx{position:absolute;inset:0;width:52px;height:52px;fill:currentColor;animation:wob .08s ease-in-out,splitL .22s cubic-bezier(.2,.7,.3,1) forwards;animation-delay:calc(var(--i)*.38s + .26s),calc(var(--i)*.38s + .34s)}
+.rv .seal .st{position:absolute;inset:3px;width:46px;height:46px;animation:drop .25s both;animation-delay:calc(var(--pre,0s) + var(--i)*.38s + .42s)}
+.rv .wx{position:absolute;inset:0;width:52px;height:52px;fill:currentColor;animation:wob .08s ease-in-out,splitL .22s cubic-bezier(.2,.7,.3,1) forwards;animation-delay:calc(var(--pre,0s) + var(--i)*.38s + .26s),calc(var(--pre,0s) + var(--i)*.38s + .34s)}
 .rv .wx.l{clip-path:inset(0 50% 0 0)}.rv .wx.r{clip-path:inset(0 0 0 50%);animation-name:wob,splitR}
 @keyframes wob{50%{transform:scale(1.06)}}
 @keyframes splitL{40%{opacity:1}70%,to{opacity:0}to{transform:translateX(-8px) rotate(-16deg)}}@keyframes splitR{40%{opacity:1}70%,to{opacity:0}to{transform:translateX(8px) rotate(16deg)}}
 .rv .sh{position:absolute;left:calc(50% - 2.5px);top:calc(50% - 2.5px);width:5px;height:5px;clip-path:polygon(0 0,100% 30%,40% 100%);background:currentColor;opacity:0;animation:shard .24s ease-out;animation-delay:calc(var(--i)*.38s + .34s)}
 @keyframes shard{0%{opacity:1;transform:translate(0,0)}40%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(60deg)}}
 .rv small{font-size:13px;color:var(--mute);font-weight:700;white-space:nowrap}.rv small b{color:var(--ink)}
+.rvcards.spec .rv small .wbp{font-size:16px;gap:4px}.rvcards.spec .rv small .wbp b{font-weight:800;color:var(--ink)}.rvcards.spec .rv small .wbp b:not(.on){animation:rvdim .3s both;animation-delay:calc(var(--pre,0s) + var(--i)*.38s + .42s)}@keyframes rvdim{to{color:var(--mute);font-weight:600}}.rvcards.spec .rv small .wbp .mini{width:12px;height:12px}
 @keyframes rvon{from{transform:translateY(8px);opacity:0}}
 #turnres.top{bottom:auto;top:10px}
 #turnres.out{animation:rvout .3s cubic-bezier(.4,0,.2,1) forwards}@keyframes rvout{to{transform:translate(-50%,24px) scale(.85);opacity:0}}
@@ -399,6 +401,8 @@ body.big .bfoot .qchip{font-size:17px}
 @media (max-height:520px) and (min-width:560px){#welcome .wcard{display:grid;grid-template-columns:44% 1fr;gap:16px;align-items:center;text-align:left;width:min(100%,640px);padding:16px}#welcome .wart{margin:0}}
 @media (prefers-reduced-motion:reduce){#welcome,#welcome .wcard,#welcome .wart *{animation:none!important}}
 #dlg{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:20px}
+.dlgx{float:right;position:relative;z-index:2;width:36px;height:36px;margin:-8px -8px 4px 10px;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:var(--mute);cursor:pointer}.dlgx:hover{background:var(--soft);color:var(--ink)}.dlgx svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.tup .tcard{position:relative}.tup .tcard>.dlgx{position:absolute;top:10px;right:10px;margin:0;float:none}
 #dlg .card{max-width:340px;width:100%;padding:18px}#dlg .card{max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow-y:auto;overscroll-behavior:contain}#dlg .card:has(>#dlgMsg){display:flex;flex-direction:column;overflow:hidden}#dlg .card>#dlgMsg{overflow-y:auto;min-height:0;overscroll-behavior:contain}#dlg .card>#dlgMsg~.gfoot{flex:none}
 @media (max-height:720px){.rkin .tiers div{min-height:24px}.rkin .rklgb .btn{min-height:42px}}#dlgMsg{margin:0 0 8px;font-size:15px;font-weight:700}
 #toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#2a3634;color:#e9f0ee;padding:10px 16px;border-radius:12px;font-size:14px;font-weight:800;z-index:40;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.3)}
@@ -1627,7 +1631,7 @@ img,svg,a{-webkit-user-drag:none}
   <div class="card" id="rkTierC">
    <div class="chead"><h2>티어</h2></div>
    <div class="tiers" id="rkTiers"></div>
-   <details class="rules rkhelp"><summary><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01"/></svg>랭크 게임 규칙</summary><ul class="rknote"><li>고르기 20초 · 베팅 30초 · 처음 5판은 배치</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li><li>2연승부터 더 오르고 2연패부터 더 내려가요</li><li>시즌은 3달마다 · 새 시즌은 한 단계 아래 최저점부터</li><li>챌린저는 매일 0시 마스터 상위 5명</li><li>골드까지는 상대 칩 예상 범위를 보여 줘요</li><li>점수 차 150점 안에서 매칭</li><li>상대가 없으면 AI가 대신 들어올 수 있어요</li></ul></details>
+   <details class="rules rkhelp"><summary><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01"/></svg>랭크 게임 규칙</summary><ul class="rknote"><li>고르기 20초 · 베팅 30초 · 처음 5판은 배치</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li><li>2연승부터 더 오르고 2연패부터 더 내려가요</li><li>시즌은 3달마다 · 새 시즌은 한 단계 아래 최저점부터</li><li>챌린저는 매일 0시 마스터 상위 5명</li><li>골드까지는 상대 칩 예상 범위를 보여 줘요</li><li>점수가 비슷한 사람부터 · 사람끼리 먼저 매칭</li><li>상대가 없으면 AI가 대신 들어올 수 있어요</li></ul></details>
   </div>
  </div>
 
@@ -1685,7 +1689,7 @@ img,svg,a{-webkit-user-drag:none}
      <li>정확히 5개면 승리. 6개 이상은 무효예요. 3·3,&nbsp;4·4는 괜찮아요.</li>
      <li>한 턴에 둘 다 오목이면 줄이 많은 쪽, 같으면 그 턴의 후 플레이어가 이겨요.</li>
      <li data-ptu>시간을 넘기면 세 칸은 자동, 베팅은 칸마다 1{P}. <span class="nw">3턴 연속이면</span> 기권패.</li>
-     <li>랭크 게임은 점수 차 150점 안에서 짝지어요. 20초쯤 기다려도 짝이 없으면 AI가 대신 들어와요.</li>
+     <li>랭크 게임은 사람끼리 먼저, 점수가 비슷한 상대부터 짝지어요. 10~15초 기다려도 사람이 없으면 AI가 대신 들어와요.</li>
      <li>일반 게임 방과 랭크 게임에 AI가 <span class="nw">함께할 수 있어요.</span></li>
      <li>랭크 점수는 티어가 낮을수록 많이 오르고 덜 깎여요. 높을수록 덜 오르고 더 깎여요. 2연승·2연패부터는 더 오르고 더 내려가요.</li>
      <li>시즌은 3달마다 새로 시작해요(시즌 1은 모두 1000점). 지난 시즌 티어의 한 단계 아래 최저점에서 배치 5판부터 다시 해요. 골드 이하와 기록이 없으면 900점이에요.</li>
@@ -1870,7 +1874,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.11';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.12';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2770,6 +2774,8 @@ function renderPlayers(){
   // 관리자만: 랭크 게임 AI 상대의 실제 모델 표시(연승·연패로 바뀐 경우 원래 모델도)
   if(!mine&&UI.mode==='local'&&L.s&&L.s.bot&&L.s.ai&&isAdmin()){const base=(BOTMAP.get(L.s.bot.id)||{}).lv;tags=`<span class="tag j" id="admModel">${lvName(L.s.ai)}${base&&base!==L.s.ai?' · 원래 '+lvName(base):''}</span>`+tags}
   if(off)tags+='<span class="tag w">연결 끊김</span>';
+  // 랭크 게임 관전: 두 사람의 티어 문양·티어·순위(배치 중이면 '배치 중')
+  if(vs.spect&&!vs.me&&G.meta&&G.meta.ranked&&UI.mode==='online'){const k=rkByNick(vs.names&&vs.names[id]);if(k)tags=`<span class="tag rkt">${k.pl?'':emblem(k.t,16)}${k.t.n}${k.rank?` · ${k.rank}위`:''}</span>`+tags}
   if(timed&&w)tags+=`<span class="tag w">시간 초과 ${w}/3</span>`;
   // 내 점수는 늘 보임, 상대 점수는 대국이 끝난 뒤에만
   const late=over&&UI.rv&&vs.last&&UI.rv.t===vs.last.t&&Date.now()<UI.rv.at+2800;
@@ -2979,21 +2985,23 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
 document.addEventListener('change',e=>{const t=e.target;if(t&&t.type==='checkbox'&&t.id!=='setSnd')snd(t.checked?'toggleOn':'toggleOff')},true);
 // 개봉 시작: 약 2초 동안 다음 턴 화면을 미루고, 다음 턴 시간도 그만큼 늦게 시작(양쪽 같은 연출이라 공평)
 function startReveal(vs){
- const now=Date.now();{const t=$('#toast');clearTimeout(toastT);t.classList.remove('on')}UI.rv={t:vs.last.t,at:now,until:now+(vs.phase==='over'?WIN_T.sheet:RV_MS)};if(vs.phase==='over'){setTimeout(()=>{if(UI.rv&&UI.rv.at===now)renderBoard()},WIN_T.view+30);setTimeout(()=>{if(UI.rv&&UI.rv.at===now)renderPlayers()},WIN_T.sheet+350)}
+ // 관전(두 사람 칩을 아는 경우): 칸마다 'A 3 : 2'를 먼저 1.1초 보여 준 뒤 깨짐
+ const pre=vs.spect&&!vs.me&&wBets(vs,vs.last)?1100:0;
+ const now=Date.now(),at=now+pre;{const t=$('#toast');clearTimeout(toastT);t.classList.remove('on')}UI.rv={t:vs.last.t,at,pre,until:at+(vs.phase==='over'?WIN_T.sheet:RV_MS)};if(vs.phase==='over'){setTimeout(()=>{if(UI.rv&&UI.rv.at===at)renderBoard()},pre+WIN_T.view+30);setTimeout(()=>{if(UI.rv&&UI.rv.at===at)renderPlayers()},pre+WIN_T.sheet+350)}
  if(UI.mode==='online'&&vs.phase==='designate'){const k=vs.t+':designate';openAt(k,Math.max(G.open[k]||0,now+RV_MS))}
  if(UI.mode==='local'&&L.s&&L.s.td&&L.s.phase==='designate')L.s.ph0=Math.max(L.s.ph0,now+RV_MS);
  clearTimeout(startReveal.t);startReveal.t=setTimeout(()=>{UI.panelKey='';renderAll();const p=$('#panel');if(!p.classList.contains('rise')){p.classList.remove('pin');void p.offsetWidth;p.classList.add('pin')}},UI.rv.until-now+30);
  const vib=lget('bo-vib')!=='0';
- [0,1,2].forEach(i=>{setTimeout(()=>snd('crack'),i*RS*1000);setTimeout(()=>{snd('stone');try{if(vib&&navigator.vibrate)navigator.vibrate(15)}catch(e){}},(i*RS+RL)*1000)});
- if(vs.phase==='over'&&vs.winner){const me=vs.me||(UI.mode==='local'?'A':null),t0=(3*RS+RL)*1000+250;setTimeout(()=>snd('five'),t0);if(me&&!vs.spect)setTimeout(()=>snd(vs.winner===me?'win':'lose'),WIN_T.sheet)}
+ const P0=(UI.rv.pre||0);[0,1,2].forEach(i=>{setTimeout(()=>snd('crack'),P0+i*RS*1000);setTimeout(()=>{snd('stone');try{if(vib&&navigator.vibrate)navigator.vibrate(15)}catch(e){}},P0+(i*RS+RL)*1000)});
+ if(vs.phase==='over'&&vs.winner){const me=vs.me||(UI.mode==='local'?'A':null),t0=P0+(3*RS+RL)*1000+250;setTimeout(()=>snd('five'),t0);if(me&&!vs.spect)setTimeout(()=>snd(vs.winner===me?'win':'lose'),WIN_T.sheet)}
 }
 // 개봉 카드(시트 안): A→B→C 차례로 도장이 깨지고 돌이 놓임. 칸마다 누구 돌인지 + 내가 건 점수(내 것)만
 const WAXD0=['#007A7A','#244F9E','#A35200'],WAXD1=['#16a39c','#4f7fd6','#d0772c'];let WAXD=WAXD0;
 function revealCards(vs){WAXD=document.documentElement.dataset.theme==='light'?WAXD0:WAXD1;
- const h=vs.last,me=vs.me,mine=me&&h.bets[me];
+ const h=vs.last,me=vs.me,mine=me&&h.bets[me],sp=!me&&vs.spect&&wBets(vs,h),pre=UI.rv&&UI.rv.t===h.t?(UI.rv.pre||0)/1000:0;
  const six=h.cells.some(([r,c])=>{const v=vs.board[r][c];return v&&DIRS.some(([dr,dc])=>aiRun(vs.board,r,c,dr,dc,v)>=6)});
  const who=u=>u===me?'나':(vs.names&&vs.names[u])||'상대';
- return `<div class="rvcards">${h.cells.map((c,i)=>`<div class="rv${me&&h.win[i]===me?' me':''}" style="--i:${i};--k:${HEX[i]};color:${WAXD[i]}"><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span><span class="seal"><b class="sh" style="--dx:-16px;--dy:-9px;width:4px;height:5px"></b><b class="sh" style="--dx:15px;--dy:-11px;width:5px;height:3px;rotate:40deg"></b><b class="sh" style="--dx:3px;--dy:17px;width:3px;height:4px;rotate:-25deg"></b><span class="st ${h.win[i]===vs.A?'k':'w'}" role="img" aria-label="${LBL[i]} 칸 ${esc(who(h.win[i]))} 돌"></span><svg class="wx l" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg><svg class="wx r" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg></span><small>${mine?`내 <b>${h.bets[me][i]}</b>`:'&nbsp;'}</small></div>`).join('')}</div>${six?'<p class="note" style="text-align:center;margin:6px 0 0">6목 무효</p>':''}${me&&h.auto&&h.auto[me]?`<p class="note" style="text-align:center;margin:6px 0 0">${ptT('시간 초과 · 칸마다 1{P}씩 걸림')}</p>`:''}`;
+ return `<div class="rvcards${sp?' spec':''}" style="--pre:${pre}s">${h.cells.map((c,i)=>`<div class="rv${me&&h.win[i]===me?' me':''}" style="--i:${i};--k:${HEX[i]};color:${WAXD[i]}"><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span><span class="seal"><b class="sh" style="--dx:-16px;--dy:-9px;width:4px;height:5px"></b><b class="sh" style="--dx:15px;--dy:-11px;width:5px;height:3px;rotate:40deg"></b><b class="sh" style="--dx:3px;--dy:17px;width:3px;height:4px;rotate:-25deg"></b><span class="st ${h.win[i]===vs.A?'k':'w'}" role="img" aria-label="${LBL[i]} 칸 ${esc(who(h.win[i]))} 돌"></span><svg class="wx l" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg><svg class="wx r" viewBox="-16 -16 32 32"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg></span><small>${mine?`내 <b>${h.bets[me][i]}</b>`:sp?wBetPair(vs,h,i):'&nbsp;'}</small></div>`).join('')}</div>${six?'<p class="note" style="text-align:center;margin:6px 0 0">6목 무효</p>':''}${me&&h.auto&&h.auto[me]?`<p class="note" style="text-align:center;margin:6px 0 0">${ptT('시간 초과 · 칸마다 1{P}씩 걸림')}</p>`:''}`;
 }
 function renderLast(){
  const vs=vstate(),box=$('#last');box.classList.toggle('hide',UI.mode==='tut'||!!UI.review||!vs||!vs.last||revealing());$('#logcard').classList.toggle('hide',UI.mode==='tut'||!vs||!vs.hist.length);
@@ -3992,9 +4000,10 @@ function tupShow(t0,t1){snd('tierUp');
  // 연출 중 확인 → 바로 완성 화면(한 번 더 누르면 닫힘)
  const skip=()=>{done=true;clearTimeout(dT);el.getAnimations({subtree:true}).forEach(a=>{try{if(a.effect&&a.effect.getComputedTiming().iterations!==Infinity)a.finish()}catch(e){}})};
  const close=()=>{if(TUPC.el!==el)return;clearTimeout(dT);TUPC.el=null;el.classList.add('out');modalClose(el);setTimeout(()=>el.remove(),rm?0:200)};
- el.querySelector('button').addEventListener('click',()=>done?close():skip());
- el.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();close()}else if(e.key==='Tab'){e.preventDefault();el.querySelector('button').focus()}});
- modalOpen(el,'button')}
+ el.querySelector('.tcard').insertAdjacentHTML('afterbegin','<button class="dlgx" type="button"  aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>');el.querySelector('.tcard>.dlgx').addEventListener('click',close);el.addEventListener('click',e=>{if(e.target===el)close()});
+ el.querySelector('.tcard>.btn').addEventListener('click',()=>done?close():skip());
+ el.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();close()}else if(e.key==='Tab'){e.preventDefault();el.querySelector('.tcard>.btn').focus()}});
+ modalOpen(el,'.tcard>.btn')}
 function rankDelta(vs){
  const s=G.rkSnap;if(!s||!vs.me||!s[vs.A]||!s[vs.B]||snNew(s))return null;
  const me=vs.me,op=me===vs.A?vs.B:vs.A,S=vs.winner==null?.5:vs.winner===me?1:0;
@@ -4030,6 +4039,7 @@ function renderRank(){
 }
 // 내 줄은 지금 닉네임으로(서버 기록에 닉네임이 아직 없어도)
 const rkNick=p=>(p.seat===SEAT?myNick():p.nick)||'플레이어';
+function rkByNick(n){if(!n||!RK.loaded||!RK.list)return null;const i=RK.list.findIndex(p=>rkNick(p)===n);if(i>=0){const p=RK.list[i];return{p,t:tierOf(p),rank:i+1}}return{p:null,t:{n:'배치 중',k:''},rank:0,pl:true}}
 const CROWN='<svg class="crown" viewBox="0 0 26 18" aria-hidden="true"><path d="M2 15 1 4l6.5 5L13 1l5.5 8L25 4l-1 11z" fill="#F2C94C" stroke="#a8851b" stroke-width="1"/><rect x="2" y="15" width="22" height="2.6" rx="1" fill="#e2bd45"/></svg>';
 // 티어표. pts면 '같은 점수끼리 한 판(배치 뒤, 연승·연패 없이)' 이기면·지면 점수를 함께 보여 줌
 const tierPts=i=>[Math.round(kOf(PLACE*2)*.5*TUP[i]),Math.round(kOf(PLACE*2)*.5*TDN[i])];
@@ -4047,7 +4057,7 @@ function addAiRec(level,res){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||
 // ===== 랭크 매칭: 대기 중인 사람끼리 점수가 비슷한 상대와 자동으로 짝지음 =====
 // 서버가 없어서 모든 폰이 같은 규칙으로 짝을 계산하고, 자리 id가 작은 쪽이 방을 열어 상대 알림함에 알려줌
 const MM={on:false,since:0,busy:false,peers:[],inbox:null,seen:{}};
-const mmWin=w=>w>=10e3?150:100,MM_BOT=17e3,MM_BOTJ=6e3; // 점수 차는 최대 150점. 17~23초(평균 20초) 넘게 짝이 없으면 AI 상대
+const mmWin=w=>w>=6e3?1e9:w>=3e3?200:100,MM_BOT=10e3,MM_BOTJ=5e3; // 사람 우선: 처음 3초는 100점, 6초까지 200점, 그 뒤엔 점수 차 상관없이 사람끼리. 10~15초(무작위) 넘게 사람이 없으면 AI 상대
 function mmList(){
  const now=Date.now(),seen=new Map();
  for(const p of MM.peers){const x=p&&p.presence&&p.presence.mm;if(!x||typeof x!=='object')continue;
@@ -4093,7 +4103,7 @@ const rkHasNick=()=>!!(lget('bo-nick')||($('#nick')||{}).value||'').trim();
 const rkNickLine=()=>rkHasNick()?'':'<span class="rknk">랭크 게임 전에 닉네임을 정해 주세요</span>';
 // 랭크 시작 전: 상대 칩 계산 도움 안내(골드까지). [확인]은 다음에도 보여 주고, [다시 보지 않기]는 이 기기에서 그만
 function rkCntAsk(){if(UI.cntPass){UI.cntPass=false;return true}if(!cntOn()||lget('bo-cntok'))return true;
- dialog(`<span class="rkin cntin"><h3 id="rkinH">상대 칩 계산 도움</h3><span class="cntdemo" aria-hidden="true"><span class="pp q cnt"><span class="coin"></span><small>예상</small>12~23</span></span><ul><li>골드까지는 상대 칩의 <b>예상 범위</b>가 보여요</li><li>지금까지 결과로 계산한 값이에요</li><li>실제 상대 칩은 꼭 이 범위 안에 있어요</li><li>플래티넘부터는 사라져요 · 실력으로 승부!</li></ul></span>`,'확인',()=>{UI.cntPass=true;mmStart()},'다시 보지 않기');
+ dialog(`<span class="rkin cntin"><h3 id="rkinH">상대 칩 계산 도움</h3><span class="cntdemo" aria-hidden="true"><span class="pp q cnt"><span class="coin"></span><small>예상</small>12~23</span></span><ul><li>골드까지는 상대 칩의 <b>예상 범위</b>가 보여요</li><li>지금까지 결과로 계산한 값이에요</li><li>실제 상대 칩은 꼭 이 범위 안에 있어요</li><li>플래티넘부터는 사라져요 · 실력으로 승부!</li></ul></span>`,'랭크 게임',()=>{UI.cntPass=true;mmStart()},'다시 보지 않기');
  const d=$('#dlg'),no=d.querySelector('[data-act=dlgno]');if(no)no.dataset.act='cntnever';d.setAttribute('aria-labelledby','rkinH');return false}
 // 랭크 매칭 전: 닉네임이 없으면 안내 창 → 닉네임 정하기(처음 한 번은 무료)
 function rkNickAsk(then){if(rkHasNick())return true;dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}닉네임을 정해 주세요</h3><span class="sub" style="display:block">순위표와 상대 화면에 보이는 이름이에요</span><span class="rknote">처음 한 번은 무료로 정할 수 있어요</span></span>`,'닉네임 정하기',()=>{UI.afterNick=then||null;openSheet('nick')},'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH');return false}
@@ -4961,7 +4971,7 @@ function lvState(d){const bd=emptyBoard(),hist=[];
  let pts={};if(d.Bt&&d.Bt.length>=d.H.length){const n=d.H.length,sp=X=>hist.reduce((a,h)=>a+(h.bets[X]||[0,0,0]).reduce((x,y)=>x+y,0),0),add=over?n:n+1;pts={A:10*add-sp('A'),B:10*add-sp('B')}}
  return{pend:d.pend||null,phase:ph,t:live?hist.length:over?hist.length:Math.max(d.t,hist.length+1),board:bd,pts,warn:{A:0,B:0},hist,A:'A',B:'B',last:hist[hist.length-1]||null,
   sun,hu:sun?(sun==='A'?'B':'A'):null,cells,key:cells?cellsKey(cells):'',sealed:{},auto:{},pending:[],winner:over?d.w:null,reason:over?d.why:'',waitOn:[]}}
-// 관전 재생(11/27): 받은 기록에 새 턴이 있으면 한 턴씩 ① 세 칸 표시 ② 두 사람 칩 공개 ③ 돌 놓기 순서로 보여 줌(처음 들어올 때는 바로)
+// 관전 재생(11/27): 받은 기록에 새 턴이 있으면 한 턴씩 ① 세 칸 표시 ② 개봉 카드(두 사람 칩 → 깨짐 → 돌) 순서로 보여 줌(처음 들어올 때는 바로)
 const WS_A=()=>window.__wsFast?0:1500,WS_B=()=>window.__wsFast?0:1900,WS_C=()=>window.__wsFast?0:450;
 function wShow(d){const w=G.watch;if(!w)return;w.full=d;if(w.shown==null||w.shownId!==d.id){w.shownId=d.id;w.shown=d.H.length;clearTimeout(w.tm);w.tm=null;w.stg=null;wApply(d)}
  else if(!w.tm)wStep();else if(w.stg==null)wApply(d)}
@@ -4973,8 +4983,8 @@ function wStep(){const w=G.watch;if(!w||!w.full)return;const d=w.full;
  if(w.shown>=d.H.length){w.tm=null;w.stg=null;wApply(d);return}
  const e=d.H[w.shown],same=w.lastC===e.slice(1,7);
  if(w.stg==null&&!same){w.stg=0;wApply(wDisp(d,w.shown,0));snd('pick');w.tm=setTimeout(wStep,WS_A());return}
- if(w.stg==null||w.stg===0){w.stg=1;wApply(wDisp(d,w.shown,1));snd('reveal');w.tm=setTimeout(wStep,WS_B());return}
- w.stg=null;w.shown++;snd('stone');wApply(wDisp(d,w.shown,w.shown<d.H.length?null:undefined));w.tm=setTimeout(wStep,WS_C())}
+ // 세 칸 다음은 바로 개봉 연출(카드마다 두 사람 칩을 먼저 보여 준 뒤 깨짐 · startReveal) → 연출이 끝나면 다음 턴
+ w.stg=null;w.shown++;wApply(wDisp(d,w.shown,w.shown<d.H.length?null:undefined));w.tm=setTimeout(wStep,WS_C()?(1100+RV_MS+600):0)}
 // 친구가 대국 화면을 나갔는지(접속 표시 기준)
 function wGone(){const w=G.watch;if(!w)return false;if(w.pub)return !!(!w.bot&&w.rl&&w.rl.ph!=='over'&&Date.now()-w.rl.at>180e3);const o=FR.ons.get(w.u);if(!o)return false;const fresh=o.at&&Date.now()-o.at<FR_FRESH;return !(fresh&&['g','r','a'].includes(o.st))}
 function wPanel(){const p=$('#panel'),w=G.watch,vs=vstate();setSheet(false);let key,h;
@@ -4984,7 +4994,7 @@ function wPanel(){const p=$('#panel'),w=G.watch,vs=vstate();setSheet(false);let 
  else{const gone=wGone();key=[w.rl.id,vs.phase,vs.t,vs.hist.length,w.rl.t,(vs.cells||[]).join(),gone].join('|');
   const pd=vs.pend,ph=pd?'칩 공개':vs.phase==='bet'?'세 칸 · 베팅':phaseName(vs.phase);key+='|'+(pd?'p':'');
   const pl=pd?`<div class="strip wbs wpend"><span class="tn">${pd.t}턴</span>${pd.cells.map((c,i)=>`<span><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span>${wBetPair(vs,pd,i)}</span>`).join('')}</div>`:'';
-  h=waitBox(gone?(w.pub?'중계가 멈췄어요':'친구가 대국 화면을 나갔어요'):w.k==='r'?`${LV_D}턴 늦게 보는 중 · ${ph}`:`관전 중 · ${ph}`,pl||lastLine(vs))}
+  h=waitBox(gone?(w.pub?'중계가 멈췄어요':'친구가 대국 화면을 나갔어요'):w.k==='r'?`${LV_D}턴 늦게 보는 중${ph?' · '+ph:''}`:`관전 중${ph?' · '+ph:''}`,pl||lastLine(vs))}
  if(UI.panelKey===key)return;UI.panelKey=key;p.innerHTML=h}
 function frBoot(){if(!frFb()&&UI.tab==='pal')setTab('home',true);frStart();frRender();setTimeout(frHash,800)}
 // ===== 공개 랭크 관전 · AI 방 (2026-11) =====
@@ -5170,7 +5180,7 @@ function show(v){if(v!=='lobby'&&MM.on)mmStop();if(v!=='lobby'){const u=$('#updB
 function goLobby(){renderAiResume();leaveGame();UI.mode='online';UI.review=false;RV.d=null;G.gid=null;if(location.hash)history.replaceState(null,'',location.pathname+location.search);show('lobby');setSheet(false);renderRooms()}
 // ===== 모달 접근성: 열린 창 밖은 inert(포커스·낭독 차단), 닫으면 원래 버튼으로 포커스 복귀 =====
 const MODAL={stack:[]};
-function modalOpen(el,focusSel){if(!el)return;const ret=document.activeElement,iner=[];let n=el;
+function modalOpen(el,focusSel){if(!el)return;if(el.id==='dlg'){const c=el.querySelector('.card');if(c&&!c.querySelector('.dlgx'))(c.querySelector('#dlgMsg')||c).insertAdjacentHTML('afterbegin','<button class="dlgx" type="button" data-act="dlgx" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>')}const ret=document.activeElement,iner=[];let n=el;
  while(n&&n.parentElement&&n!==document.body){for(const sib of n.parentElement.children){if(sib!==n&&!sib.inert&&!['toast','srlive'].includes(sib.id)&&sib.tagName!=='SCRIPT'&&!(sib.id==='shbg')){sib.inert=true;iner.push(sib)}}n=n.parentElement}
  el.setAttribute('aria-modal','true');MODAL.stack.push({el,ret,iner});
  setTimeout(()=>{const f=(focusSel&&el.querySelector(focusSel))||el.querySelector('input[type=text],button:not([disabled]),[tabindex="0"]');if(f)try{f.focus({preventScroll:true})}catch(e){}},40)}
@@ -5273,6 +5283,7 @@ document.addEventListener('click',e=>{
  else if(a==='glink')googleLink();
  else if(a==='acc')openAcct();
  else if(a==='rkacc'){dialogClose();openAcct(()=>{goLobby();setTab('rank')})}
+ else if(a==='dlgx'){dialogClose();return}
  else if(a==='cntnever'){lset('bo-cntok','1');dialogClose();UI.cntPass=true;mmStart()}
  else if(a==='rkgoo'){dialogClose();googleLink().then(r=>{if(r==='linked'){goLobby();setTab('rank')}})}
  else if(a==='wemail'){$('#welcome').classList.add('hide');openAcct()}
@@ -5359,6 +5370,8 @@ document.addEventListener('change',e=>{const id=e.target.id;
  else if(id==='setBgm'){lset('bo-bgm',e.target.checked?'1':'0');BG.ok=true;bgmUpdate()}});
 $('#nick').addEventListener('input',()=>{$('#nickErr').textContent=''});
 $('#nick').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nickCommit()}});
+// 안내창 바깥(어두운 곳)을 누르면 X와 같게 닫힘
+{const d=$('#dlg');if(d)d.addEventListener('click',e=>{if(e.target===d)dialogClose()})}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#dlg').classList.contains('hide')){dialogClose();return}if(shOpen)closeSheet();else if(!$('#welcome').classList.contains('hide')){lset('bo-tut-done','1');$('#welcome').classList.add('hide')}else if(UI.review&&UI.view==='game')RV.close()}});
 // 키보드 사용자: 단계가 바뀌어 포커스가 사라지면 다음에 할 곳으로 옮김
 document.addEventListener('keydown',e=>{if(['Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Enter',' '].includes(e.key)&&!UI.kbd){UI.kbd=true;UI.panelKey='';if(UI.view==='game')renderAll()}},true);
