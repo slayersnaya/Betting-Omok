@@ -471,12 +471,12 @@ service cloud.firestore {
       && get(onPath(u)).data.get('tka', 0) > nowMs() - 604800000; }
     function fmsg(v, s, i) { return v is map && v.keys().hasOnly(['i','s','t','a','e','k']) && v.keys().hasAll(['i','s','t','a'])
       && (!('k' in v) || v.k in ['inv','acc','dec','can','exp'])
-      && v.i == i && v.s == s && v.t is string && v.t.size() >= 1 && v.t.size() <= 200 && nearNow(v.a, 120000, 120000)
+      && v.i == i && v.s == s && v.t is string && v.t.size() >= 1 && v.t.size() <= 200 && nearNow(v.a, 600000, 600000)
       && (!('e' in v) || (v.e is int && v.e >= 1 && v.e < i)); }
     // 새 목록 = 지난 목록 + 하나(50개가 차 있으면 맨 앞 하나를 빼고). 내가 본 목록이 서버 것과 다르면 거부 → 앱이 다시 시도
     function shifted(o, n) { return n is list
-      && ((o.size() < 50 && n.size() == o.size() + 1 && n[0:o.size()] == o)
-          || (o.size() >= 50 && n.size() == 50 && n[0:49] == o[o.size() - 49:o.size()])); }
+      && ((o.size() < 50 && n.size() == o.size() + 1 && n.hasAll(o))
+          || (o.size() >= 50 && n.size() == 50 && o.removeAll(n).size() == o.size() - 49)); }
     function fpAccept(d, r, k, s) { return d.st == 'req' && d.by != me() && r.st == 'ok' && k.hasOnly(['st','sa','n' + s])
       && r.sa == request.time && nick(r.get('n' + s, '')); }
     function fpDecline(d, r, k) { return d.st == 'req' && d.by != me() && r.st == 'no' && k.hasOnly(['st','sa']) && r.sa == request.time; }
