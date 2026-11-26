@@ -1,6 +1,8 @@
 rules_version = '2';
 // 베팅 오목 — Firestore 보안 규칙 (2026-11 강화판)
 // 2026-11 재화·상점 1단계: wal(옥돌 지갑·꾸미기) 추가, res·bres·rt·on에 공개 장착 eq
+// 2026-11 우편함: mail(관리자 선물·공지) 추가, wal 에 받은 우편 mr·받기 k:'mail'
+// 2026-11 단계별 묘수 풀이: wal에 sp(단계별 깬 문제 수) 추가, k 'stg'(한 번에 한 문제·10초 간격·정해진 옥돌)
 // 2026-11 관전: g/*/p 읽기는 두 사람·끝난 판·관전 허용한 친구만, lv(AI·랭크 중계, 관전자 표시) 추가, on에 대국 종류·관전 허용, rt에 관전 수 wn
 // 2026-11 친구 기능: fp(친구·대화)·on(접속)·fc(친구 코드)·bk(차단)·rep(신고) 추가, nicks에 표시용 n
 // 핵심: ① 대국 기록은 '추가만'(이미 쓴 값 수정·삭제 금지) ② 시각은 서버 시각으로 검사
@@ -365,7 +367,7 @@ service cloud.firestore {
     function eqPub(v) { return v is string && v.size() <= 64 && v.matches('^[a-z0-9_.]*$')
       && (v == '' || get(walPath(me())).data.own.hasAll(v.split('[.]'))); }
     function slotOk(e, k, re) { return !(k in e) || e[k] == '' || e[k].matches(re); }
-    function walShape(n) { return n.keys().hasOnly(['g','d','dc','dq','own','eq','cl','k','at','ck','nc','am','ad'])
+    function walShape(n) { return n.keys().hasOnly(['g','d','dc','dq','own','eq','cl','k','at','ck','nc','am','ad','mr','sp'])
       && (!('am' in n) || n.am is int) && (!('ad' in n) || (n.ad is list && n.ad.size() <= 31))
       && (!('nc' in n) || (n.nc is int && n.nc >= 0 && n.nc <= 9999))
       && (!('ck' in n) || (n.ck is int && n.ck >= 0 && n.ck <= 6))
@@ -426,21 +428,131 @@ service cloud.firestore {
       let it = n.own[n.own.size() - 1];
       return n.own == o.own.concat([it]) && !(it in o.own) && it in ecoPrice()
         && (o.g - n.g == ecoPrice()[it] || (isAdmin() && n.g == o.g)) && n.cl == o.cl && sameDay(o, n); }
+    // 단계별 묘수 풀이: sp = [Easy, Normal, Hard, Godlike] 깬 문제 수(0~20). 한 번 쓰기에 한 단계만 +1, 앞 단계 10문제 이상이어야 다음 단계,
+    //  옥돌은 문제당 5·10·20·30, 20번째는 50·100·250·600. 지갑의 마지막 쓰기(at)에서 10초가 지나야 함(관리자는 간격·열림 조건 없음)
+    //  못 지키는 것(서버 없음): 정말 풀었는지 → 위조해도 단계마다 20문제·전체 옥돌 2,235가 끝, 한 문제에 10초 이상
+    function spOf(d) { return d.get('sp', [0, 0, 0, 0]); }
+    function stgAmt(i, c) { return c == 20 ? [50, 100, 250, 600][i] : [5, 10, 20, 30][i]; }
+    function stgAt(o, n, i) {
+      let a = spOf(o);
+      let b = n.sp;
+      return b[i] == a[i] + 1 && b[i] <= 20
+        && (i == 0 || b[0] == a[0]) && (i == 1 || b[1] == a[1]) && (i == 2 || b[2] == a[2]) && (i == 3 || b[3] == a[3])
+        && (i == 0 || a[i - 1] >= 10 || isAdmin())
+        && n.g == o.g + stgAmt(i, b[i]); }
+    function walStg(o, n) {
+      return n.sp is list && n.sp.size() == 4 && n.sp[0] is int && n.sp[1] is int && n.sp[2] is int && n.sp[3] is int
+        && (stgAt(o, n, 0) || stgAt(o, n, 1) || stgAt(o, n, 2) || stgAt(o, n, 3))
+        && (request.time > o.at + duration.value(10, 's') || isAdmin())
+        && n.own == o.own && n.cl == o.cl && n.eq == o.eq && sameDay(o, n); }
     function walEquip(o, n) { return n.g == o.g && n.own == o.own && n.cl == o.cl && sameDay(o, n); }
     function walReset(o, n) { return n.g == 0 && n.own == [] && n.eq == {} && n.cl == o.cl && sameDay(o, n); }
+    // ===== 친구 초대 보상 (서버 함수 없이 규칙으로만) =====
+    // ref/{새 uid}: 친구 초대 링크(친구 코드 c)로 처음 들어온 새 계정이 지갑을 만들기 전에 한 번 만듦 {by 초대한 사람, c, at, st 'p'}
+    //   새 계정 확인 = 지갑(wal)이 아직 없음 + 로그인한 지 하루 안(auth_time). 자기 코드·없는 코드는 안 됨
+    //   → 구글 계정 연결 + 첫 판을 마치면 본인이 st 'ok'(oa 시각)로 한 번만 바꿈. 그 밖의 수정·삭제 금지(같은 계정 두 번 인정 불가)
+    // rfc/{초대한 사람}: 인정된 uid 목록 u(최대 10). 한 번에 하나씩 추가하고, 추가할 때마다 ref 문서(by = 나, st 'ok')로 확인
+    // 지갑 k 'ref': cl에 'ri1'·'ri3'·'ri5'·'ri10'(rfc 인원 도달, 옥돌 100·300·500·1000) 또는 'r_in'(초대받은 사람 환영 100)을 한 번씩
+    // 못 막는 것: 한 사람이 구글 계정을 여러 개 만들어 스스로 초대하는 것(계정마다 구글 가입이 필요해 수고가 큼), 첫 판을 실제로 뒀는지
+    function refPath(u) { return /databases/$(database)/documents/ref/$(u); }
+    function rfcPath(u) { return /databases/$(database)/documents/rfc/$(u); }
+    function gAcct() { return signedIn() && 'google.com' in request.auth.token.firebase.identities; }
+    function refOk(u) { return u is string && get(refPath(u)).data.by == me() && get(refPath(u)).data.st == 'ok'; }
+    function refTier() { return {'ri1': [1, 100], 'ri3': [3, 300], 'ri5': [5, 500], 'ri10': [10, 1000]}; }
+    function walRef(o, n) {
+      let key = n.cl[n.cl.size() - 1];
+      return n.cl == o.cl.concat([key]) && !(key in o.cl) && key is string && sameDay(o, n) && n.own == o.own && n.eq == o.eq
+        && ((key in refTier() && get(rfcPath(me())).data.u.size() >= refTier()[key][0] && n.g == o.g + refTier()[key][1])
+            || (key == 'r_in' && get(refPath(me())).data.st == 'ok' && n.g == o.g + 100)); }
+    match /ref/{u} {
+      allow read: if signedIn() && (u == me() || resource.data.by == me());
+      allow create: if signedIn() && u == me()
+        && request.resource.data.keys().hasOnly(['by','c','at','st']) && request.resource.data.st == 'p'
+        && request.resource.data.at == request.time
+        && request.resource.data.c is string && request.resource.data.c.matches('^[A-HJ-NP-Z2-9]{8}$')
+        && request.resource.data.by is string && request.resource.data.by != me()
+        && get(/databases/$(database)/documents/fc/$(request.resource.data.c)).data.by == request.resource.data.by
+        && !exists(walPath(me()))
+        && request.auth.token.get('auth_time', 0) > request.time.toMillis() / 1000 - 86400;
+      allow update: if gAcct() && u == me() && resource.data.st == 'p'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st','oa'])
+        && request.resource.data.st == 'ok' && request.resource.data.oa == request.time;
+      allow delete: if false;
+    }
+    match /rfc/{u} {
+      allow read: if signedIn() && u == me();
+      allow create: if gAcct() && u == me() && request.resource.data.keys().hasOnly(['u'])
+        && request.resource.data.u is list && request.resource.data.u.size() == 1 && refOk(request.resource.data.u[0]);
+      allow update: if gAcct() && u == me() && request.resource.data.keys().hasOnly(['u'])
+        && request.resource.data.u is list && request.resource.data.u.size() <= 10
+        && request.resource.data.u == resource.data.u.concat([request.resource.data.u[request.resource.data.u.size() - 1]])
+        && !(request.resource.data.u[request.resource.data.u.size() - 1] in resource.data.u)
+        && refOk(request.resource.data.u[request.resource.data.u.size() - 1]);
+      allow delete: if false;
+    }
+    // ===== 우편함: 관리자가 보낸 우편 mail/{id} 를 받아 내 지갑에 넣기(k:'mail'). 서버 함수 없이 규칙이 우편 문서와 맞춰 봄 =====
+    //  지갑 mr = 받은 우편 id 목록(최대 20). 우편 id 안에 끝시각이 들어 있어(m+13자리 ms+_+6자) 끝난 우편 id 는 추가 읽기 없이 목록에서 뺄 수 있음
+    //  → 목록이 계속 커지지 않음. 아직 안 끝난 우편 id 는 못 뺌(다시 받기 막기). 다른 종류 쓰기는 mr 을 못 바꿈(update 가드 줄)
+    //  이미 가진 아이템이면 상점 가격(ecoPrice)만큼 옥돌로 대신. 하루 상한(dc)·1회성 보상(cl)·장착(eq)과는 무관
+    function mrOld(o) { return o.get('mr', []); }
+    function mrGone(o, n, i) { return mrOld(o).size() <= i || mrOld(o)[i] in n.mr || mrOld(o)[i] < 'm' + string(request.time.toMillis()); }
+    function walMail(o, n) {
+      let id = n.mr[n.mr.size() - 1];
+      let m = get(/databases/$(database)/documents/mail/$(id)).data;
+      let has = m.it != '' && m.it in o.own;
+      let add = m.g + (has ? ecoPrice()[m.it] : 0);
+      return id is string && id.matches('^m[0-9]{13}_[a-z0-9]{6}$') && !(id in mrOld(o))
+        && n.mr.size() <= 20 && n.mr.toSet().size() == n.mr.size() && mrOld(o).hasAll(n.mr.removeAll([id]))
+        && mrGone(o, n, 0) && mrGone(o, n, 1) && mrGone(o, n, 2) && mrGone(o, n, 3) && mrGone(o, n, 4)
+        && mrGone(o, n, 5) && mrGone(o, n, 6) && mrGone(o, n, 7) && mrGone(o, n, 8) && mrGone(o, n, 9)
+        && mrGone(o, n, 10) && mrGone(o, n, 11) && mrGone(o, n, 12) && mrGone(o, n, 13) && mrGone(o, n, 14)
+        && mrGone(o, n, 15) && mrGone(o, n, 16) && mrGone(o, n, 17) && mrGone(o, n, 18) && mrGone(o, n, 19)
+        && (m.to == 'all' || m.to == me()) && m.from <= nowMs() && nowMs() < m.until
+        && n.g == (o.g + add > 99999 ? 99999 : o.g + add)
+        && n.own == (m.it == '' || has ? o.own : o.own.concat([m.it]))
+        && n.cl == o.cl && n.eq == o.eq && sameDay(o, n); }
+    //  우편 문서: to 'all'(그 기간에 앱을 연 모두) 또는 한 사람 uid · t 제목 · msg 내용 · g 옥돌(0~10000) · it 상점 아이템 id 또는 ''
+    //  from~until 받을 수 있는 기간(ms, 최대 31일) · nk 받는 사람 닉네임(관리자 표시용) · by 보낸 관리자 · at 서버 시각
+    //  읽기: 받는 사람(전체 우편은 모두)·관리자 · 만들기·지우기: 관리자만 · 고치기 금지(잘못 보냈으면 지우고 다시)
+    match /mail/{id} {
+      allow read: if signedIn() && (resource.data.to == 'all' || resource.data.to == me() || isAdmin());
+      allow create: if isAdmin() && id.matches('^m[0-9]{13}_[a-z0-9]{6}$')
+        && request.resource.data.keys().hasOnly(['to','t','msg','g','it','from','until','nk','by','at'])
+        && request.resource.data.keys().hasAll(['to','t','msg','g','it','from','until','by','at'])
+        && (request.resource.data.to == 'all' || seatId(request.resource.data.to))
+        && request.resource.data.t is string && request.resource.data.t.size() >= 1 && request.resource.data.t.size() <= 30
+        && request.resource.data.msg is string && request.resource.data.msg.size() <= 200
+        && request.resource.data.g is int && request.resource.data.g >= 0 && request.resource.data.g <= 10000
+        && (request.resource.data.it == '' || request.resource.data.it in ecoPrice())
+        && (request.resource.data.g > 0 || request.resource.data.it != '' || request.resource.data.msg.size() > 0)
+        && request.resource.data.from is int && request.resource.data.until is int
+        && request.resource.data.until > request.resource.data.from && request.resource.data.until > nowMs()
+        && request.resource.data.until - request.resource.data.from <= 2678400000
+        && id.matches('^m' + string(request.resource.data.until) + '_[a-z0-9]{6}$')
+        && (!('nk' in request.resource.data) || nick(request.resource.data.nk))
+        && request.resource.data.by == me() && request.resource.data.at == request.time;
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
     match /wal/{uid} {
       allow read: if signedIn() && uid == me();
       allow create: if signedIn() && uid == me() && walShape(request.resource.data) && request.resource.data.k == 'new'
         && request.resource.data.g == 0 && request.resource.data.dc == 0 && request.resource.data.dq == []
-        && request.resource.data.own == [] && request.resource.data.cl == [] && request.resource.data.eq == {};
+        && request.resource.data.own == [] && request.resource.data.cl == [] && request.resource.data.eq == {}
+        && !('sp' in request.resource.data);
       allow update: if signedIn() && uid == me() && walShape(request.resource.data)
         && ((request.resource.data.k == 'earn' && walEarn(resource.data, request.resource.data))
             || (request.resource.data.k == 'claim' && walClaim(resource.data, request.resource.data))
             || (request.resource.data.k == 'buy' && walBuy(resource.data, request.resource.data))
             || (request.resource.data.k == 'equip' && walEquip(resource.data, request.resource.data))
+            || (request.resource.data.k == 'mail' && walMail(resource.data, request.resource.data))
             || (request.resource.data.k == 'reset' && walReset(resource.data, request.resource.data))
+            || (request.resource.data.k == 'ref' && walRef(resource.data, request.resource.data))
             || (request.resource.data.k == 'att' && walAtt(resource.data, request.resource.data))
-            || (request.resource.data.k == 'nick' && walNick(resource.data, request.resource.data)))
+            || (request.resource.data.k == 'nick' && walNick(resource.data, request.resource.data))
+            || (request.resource.data.k == 'stg' && walStg(resource.data, request.resource.data)))
+        && (request.resource.data.k == 'mail' || request.resource.data.get('mr', []) == resource.data.get('mr', []))
+        && (request.resource.data.k == 'stg' || spOf(request.resource.data) == spOf(resource.data))
         && (request.resource.data.k == 'nick' || request.resource.data.get('nc', 0) == resource.data.get('nc', 0))
         && (request.resource.data.k == 'att' || (request.resource.data.get('am', 0) == resource.data.get('am', 0) && request.resource.data.get('ad', []) == resource.data.get('ad', [])))
         && request.resource.data.get('ck', 0) == resource.data.get('ck', 0);

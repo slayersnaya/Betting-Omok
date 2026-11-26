@@ -868,9 +868,23 @@ body.big .rvaih,body.big .rvain{font-size:14px}body.big .rvaic .aic b{font-size:
 .anote{margin:8px 0 0;font-size:12px}
 body.big .arow{font-size:15px;grid-template-columns:minmax(0,8em) minmax(30px,1fr) 4.4em 5em}
 /* 이모트 */
-.emobtn{position:relative}.emobtn svg{width:21px;height:21px}
-.emobtn.cool{color:var(--faint)}
-.emobtn.cool::after{content:'';position:absolute;inset:4px;border-radius:50%;background:conic-gradient(var(--jade) var(--cd),transparent 0);-webkit-mask:radial-gradient(circle,transparent 58%,#000 61%);mask:radial-gradient(circle,transparent 58%,#000 61%);opacity:.8}
+.emobtn{position:relative;width:auto;min-width:44px;padding:0 12px 0 7px;gap:5px;grid-auto-flow:column;color:var(--jadeink);font:inherit;font-size:13px;font-weight:800;white-space:nowrap;border-radius:999px}
+/* 이모트 버튼: 다른 줄 아이콘과 달리 이모트 캐릭터 얼굴 + '이모트' 글자, 옅은 제이드 알약 바탕(좁아서 가운데 글이 잘리면 글자만 숨김) */
+.emobtn::before{content:'';position:absolute;left:0;right:0;top:max(2px,calc(50% - 17px));bottom:max(2px,calc(50% - 17px));border-radius:999px;background:color-mix(in srgb,var(--jade) 15%,transparent);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--jade) 42%,transparent);z-index:-1}
+.emobtn{isolation:isolate}.emobtn:hover::before{background:color-mix(in srgb,var(--jade) 24%,transparent)}.emobtn[aria-expanded=true]::before{background:color-mix(in srgb,var(--jade) 30%,transparent)}
+.emobtn .emic{position:relative;display:grid;place-items:center;width:26px;height:26px;flex:none}.emobtn .emic svg{width:26px;height:26px;stroke:none}
+:root:not([data-theme=light]) .emobtn .emic svg{filter:drop-shadow(0 0 1.3px rgba(255,255,255,.5))}
+.emobtn.tight{padding:0 9px}.emobtn.tight .eml{display:none}
+.emobtn.cool{color:var(--faint)}.emobtn.cool .emic svg{opacity:.45}
+.emobtn.cool .emic::after{content:'';position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(var(--jade) var(--cd),transparent 0);-webkit-mask:radial-gradient(circle,transparent 62%,#000 66%);mask:radial-gradient(circle,transparent 62%,#000 66%)}
+.emobtn.hi::before{animation:emoHi 1.1s ease-out 3}
+@keyframes emoHi{0%{box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--jade) 42%,transparent),0 0 0 0 color-mix(in srgb,var(--jade) 55%,transparent)}100%{box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--jade) 42%,transparent),0 0 0 10px transparent}}
+/* 첫 대국 때 한 번: 버튼 아래 짧은 말풍선(누를 수 없음 → 판·베팅 조작을 막지 않음) */
+.emotip{position:fixed;z-index:30;pointer-events:none;padding:8px 12px;border-radius:12px;background:var(--jade);color:#fff;font-size:13px;font-weight:800;white-space:nowrap;box-shadow:0 8px 22px rgba(0,0,0,.3);animation:emoTipIn 4.6s ease forwards}
+.emotip::before{content:'';position:absolute;top:-5px;right:var(--ax,22px);width:11px;height:11px;background:var(--jade);transform:rotate(45deg);border-radius:2px}
+:root[data-theme=light] .emotip,:root[data-theme=light] .emotip::before{background:#007f7f}
+@keyframes emoTipIn{0%{opacity:0;transform:translateY(-4px)}8%{opacity:1;transform:none}88%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.emobtn.hi::before{animation:none}.emotip{animation:emoFade 4.6s linear forwards}}
 #emoPick{position:fixed;z-index:31;width:min(312px,calc(100vw - 16px));padding:10px;border-radius:18px;background:var(--card);box-shadow:0 12px 34px rgba(0,0,0,.42);border:1px solid var(--line)}
 .emog{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .emoi{aspect-ratio:1;border:0;border-radius:14px;background:#EFE6D3;padding:4px;cursor:pointer;display:grid;place-items:center}
@@ -1354,6 +1368,29 @@ html{scroll-padding-top:64px}
 .rwinfo details>.eh:first-of-type{margin-top:4px}
 #tab-rwd .enote{margin-top:4px}
 #rwdBody>*+*{margin-top:12px}
+/* 친구 초대 칸(보상 탭) · 친구 추가 시트 한 줄 */
+.rwinv .chead>span{display:inline-flex;align-items:center;gap:8px;overflow:visible}.rwinv .chead b{color:var(--ink);font-weight:800}
+.ivp{font-style:normal;font-size:11.5px;font-weight:800;color:var(--jadeink);background:color-mix(in srgb,var(--jade) 14%,transparent);border-radius:999px;padding:3px 8px}
+.ivtrack{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));position:relative}
+.ivtrack::before,.ivtrack::after{content:'';position:absolute;top:13px;left:12.5%;height:4px;border-radius:2px}
+.ivtrack::before{right:12.5%;background:var(--raise)}.ivtrack::after{width:calc(var(--f) * .75);background:var(--jade)}
+.ivtrack li{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap}
+.ivd{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--raise);color:var(--mute);font-style:normal;font-size:13px;font-weight:800;box-shadow:0 0 0 3px var(--card)}
+.ivtrack .on .ivd{background:var(--jade);color:#fff}.ivtrack .rdy .ivd{box-shadow:0 0 0 3px var(--card),0 0 0 5px color-mix(in srgb,var(--jade) 45%,transparent)}
+.ivd svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.ivtrack b{font-size:12.5px;font-weight:800;margin-top:2px}.ivtrack span{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;color:var(--mute)}.ivtrack span .gdot{width:8px;height:8px}
+.ivtrack .on b{color:var(--jadeink)}
+.ivnote{margin:12px 0 10px;text-align:center;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ivme{display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:12px;background:var(--sel);margin-bottom:12px;white-space:nowrap}
+.ivme .ivt{flex:1;min-width:0;display:flex;flex-direction:column}.ivme .ivt b{font-size:13.5px}.ivme .ivt small{font-size:11.5px;color:var(--mute);overflow:hidden;text-overflow:ellipsis}
+.ivck{display:inline-flex;align-items:center;gap:2px;flex:none;font-size:11.5px;font-weight:800;color:var(--faint);padding:3px 7px;border-radius:999px;background:var(--soft)}
+.ivck.ok{color:var(--jadeink);background:color-mix(in srgb,var(--jade) 14%,transparent)}.ivck svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.ivme em{font-style:normal;display:inline-flex;align-items:center;gap:4px;flex:none;font-weight:800;font-size:13px;margin-left:2px}.ivme em .gdot{width:8px;height:8px}
+.rwinv .btn.wide{gap:8px}.rwinv .btn.wide svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ivlink{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;margin-top:8px;padding:0 12px;border:0;border-radius:12px;background:var(--soft);color:var(--ink);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap}
+.ivlink svg{width:18px;height:18px;fill:none;stroke:var(--jadeink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}.ivlink span{flex:1;text-align:left}.ivlink b{color:var(--mute);font-size:12.5px;font-weight:800}.ivlink .chev{width:16px;height:16px;stroke:var(--faint)}
+@media (max-width:370px){.ivme .ivt small{display:none}.ivck{padding:3px 6px}}
+@media (min-width:1024px){#rwdBody:has(>.rwinv)>.rwtoday{grid-row:span 3}}
 #shopSeg{position:sticky;top:0;z-index:4;box-shadow:0 0 0 6px var(--bg)}
 #shopBody{margin-top:14px}
 .tabbar button[data-k=rwd] .tbn{left:calc(50% + 6px)}
@@ -1410,6 +1447,106 @@ html{scroll-padding-top:64px}
 #bov .bchip.bon .bring{opacity:1;animation:bring 1.1s ease-in-out infinite}
 @keyframes bring{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.28);opacity:.35}}
 @media (prefers-reduced-motion:reduce){#bov .bchip.bon .bring{animation:none;stroke-width:4.5}}
+/* ===== MAIL (우편함·관리자 선물) ===== */
+.ltop .hmail{position:relative;color:var(--ink)}.ltop .hmail svg{width:22px;height:22px}
+.hmail .mbn{position:absolute;top:4px;right:2px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#c0392b;color:#fff;font-size:10.5px;font-weight:800;line-height:17px;text-align:center;display:none;font-style:normal;box-shadow:0 0 0 2px var(--bg)}
+.hmail .mbn.on{display:block}
+@media (max-width:440px){.ltop.tight .hmail{width:40px}}
+#sh-mail .mlist{display:flex;flex-direction:column;gap:10px}
+.mcard{display:grid;grid-template-columns:56px minmax(0,1fr);gap:6px 12px;padding:12px;border-radius:var(--ri,14px);background:var(--soft)}
+.mart{grid-row:1/span 2;width:56px;height:56px;border-radius:12px;background:var(--raise);display:grid;place-items:center;overflow:hidden}
+.mart .art{height:56px}.mart .art svg{width:52px;height:29px;border-radius:6px}.mart .art.af .cfr{--z:36px!important}
+.mart .art.at,.mart .art.an{font-size:10px;padding:0 3px}.mart .art.an .cn{font-size:11px}.mart .ctt{font-size:9.5px}.mart .art.as svg{width:34px;height:34px}
+.mart .mgem .gdot{width:26px;height:26px}.mart .mnote svg{width:26px;height:26px;stroke:var(--jadeink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mtx{min-width:0;display:flex;flex-direction:column;gap:5px;justify-content:center}
+.mtt{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mmsg{margin:0;font-size:13px;color:var(--mute);line-height:1.45;word-break:keep-all;overflow-wrap:anywhere;text-wrap:pretty;white-space:pre-line}
+.mgift{display:flex;flex-wrap:wrap;gap:5px 8px;align-items:center}
+.mgi{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:12px;background:var(--sel);color:var(--jadeink);font-size:12.5px;font-weight:800;white-space:nowrap}.mgi .gdot{width:9px;height:9px}
+.mgx{font-size:12px;color:var(--mute);font-weight:700;white-space:nowrap}
+.mft{grid-column:2;display:flex;align-items:center;gap:8px;min-height:40px}
+.mdue{margin-right:auto;font-size:12px;color:var(--faint);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.mgot{font-size:13px;font-weight:800;color:var(--mute);white-space:nowrap}
+.mft .btn.small{min-height:40px;min-width:72px}.mft .btn.ghost.small{min-width:60px}
+.mcard.got .mart,.mcard.got .mtt{opacity:.72}
+.mall{margin-bottom:10px}.mall:disabled,.mft .btn:disabled{opacity:.55;cursor:default}
+.mempty{display:grid;place-items:center;gap:8px;padding:30px 0 22px;color:var(--faint)}.mempty svg{width:42px;height:42px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.mempty p{margin:0;font-size:14px;font-weight:700;color:var(--mute)}
+.mnote2{text-align:center}
+.mbeta{display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:12px;background:color-mix(in srgb,#CC6600 16%,transparent);margin-bottom:10px;font-size:13px;font-weight:800}.mbeta span{flex:1;min-width:0;word-break:keep-all}.mbeta .btn{min-height:40px;flex:none}
+#mailAdmBody .lbl{margin:14px 2px 6px}
+.mbetab{margin-bottom:2px}
+.ltop.tight2 .logo{display:none}.ltop.tight2 h1{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.marow{display:flex;gap:8px;margin-top:8px}.marow input{flex:1;min-width:0}.marow .btn{min-height:46px}
+.mafound{font-size:12.5px;font-weight:700;color:var(--warn);margin:6px 2px 0;min-height:17px}.mafound.ok{color:var(--jadeink)}
+#mailAdmBody textarea,#mailAdmBody select,#mailAdmBody input[type=date]{width:100%;border-radius:12px;border:2px solid transparent;background:var(--soft);color:var(--ink);font:inherit;font-size:16px}
+#mailAdmBody textarea{padding:10px 12px;resize:vertical;min-height:72px;line-height:1.45}
+#mailAdmBody select,#mailAdmBody input[type=date]{min-height:46px;padding:0 10px}
+#mailAdmBody textarea:focus,#mailAdmBody select:focus,#mailAdmBody input:focus{border-color:var(--jade);outline:0}
+.ma2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:8px}.ma2 .lbl{white-space:nowrap}
+.ma2.mad{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center}.ma2.mad span{color:var(--mute);font-weight:800}
+#mailAdmBody>.btn:not(.mbetab){margin-top:12px}
+.mash{font-size:15px;margin:22px 2px 2px}.manote{margin:6px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.manote+.manote{margin-top:2px}
+.msrow{display:flex;align-items:center;gap:10px;padding:10px 10px 10px 12px;border-radius:12px;background:var(--soft);margin-top:8px}
+.msrow>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.msrow b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.msrow span{font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.msrow .btn{min-height:40px;flex:none}
+.mconf{display:flex;flex-direction:column;gap:5px;text-align:center}.mconf b{font-size:16px;word-break:keep-all}.mconf span{font-size:13.5px;color:var(--mute);word-break:keep-all;text-wrap:balance}
+/* STG */
+/* STG: 단계별 묘수 풀이(홈 타일 · 시트 #sh-stg) */
+:root{--stggold:#e0a82e}:root[data-theme=light]{--stggold:#946400}
+#stgTile{grid-column:1/-1}
+#stgTile .tsub{display:block;font-size:11px;font-weight:700;color:var(--mute);margin-top:1px;line-height:1.3}
+#sh-stg .shh{gap:6px}#sh-stg .shh h2{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#sh-stg .shh h2.god{color:var(--stggold)}
+#stgBk{margin-left:-6px}#stgBk svg{width:22px;height:22px}
+.stgl{display:grid;gap:8px}
+.stgc{display:grid;grid-template-columns:1fr auto;grid-template-areas:"n p" "b b" "r r";align-items:center;gap:6px 10px;width:100%;padding:12px 14px;border:0;border-radius:14px;background:var(--soft);color:var(--ink);text-align:left;cursor:pointer;font:inherit}
+.stgc:focus-visible,.stgq:focus-visible{outline:3px solid var(--jadeink);outline-offset:2px}
+.stgn{grid-area:n;display:flex;align-items:center;gap:8px;min-width:0}.stgn b{font-size:16px;font-weight:800;white-space:nowrap}
+.stgpw{display:inline-flex;gap:2px}.stgpw i{width:5px;height:5px;border-radius:50%;background:var(--faint)}.stgpw i.on{background:var(--jadeink)}
+.stgc.god .stgn b,.stgc.god .stgpw i.on{color:var(--stggold)}.stgc.god .stgpw i.on{background:var(--stggold)}
+.stgp{grid-area:p;font-size:18px;font-weight:800;white-space:nowrap}.stgp small{font-size:12px;color:var(--mute);font-weight:800;margin-left:1px}
+.stgbar{grid-area:b;display:block;height:6px;border-radius:3px;background:var(--raise);overflow:hidden}.stgbar i{display:block;height:100%;border-radius:3px;background:var(--jade)}
+.stgc.god .stgbar i{background:var(--stggold)}
+.stgr{grid-area:r;display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--mute);white-space:nowrap;min-width:0}.stgr span{overflow:hidden;text-overflow:ellipsis}
+.stgr svg{width:14px;height:14px;flex:none;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}.stgr .gdot{width:9px;height:9px}
+.stgr.ok{color:var(--jadeink)}
+.stgc.lock{cursor:default}.stgc.lock .stgn,.stgc.lock .stgp,.stgc.lock .stgbar{opacity:.45}
+.stgsync{text-align:center;margin:10px 0 0;font-size:12px}
+.stgmh{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"p bar" "g g";align-items:center;gap:6px 12px}
+.stgmh .stgp{grid-area:p}.stgmh .stgbar{grid-area:bar}
+.stgbig{grid-area:g;display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--mute);white-space:nowrap}.stgbig .gdot{width:9px;height:9px}
+.stgg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:14px 0}
+.stgq{position:relative;display:grid;place-items:center;aspect-ratio:1/1;min-height:44px;max-height:64px;border:0;border-radius:12px;background:var(--soft);color:var(--ink);font:inherit;font-weight:800;font-size:16px;cursor:pointer}
+.stgq.done{background:color-mix(in srgb,var(--jade) 22%,var(--soft));color:var(--jadeink)}
+.stgq.cur{background:var(--jade);color:#fff;box-shadow:0 0 0 3px color-mix(in srgb,var(--jade) 35%,transparent)}
+.stgq.lock{color:var(--faint);cursor:default}
+.stgq .ck{position:absolute;right:4px;top:3px;display:grid;width:14px;height:14px}.stgq .ck svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.stgq.big .gdot{position:absolute;right:5px;top:5px;width:9px;height:9px}
+.stgq.big{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--jade) 45%,transparent)}.stgq.big.cur{box-shadow:0 0 0 3px color-mix(in srgb,var(--jade) 35%,transparent)}
+#sh-stg[data-s="3"] .stgq.cur{background:var(--stggold);color:#241a05;box-shadow:0 0 0 3px color-mix(in srgb,var(--stggold) 35%,transparent)}
+#sh-stg[data-s="3"] .stgmh .stgbar i{background:var(--stggold)}
+.stgfin{text-align:center;font-weight:800;color:var(--jadeink);margin:4px 0 0}
+.stgph .tag{margin-left:auto;display:inline-flex;align-items:center;gap:4px}.stgph .tag .gdot{width:8px;height:8px}
+.stgtie{text-align:center;margin:4px 0 0;font-size:12px;font-weight:700;color:var(--mute)}
+.stgex li{word-break:keep-all}.stgex .lab,.pzres .lab{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:5px;margin:0 2px 0 4px;font-size:11px;font-weight:800;color:#fff;background:var(--k);vertical-align:-3px}
+.stgex .lab:first-child,.pzres .nw .lab:first-of-type{margin-left:2px}
+.stgc2{color:var(--mute)}
+.stgbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.stgbtns .btn:only-child{grid-column:1/-1}
+.stgwin{gap:4px;padding:14px 10px}.stgwin b{font-size:20px}
+.stggem{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:color-mix(in srgb,var(--jade) 20%,transparent);animation:stgpop .5s ease-out}
+.stggem .gdot{width:22px;height:22px}
+@keyframes stgpop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.stggem{animation:none}}
+@media (max-width:370px){.stgc{padding:11px 12px}.stgr{font-size:12px}.stgg{gap:6px}}
+.pzres .stgwl{display:block;text-align:center}
+/* STG: 넓은 화면의 홈은 타일 줄 높이가 고정(64·80·92px)이라 세 번째 타일(한 줄 전체)이 들어가도록 그 줄만 자동 높이로 */
+@media (min-width:700px) and (max-width:1023px) and (orientation:portrait),(min-width:1024px) and (max-width:1279px){#tab-home:not(.hide){grid-template-rows:auto auto auto auto 1fr}}
+@media (min-width:1280px){#tab-home:not(.hide){grid-template-rows:auto auto auto auto}}
+#stgTile .stgmini{flex:none;display:flex;gap:4px;margin-left:auto}
+#stgTile .stgmini i{display:block;width:16px;height:5px;border-radius:3px;background:linear-gradient(90deg,var(--jade) var(--p),var(--raise) var(--p))}
+#stgTile .stgmini i.g{background:linear-gradient(90deg,var(--stggold) var(--p),var(--raise) var(--p))}
+#stgTile>span:not(.ic):not(.stgmini){flex:1 1 auto;min-width:0}
+#sh-stg[data-s="3"] .stgph .tag.j{background:color-mix(in srgb,var(--stggold) 85%,transparent);color:#241a05}
+@media (max-width:330px){#stgTile .stgmini{display:none}}
+#sh-stg[data-s="3"] .stgph .stgpw i.on{background:var(--stggold)}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -1452,6 +1589,7 @@ html{scroll-padding-top:64px}
   <div class="tiles">
    <button class="tile" data-act="sheet" data-k="local"><span class="ic" style="background:color-mix(in srgb,var(--c) 18%,transparent);color:#ee8b33"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></span><span>한 폰 대국<small class="tsub">한 기기로 둘이서</small></span></button>
    <button class="tile" id="pzTile" data-act="fxpuz"><span class="ic" style="background:color-mix(in srgb,var(--jade) 18%,transparent);color:var(--jadeink)"><svg viewBox="0 0 24 24"><path d="M10 3h4v2.2a1.8 1.8 0 1 0 3 0V3h4v7h-2.2a1.8 1.8 0 1 0 0 3H21v8h-7v-2.2a1.8 1.8 0 1 0-3 0V21H3v-8h2.2a1.8 1.8 0 1 0 0-3H3V3h7"/></svg></span><span>오늘의 묘수 풀이<small class="tsub"></small></span></button>
+   <!-- STG --><button class="tile" id="stgTile" data-act="stg"><span class="ic" style="background:color-mix(in srgb,var(--jade) 18%,transparent);color:var(--jadeink)"><svg viewBox="0 0 24 24"><path d="M3 20h5v-5h5v-5h5V5h3"/><path d="M3 20V9"/></svg></span><span>단계별 묘수 풀이<small class="tsub"></small></span></button>
   </div>
   <div class="card" id="rkTop"><div class="chead"><h2>랭킹</h2><span class="sznm">시즌 1 · 상위 10명</span><button class="btn ghost small" data-act="tab" data-k="rank">전체</button></div><div id="rkTopL"></div></div>
   <div class="card" id="ruleMini"><div class="chead"><h2>규칙 한눈에</h2><button class="btn ghost small" data-act="tut">튜토리얼</button><button class="btn ghost small" data-act="tab" data-k="rule">전체 규칙</button></div></div>
@@ -1586,7 +1724,7 @@ html{scroll-padding-top:64px}
  <div class="gtop">
   <button class="ibtn" data-act="lobby" aria-label="나가기"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
   <div class="gmid" id="gmid"></div><span class="srOnly" id="gttl">베팅 오목</span>
-  <div class="right"><button class="ibtn frb hide" data-act="frgame" id="frBadge" aria-label="친구 소식"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg><b></b></button><button class="ibtn hide emobtn" id="emoBtn" data-act="fxemobtn" aria-label="이모트 보내기" aria-haspopup="dialog" aria-expanded="false" aria-controls="emoPick"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.2c1.8 2.2 5.2 2.2 7 0"/><path d="M9 9.6h.01M15 9.6h.01" stroke-width="3"/></svg></button><button class="ibtn hide" data-act="full" id="fullBtn" aria-label="전체 판"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button><button class="btn ghost small" data-act="resign" id="resignBtn">기권</button><button class="btn ghost small hide" data-act="tskip" id="skipBtn">건너뛰기</button></div>
+  <div class="right"><button class="ibtn frb hide" data-act="frgame" id="frBadge" aria-label="친구 소식"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg><b></b></button><button class="ibtn hide emobtn" id="emoBtn" data-act="fxemobtn" aria-label="이모트 보내기" aria-haspopup="dialog" aria-expanded="false" aria-controls="emoPick"><span class="emic" aria-hidden="true"><svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2.1"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.2c1.8 2.2 5.2 2.2 7 0"/><path d="M9 9.6h.01M15 9.6h.01" stroke-width="3"/></svg></span><span class="eml">이모트</span></button><button class="ibtn hide" data-act="full" id="fullBtn" aria-label="전체 판"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button><button class="btn ghost small" data-act="resign" id="resignBtn">기권</button><button class="btn ghost small hide" data-act="tskip" id="skipBtn">건너뛰기</button></div>
  </div>
  <div class="ggrid">
   <div class="bdcol">
@@ -1670,6 +1808,10 @@ html{scroll-padding-top:64px}
   <div class="shh"><h2>오늘의 묘수 풀이</h2><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div id="pzBody"></div>
  </div>
+<!-- STG --><div class="lsheet hide" id="sh-stg" role="dialog" aria-labelledby="stgT">
+  <div class="shh"><button class="ibtn hide" id="stgBk" data-act="stgback" aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><h2 id="stgT">단계별 묘수 풀이</h2><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div id="stgBody"></div>
+ </div>
 <div id="emoPick" class="hide" role="dialog" aria-label="이모트 고르기"></div>
 <div id="recap" class="hide" role="dialog" aria-modal="true" aria-labelledby="rcT"><div class="rccard" id="rcCard"></div></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="fxs1" cx=".38" cy=".32" r=".78"><stop offset="0" stop-color="#62676b"/><stop offset=".3" stop-color="#2a2e31"/><stop offset="1" stop-color="#030404"/></radialGradient><radialGradient id="fxs2" cx=".4" cy=".34" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".8" stop-color="#e8e2d6"/><stop offset="1" stop-color="#bdb5a5"/></radialGradient></defs></svg>
@@ -1683,6 +1825,7 @@ html{scroll-padding-top:64px}
    <p class="lbl">내 친구 코드</p>
    <div class="fcode"><code id="palCode">—</code><button class="btn ghost small" data-act="frcopy">복사</button></div>
    <button class="btn wide" data-act="frshare"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>초대 링크 보내기</button>
+   <button class="ivlink hide" id="ivFr" data-act="ivgo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="8.5" width="17" height="4" rx="1"/><path d="M5 12.5V20h14v-7.5M12 8.5V20M12 8.5C10.5 5 7 4.5 7 6.6 7 8 9.5 8.5 12 8.5zM12 8.5c1.5-3.5 5-4 5-1.9 0 1.4-2.5 1.9-5 1.9z"/></svg><span>친구 초대 보상</span><b class="num"></b><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
   </div>
  </div>
  <div class="lsheet hide" id="sh-fset" role="dialog" aria-labelledby="fsetT">
@@ -1709,7 +1852,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.2259';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.2306';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2754,7 +2897,7 @@ function bgmTense(){try{const vs=vstate();if(!vs||!vs.board||vs.phase==='over'||
  for(const [dr,dc] of DIRS){for(let r=0;r<N&&!v;r++)for(let c=0;c<N&&!v;c++){const er=r+dr*4,ec=c+dc*4;if(er<0||er>=N||ec<0||ec>=N)continue;let a=0,b=0,e=0;for(let k=0;k<5;k++){const x=bd[r+dr*k][c+dc*k];if(x===1)a++;else if(x===2)b++;else e++}if(e===1&&(a===4||b===4))v=true}if(v)break}
  bgmTense.k=key;bgmTense.v=v;return v}catch(e){return false}}
 function bgmScene(){if(!bgmOn()||document.hidden||!BG.ok)return'';let k='lobby';
- if(UI.view==='game')k=UI.mode==='tut'?'':bgmTense()?'tense':'game';else if(shOpen==='puz')k='puzzle';else if(typeof MM!=='undefined'&&MM.on)k='match';
+ if(UI.view==='game')k=UI.mode==='tut'?'':bgmTense()?'tense':'game';else if(shOpen==='puz'||shOpen==='stg'/* STG */)k='puzzle';else if(typeof MM!=='undefined'&&MM.on)k='match';
  return BGM_FILES[k]?k:(k==='puzzle'||k==='match')&&BGM_FILES.lobby?'lobby':''}
 function bgmUnit(){const c=aCtx();if(!c)return null;const el=new Audio();el.preload='auto';el.loop=false;const g=c.createGain();g.gain.value=0;try{c.createMediaElementSource(el).connect(g).connect(c.destination)}catch(e){return null}
  const u={el,g,k:''};el.addEventListener('timeupdate',()=>{if(BG.u[BG.cur]!==u||!el.duration||u.x)return;if(el.duration-el.currentTime<4){u.x=1;bgmPlay(u.k,4,true)}});return u}
@@ -4500,7 +4643,7 @@ function frHash(){let m=/^#f-([A-Za-z0-9]{8})(?:\.([0-9a-f]{16}))?$/.exec(locati
  if(!frFb()){FR.pend=null;lrm('bo-frlink');return}
  if(UI.view!=='lobby'||!$('#welcome').classList.contains('hide')||!$('#dlg').classList.contains('hide')){clearTimeout(FR.hashT);FR.hashT=setTimeout(frHash,1500);return}
  const P=FR.pend;
- if(!frG()){FR.pend=null;setTab('pal',true);dialog('친구 초대 링크로 들어왔어요.<br>친구 추가는 구글 계정을 연결하면<br>할 수 있어요. 지금 기록은 그대로 이어져요.','구글 연결',()=>googleLink().then(r=>{if(r==='linked'){FR.pend=P;setTimeout(()=>{frStart()},200)}else lrm('bo-frlink')}),'나중에');return}
+ if(!frG()){FR.pend=null;setTab('pal',true);dialog('친구 초대 링크로 들어왔어요.<br>친구 추가는 구글 계정을 연결하면<br>할 수 있어요. 지금 기록은 그대로 이어져요.'/* INV */+invHint(),'구글 연결',()=>googleLink().then(r=>{if(r==='linked'){FR.pend=P;setTimeout(()=>{frStart()},200)}else lrm('bo-frlink')}),'나중에');return}
  if(!FR.base){clearTimeout(FR.hashT);FR.hashT=setTimeout(frHash,600);return}
  FR.pend=null;lrm('bo-frlink');frLink(P)}
 async function frLink(P){let d=null;try{const x=await db.doc('fc/'+P.c).get();d=x.exists?x.data():null}catch(e){}
@@ -4698,6 +4841,7 @@ function lvTick(){const c=lvCtx(),want=!!(c&&lvAllow()&&db);
  if(c.k==='g'||!LV.n)return;
  const d=lvSnap(c);if(!d)return;const key=JSON.stringify(d);if(key===LV.key)return;LV.key=key;LV.wrote=true;
  db.doc('lv/'+SEAT).set(Object.assign(d,{at:SRV_TS})).catch(()=>{LV.key='';
+  // 서버 규칙이 예전 것(칩 칸 b 모름)이면 칩 없이 다시 씀 → 관전은 계속 됨
   if('b' in d){LV.noB=true;const d2=Object.assign({},d);delete d2.b;db.doc('lv/'+SEAT).set(Object.assign(d2,{at:SRV_TS})).catch(()=>{})}})}
 function lvCount(){const now=Date.now(),ids=[...LV.docs].filter(([,at])=>now-at<LV_FRESH).map(([u])=>u).sort(),j=ids.join();
  if(j!==LV.ids){const added=ids.some(u=>!LV.ids.split(',').includes(u));LV.ids=j;LV.n=ids.length;if(added)LV.key='';lvBadge()}}
@@ -5391,7 +5535,7 @@ function emoAiHear(k){const c=emoCtx();if(!c||c.kind==='online')return;const p=c
 function emoAiTick(){const s=L.s;if(UI.mode!=='local'||!s||!s.ai||UI.view!=='game')return;const st=emoAiState();if(!st||st.over||s.phase!=='over')return;st.over=true;
  if(s.reason==='기권'||s.reason==='나감')return;const aiWon=s.winner==='B',p=(aiWon?.2:.3)*(s.bot?.85:1);if(Math.random()<p){const a=aiWon?[8,11]:[11,1,5];emoAiSay(a[Math.floor(Math.random()*a.length)],2600+Math.random()*1800)}}
 // 상단 버튼(쿨다운 고리)과 고르기 창
-function emoBtn(){const b=$('#emoBtn');if(!b)return;const c=emoCtx();b.classList.toggle('hide',!c);if(!c){emoPick(false);return}const w=emoWait();b.classList.toggle('cool',w>0);
+function emoBtn(){const b=$('#emoBtn');if(!b)return;const c=emoCtx();b.classList.toggle('hide',!c);if(!c){emoPick(false);return}const w=emoWait();b.classList.toggle('cool',w>0);/* EMO2 */try{emoLook(b,c)}catch(e){}
  const tot=FX.emo.sent.length>=EMO_MAX&&w>EMO_GAP?EMO_WIN:EMO_GAP;b.style.setProperty('--cd',w>0?(w/tot*360).toFixed(0)+'deg':'0deg');b.setAttribute('aria-label',w>0?`이모트 · ${Math.ceil(w/1000)}초 뒤 가능`:'이모트 보내기');
  const pk=$('#emoPick');if(pk&&!pk.classList.contains('hide')){const n=$('#emoCd');if(n)n.textContent=w>0?`${Math.ceil(w/1000)}초 뒤 다시`:'';pk.querySelectorAll('[data-act=fxemo]').forEach(x=>{x.disabled=w>0})}}
 function emoPick(on){const pk=$('#emoPick');if(!pk)return;const b=$('#emoBtn');if(on==null)on=pk.classList.contains('hide');const c=emoCtx();if(on&&!c)on=false;
@@ -5400,6 +5544,19 @@ function emoPick(on){const pk=$('#emoPick');if(!pk)return;const b=$('#emoBtn');i
  pk.innerHTML=`<div class="emog">${EMO.map((e,k)=>`<button class="emoi" data-act="fxemo" data-i="${k}" aria-label="${e.n} (${e.f})" title="${e.n}"${w>0?' disabled':''}>${emoSVG(k,col)}</button>`).join('')}</div><div class="emof"><span id="emoCd" class="nw" aria-live="polite">${w>0?`${Math.ceil(w/1000)}초 뒤 다시`:''}</span><label class="sw emomu">상대 이모트 끄기<input type="checkbox" id="emoMute"${emoMuted()?' checked':''}></label></div>`;
  const r=b.getBoundingClientRect();pk.style.top=Math.round(r.bottom+6)+'px';pk.style.right='auto';pk.classList.remove('hide');{const w=pk.offsetWidth||312;pk.style.left=Math.max(8,Math.min(innerWidth-w-8,Math.round(r.right-w)))+'px'}b.setAttribute('aria-expanded','true');
  setTimeout(()=>{const f=pk.querySelector('.emoi:not([disabled])')||pk.querySelector('input');if(f)f.focus({preventScroll:true})},30)}
+// 버튼 모양(EMO2): 아이콘 = 내 돌 색 이모트 캐릭터('안녕'), 좁아서 가운데 글이 잘리면 '이모트' 글자만 숨김, 첫 대국 때 한 번 말풍선
+function emoLook(b,c){const col=emoCol(c.vs,c.me),ic=b.querySelector('.emic');if(ic&&ic.dataset.c!==String(col)){ic.dataset.c=String(col);ic.innerHTML=emoSVG(0,col)}
+ const gm=$('#gmid'),top=b.closest('.gtop'),k=innerWidth+'|'+(gm?gm.textContent:'')+'|'+[...b.parentElement.children].map(x=>x.classList.contains('hide')?0:1).join('')+(document.body.classList.contains('big')?'b':'');
+ if(b.dataset.fk!==k){b.dataset.fk=k;b.classList.remove('tight');if(gm&&top&&(gm.scrollWidth>gm.clientWidth+1||top.scrollWidth>top.clientWidth+1))b.classList.add('tight')}
+ const pk=$('#emoPick');if(pk&&!pk.classList.contains('hide'))emoTipOff(1);else emoTip(b)}
+function emoTip(b){if(emoTip.on||lget('bo-emotip')||UI.mode==='tut'||!b.getClientRects().length)return;
+ if(!$('#coin').classList.contains('hide')||!$('#dlg').classList.contains('hide')||revealing()||document.querySelector('.modal:not(.hide),#tup'))return;
+ if(!emoTip.at){emoTip.at=Date.now();return}if(Date.now()-emoTip.at<1200)return; // 화면이 자리 잡은 뒤
+ emoTip.on=1;lset('bo-emotip','1');const r=b.getBoundingClientRect(),t=document.createElement('div');t.id='emoTip';t.className='emotip';t.setAttribute('role','status');t.textContent='이모트를 보낼 수 있어요';document.body.appendChild(t);
+ const w=t.offsetWidth,left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w+24));t.style.left=left+'px';t.style.top=Math.round(r.bottom+8)+'px';t.style.setProperty('--ax',Math.max(10,Math.min(w-22,left+w-(r.left+r.width/2)-5.5))+'px');
+ if(!fxReduce())b.classList.add('hi');emoTip.t=setTimeout(()=>emoTipOff(),4600)}
+function emoTipOff(){clearTimeout(emoTip.t);const t=$('#emoTip');if(t)t.remove();const b=$('#emoBtn');if(b)b.classList.remove('hi')}
+document.addEventListener('pointerdown',()=>{if($('#emoTip'))emoTipOff()},true);
 
 // ===== 7. 시즌 결산: 시즌이 바뀐 뒤 처음 앱을 열면 한 번(랭크 게임을 둔 사람만) =====
 // FEAT-MERGE(rank3): 랭크 개편팀 사본의 rankCalc(SS,LT,docs,bdocs)·RESET·cfg/season{n}(시즌 n 최종 기록 {n,at,v,p:{자리:[티어,점수,판수]}})이 있으면 그것을 씀.
@@ -5590,7 +5747,7 @@ function ecoWrite(kind,mut){const p=ECO.q.then(async()=>{for(let i=0;i<2;i++){if
  ECO.q=p.then(()=>{},()=>{});return p.then(ok=>{ecoPaint();return ok})}
 async function ecoLoad(){let loc=null;try{loc=JSON.parse(lget('bo-wal')||'null')}catch(e){}
  if(!ecoSrv()){ECO.w=ecoNorm(loc);ECO.ok=true;ECO.ready();ecoAfterLoad();return}
- try{const x=await db.doc('wal/'+SEAT).get();if(x.exists)ECO.w=ecoNorm(x.data());else{const n=ecoFresh();await db.doc('wal/'+SEAT).set(Object.assign({},n,{k:'new',at:SRV_TS}));ECO.w=n}
+ try{const x=await db.doc('wal/'+SEAT).get();if(x.exists)ECO.w=ecoNorm(x.data());else{/* INV */await invRecord();const n=ecoFresh();await db.doc('wal/'+SEAT).set(Object.assign({},n,{k:'new',at:SRV_TS}));ECO.w=n}
   ECO.ok=true;lset('bo-wal',JSON.stringify(ECO.w))}catch(e){ECO.err=1;ECO.w=ecoNorm(loc&&loc.own?loc:null);console.warn('eco load',e&&e.code)}
  ECO.ready();ecoAfterLoad()}
 function ecoBoot(){if(ECO.boot)return;ECO.boot=1;ecoDefs();ecoLoad().catch(()=>{ECO.ready()});
@@ -5862,6 +6019,69 @@ function attAuto(){if(!ECO.ok||!ECO.w||attDone()||ECO.attBusy)return;try{if(sess
  if(ECO.attFail&&Date.now()-ECO.attFail<60e3)return;
  if(UI.view!=='lobby'||UI.mode==='tut'||shOpen||!$('#dlg').classList.contains('hide')||!$('#welcome').classList.contains('hide'))return;attStamp()}
 rwAdd({id:'att',order:-1,items:()=>!ECO.ok||!ECO.w||attDone()||!ECO.attFail?[]:[{id:'att',t:'출석체크',st:'ready',g:attAmt(attDays().length+1)}],claim:()=>attStamp()});
+// ===== INVITE START (친구 초대 보상 11/26) =====
+// 병합 메모: 이 블록은 새 함수만 담음. 기존 코드에 끼운 곳은 '/* INV */' 표시가 붙은 짧은 호출뿐(ecoLoad 새 지갑 직전 · frHash 안내 한 줄 · 친구 추가 시트 한 줄)
+// 초대 링크 = 기존 친구 초대 링크(?f=친구코드&k=토큰). 링크로 처음 들어온 '새 계정'이면 지갑을 만들기 직전에 ref/{내 uid} {by 초대한 사람, st 'p'}를 남김
+//  → 구글 계정 연결 + 첫 판(옥돌 받는 판: AI·일반·랭크 3턴 이상)을 마치면 st 'ok' → 초대받은 사람 환영 옥돌 100(1번)
+//  초대한 사람: ref(by = 나) 목록을 읽어 'ok'인 uid를 rfc/{나}.u에 하나씩 올림(최대 10) → 1·3·5·10명 도달 보상(옥돌 100·300·500·1000, 각 1번)
+//  규칙(firestore.rules)이 지키는 것: 새 계정만(지갑 없음 + 로그인 하루 안), 자기 코드 불가, 한 계정 한 번, 단계 보상 한 번, 정해진 양
+var INV={c:'',ref:null,list:null,cred:null,at:0,busy:0,conf:0,cfail:0};
+const INV_T=[[1,100,'ri1'],[3,300,'ri3'],[5,500,'ri5'],[10,1000,'ri10']],INV_IN=100,INV_MAX=10;
+// 링크의 친구 코드를 맨 처음에 잡아 둠(친구 기능이 주소에서 지우기 전에)
+(function(){try{const f=new URL(location.href).searchParams.get('f');let c=f&&/^[A-Za-z0-9]{8}$/.test(f)?f.toUpperCase():'';
+ if(!c){const x=JSON.parse(lget('bo-frlink')||'null');if(x&&typeof x.c==='string'&&Date.now()-(+x.at||0)<7*864e5)c=x.c.toUpperCase()}
+ if(/^[A-HJ-NP-Z2-9]{8}$/.test(c))INV.c=c}catch(e){}})();
+const invG=()=>!!(ecoSrv()&&user.provider&&user.provider()==='google');
+const invN=()=>Math.min(INV_MAX,Math.max((INV.cred||[]).length,(INV.list||[]).filter(r=>r.st==='ok').length));
+// 새 지갑을 만들기 직전(ecoLoad)에 한 번: 초대 링크로 온 새 계정이면 기록. 실패해도 지갑 만들기는 그대로
+async function invRecord(){if(!INV.c||!ecoSrv())return;try{const x=await db.doc('fc/'+INV.c).get(),d=x.exists?x.data():null;if(!d||!okSeat(d.by)||d.by===SEAT)return;
+ await db.doc('ref/'+SEAT).set({by:d.by,c:INV.c,at:SRV_TS,st:'p'});INV.ref={by:d.by,st:'p',n:str12(d.n)};lset('bo-ref',JSON.stringify(INV.ref))}catch(e){console.warn('inv rec',e&&e.code)}}
+async function invBoot(){try{const x=JSON.parse(lget('bo-ref')||'null');if(x&&okSeat(x.by)&&['p','ok','done'].includes(x.st))INV.ref=x}catch(e){}
+ // 다른 기기에서 초대받은 구글 계정: 계정마다 한 번만 확인
+ if(!INV.ref&&invG()&&!lget('bo-refchk')){try{const x=await db.doc('ref/'+SEAT).get();if(x.exists){const d=x.data()||{};INV.ref={by:d.by,st:d.st==='ok'?(ECO.w&&ECO.w.cl.includes('r_in')?'done':'ok'):'p',n:''};lset('bo-ref',JSON.stringify(INV.ref))}lset('bo-refchk','1')}catch(e){}}
+ if(INV.ref&&INV.ref.st==='ok'&&ECO.w&&ECO.w.cl.includes('r_in')){INV.ref.st='done';lset('bo-ref',JSON.stringify(INV.ref))}
+ setTimeout(()=>invPoll(true),2500);setInterval(invTick,4000);ecoPaint()}
+function invTick(){if(!ECO.ok)return;invConfirm();const sent=Date.now()-(+lget('bo-invsent')||0)<14*864e5;
+ if(UI.view==='lobby'&&document.visibilityState==='visible'&&(UI.tab==='rwd'||(sent&&Date.now()-INV.at>3*60e3)))invPoll()}
+// 초대받은 사람: 구글 연결 + 첫 판을 마치면 인정(한 번)
+async function invConfirm(){const R=INV.ref;if(!R||R.st!=='p'||INV.conf||!ECO.ok||!invG()||!lget('bo-refg')||Date.now()-INV.cfail<60e3)return;INV.conf=1;
+ try{await db.doc('ref/'+SEAT).update({st:'ok',oa:SRV_TS});R.st='ok';lset('bo-ref',JSON.stringify(R));toast('친구 초대 인정 · 보상 탭에서 옥돌 받기');ecoPaint()}
+ catch(e){INV.cfail=Date.now();console.warn('inv ok',e&&e.code)}finally{INV.conf=0}}
+// 초대한 사람: 내 링크로 온 계정 목록 → 인정된 사람을 rfc에 하나씩(규칙이 ref 문서로 확인)
+async function invPoll(force){if(INV.busy||!ECO.ok||!invG())return;if(!force&&Date.now()-INV.at<60e3)return;INV.busy=1;INV.at=Date.now();
+ try{const qs=await db.collection('ref').where('by','==',SEAT).limit(60).get();INV.list=qs.docs.map(x=>({u:x.id,st:(x.data()||{}).st}));
+  let cr=[];try{const x=await db.doc('rfc/'+SEAT).get();const u=x.exists&&x.data().u;if(Array.isArray(u))cr=u.filter(v=>typeof v==='string')}catch(e){}
+  for(const r of INV.list){if(cr.length>=INV_MAX)break;if(r.st!=='ok'||cr.includes(r.u))continue;const nx=cr.concat([r.u]);try{await db.doc('rfc/'+SEAT).set({u:nx});cr=nx}catch(e){console.warn('inv rfc',e&&e.code);break}}
+  INV.cred=cr}catch(e){console.warn('inv poll',e&&e.code)}finally{INV.busy=0}ecoPaint()}
+// 받을 보상(보상 탭 맨 위 띠 [모두 받기])
+function invReady(){const out=[];if(!ECO.ok||!ECO.w||!ecoSrv())return out;const w=ECO.w,n=(INV.cred||[]).length;
+ if(INV.ref&&INV.ref.st==='ok'&&!w.cl.includes('r_in'))out.push({id:'r_in',key:'r_in',t:'친구 초대 환영',st:'ready',g:INV_IN});
+ for(const [k,amt,key] of INV_T)if(n>=k&&!w.cl.includes(key))out.push({id:key,key,t:`친구 초대 ${k}명`,st:'ready',g:amt});return out}
+async function invClaimAll(){for(const r of invReady()){const ok=await ecoWrite('ref',n=>{if(n.cl.includes(r.key))return false;n.cl.push(r.key);n.g+=r.g});
+ if(ok){toast(`${r.t} · 옥돌 +${ecoFmt(r.g)}`);if(r.key==='r_in'&&INV.ref){INV.ref.st='done';lset('bo-ref',JSON.stringify(INV.ref))}}}}
+rwAdd({id:'inv',order:1,items:()=>invReady(),claim:()=>invClaimAll()});
+// 첫 판 표시: 옥돌을 받는 판(AI·일반·랭크, 3턴 이상)을 끝내면 이 기기에 남김
+{const _eg=ecoGame;ecoGame=function(d,key){try{if(d&&key&&d.me&&(d.hist||[]).length>=ECO_MIN_T){const I=ecoGameInfo(d,key);if(I&&I.mode!=='local')lset('bo-refg','1')}}catch(e){}return _eg.apply(this,arguments)}}
+{const _fs=frShare;frShare=function(){lset('bo-invsent',String(Date.now()));return _fs.apply(this,arguments)}}
+// 친구 초대 링크로 처음 온 사람에게 보여 줄 한 줄(frHash 안내 창)
+const invHint=()=>INV.ref&&INV.ref.st==='p'?`<br><span class="sub">연결하고 한 판 두면 환영 옥돌 ${INV_IN}</span>`:'';
+// 보상 탭 '친구 초대' 칸
+function invCard(){if(!ecoSrv()||!ECO.w)return '';const w=ECO.w,n=invN(),pend=(INV.list||[]).filter(r=>r.st==='p').length,R=INV.ref;
+ const fill=n<=1?0:n<=3?(n-1)/2/3:n<=5?1/3+(n-3)/2/3:2/3+(n-5)/5/3;
+ const nodes=INV_T.map(([k,amt,key])=>{const got=w.cl.includes(key),on=n>=k;return `<li class="${on?'on':''}${got?' got':on?' rdy':''}"><i class="ivd num" aria-hidden="true">${got?IC.check:k}</i><b>${k}명</b><span><i class="gdot" aria-hidden="true"></i>${ecoFmt(amt)}</span></li>`}).join('');
+ let me='';if(R&&R.st!=='done'&&!w.cl.includes('r_in')){const gk=invG(),gm=!!lget('bo-refg');
+  me=`<div class="ivme"><span class="ivt"><b>초대받은 보상</b>${R.n?`<small>${esc(R.n)}님 초대</small>`:''}</span><span class="ivck${gk?' ok':''}">${gk?IC.check:''}구글 연결</span><span class="ivck${gm?' ok':''}">${gm?IC.check:''}첫 판</span><em><i class="gdot" aria-hidden="true"></i>${INV_IN}</em></div>`}
+ return `<section class="card rwc rwinv" aria-labelledby="ivH"><div class="chead"><h2 id="ivH">친구 초대</h2><span>${pend?`<i class="ivp">확인 중 ${pend}명</i>`:''}<b class="num">${n}/${INV_MAX}명</b></span></div>${me}
+  <ol class="ivtrack" style="--f:${(fill*100).toFixed(1)}%" aria-label="초대 ${n}명">${nodes}</ol>
+  <p class="note ivnote">처음 온 친구가 구글 연결 후 한 판 두면 인정</p>
+  <button class="btn wide" data-act="frshare"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>초대 링크 보내기</button></section>`}
+function invPaint(){const c=$('#rwdBody');if(c&&c.firstElementChild){const h=invCard(),o=c.querySelector('.rwinv');
+  if(!h){if(o)o.remove()}else if(!o||o.dataset.h!==h){const t=document.createElement('div');t.innerHTML=h;const el=t.firstElementChild;el.dataset.h=h;if(o)o.replaceWith(el);else{const a=c.querySelector('.rwinfo');a?a.before(el):c.appendChild(el)}}}
+ const f=$('#ivFr');if(f){const on=ecoSrv()&&ECO.ok&&!!ECO.w;f.classList.toggle('hide',!on);if(on){const t=`${invN()}/${INV_MAX}명`,b=f.querySelector('b');if(b&&b.textContent!==t)b.textContent=t}}}
+{const _ep2=ecoPaint;ecoPaint=function(){const r=_ep2.apply(this,arguments);try{invPaint()}catch(e){console.warn('invPaint',e)}return r}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act=ivgo]');if(!b)return;closeSheet();setTab('rwd');invPoll();setTimeout(()=>{const x=$('#rwdBody .rwinv');if(x)x.scrollIntoView({block:'center',behavior:fxReduce()?'auto':'smooth'})},120)});
+ECO.q.then(()=>invBoot()).catch(()=>{});
+// ===== INVITE END =====
 // 보상 탭 띠(rwBar)·배지에 상점 보상 등록 — 받을 것(ready)·진행 중 과제(prog)
 rwAdd({id:'eco',order:0,
  items:()=>{if(!ECO.ok||!ECO.w)return[];
@@ -5872,6 +6092,282 @@ rwAdd({id:'eco',order:0,
  claim:()=>ecoClaimAll()});
 {const _ep=ecoPaint;ecoPaint=function(){const r=_ep.apply(this,arguments);try{rwPaint()}catch(e){}return r}}
 // ===== ECO END =====
+// ===== MAIL START (우편함·관리자 선물 11/26) =====
+// 병합 메모: 이 블록은 새 함수만 담음. 기존 함수는 감싸기(ecoNorm·ecoAfterLoad·renderAcct·ecoPaint)로만 이어 붙임 — 기존 줄은 안 고침
+// 우편 mail/{id} (관리자만 만들기·지우기, 고치기 금지): id = 'm'+끝시각(ms 13자리)+'_'+6자
+//   to 'all'(그 기간에 앱을 연 모두)|uid · t 제목 · msg 내용 · g 옥돌 · it 상점 아이템 id|'' · from~until 받을 수 있는 기간(ms) · nk 받는 사람 닉네임(관리자 표시용) · by · at
+// 받기 = 내 지갑 wal 에 k:'mail' 쓰기: mr(받은 우편 id 목록) 끝에 id 를 붙이고 옥돌·아이템을 늘림. 규칙이 우편 문서를 get 으로 확인(대상·기간·금액·한 번만)
+//   이미 가진 아이템이면 상점 가격만큼 옥돌로 대신 · 끝난 우편 id 는 목록에서 빼도 됨(id 안의 끝시각으로 규칙이 확인) → 목록이 커지지 않음(최대 20)
+// 공지(선물 없는 우편)는 서버에 쓰지 않고 이 기기에 '읽음'만 기록. 읽기 비용은 mailFetch 설명 참고
+var MAIL={list:[],at:0,atP:0,busy:null,err:0,adm:null,admBusy:0,tgt:null,claiming:0,booted:0};
+const MAIL_MAX=20,MAIL_GMAX=10000,MAIL_IDRE=/^m[0-9]{13}_[a-z0-9]{6}$/,MAIL_SKEW=10*60e3;
+const MAIL_BETA={t:'Beta Test 참여 감사 선물',msg:'베타 테스트에 함께해 주셔서 고마워요.\n물결 테두리를 보내 드려요.',it:'f2',g:0,end:Date.UTC(2026,11,2,15)}; // 준비값 · 알림 줄은 12/3 0시(한국)까지
+const mailSrv=()=>{try{return ecoSrv()}catch(e){return false}};
+function mailNorm(id,d){if(!MAIL_IDRE.test(id||'')||!d||typeof d!=='object')return null;const I=v=>Number.isInteger(v)?v:null;
+ const from=I(d.from),until=I(d.until),g=I(d.g)||0,it=typeof d.it==='string'&&ECO_BY.has(d.it)?d.it:'';if(from==null||until==null||until<=from)return null;
+ return{id,to:String(d.to||''),t:String(d.t||'').slice(0,30),msg:String(d.msg||'').slice(0,200),g:Math.max(0,Math.min(MAIL_GMAX,g)),it,from,until,nk:typeof d.nk==='string'?d.nk.slice(0,12):'',at:typeof d.at==='number'?d.at:0}}
+const mailGift=m=>m.g>0||!!m.it;
+const mailMr=()=>ECO.w&&Array.isArray(ECO.w.mr)?ECO.w.mr:[];
+const mailGot=m=>mailMr().includes(m.id);
+function mailRd(){let a=[];try{a=JSON.parse(lget('bo-mailrd')||'[]')}catch(e){}return Array.isArray(a)?a.filter(x=>typeof x==='string'&&MAIL_IDRE.test(x)):[]}
+function mailRdAdd(ids){const a=mailRd(),now=Date.now();for(const id of ids)if(!a.includes(id))a.push(id);lset('bo-mailrd',JSON.stringify(a.filter(x=>+x.slice(1,14)>now-864e5).slice(-50)))}
+// 지금 보이는 우편: 받을 수 있는 기간 안. 받는 사람만(관리자 화면은 따로)
+const mailLive=()=>{const now=Date.now();return MAIL.list.filter(m=>(m.to==='all'||m.to===SEAT)&&m.from<=now&&now<m.until).sort((a,b)=>(mailGot(a)-mailGot(b))||(b.from-a.from))};
+const mailReady=()=>mailLive().filter(m=>mailGift(m)&&!mailGot(m));
+const mailUnread=()=>{const rd=mailRd();return mailLive().filter(m=>mailGift(m)?!mailGot(m):!rd.includes(m.id)).length};
+// ----- 불러오기: 전체 우편(to=all)·내 우편(to=나) 질의 2개. 읽기 = 받은 문서 수(빈 결과는 1)
+//  앱을 열 때: 전체 1시간·내 우편 6시간에 한 번 · 화면으로 돌아올 때: 전체 2시간 · 우편함을 열 때: 둘 다 2분에 한 번(이 기기에 저장해 둔 목록을 먼저 보여 줌)
+//  → 1000명이 매일 3번씩 열어도 하루 약 8천~1만 읽기(무료 5만). 받기 = 쓰기 1 + 규칙 확인 읽기 1
+function mailFetch(force,kind){if(!mailSrv())return Promise.resolve();if(MAIL.busy)return MAIL.busy;const now=Date.now();
+ const doA=kind!=='p'&&(force===true||now-MAIL.at>(force||120e3)),doP=kind!=='a'&&(force===true||now-MAIL.atP>(kind==='boot'?6*3600e3:(force||120e3)));if(!doA&&!doP)return Promise.resolve();
+ MAIL.busy=(async()=>{try{const Q=[doA?db.collection('mail').where('to','==','all').limit(30).get():null,doP?db.collection('mail').where('to','==',SEAT).limit(30).get():null];const [a,b]=await Promise.all(Q.map(q=>q||Promise.resolve(null)));
+   const keep=MAIL.list.filter(m=>m.to==='all'?!a:!b),seen=new Set(keep.map(m=>m.id)),L=keep.slice();
+   for(const x of [...(a?a.docs:[]),...(b?b.docs:[])]){if(seen.has(x.id))continue;seen.add(x.id);const m=mailNorm(x.id,x.data());if(m)L.push(m)}
+   const t=Date.now();if(a)MAIL.at=t;if(b)MAIL.atP=t;MAIL.list=L;MAIL.err=0;lset('bo-mail',JSON.stringify({at:MAIL.at,ap:MAIL.atP,u:SEAT,l:L}))}catch(e){MAIL.err=1;console.warn('mail',e&&e.code)}finally{MAIL.busy=null}mailPaint()})();return MAIL.busy}
+function mailBoot(){if(MAIL.booted||!mailSrv())return;MAIL.booted=1;mailDom();
+ try{const c=JSON.parse(lget('bo-mail')||'null');if(c&&c.u===SEAT&&Array.isArray(c.l)){MAIL.list=c.l.map(m=>mailNorm(m&&m.id,m)).filter(Boolean);MAIL.at=Number.isFinite(c.at)?c.at:0;MAIL.atP=Number.isFinite(c.ap)?c.ap:0}}catch(e){}
+ mailPaint();mailFetch(60*60e3,'boot');
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')mailFetch(120*60e3,'a')});
+ setInterval(()=>{if(document.visibilityState==='visible')mailPaintHdr()},30e3)}
+// ----- 받기: 우편 하나 = 지갑 쓰기 한 번(규칙이 우편 문서 1개를 확인) -----
+function mailPrune(mr){const lim=Date.now()-MAIL_SKEW;return mr.filter(id=>!(MAIL_IDRE.test(id)&&+id.slice(1,14)<lim))}
+function mailClaimOne(m){let res=null;return ecoWrite('mail',n=>{const mr=mailPrune(Array.isArray(n.mr)?n.mr:[]);if(mr.includes(m.id)){res='dup';return false}if(mr.length>=MAIL_MAX){res='full';return false}
+  const has=!!m.it&&n.own.includes(m.it),add=m.g+(has?(ECO_BY.get(m.it)||{}).p||0:0);n.mr=mr.concat([m.id]);n.g=Math.min(ECO_MAX,n.g+add);if(m.it&&!has)n.own.push(m.it);res={g:add,it:m.it&&!has?m.it:''}})
+ .then(ok=>ok?res:(res==='dup'?'dup':res==='full'?'full':null))}
+async function mailClaim(ids){if(MAIL.claiming||!ECO.ok||!ECO.w||!mailSrv())return;const L=mailReady().filter(m=>ids.includes(m.id));if(!L.length)return;MAIL.claiming=1;mailRender();
+ let g=0;const its=[];let fail=0,full=0;
+ try{for(const m of L){const r=await mailClaimOne(m);if(r&&typeof r==='object'){g+=r.g;if(r.it)its.push(r.it)}else if(r==='full')full++;else if(r!=='dup')fail++}}finally{MAIL.claiming=0}
+ if(g||its.length){snd('reward');const p=its.map(x=>ecoItem(x).n);if(g)p.push(`옥돌 +${ecoFmt(g)}`);toast(p.join(' · '))}
+ else if(full)toast('받은 우편이 많아요 · 잠시 뒤 다시');else if(fail){snd('error');toast('받지 못했어요 · 잠시 뒤 다시');mailFetch(true)}
+ mailPaint()}
+// ----- 화면: 머리줄 우편 버튼(안 읽은 수) · 우편함 시트 · 관리자 보내기 시트 -----
+const MAIL_IC='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.4"/><path d="M3.6 7.4l8.4 6.1 8.4-6.1"/></svg>';
+function mailDom(){if($('#hMail'))return;const hg=$('#hGem');if(hg){const b=document.createElement('button');b.className='ibtn hmail';b.id='hMail';b.dataset.act='mailopen';b.setAttribute('aria-label','우편함');b.innerHTML=MAIL_IC+'<b class="mbn" aria-hidden="true"></b>';hg.after(b)}
+ const X='<button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
+ const host=$('#sh-adm')||$('#sh-set');if(!host)return;
+ const s1=document.createElement('div');s1.className='lsheet hide';s1.id='sh-mail';s1.setAttribute('role','dialog');s1.setAttribute('aria-label','우편함');
+ s1.innerHTML=`<div class="shh"><h2>우편함</h2><button class="ibtn hide" id="mailToAdm" data-act="mailadm" aria-label="관리자 · 선물 보내기"><svg viewBox="0 0 24 24"><path d="M4 12l16-7-6 15-2.6-6.4z"/><path d="M11.4 13.6L20 5"/></svg></button>${X}</div><div id="mailBody"></div>`;
+ const s2=document.createElement('div');s2.className='lsheet hide';s2.id='sh-mailadm';s2.setAttribute('role','dialog');s2.setAttribute('aria-label','선물 보내기');
+ s2.innerHTML=`<div class="shh"><h2>선물 보내기</h2>${X}</div><div id="mailAdmBody"></div>`;host.after(s1,s2);
+ const au=$('#admUsers');if(au&&!$('#admMail')){const b=document.createElement('button');b.className='btn ghost wide hide';b.id='admMail';b.dataset.act='mailadm';b.style.marginTop='8px';b.textContent='관리자 · 선물 보내기';au.after(b)}}
+function mailPaintHdr(){const b=$('#hMail');if(!b)return;b.classList.toggle('hide',!mailSrv());const n=mailUnread(),e=b.querySelector('.mbn'),t=n>9?'9+':n?String(n):'';
+ if(e&&e.textContent!==t){e.textContent=t;e.classList.toggle('on',!!n)}const lb=n?`우편함 · 새 우편 ${n}개`:'우편함';if(b.getAttribute('aria-label')!==lb)b.setAttribute('aria-label',lb);try{hdrFit()}catch(e){}}
+function mailPaint(){mailPaintHdr();if(shOpen==='mail')mailRender();if(shOpen==='mailadm')mailAdmRender();{const a=$('#admMail');if(a)a.classList.toggle('hide',!isAdmin())}}
+const mailDate=ms=>{const t=new Date(ms+KST);return `${t.getUTCMonth()+1}월 ${t.getUTCDate()}일`};
+// 끝시각(다음 날 0시)은 '그 전날까지'로 보여 줌
+const mailDue=m=>{const last=m.until-1,d=Math.floor((last+KST)/864e5)-Math.floor((Date.now()+KST)/864e5);return `${mailDate(last)}까지${d<=0?' · 오늘 끝':d<=6?` · ${d}일 남음`:''}`};
+function mailArt(m){if(m.it){const it=ecoItem(m.it);if(it)return ecoArt(it)}if(m.g)return '<span class="mgem" aria-hidden="true"><span class="gdot"></span></span>';return `<span class="mnote" aria-hidden="true">${MAIL_IC}</span>`}
+function mailGiftTxt(m,got){const it=m.it?ecoItem(m.it):null,p=[];
+ if(it){const has=!got&&ecoHas(m.it);p.push(`<span class="mgi">${esc(it.n)}</span>`);if(has)p.push(`<span class="mgx">보유 중 · 옥돌 ${ecoFmt(it.p)}으로 받아요</span>`)}
+ if(m.g)p.push(`<span class="mgi"><i class="gdot" aria-hidden="true"></i>옥돌 ${ecoFmt(m.g)}</span>`);return p.length?`<div class="mgift">${p.join('')}</div>`:''}
+function mailCard(m){const gift=mailGift(m),got=gift&&mailGot(m),it=m.it?ecoItem(m.it):null;
+ let act='';if(gift&&!got)act=`<button class="btn small" data-act="mailget" data-id="${m.id}"${MAIL.claiming||!ECO.ok?' disabled':''}>받기</button>`;
+ else if(got&&it&&ecoHas(m.it)&&ecoEqOf(it.c)!==m.it)act=`<button class="btn ghost small" data-act="mailequip" data-id="${m.id}">장착</button><span class="mgot">받음</span>`;
+ else if(got)act='<span class="mgot">받음</span>';
+ return `<article class="mcard${got?' got':''}${gift?'':' ntc'}"><span class="mart">${mailArt(m)}</span><div class="mtx"><b class="mtt">${esc(m.t)}</b>${m.msg?`<p class="mmsg">${esc(m.msg)}</p>`:''}${gift?mailGiftTxt(m,got):''}</div><div class="mft"><span class="mdue">${mailDue(m)}</span>${act}</div></article>`}
+function mailRender(){const body=$('#mailBody');if(!body)return;{const t=$('#mailToAdm');if(t)t.classList.toggle('hide',!isAdmin())}
+ const L=mailLive(),R=mailReady();let h='';
+ if(isAdmin()&&Date.now()<MAIL_BETA.end&&!MAIL.list.some(m=>m.t===MAIL_BETA.t)&&!(MAIL.adm||[]).some(m=>m.t===MAIL_BETA.t))h+=`<div class="mbeta"><span>베타 선물을 아직 보내지 않았어요</span><button class="btn small" data-act="mailbeta">보내기 화면</button></div>`;
+ if(R.length>1)h+=`<button class="btn wide mall" data-act="mailall"${MAIL.claiming||!ECO.ok?' disabled':''}>모두 받기 · ${R.length}개</button>`;
+ if(!L.length)h+=`<div class="mempty">${MAIL_IC}<p>${MAIL.busy&&!MAIL.at?'불러오는 중':MAIL.err&&!MAIL.at?'불러오지 못했어요':'받은 우편이 없어요'}</p></div>`;
+ else h+=`<div class="mlist">${L.map(mailCard).join('')}</div><p class="note mnote2">기간이 지나면 우편이 사라져요</p>`;
+ body.innerHTML=h;
+ // 본 공지는 읽음(선물 없는 우편만. 선물은 받아야 읽음)
+ const ntc=L.filter(m=>!mailGift(m)).map(m=>m.id);if(ntc.length){const rd=mailRd();if(ntc.some(x=>!rd.includes(x))){mailRdAdd(ntc);mailPaintHdr()}}}
+function mailOpen(){if(!mailSrv()){toast('인터넷에 연결되면 볼 수 있어요');return}snd('open');openSheet('mail');mailRender();mailFetch(false)}
+// ----- 관리자: 보내기 화면 -----
+const mailDayStr=ms=>{const t=new Date(ms+KST);return t.toISOString().slice(0,10)};
+const mailDayMs=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?Date.UTC(+m[1],+m[2]-1,+m[3])-KST:NaN};
+function mailForm(){if(!MAIL.f)MAIL.f={to:'all',nk:'',t:'',msg:'',g:0,it:'',d0:mailDayStr(Date.now()),d1:mailDayStr(Date.now()+6*864e5)};return MAIL.f}
+function mailBetaFill(){MAIL.f={to:'all',nk:'',t:MAIL_BETA.t,msg:MAIL_BETA.msg,g:MAIL_BETA.g,it:MAIL_BETA.it,d0:mailDayStr(Date.now()),d1:mailDayStr(Date.now()+6*864e5)};MAIL.tgt=null}
+function mailAdmOpen(beta){if(!isAdmin()){return}if(beta)mailBetaFill();openSheet('mailadm');mailAdmRender();mailAdmLoad()}
+async function mailAdmLoad(){if(!isAdmin()||!db||MAIL.admBusy)return;MAIL.admBusy=1;
+ try{const qs=await db.collection('mail').limit(200).get();const now=Date.now(),L=[];
+  for(const x of qs.docs){const d=x.data()||{};
+   // 끝난 지 하루 지난 우편은 지움(모든 사람이 앱을 열 때 읽는 양을 줄임)
+   if(Number.isInteger(d.until)&&d.until<now-864e5){db.doc('mail/'+x.id).delete().catch(()=>{});continue}const m=mailNorm(x.id,d);if(m)L.push(m)}
+  MAIL.adm=L.sort((a,b)=>b.from-a.from)}catch(e){MAIL.adm=MAIL.adm||[];MAIL.admErr=(e&&e.code)||'err'}finally{MAIL.admBusy=0}if(shOpen==='mailadm')mailAdmRender();if(shOpen==='mail')mailRender()}
+function mailAdmRead(){const f=mailForm(),v=s=>{const e=$(s);return e?e.value:''};f.t=v('#maT').trim().slice(0,30);f.msg=v('#maM').trim().slice(0,200);f.g=Math.max(0,Math.min(MAIL_GMAX,parseInt(v('#maG'),10)||0));f.it=v('#maI');f.d0=v('#maD0');f.d1=v('#maD1');f.nk=v('#maN').trim().slice(0,12);return f}
+function mailAdmRender(){const body=$('#mailAdmBody');if(!body)return;const f=mailForm();
+ const opts=`<option value="">없음</option>`+ECO_SLOTS.map(c=>`<optgroup label="${ECO_CAT[c]}">${ECO_ITEMS.filter(x=>x.c===c).map(x=>`<option value="${x.id}"${f.it===x.id?' selected':''}>${esc(x.n)} · ${ecoFmt(x.p)}</option>`).join('')}</optgroup>`).join('');
+ const tg=MAIL.tgt;
+ const sent=(MAIL.adm||[]).map(m=>{const now=Date.now(),st=now<m.from?'예정':now<m.until?'받는 중':'끝남',it=m.it?ecoItem(m.it):null,gift=[it&&it.n,m.g?`옥돌 ${ecoFmt(m.g)}`:''].filter(Boolean).join(' · ')||'공지';
+  return `<div class="msrow"><div><b>${esc(m.t)}</b><span>${m.to==='all'?'전체':esc(m.nk||'한 명')} · ${esc(gift)}</span><span>${mailDate(m.from)} ~ ${mailDate(m.until-1)} · ${st}</span></div><button class="btn ghost small" data-act="maildel" data-id="${m.id}">지우기</button></div>`}).join('');
+ body.innerHTML=`${Date.now()<MAIL_BETA.end&&!(MAIL.adm||[]).some(m=>m.t===MAIL_BETA.t)?`<button class="btn ghost wide mbetab" data-act="mailbetafill">베타 선물 양식 불러오기</button>`:''}
+  <p class="lbl">받는 사람</p><div class="seg row" id="maTo"><button data-act="mailto" data-v="all" aria-pressed="${f.to==='all'}">전체</button><button data-act="mailto" data-v="one" aria-pressed="${f.to!=='all'}">한 명</button></div>
+  ${f.to!=='all'?`<div class="marow"><input type="text" id="maN" maxlength="12" placeholder="닉네임" value="${esc(f.nk)}" autocomplete="off" aria-label="받는 사람 닉네임"><button class="btn ghost small" data-act="mailfind">찾기</button></div><p class="mafound${tg&&tg.ok?' ok':''}" id="maFound" role="status">${tg?esc(tg.msg):''}</p>`:`<input type="hidden" id="maN" value="">`}
+  <p class="lbl">제목</p><input type="text" id="maT" maxlength="30" value="${esc(f.t)}" placeholder="제목" aria-label="제목">
+  <p class="lbl">내용</p><textarea id="maM" maxlength="200" rows="3" placeholder="내용 (선택)" aria-label="내용">${esc(f.msg)}</textarea>
+  <div class="ma2"><div><p class="lbl">옥돌</p><input type="number" id="maG" min="0" max="${MAIL_GMAX}" step="10" inputmode="numeric" value="${f.g||0}" aria-label="옥돌"></div><div><p class="lbl">아이템</p><select id="maI" aria-label="아이템">${opts}</select></div></div>
+  <p class="lbl">받을 수 있는 기간</p><div class="ma2 mad"><input type="date" id="maD0" value="${f.d0}" aria-label="시작일"><span aria-hidden="true">~</span><input type="date" id="maD1" value="${f.d1}" aria-label="끝나는 날"></div>
+  <p class="note manote">끝나는 날 밤 12시까지 받을 수 있어요</p><p class="note manote">이미 가진 아이템은 같은 값의 옥돌로 받아요</p>
+  <button class="btn wide" data-act="mailsend">보내기</button>
+  <h3 class="mash">보낸 우편</h3>${MAIL.adm==null?'<p class="sub">불러오는 중</p>':sent||'<p class="sub">없음</p>'}`}
+async function mailFind(){const f=mailAdmRead(),n=f.nk;MAIL.tgt=null;if(!n){MAIL.tgt={ok:false,msg:'닉네임을 넣어 주세요'};return mailAdmRender()}
+ let uid=null;try{const x=await db.doc('nicks/'+nickKey(n)).get();if(x.exists&&okSeat((x.data()||{}).by))uid=x.data().by}catch(e){}
+ if(!uid&&ADM.rows&&ADM.rows.length){const r=ADM.rows.filter(r=>r.nk===n);if(r.length===1)uid=r[0].id}
+ MAIL.tgt=uid?{ok:true,uid,nk:n,msg:`찾음 · ${n}`}:{ok:false,msg:'그 닉네임을 찾지 못했어요'};mailAdmRender()}
+function mailAdmCheck(){const f=mailAdmRead(),now=Date.now();
+ if(f.to!=='all'&&!(MAIL.tgt&&MAIL.tgt.ok&&MAIL.tgt.nk===f.nk))return{e:'받는 사람을 먼저 찾아 주세요'};
+ if(!f.t)return{e:'제목을 넣어 주세요'};if(!f.g&&!f.it&&!f.msg)return{e:'선물이나 내용을 넣어 주세요'};
+ const a=mailDayMs(f.d0),b=mailDayMs(f.d1);if(!isFinite(a)||!isFinite(b))return{e:'기간을 확인해 주세요'};
+ const from=Math.max(a,a<=now?now-60e3:a),until=b+864e5;if(until<=from||until<=now)return{e:'끝나는 날을 확인해 주세요'};if(until-from>31*864e5)return{e:'기간은 31일까지예요'};
+ return{f,from,until}}
+function mailSendAsk(){const c=mailAdmCheck();if(c.e){toast(c.e);return}const f=c.f,it=f.it?ecoItem(f.it):null,gift=[it&&it.n,f.g?`옥돌 ${ecoFmt(f.g)}`:''].filter(Boolean).join(' · ')||'선물 없음(공지)';
+ dialog(`<div class="mconf"><b>${esc(f.t)}</b><span>${f.to==='all'?'기간 안에 앱을 연 모든 사람':esc(MAIL.tgt.nk)}</span><span>${esc(gift)}</span><span>${mailDate(c.from)} ~ ${mailDate(c.until-1)}</span></div>`,'보내기',()=>mailSend(c),'취소')}
+async function mailSend(c){if(!isAdmin()||!db)return;const f=c.f,r=[...crypto.getRandomValues(new Uint8Array(6))].map(x=>'abcdefghijklmnopqrstuvwxyz0123456789'[x%36]).join(''),id='m'+c.until+'_'+r;
+ const d={to:f.to==='all'?'all':MAIL.tgt.uid,t:f.t,msg:f.msg,g:f.g,it:f.it||'',from:c.from,until:c.until,by:SEAT,at:SRV_TS};if(f.to!=='all')d.nk=MAIL.tgt.nk.slice(0,12);
+ try{await db.doc('mail/'+id).set(d);snd('notify');toast('보냈어요');MAIL.f=null;MAIL.tgt=null;mailAdmLoad();mailFetch(true)}catch(e){snd('error');toast('보내지 못했어요 · 규칙 게시를 확인해 주세요');console.warn('mail send',e&&e.code)}}
+function mailDel(id){const m=(MAIL.adm||[]).find(x=>x.id===id);if(!m)return;dialog(`<div class="mconf"><b>${esc(m.t)}</b><span>이 우편을 지울까요? 아직 안 받은 사람은 못 받아요</span></div>`,'지우기',async()=>{try{await db.doc('mail/'+id).delete();toast('지웠어요');MAIL.adm=MAIL.adm.filter(x=>x.id!==id);MAIL.list=MAIL.list.filter(x=>x.id!==id);mailPaint()}catch(e){toast('지우지 못했어요')}},'취소')}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;if(!a.startsWith('mail'))return;
+ if(a==='mailopen')mailOpen();else if(a==='mailget')mailClaim([b.dataset.id]);else if(a==='mailall')mailClaim(mailReady().map(m=>m.id));
+ else if(a==='mailequip'){const m=MAIL.list.find(x=>x.id===b.dataset.id),it=m&&ecoItem(m.it);if(it)ecoEquip(it.c,m.it)}
+ else if(a==='mailadm'){if(shOpen==='set'||shOpen==='mail')closeSheet(true);mailAdmOpen(false)}else if(a==='mailbeta'){closeSheet(true);mailAdmOpen(true)}
+ else if(a==='mailbetafill'){mailBetaFill();mailAdmRender()}else if(a==='mailto'){const f=mailAdmRead();f.to=b.dataset.v==='all'?'all':'one';mailAdmRender()}
+ else if(a==='mailfind')mailFind();else if(a==='mailsend')mailSendAsk();else if(a==='maildel')mailDel(b.dataset.id)});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='maN'){e.preventDefault();mailFind()}});
+// 기존 함수 감싸기: 지갑 정리(ecoNorm)가 mr 을 지우지 않게 · 지갑을 불러온 뒤 시작 · 지갑이 바뀌면 배지·목록 다시 · 관리자 버튼
+{const _n=ecoNorm;ecoNorm=function(d){const o=_n.apply(this,arguments);if(d&&Array.isArray(d.mr))o.mr=d.mr.filter(x=>typeof x==='string').slice(0,MAIL_MAX);return o}}
+{const _a=ecoAfterLoad;ecoAfterLoad=function(){const r=_a.apply(this,arguments);try{mailBoot()}catch(e){}return r}}
+{const _p=ecoPaint;ecoPaint=function(){const r=_p.apply(this,arguments);try{mailPaint()}catch(e){}return r}}
+// 머리줄: 우편 버튼 때문에 닉네임이 잘리면(제목은 이미 숨김) 로고도 숨겨 닉네임에 자리를 줌. 우편 버튼이 없으면 예전과 같음
+{const _h=hdrFit;hdrFit=function(){const r=_h.apply(this,arguments);try{const h=$('#lobby .ltop'),t=$('#nickTxt'),m=$('#hMail');if(h&&t){h.classList.remove('tight2');if(m&&!m.classList.contains('hide')&&h.classList.contains('tight')&&innerWidth<=440&&t.scrollWidth>t.clientWidth)h.classList.add('tight2')}}catch(e){}return r}}
+{const _r=renderAcct;renderAcct=function(){const r=_r.apply(this,arguments);try{const a=$('#admMail');if(a)a.classList.toggle('hide',!isAdmin())}catch(e){}return r}}
+// ===== MAIL END =====
+// ===== STG START (단계별 묘수 풀이 11/26: Easy·Normal·Hard·Godlike 각 20문제) =====
+// 병합 메모: 이 블록은 새 함수·데이터만 담음. 기존 코드에 끼운 곳은 '/* STG */' 표시가 붙은 곳뿐(홈 타일·시트 HTML, CSS 묶음, BGM 한 줄)
+// 문제: 오프라인 생성기(eval/stage/gen)가 게임 판정(fxOutcomes·pzSolve·pzGood)으로 만들고 검사한 80문제를 데이터로 넣음(모든 폰 같음, 서버 읽기 없음)
+//  한 줄 = 흑돌|백돌|세 칸|선후(s/h)·목표(b 막기/w 이기기)|상대 칩|내 칩|정답 합|판 보기(행,열,크기)  좌표는 글자 a~s(0~18). 나는 늘 흑
+// 정답: 오늘의 묘수 풀이와 같은 판정(pzJudge) — 상대가 가진 칩 안에서 어떻게 걸어도 해내고, 합이 가장 적은 베팅
+// 진행: 지갑 wal.sp=[E,N,H,G](깬 문제 수)와 이 기기 기록 bo-stg:{SEAT} 중 큰 값. 깨면 이 기기에 먼저 +1 → 지갑에 한 칸씩 반영하며 옥돌
+// 규칙(firestore.rules walStg): 한 번에 한 단계 +1 · 앞 단계 10문제 이상 · 정해진 옥돌 · 지갑 마지막 쓰기에서 10초. 같은 문제 두 번 보상 없음
+const STG_DATA={"E":["khlhpi|gjhjigijkjmemj|hhiijj|hb|6|7|6|fdj","fkipjijllipk|dhhjijlgmjnenfngnhnl|mhnioj|hb|6|11|6|hdk","hhjikjlkml|epnp|lmmmnm|hw|6|8|6|fgl","gigjglgmjmkdkonmpgph|dignijkgpl|flgkhj|hw|6|14|6|dfl","ghjongni|brcqdmdpeokhofojom|fmfnfo|sb|5|10|6|agn","fognjokgki|eghghjimkjmgngogpiqg|niohpg|sb|5|6|6|jdj","fgghgnmg|fdhfhghhhjnl|hiijjk|hb|6|9|6|cel","efkfkjpi|fjhhihjhlhop|kgkhki|hb|6|14|6|gcl","jomjnfnkolpm|klmk|lhlilj|sw|5|11|6|iek","ddfefjhjiplloeofogoi|fifnglmnoj|mhnhoh|sw|5|13|6|jdj","fgkopnpopqpr|epglllmm|nnoopp|hw|6|14|6|jkj","dmfdffhknenfnhniolpi|dggdgmilkglgnm|mgngog|hw|6|7|6|hdk","dgeggggmhglo|diehfmil|fggfhe|hw|6|8|6|bcj","fpfqgpinjmlk|elfmhemi|gnhoip|hw|7|15|7|dik","hfjiojpfpiqhrg|ehiepl|njnknl|sw|7|14|8|hcm","eienfjpd|eeeofngmhgiklh|gkhlim|sb|5|6|6|dfl","dejdjjljmkmnpi|ehfhhfnknmnnno|nlompn|sb|6|9|7|jhj","lonmqjrk|mgnioepgphqfre|ngohpi|sb|6|13|7|kdj","dgfhflhojhne|fkhiijjgjokfleoi|ghhhih|sb|6|10|7|edj","gjgngphchdhehfmkoo|egkfmhmjpm|hgigjg|hw|12|17|12|dbl"],"N":["flgghmiljkjmkjkllkmjodofpl|ihjhlgnh|limini|hw|15|15|14|gel","doenfjgkhlhoijimkmoi|dgegjjjkjljmnfnhok|injnkn|hb|13|17|13|dfn","jflhofoh|ekfjhoogop|gihhig|hb|15|16|13|ddk","dfhfjhof|dmfokflgmhninopepfpgph|nkojpi|hb|9|18|15|gdn","dddjiljmlompnoop|eminjnnepk|knlnmn|sw|7|14|8|hik","hpigiijjndnm|chdhehelenhdhihjhkhljhpf|fhghhh|hb|14|29|24|bcl","gjkmmm|glhkhqidipirjojqkplmlo|knlnmn|hb|14|30|25|eil","gmikipjjkiljlnpg|deefeihmhnkj|hjhkhl|hb|9|15|7|dgk","dhdoegenjhnh|djeijmlkmhnopp|fhgghf|sb|10|17|11|cdj","hlje|gehfigkjlfmjnjoioj|jhkilj|hb|22|46|40|fdl","dogehkmpnh|gohhikjkkeknkokplklmmkof|kkklkm|hb|22|45|40|fgl","dgffhlkf|hihoiljijjjljmlfllmlpf|jkkllm|sb|7|14|13|ghj","dfdjeknjpn|ifjgkhkkkmlkmkofokon|limjnk|sb|9|23|17|hej","gpnf|fnieihikjikekjlelkme|hgifje|sb|10|27|19|gdj","dhdmeieneofjhlillelf|dnekemkllpmomppk|flgkhj|hb|20|22|18|cen","eohd|cfdgdkehhjhlhmhnlg|figjhk|sb|14|31|27|bdm","hmkfklmfmnninoooop|fjjkmdnmogom|kmlmmm|sb|15|21|16|gik","ieljmlpn|hokl|mknlom|hw|6|18|12|jhj","eifhhnleljpo|hhiijjjmjnjojpkdkpllninjodok|imjlkk|sb|10|20|19|dfn","edffhgijikpk|djfhmnnpon|igihii|hw|7|23|15|bck"],"H":["enepfmjhkhlhminhnknopkqlrm|kfkplgmfmkneoe|mhnioj|sb|21|24|22|idl","fjhjljlomhnhohoo|fnghhhhlieihikimjjkikjkp|jhkhlh|sb|16|38|31|fdl","fpihlillmink|fighgihehijglhlpmgndnfoepg|iijiki|sb|18|38|35|ebm","gfgohfhghhigjfjkok|fphdhlhmhniilfnh|hihjhk|hb|11|13|10|dcn","dofjfkgkhminjoniop|dlelfhflfohjpo|glhlil|hb|13|17|12|cij","elghgnhoipjpnn|efglhliljlkono|flfmfn|hb|9|9|8|djj","fgfmgnipjdjqlioopk|epgmhlhpimjijlkkljnknlnp|hmhnho|hb|10|10|9|dhl","dpedikjjlilklllmmg|ffjdjejfjgjp|jhkilj|hb|13|17|12|ecm","gngohgnpod|ejgikm|gkglgm|sw|12|37|33|dhj","eohnjgkjkklgmingnjokph|gegkikinjjjllhmg|kgkhki|hw|14|39|36|fbm","ffhojgkgknlkoj|eijjmfngnhninj|lmmlnk|sw|9|24|24|hfk","dkeiejfdgenn|hnhoifihiiijlg|hfigjh|sw|10|31|27|dbk","fkhjimjflplqlrmi|fpigjokommmonmnoogompm|lmlnlo|hb|9|21|14|gil","gdngnlnnpfppqfrf|ddfoiojfkdkfkhlflglhmgneodoepdpn|mfnfof|hb|9|15|14|ial","dkejenfignjekdlc|dpefffgfhehfhhhijk|ghhgif|hb|9|18|14|cbl","edehgjjhknlnmn|dheiiemoompepkplpmpoqk|nnonpn|hb|16|31|28|jij","elmjnhogpf|fphfklkmknkolklllmln|kkljmi|hb|17|33|30|een","dlejemfmgmhmhninknlgln|eegeikjjkilhli|hlimjn|hw|9|10|8|cfl","fkhmjgjmkmlmneohpmqmrm|dheeikjjkjkklkllmlnnon|mmnmom|hb|22|44|40|gen","fmfogggmhdhmjmkgkhkikj|fefjgihjikkmpe|imjlkk|hw|11|17|10|efj"],"G":["ejjkjlkfkgkhljminh|lelh|kikjkk|sw|11|15|12|hej","jhjonhnnpk|fijdlkmcmdmemimjmkmp|mfmgmh|hb|9|16|8|hbl","dedkejfijekdlcmdmiodoipf|hdihknldpmpp|ghhgif|sw|11|28|21|cbl","hfifijjfmemgmhmipo|ghnfofpfpp|kflfmf|hw|21|21|20|gcl","efffiljljnjpkllkmkmlnkok|emgghhiimmnlnnoo|jjkkll|hb|14|14|13|eem","dfekfdfjgihhljlomkmmndngnlol|fogehehfnfpk|igjhki|sw|11|17|12|dbm","fhgohehfhghkhlhmkilhmemp|dfelfkfpgjgmihmkmo|hhhihj|sw|9|19|17|cdn","dhgeiciejdkelfno|dkfogmjgkglgoopgqgrg|mgngog|hb|21|21|20|ham","dgegehenfgfojonl|fhhhiejfkeldnkoopi|gghgig|hb|9|14|8|cbn","eeffggjikkllmmop|elieifigih|hhiijj|sw|19|40|37|ddl","hdof|elfmgmhmlmmmnm|imjmkm|hb|22|24|21|ehl","fcfhgdgmhejgjijjlfmfnf|dpicidieigjlkhnl|ifjfkf|hw|10|16|9|ebl","fnhoinjmkelkoppd|glhdhlilmlngnlokolpf|jlklll|hb|18|24|17|fil","djigkllmmfmimmnooooppo|dfdlinkioeompkpmqjqmrirm|mnnmol|hb|9|12|8|hgm","gghfjpkhkjkkkl|fmifjhjjjkjlmimjniofoi|jikili|hb|19|26|18|edm","effffogfgphehoifikjejhkele|hdidkdkhldpepg|hfiejd|sb|9|12|10|dak","defnfphhhihkhljijjjkjmml|igihiiijneofom|hjikjl|sb|9|14|10|dfm","dddkehhoiojoko|fhhlhmikiljjjkjpkgkikj|gmgngo|hb|9|19|11|chk","dpeeephhhijikjlkmlno|fpjnkfmmmnmonfokonpjpnqiqn|nlnmnn|hb|9|13|11|igk","difohkifjgkflimhmjniogojpd|gejejhjjjkjlkgknpn|jikhlg|sw|9|16|14|gdk"]};
+const STG_LV=[{k:'E',n:'Easy'},{k:'N',n:'Normal'},{k:'H',n:'Hard'},{k:'G',n:'Godlike'}];
+const STG_AMT=[5,10,20,30],STG_BIG=[50,100,250,600],STG_OPEN=10,STG_GAP=11500,STG_N=20;
+const stgAmt=(s,c)=>c===STG_N?STG_BIG[s]:STG_AMT[s];
+const STG={v:'list',s:0,i:0,bet:[1,1,1],res:null,cache:new Map(),busy:false,tm:0,fail:0};
+const STG_IC='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h5v-5h5v-5h5V5h3"/><path d="M3 20V9M21 5v15"/></svg>';
+const STG_LOCK='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+const STG_OK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4 4 9-9.5"/></svg>';
+const STG_BACK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+// 문제 한 개 풀기(판·세 칸·정답 계산은 게임 판정 그대로). 결과는 기억
+function stgPz(s,i){const key=s+':'+i;if(STG.cache.has(key))return STG.cache.get(key);const L=STG_LV[s],row=L&&STG_DATA[L.k][i];if(!row)return null;
+ const [k,w,cs,fl,X,P,best,vw]=row.split('|'),dp=t=>{const a=[];for(let j=0;j+1<t.length;j+=2)a.push([t.charCodeAt(j)-97,t.charCodeAt(j+1)-97]);return a};
+ const bd=emptyBoard();dp(k).forEach(([r,c])=>bd[r][c]=1);dp(w).forEach(([r,c])=>bd[r][c]=2);
+ const cells=dp(cs),meSun=fl[0]==='s',goal=fl[1]==='w'?'win':'block',O=fxOutcomes(bd,cells,1,meSun),sol=pzSolve(O,+P,+X,meSun,goal);
+ const pz={type:'bet',stg:1,s,i,goal,bd,cells,meSun,P:+P,X:+X,O,best:sol?sol.best:+best,n:sol?sol.n:0,ex:sol?sol.ex:[1,1,1],view:[...vw].map(ch=>ch.charCodeAt(0)-97)};
+ pz.det=stgDetail(pz);pz.simul=pz.det.some(x=>x.fm&&x.fo);STG.cache.set(key,pz);return pz}
+// 8가지 결과(내가 가져간 칸 마스크)마다 오목 줄 수·새 6목(무효) 여부
+function stgDetail(pz){const out=[],ov0=overLines(pz.bd,1).length,ow0=overLines(pz.bd,2).length;for(let m=0;m<8;m++){const b=pz.bd.map(r=>r.slice()),su=[0,1,2].map(i=>((m>>i)&1)===(pz.meSun?1:0)?99:0),hu=su.map(v=>v?0:99);
+  settle(b,pz.cells,su,hu,pz.meSun?1:2,pz.meSun?2:1);out.push({fm:fiveLines(b,1).length,fo:fiveLines(b,2).length,vm:overLines(b,1).length>ov0,vo:overLines(b,2).length>ow0})}return out}
+// ----- 진행(서버 지갑 + 이 기기) -----
+const stgKey=()=>'bo-stg:'+(SEAT||'local');
+function stgLoc(){try{const v=JSON.parse(lget(stgKey())||'null');if(Array.isArray(v)&&v.length===4)return v.map(x=>Math.max(0,Math.min(STG_N,x|0)))}catch(e){}return[0,0,0,0]}
+const stgSrv=()=>{const a=ECO.w&&Array.isArray(ECO.w.sp)&&ECO.w.sp.length===4?ECO.w.sp:null;return a?a.map(x=>Math.max(0,Math.min(STG_N,x|0))):[0,0,0,0]};
+const stgCnt=()=>{const a=stgLoc(),b=stgSrv();return a.map((x,j)=>Math.max(x,b[j]))};
+const stgOpen=(s,c)=>s===0||(c||stgCnt())[s-1]>=STG_OPEN;
+const stgPend=()=>{const a=stgCnt(),b=stgSrv();return a.reduce((t,x,j)=>t+Math.max(0,x-b[j]),0)};
+const stgAll=()=>stgCnt().reduce((a,b)=>a+b,0);
+// 지갑에 한 칸씩: 앞 단계부터, 마지막 지갑 쓰기에서 STG_GAP 뒤(규칙 10초 + 여유). 막히면 점점 늦게 다시
+function stgSync(){clearTimeout(STG.tm);if(STG.busy||!ECO.ok||!ECO.w)return;const loc=stgLoc(),srv=stgSrv(),s=[0,1,2,3].find(j=>loc[j]>srv[j]);if(s===undefined){STG.fail=0;return}
+ if(s>0&&srv[s-1]<STG_OPEN)return; // 앞 단계가 지갑에 10문제 미만이면 규칙상 못 씀(정상 진행에서는 생기지 않음)
+ const wait=ecoSrv()?STG_GAP-(Date.now()-Math.max(ECO.lastW||0,ECO.wAt||0)):0;if(wait>0){STG.tm=setTimeout(stgSync,wait+60);return}
+ STG.busy=true;const c=srv[s]+1,amt=stgAmt(s,c);
+ ecoWrite('stg',n=>{const sp=Array.isArray(n.sp)&&n.sp.length===4?n.sp.slice():[0,0,0,0];if(sp[s]+1!==c)return false;sp[s]=c;n.sp=sp;n.g+=amt}).then(ok=>{STG.busy=false;
+  if(ok){STG.fail=0;stgPaintAll()}else STG.fail++;STG.tm=setTimeout(stgSync,ok?300:Math.min(120e3,STG_GAP*STG.fail))},()=>{STG.busy=false})}
+// ----- 판 그림: 세 칸과 그 둘레 돌이 모두 보이게(문제마다 정한 범위) -----
+function stgBoardSVG(pz){const [a,b,n]=pz.view,K=30,W=K*(n-1)+K*1.2,x=c=>K*.6+(c-b)*K,y=r=>K*.6+(r-a)*K;
+ let s=`<svg class="pzbd stgbd" viewBox="0 0 ${W} ${W}" role="img" aria-label="${esc(pzAria(pz))}"><rect width="${W}" height="${W}" rx="10" fill="#DDB06A"/>`;
+ for(let i=0;i<n;i++)s+=`<path d="M${x(b)} ${y(a+i)}H${x(b+n-1)}M${x(b+i)} ${y(a)}V${y(a+n-1)}" stroke="#3A2510" stroke-opacity=".55" stroke-width="1"/>`;
+ for(let r=a;r<a+n;r++)for(let c=b;c<b+n;c++){const v=pz.bd[r][c];if(v)s+=`<circle cx="${x(c)}" cy="${y(r)+1.2}" r="12.6" fill="#2a1806" opacity=".28"/><circle cx="${x(c)}" cy="${y(r)}" r="12.2" fill="url(#fxs${v})"/>`}
+ pz.cells.forEach(([r,c],j)=>{s+=`<circle cx="${x(c)}" cy="${y(r)}" r="12" fill="${HEX[j]}"/><circle cx="${x(c)}" cy="${y(r)}" r="8.4" fill="#FBF6EA"/><text x="${x(c)}" y="${y(r)+4.3}" text-anchor="middle" font-family="NS,sans-serif" font-weight="800" font-size="11.5" fill="${CHIPD[j]}">${LBL[j]}</text>`});
+ return s+'</svg>'}
+// ----- 설명 -----
+const stgLab=j=>`<span class="lab" style="--k:${LCOL[j]}">${LBL[j]}</span>`;
+const stgCells=om=>[0,1,2].filter(i=>(om>>i)&1);
+// 상대가 om 칸을 가져갔을 때(나머지는 내 돌) 결과 글: 줄바꿈 단위로 나눈 조각들
+function stgOut(pz,om){const m=7^om,d=pz.det[m],o=pz.O[m],W=o==='me'?'내가 이김':'상대가 이김';
+ if(d.fm&&d.fo)return[`둘 다 오목 · 줄 ${d.fm}:${d.fo}`,d.fm===d.fo?`같으면 후 플레이어 → ${W}`:`→ ${W}`];
+ if(o==='op')return['상대 오목'];if(o==='me')return['내 오목'];
+ if(d.vm)return['내 줄 6목 → 무효'];return['오목 없음']}
+const stgLine=(pz,om)=>`<span class="nw">${stgWho(om)} →</span> `+stgOut(pz,om).map(t=>`<span class="nw">${esc(t)}</span>`).join(' ');
+const stgWho=om=>om?`${stgCells(om).map(stgLab).join('')} 상대 돌`:'세 칸 모두 내 돌';
+// 상대가 노릴 결과(최소 묶음): 막기 = 상대 승, 이기기 = 내 승이 아닌 것
+function stgBad(pz){const bad=om=>pz.goal==='win'?pz.O[7^om]!=='me':pz.O[7^om]==='op',B=[];for(let om=0;om<8;om++)if(bad(om))B.push(om);return B.filter(om=>!B.some(x=>x!==om&&(x&om)===x))}
+// 내 베팅 b로 상대가 X칩 안에서 만들 수 있는 가장 싼 '나쁜 결과'(오답 풀이). 없으면 null
+function stgBreak(pz,b){const th=b.map(v=>pz.meSun?v:v+1),bad=m=>pz.goal==='win'?pz.O[m]!=='me':pz.O[m]==='op';let best=null;
+ for(let om=0;om<8;om++){let ok=true;const ob=[0,1,2].map(i=>{if((om>>i)&1)return th[i];if(th[i]<2){ok=false;return 0}return 1});if(!ok)continue;const c=ob[0]+ob[1]+ob[2];
+  if(c>pz.X||!bad(7^om))continue;if(!best||c<best.c)best={c,ob,om}}return best}
+// 상대가 om 칸을 가져가려면 드는 칩(내 베팅 b 기준). 못 만들면 null
+function stgCost(pz,b,om){const th=b.map(v=>pz.meSun?v:v+1),ob=[];for(let i=0;i<3;i++){if((om>>i)&1)ob.push(th[i]);else{if(th[i]<2)return null;ob.push(1)}}return{c:ob[0]+ob[1]+ob[2],ob}}
+// 설명에 보일 경우: 상대가 노릴 나쁜 결과 전부 중, 더 싸게 같은 결과를 내는 작은 묶음이 있는 것은 뺌(못 만드는 경우는 가장 작은 묶음만). 싼 순서, 최대 4개
+function stgShow(pz,b){const bad=om=>pz.goal==='win'?pz.O[7^om]!=='me':pz.O[7^om]==='op',B=[];for(let om=0;om<8;om++)if(bad(om))B.push({om,k:stgCost(pz,b,om)});
+ const keep=B.filter(x=>!B.some(y=>y.om!==x.om&&(y.om&x.om)===y.om&&(x.k?(y.k&&y.k.c<=x.k.c):true)));
+ return keep.sort((x,y)=>(x.k?x.k.c:1e9)-(y.k?y.k.c:1e9)).slice(0,4).map(x=>x.om)}
+function stgExplain(pz){const ex=pz.ex,B=stgShow(pz,ex),rows=B.map(om=>{const k=stgCost(pz,ex,om),th=ex.map(v=>pz.meSun?v:v+1),fz=[0,1,2].filter(i=>!((om>>i)&1)&&th[i]<2);return `<li>${stgLine(pz,om)} <span class="nw stgc2">· ${k?`필요 ${k.ob.join('+')} = ${k.c}${PTU}`:`${fz.map(stgLab).join('')} 늘 상대 돌`}</span></li>`});
+ const how=`<li><span class="nw">상대가 칸을 가지려면</span> <span class="nw">${pz.meSun?'내 칩만큼(같으면 상대 돌)':'내 칩+1(같으면 내 돌)'}</span></li>`;
+ return `<ul class="pzex stgex">${how}${rows.join('')}<li><span class="nw">정답 ${ex.map((v,j)=>stgLab(j)+v).join(' ')}</span> <span class="nw">· 상대 ${pz.X}${PTU} → 모두 막힘</span></li><li><span class="nw">합 ${pz.best-1}${PTU} 이하는</span> <span class="nw">어떻게 나눠도 뚫려요</span></li></ul>`}
+// ----- 화면 -----
+const stgPips=s=>`<span class="stgpw" aria-hidden="true">${[0,1,2,3].map(j=>`<i class="${j<=s?'on':''}"></i>`).join('')}</span>`;
+function stgTitle(){const t=$('#stgT'),bk=$('#stgBk');if(!t)return;const L=STG_LV[STG.s];t.textContent=STG.v==='list'?'단계별 묘수 풀이':STG.v==='map'?L.n:`${L.n} ${STG.i+1}`;t.classList.toggle('god',STG.v!=='list'&&STG.s===3);if(bk)bk.classList.toggle('hide',STG.v==='list')}
+function stgList(){const c=stgCnt(),pend=stgPend(),adm=isAdmin();
+ return `<div class="stgl">${STG_LV.map((L,s)=>{const n=c[s],op=stgOpen(s,c),done=n>=STG_N;
+  const sub=!op?`<span class="stgr">${STG_LOCK}<span>${STG_LV[s-1].n} ${STG_OPEN}문제 깨면 열려요</span></span>`:done?`<span class="stgr ok">${STG_OK}<span>완료</span></span>`:`<span class="stgr"><i class="gdot" aria-hidden="true"></i><span>문제당 ${STG_AMT[s]} · 20번째 ${STG_BIG[s]}</span></span>`;
+  return `<button class="stgc${op?'':' lock'}${done?' done':''}${s===3?' god':''}" data-act="stgmap" data-s="${s}"${op||adm?'':' aria-disabled="true"'} aria-label="${L.n} ${n}/${STG_N}${op?'':' 잠김'}${done?' 완료':''}"><span class="stgn"><b>${L.n}</b>${stgPips(s)}</span><span class="stgp num">${n}<small>/${STG_N}</small></span><span class="stgbar" aria-hidden="true"><i style="width:${n/STG_N*100}%"></i></span>${sub}</button>`}).join('')}</div>${pend&&ecoSrv()?`<p class="note stgsync">옥돌 반영 중 · ${pend}문제</p>`:''}`}
+function stgMap(){const s=STG.s,c=stgCnt(),n=c[s],adm=isAdmin();
+ const cells=Array.from({length:STG_N},(_,i)=>{const st=i<n?'done':i===n?'cur':'lock',open=st!=='lock'||adm,big=i===STG_N-1;
+  return `<button class="stgq ${st}${big?' big':''}" data-act="stgpz" data-i="${i}"${open?'':' aria-disabled="true"'} aria-label="${i+1}번${st==='done'?' 완료':st==='cur'?' 지금 문제':' 잠김'}${big?` · 옥돌 ${STG_BIG[s]}`:''}"><span class="num">${i+1}</span>${st==='done'?`<i class="ck">${STG_OK}</i>`:''}${big&&st!=='done'?'<i class="gdot" aria-hidden="true"></i>':''}</button>`}).join('');
+ const nx=n<STG_N?`<button class="btn wide" data-act="stgpz" data-i="${n}">${n+1}번 풀기</button>`:`<p class="stgfin">${STG_LV[s].n} 완료</p>`;
+ return `<div class="stgmh"><span class="stgp num">${n}<small>/${STG_N}</small></span><span class="stgbar" aria-hidden="true"><i style="width:${n/STG_N*100}%"></i></span><span class="stgbig"><i class="gdot" aria-hidden="true"></i><span>문제당 ${STG_AMT[s]} · 20번째 ${STG_BIG[s]}</span></span></div><div class="stgg">${cells}</div>${nx}`}
+function stgPzView(){const pz=stgPz(STG.s,STG.i);if(!pz)return '<p class="sub">문제를 불러오지 못했어요</p>';const r=STG.res,c=stgCnt(),solved=STG.i<c[STG.s];
+ const q=pz.goal==='win'?(pz.simul?'가장 적게 써서 확실히 이기기':'가장 적게 써서 확실히 오목 만들기'):(pz.simul?'가장 적게 써서 상대 승리 확실히 막기':'가장 적게 써서 상대 오목 확실히 막기');
+ const tie=pz.meSun?'같으면 상대 돌':'같으면 내 돌';
+ const info=`<div class="pzinfo"><span><i class="st k"></i>나 · <b>${pz.meSun?'선':'후'} 플레이어</b></span><span>내 ${PTU} <b class="num">${pz.P}</b></span><span>상대 ${PTU} <b class="num">${pz.X}</b></span></div><p class="stgtie">${tie}</p>`;
+ const head=`<div class="pzhead stgph">${stgPips(STG.s)}<span class="nw">${STG.i+1} / ${STG_N}</span>${solved&&!(r&&r.ok&&r.first)?'<span class="tag">보상 받음</span>':`<span class="tag j"><i class="gdot" aria-hidden="true"></i>${stgAmt(STG.s,STG.i+1)}</span>`}</div>`;
+ let body='';
+ if(r&&r.ok){const nxt=STG.i+1<STG_N&&STG.i+1<=stgCnt()[STG.s];
+  const top=r.last?`<div class="pzres ok stgwin" role="status" tabindex="-1"><span class="stggem" aria-hidden="true"><i class="gdot"></i></span><b>${STG_LV[STG.s].n} 완료</b><span class="nw">옥돌 +${r.amt}</span></div>`
+   :`<div class="pzres ok" role="status" tabindex="-1"><b>정답</b><span class="nw">${r.first?`옥돌 +${r.amt}`:'이미 받은 문제'}</span>${r.unlock?`<span class="nw">${STG_LV[STG.s+1].n} 열림</span>`:''}</div>`;
+  body=top+stgExplain(pz)+`<div class="stgbtns">${nxt?`<button class="btn" data-act="stgpz" data-i="${STG.i+1}">다음 문제</button>`:''}<button class="btn ghost" data-act="stgmap" data-s="${STG.s}">목록</button></div>`}
+ else{const sum=STG.bet[0]+STG.bet[1]+STG.bet[2];
+  const bets=`<div class="pzbets">${[0,1,2].map(j=>`<div class="pzb"><span class="lab" style="--k:${LCOL[j]}">${LBL[j]}</span><button class="ibtn f" data-act="stgb" data-i="${j}" data-v="-1" aria-label="${LBL[j]} 1${PTU} 빼기">−</button><b class="num" id="stgv${j}" aria-live="polite">${STG.bet[j]}</b><button class="ibtn f" data-act="stgb" data-i="${j}" data-v="1" aria-label="${LBL[j]} 1${PTU} 더">+</button><button class="ibtn f" data-act="stgb" data-i="${j}" data-v="5" aria-label="${LBL[j]} 5${PTU} 더">+5</button></div>`).join('')}<p class="pzsum num ${sum>pz.P?'over':''}" id="stgsum">합 ${sum} / ${pz.P}${PTU}</p></div>`;
+  let why='';if(r&&!r.ok){const k=r.why;why=`<div class="pzres no" role="status" tabindex="-1"><b>아쉬워요</b>${k?`<span class="nw">상대 ${k.ob.map((v,j)=>stgLab(j)+v).join(' ')} 걸면</span><span class="stgwl">${stgLine(pz,k.om)}</span>`:'<span class="nw">확실해요. 더 적은 합으로도 돼요</span>'}</div>`}
+  body=why+bets+`<button class="btn wide" data-act="stggo"${sum>pz.P?' disabled':''}>${r&&!r.ok?'다시 제출':'제출'}</button>`}
+ return head+stgBoardSVG(pz)+info+`<p class="pzq">${q}</p>`+body}
+function stgRender(){const box=$('#stgBody');if(!box)return;stgTitle();box.dataset.v=STG.v;box.innerHTML=STG.v==='list'?stgList():STG.v==='map'?stgMap():stgPzView()}
+function stgPaintAll(){try{stgTile()}catch(e){}if(shOpen==='stg'&&STG.v==='list')stgRender()}
+function stgTile(){const t=$('#stgTile');if(!t)return;const c=stgCnt(),s=[0,1,2,3].find(j=>c[j]<STG_N&&stgOpen(j,c)),all=c.every(x=>x>=STG_N);
+ const sub=all?'모두 완료':s===undefined?`${stgAll()} / 80`:`${STG_LV[s].n} ${c[s]} / ${STG_N}`;const e=t.querySelector('.tsub');if(e&&e.textContent!==sub)e.textContent=sub;let mb=t.querySelector('.stgmini');if(!mb){mb=document.createElement('span');mb.className='stgmini';mb.setAttribute('aria-hidden','true');t.appendChild(mb)}const mh=c.map((n,j)=>`<i class="${j===3?'g':''}" style="--p:${n/STG_N*100}%"></i>`).join('');if(mb.innerHTML!==mh)mb.innerHTML=mh;t.setAttribute('aria-label',`단계별 묘수 풀이, ${sub}`)}
+function stgOpenSheet(){STG.v='list';STG.res=null;stgRender();openSheet('stg');try{stgSync()}catch(e){}}
+function stgGo(v,s,i){if(v==='map'){STG.s=s;STG.v='map';STG.res=null}else if(v==='pz'){STG.i=i;STG.v='pz';STG.res=null;STG.bet=[1,1,1]}else{STG.v='list';STG.res=null}
+ stgRender();const b=$('#stgBody');if(b)b.scrollTop=0;const sh=$('#sh-stg');if(sh)sh.scrollTop=0}
+function stgSubmit(){const pz=stgPz(STG.s,STG.i);if(!pz||(STG.res&&STG.res.ok))return;const b=STG.bet.slice();if(!validBets(b,pz.P))return;
+ if(pzJudge(pz,b)){const c=stgCnt(),first=STG.i===c[STG.s]&&stgOpen(STG.s,c);let amt=0,unlock=false;
+  if(first){const loc=stgLoc();loc[STG.s]=Math.max(loc[STG.s],STG.i+1);lset(stgKey(),JSON.stringify(loc));amt=stgAmt(STG.s,STG.i+1);unlock=STG.s<3&&STG.i+1===STG_OPEN;setTimeout(stgSync,250);stgTile()}
+  STG.res={ok:true,a:b,amt,first,unlock,last:first&&STG.i===STG_N-1};snd(STG.res.last?'reward':'correct');say(STG.res.last?`${STG_LV[STG.s].n} 완료. 옥돌 ${amt}`:first?`정답. 옥돌 ${amt}`:'정답')}
+ else{STG.res={ok:false,a:b,why:stgBreak(pz,b)};snd('wrong');say('아쉬워요')}
+ stgRender();const r=$('#stgBody .pzres');if(r){r.setAttribute('tabindex','-1');r.focus({preventScroll:true});r.scrollIntoView({block:'nearest',behavior:fxReduce()?'auto':'smooth'})}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act^=stg]');if(!b||b.disabled)return;const a=b.dataset.act;
+ if(a==='stg'){stgOpenSheet();return}
+ if(b.getAttribute('aria-disabled')==='true'){if(a==='stgmap'){const s=+b.dataset.s;toast(`${STG_LV[s-1].n} ${STG_OPEN}문제를 깨면 열려요`)}else if(a==='stgpz')toast('앞 문제를 먼저 풀어 주세요');return}
+ if(a==='stgback'){if(STG.v==='pz')stgGo('map',STG.s);else stgGo('list');return}
+ if(a==='stgmap'){stgGo('map',+b.dataset.s);return}
+ if(a==='stgpz'){const i=+b.dataset.i,c=stgCnt();if(!(i>=0&&i<STG_N))return;if(i>c[STG.s]&&!isAdmin())return;stgGo('pz',STG.s,i);return}
+ if(a==='stgb'){const pz=stgPz(STG.s,STG.i);if(!pz||(STG.res&&STG.res.ok))return;const i=+b.dataset.i,others=STG.bet.reduce((t,v,j)=>j===i?t:t+v,0);
+  STG.bet[i]=Math.max(1,Math.min(pz.P-others,STG.bet[i]+(+b.dataset.v)));const v=$('#stgv'+i);if(v)v.textContent=STG.bet[i];const sum=STG.bet[0]+STG.bet[1]+STG.bet[2],sm=$('#stgsum');if(sm){sm.textContent=`합 ${sum} / ${pz.P}${PTU}`;sm.classList.toggle('over',sum>pz.P)}
+  const go=$('#stgBody [data-act=stggo]');if(go)go.disabled=sum>pz.P;return}
+ if(a==='stggo')stgSubmit()});
+Object.assign(SND_ACT,{stg:'open',stgmap:'page',stgpz:'page',stgback:'close'});SND_SKIP.add('stggo');
+// 지갑 쓰기 시각(규칙의 10초 간격 맞추기) · 지갑을 다시 읽어도 sp 유지
+{const _w=ecoWrite;ecoWrite=function(kind,mut){return _w(kind,mut).then(ok=>{if(ok)ECO.lastW=Date.now();return ok})}}
+{const _n=ecoNorm;ecoNorm=function(d){const o=_n(d);try{const t=d&&d.at,ms=t&&typeof t.toMillis==='function'?t.toMillis():typeof t==='number'?t:0;if(ms)ECO.wAt=ms}catch(e){}if(d&&Array.isArray(d.sp)&&d.sp.length===4&&d.sp.every(v=>Number.isInteger(v)&&v>=0&&v<=STG_N))o.sp=d.sp.slice();return o}}
+// 방금 만든 지갑(서버 시각을 모름)은 지금 쓴 것으로 봄
+{const _a=ecoAfterLoad;ecoAfterLoad=function(){if(!ECO.wAt)ECO.lastW=Math.max(ECO.lastW||0,Date.now());return _a.apply(this,arguments)}}
+// 보상 탭 '보상 기준'에 한 줄
+{const _ep=ecoPaint;ecoPaint=function(){const r=_ep.apply(this,arguments);try{const d=$('#rwdBody .rwinfo details');if(d&&!d.querySelector('.stgrw')){const n=d.querySelector('p.note');const h=`<div class="eh stgrw"><h3>단계별 묘수 풀이</h3></div><div class="etab"><span>문제마다</span><b>${STG_AMT.join(' · ')}</b><span>20번째</span><b>${STG_BIG.join(' · ')}</b></div>`;if(n)n.insertAdjacentHTML('beforebegin',h);else d.insertAdjacentHTML('beforeend',h)}}catch(e){}try{stgTile()}catch(e){}return r}}
+setInterval(()=>{try{if(stgPend())stgSync()}catch(e){}},5000);
+setTimeout(()=>{try{stgTile()}catch(e){}},0);
+// ===== STG END =====
 
 }
 </script>

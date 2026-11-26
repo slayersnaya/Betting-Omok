@@ -313,3 +313,107 @@ export const documentId=()=>'__name__';
  // 문서가 없어도 규칙 검사(실제 Firestore와 같게): lv·g/*/p 단건 읽기
  const _getDoc3=getDoc;getDoc=async function(r){await ready;if(on()&&(/^lv\//.test(r.p)||/^g\/[^/]+\/p\//.test(r.p))&&!store[r.p]&&!canRead(r.p,null))throw rdeny(r.p);return _getDoc3(r)};
  window.__specRulesOn=()=>on()}
+
+// ---- (친구 초대 팀 덧붙임) firestore.rules 의 친구 초대 보상 흉내: ref/{새 uid} · rfc/{초대한 사람} · 지갑 k 'ref'
+//      같은 폴더의 firestore.rules 에 초대 규칙(walRef)이 있을 때만 켜짐(예전 웹 폴더 테스트는 그대로)
+//      auth_time 흉내: sessionStorage 'fake-old'='1' 이면 '로그인한 지 하루 넘은 계정'으로 봄
+{const _check4=check,_canRead4=canRead;let INV=null;
+ try{const x=new XMLHttpRequest();x.open('GET','firestore.rules',false);x.send();INV=x.status===200&&x.responseText.includes('function walRef(')}catch(e){INV=false}
+ const on=()=>INV===true,gA=()=>google()&&(sessionStorage.getItem('fake-p')||'google.com')==='google.com';
+ const kday=()=>Math.floor((Date.now()+32400000)/864e5),dcOld=o=>o.d===kday()?o.dc:0,dqOld=o=>o.d===kday()?o.dq:[];
+ const TIER={ri1:[1,100],ri3:[3,300],ri5:[5,500],ri10:[10,1000]};
+ const refOk=u=>{const r=store['ref/'+u];return typeof u==='string'&&!!r&&r.by===uid()&&r.st==='ok'};
+ window.__refWrites=[];
+ check=function(op,p,raw,merge){if(!on())return _check4(op,p,raw,merge);const seg=p.split('/'),me=uid(),cur=store[p];
+  if(seg[0]==='ref'&&seg.length===2){if(!me||op==='del')deny(op+' '+p);const n=merge?deep(clone(cur)||{},clone(fillST(raw,Date.now()))):clone(fillST(raw,Date.now()));
+   if(!cur){const fc=store['fc/'+n.c];
+    const ok=seg[1]===me&&only(Object.keys(n),['by','c','at','st'])&&n.st==='p'&&isST(raw.at)&&typeof n.c==='string'&&/^[A-HJ-NP-Z2-9]{8}$/.test(n.c)
+     &&typeof n.by==='string'&&n.by!==me&&!!fc&&fc.by===n.by&&!store['wal/'+me]&&sessionStorage.getItem('fake-old')!=='1';
+    if(!ok)deny('ref create '+p+' '+JSON.stringify(raw));window.__refWrites.push('c '+p);return}
+   const df=diff(cur,n);const ok=gA()&&seg[1]===me&&cur.st==='p'&&only(df.aff,['st','oa'])&&n.st==='ok'&&isST(raw.oa);
+   if(!ok)deny('ref update '+p+' '+JSON.stringify(raw));window.__refWrites.push('u '+p);return}
+  if(seg[0]==='rfc'&&seg.length===2){if(!me||op==='del')deny(op+' '+p);const n=clone(fillST(raw,Date.now()));
+   let ok=gA()&&seg[1]===me&&only(Object.keys(n),['u'])&&Array.isArray(n.u);
+   if(ok&&!cur)ok=n.u.length===1&&refOk(n.u[0]);
+   else if(ok){const x=n.u[n.u.length-1];ok=n.u.length<=10&&eq(n.u,(cur.u||[]).concat([x]))&&!(cur.u||[]).includes(x)&&refOk(x)}
+   if(!ok)deny('rfc '+p+' '+JSON.stringify(raw));window.__refWrites.push('rfc '+n.u.length);return}
+  if(seg[0]==='wal'&&seg.length===2&&op!=='del'&&raw&&raw.k==='ref'){if(!cur||seg[1]!==me)deny('wal ref '+p);
+   const n=clone(fillST(raw,Date.now())),key=Array.isArray(n.cl)?n.cl[n.cl.length-1]:null;
+   const ok=typeof key==='string'&&eq(n.cl,cur.cl.concat([key]))&&!cur.cl.includes(key)&&eq(n.own,cur.own)&&eq(n.eq,cur.eq)&&n.dc===dcOld(cur)&&eq(n.dq,dqOld(cur))&&int(n.g)&&n.g<=99999&&n.cl.length<=400
+    &&((key in TIER&&!!store['rfc/'+me]&&(store['rfc/'+me].u||[]).length>=TIER[key][0]&&n.g===cur.g+TIER[key][1])||(key==='r_in'&&!!store['ref/'+me]&&store['ref/'+me].st==='ok'&&n.g===cur.g+100));
+   if(!ok){window.__walDeny&&window.__walDeny.push('ref '+JSON.stringify(raw).slice(0,240));deny('wal ref '+p+' '+JSON.stringify(raw).slice(0,200))}
+   // 나머지(모양·날짜·nc·am/ad·ck 그대로)는 기존 흉내에 'equip'(옥돌·cl 그대로)으로 넘겨 확인
+   _check4(op,p,Object.assign({},raw,{k:'equip',g:cur.g,cl:cur.cl}),merge);window.__refWrites.push('wal '+key);return}
+  return _check4(op,p,raw,merge)};
+ canRead=function(path,data){if(!on())return _canRead4(path,data);const me=uid(),seg=path.split('/');
+  if(seg[0]==='ref')return !!me&&(seg[1]===me||(!!data&&data.by===me));
+  if(seg[0]==='rfc')return !!me&&seg[1]===me;
+  return _canRead4(path,data)};
+ window.__invRulesOn=()=>on()}
+// ---- (우편함 팀 덧붙임) firestore.rules 의 mail/{id}(관리자 선물·공지)와 wal 의 받은 우편 mr·k:'mail'(walMail) 흉내.
+//      같은 폴더의 firestore.rules 에 walMail 이 있을 때만 켜짐(예전 웹 폴더 시험은 그대로)
+{const _check4=check,_canRead4=canRead;let MAILR=null;
+ try{const x=new XMLHttpRequest();x.open('GET','firestore.rules',false);x.send();MAILR=x.status===200&&x.responseText.includes('function walMail(')}catch(e){MAILR=false}
+ const on=()=>MAILR===true,adm=()=>window.__fakeAdmin===true&&!!uid()&&google();
+ const PRICE={t1:800,t2:800,t3:800,n1:1200,n2:1200,n3:1200,f1:1500,f2:1500,f3:1500,s1:1200,s2:1200,s3:1200,w1:2500,w2:2500,b1:3000,b2:3000,x1:3500,x2:3500};
+ const IDRE=/^m[0-9]{13}_[a-z0-9]{6}$/;window.__mailDeny=[];window.__mailGets=0;
+ const mrOf=o=>o&&Array.isArray(o.mr)?o.mr:[];
+ check=function(op,p,raw,merge){if(!on())return _check4(op,p,raw,merge);const seg=p.split('/'),me=uid(),cur=store[p],now=Date.now();
+  if(seg[0]==='mail'&&seg.length===2){if(!me)deny(op+' '+p);
+   if(op==='del'){if(adm())return;deny('mail del '+p)}
+   if(cur)deny('mail update '+p);const r=fillST(raw,now),id=seg[1];
+   const ok=adm()&&IDRE.test(id)&&only(Object.keys(r),['to','t','msg','g','it','from','until','nk','by','at'])&&['to','t','msg','g','it','from','until','by','at'].every(k=>k in r)
+    &&(r.to==='all'||seatId(r.to))&&typeof r.t==='string'&&r.t.length>=1&&r.t.length<=30&&typeof r.msg==='string'&&r.msg.length<=200
+    &&int(r.g)&&r.g>=0&&r.g<=10000&&(r.it===''||r.it in PRICE)&&(r.g>0||r.it!==''||r.msg.length>0)&&int(r.from)&&int(r.until)&&r.until>r.from&&r.until>now&&r.until-r.from<=2678400000
+    &&id.startsWith('m'+r.until+'_')&&(!('nk' in r)||nick(r.nk))&&r.by===me&&isST(raw.at);
+   if(!ok){window.__mailDeny.push('mail '+JSON.stringify(raw).slice(0,200));deny('mail '+p+' '+JSON.stringify(raw).slice(0,200))}return}
+  if(seg[0]==='wal'&&seg.length===2&&op!=='del'&&raw&&typeof raw==='object'){
+   const n=merge?deep(clone(cur)||{},clone(fillST(raw,now))):clone(fillST(raw,now));
+   if(cur&&n.k==='mail'){const o=cur,old=mrOf(o),mr=n.mr,F=why=>{window.__mailDeny.push(why);deny('wal mail '+why)};
+    if(!Array.isArray(mr)||!mr.length)F('mr');const id=mr[mr.length-1];
+    if(typeof id!=='string'||!IDRE.test(id)||old.includes(id))F('id '+id);
+    if(mr.length>20||new Set(mr).size!==mr.length||!mr.slice(0,-1).every(x=>old.includes(x))||mr.filter(x=>x===id).length!==1)F('mr shape');
+    for(const x of old)if(!mr.includes(x)&&!(x<'m'+now))F('removed live '+x);
+    window.__mailGets++;const m=store['mail/'+id];if(!m)F('no mail '+id);
+    if(!(m.to==='all'||m.to===me))F('not mine');if(!(m.from<=now&&now<m.until))F('time');
+    const has=m.it!==''&&o.own.includes(m.it),add=m.g+(has?PRICE[m.it]:0),g2=o.g+add>99999?99999:o.g+add;
+    if(n.g!==g2)F('g '+n.g+'!='+g2);if(!eq(n.own,m.it===''||has?o.own:o.own.concat([m.it])))F('own');if(!eq(n.eq,o.eq))F('eq');
+    // 나머지(모양·서버 시각·같은 날·cl·nc·ck·am/ad 가드)는 '장착' 검사에 맡김: 옥돌·보유만 미리 맞춘 지갑으로
+    const r2=Object.assign({},raw,{k:'equip'});delete r2.mr;const o2=Object.assign({},o,{g:n.g,own:n.own,eq:n.eq});delete o2.mr;store[p]=o2;
+    try{return _check4(op,p,r2,merge)}finally{if(store[p]===o2)store[p]=cur}}
+   if(cur&&!eq(mrOf(n),mrOf(cur))){window.__mailDeny.push('mr changed by '+n.k);deny('wal mr '+p)}
+   if('mr' in raw||(cur&&'mr' in cur)){const r2=Object.assign({},raw);delete r2.mr;let o2=null;if(cur&&'mr' in cur){o2=Object.assign({},cur);delete o2.mr;store[p]=o2}
+    if(!cur&&'mr' in raw&&!(Array.isArray(raw.mr)&&raw.mr.length<=20))deny('wal mr create');
+    try{return _check4(op,p,r2,merge)}finally{if(o2&&store[p]===o2)store[p]=cur}}}
+  return _check4(op,p,raw,merge)};
+ canRead=function(path,data){if(!on())return _canRead4(path,data);const seg=path.split('/');
+  if(seg[0]==='mail'){const me=uid();if(!me)return false;return !!data&&(data.to==='all'||data.to===me||adm())}
+  return _canRead4(path,data)};
+ // 읽기 횟수 세기(시험용): mail 질의마다 +1, 받은 문서 수(빈 결과 1)도 따로
+ const _gd4=getDocs;getDocs=async function(Q){const r=await _gd4(Q);if(Q&&Q.p==='mail'){window.__mailQ=(window.__mailQ||0)+1;window.__mailR=(window.__mailR||0)+Math.max(1,r.docs.length)}return r};
+ window.__mailRulesOn=()=>on()}
+
+// ---- (단계별 묘수 풀이 덧붙임) firestore.rules 의 walStg/spOf 흉내: wal.sp = [E,N,H,G] 깬 수, k 'stg' 는 한 단계만 +1·앞 단계 10 이상·정해진 옥돌·지갑 마지막 쓰기에서 10초.
+//      다른 종류의 쓰기는 sp 를 바꾸지 못함, 처음 만들 때 sp 금지. 같은 폴더 firestore.rules 에 walStg 가 있을 때만 켜짐(예전 웹 폴더 테스트는 그대로)
+{const _check5=check;let STG=null;
+ try{const x=new XMLHttpRequest();x.open('GET','firestore.rules',false);x.send();STG=x.status===200&&x.responseText.includes('function walStg(')}catch(e){STG=false}
+ const AMT=[5,10,20,30],BIG=[50,100,250,600],spOf=d=>d&&Array.isArray(d.sp)?d.sp:[0,0,0,0];
+ window.__stgDeny=[];
+ check=function(op,p,raw,merge){const seg=p.split('/');
+  if(!STG||seg[0]!=='wal'||seg.length!==2||op==='del'||!raw||typeof raw!=='object')return _check5(op,p,raw,merge);
+  const cur=store[p],me=uid(),adm=window.__fakeAdmin===true&&google(),no=w=>{window.__stgDeny.push(w);deny('wal stg '+w+' '+JSON.stringify(raw).slice(0,200))};
+  if(!cur){if('sp' in raw)no('create sp');return _check5(op,p,raw,merge)}
+  const n=merge?deep(clone(cur),clone(raw)):clone(raw),a=spOf(cur);
+  const strip=(r2)=>{const sv='sp' in cur?cur.sp:undefined;if(sv!==undefined)delete cur.sp;try{return _check5(op,p,r2,merge)}finally{if(sv!==undefined&&store[p]===cur)cur.sp=sv}};
+  if(raw.k==='stg'){const b=n.sp;
+   if(!(Array.isArray(b)&&b.length===4&&b.every(v=>int(v))))no('shape');
+   const i=[0,1,2,3].find(j=>b[j]===a[j]+1&&[0,1,2,3].every(k=>k===j||b[k]===a[k]));
+   if(i===undefined||b[i]>20)no('step');
+   if(!(i===0||a[i-1]>=10||adm))no('lock');
+   if(!(adm||Date.now()>(cur.at||0)+10000))no('interval');
+   if(n.g!==cur.g+(b[i]===20?BIG[i]:AMT[i]))no('amount');
+   // 나머지 모양·하루 값·보유·장착은 '장착(equip)' 검사와 같음(옥돌만 그대로라고 보고)
+   const r2=Object.assign({},raw,{k:'equip',g:cur.g});delete r2.sp;return strip(r2)}
+  if(JSON.stringify(spOf(n))!==JSON.stringify(a))no('sp changed by '+raw.k);
+  const r2=Object.assign({},raw);delete r2.sp;return strip(r2)};
+ window.__stgRulesOn=()=>STG===true}
