@@ -146,7 +146,7 @@ body.fbmode .xfer{display:none}body:not(.fbmode) .wgl{display:none}
 .rfull ol{margin:0 0 8px;padding-left:20px;font-size:14px}.rfull li{margin:5px 0}
 .gloss{margin:4px 0 8px;font-size:14px}.gloss dt{font-weight:800;margin-top:8px}.gloss dd{margin:2px 0 0;color:var(--mute)}
 /* 아래 탭 */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:var(--card);padding:4px 8px calc(4px + env(safe-area-inset-bottom));max-width:none!important}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--card);padding:4px 8px calc(4px + env(safe-area-inset-bottom));max-width:none!important}
 .tabbar button{background:none;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:56px;font-size:11px;font-weight:800;color:var(--mute);cursor:pointer;position:relative;white-space:nowrap}
 .tabbar button svg{width:22px;height:22px}
 .tabbar button[aria-current=page]{color:var(--jadeink)}
@@ -534,7 +534,7 @@ input,select,textarea{font-size:16px}
 @media (min-width:700px) and (max-width:1023px) and (orientation:portrait){
  #lobby>*{max-width:760px}
  #tab-home:not(.hide){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
- #tab-home>*+*{margin-top:0}#aiResume,#rkResume{grid-column:1/-1}#rkResume:empty{display:none}
+ #tab-home>*+*{margin-top:0}#aiResume{grid-column:1/-1}
  #tab-home .recent{display:block;grid-column:1/-1}
  #tab-rec:not(.hide){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}#tab-rec>*+*{margin-top:0}#tab-rec>.card:nth-child(3){grid-column:1/-1}
  .rcards{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -556,8 +556,8 @@ input,select,textarea{font-size:16px}
  .tab>*+*{margin-top:16px}
  #tab-home:not(.hide){display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:auto auto auto 1fr;column-gap:16px;row-gap:0;align-items:start}
  #tab-home>*+*{margin-top:0}#tab-home>*{margin-bottom:16px}
- #aiResume{grid-column:1/-1;grid-row:1}#rkResume{grid-column:1/-1;grid-row:2}#rkResume:empty{display:none}
- #rankCard{grid-column:1;grid-row:3/span 2}#aiCard{grid-column:2;grid-row:3/span 2}
+ #aiResume{grid-column:1/-1;grid-row:1}
+ #aiCard{grid-column:1;grid-row:2/span 2}
  #tab-home .tiles{grid-column:3;grid-row:3}#tab-home .recent{display:block;grid-column:3;grid-row:4}
  #tab-rec:not(.hide){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
  #tab-rec>*+*{margin-top:0}#tab-rec>.card:nth-child(2){grid-column:2;grid-row:1/span 2}
@@ -566,7 +566,7 @@ input,select,textarea{font-size:16px}
 }
 @media (min-width:1024px) and (max-width:1279px){
  #tab-home:not(.hide){grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto auto auto 1fr}
- #rankCard{grid-column:1;grid-row:3}#aiCard{grid-column:2;grid-row:3/span 2}
+ #aiCard{grid-column:1;grid-row:2/span 2}
  #tab-home .tiles{grid-column:1;grid-row:4}#tab-home .recent{grid-column:1/-1;grid-row:5}
 }
 /* PC·태블릿 가로 대국: 판은 화면 높이에 꽉, 오른쪽 열에 상대·나 → 패널·지난 턴·턴 기록(이 묶음만 스크롤) */
@@ -608,17 +608,17 @@ input,select,textarea{font-size:16px}
  #tab-home .recent .rnone{display:block;margin:0 2px}
  #tab-home .rgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
  #tab-home .rgrid button:nth-child(n+4){display:block}
- #aiResume{grid-area:ar}#rkResume{grid-area:rr}#rankCard{grid-area:rk}#aiCard{grid-area:ai}#tab-home .tiles{grid-area:ti}#rkTop{grid-area:tp;align-self:stretch}#tab-home .recent{grid-area:rc;align-self:start}#ruleMini{grid-area:ru;align-self:start}
+ #aiResume{grid-area:ar}#aiCard{grid-area:ai}#gameCard{grid-area:gc}#tab-home .tiles{grid-area:ti}#rkTop{grid-area:tp;align-self:stretch}#tab-home .recent{grid-area:rc;align-self:start}#ruleMini{grid-area:ru;align-self:start}
  #rankCard{display:flex;flex-direction:column}#rankCard>#mmBtn{margin-top:auto}
 }
 /* 태블릿 세로(700~1023): 2단, 랭크·AI 카드 높이를 맞춤(랭크 카드 아래 빈칸 없앰) */
 @media (min-width:700px) and (max-width:1023px) and (orientation:portrait){
- #tab-home:not(.hide){grid-template-areas:"ar ar" "rr rr" "rk ai" "ti ti" "tp rc" "tp ru";grid-template-rows:auto auto auto auto auto 1fr;align-items:stretch}
+ #tab-home:not(.hide){grid-template-areas:"ar ar" "ai gc" "ai ti" "tp rc" "tp ru";grid-template-rows:auto auto auto auto 1fr;align-items:stretch}
  #ruleMini .rcards{grid-template-columns:1fr 1fr;gap:10px}
 }
 /* PC 2단(1024~1279) */
 @media (min-width:1024px) and (max-width:1279px){
- #tab-home:not(.hide){grid-template-areas:"ar ar" "rr rr" "rk ai" "ti ai" "tp rc" "tp ru";grid-template-rows:auto auto auto auto auto 1fr;align-items:stretch}
+ #tab-home:not(.hide){grid-template-areas:"ar ar" "ai gc" "ai ti" "tp rc" "tp ru";grid-template-rows:auto auto auto auto 1fr;align-items:stretch}
  #ruleMini .rcards{grid-template-columns:1fr 1fr;gap:10px}
 }
 /* PC 3단(1280 이상): 랭크 / AI / 친구·한 폰, 그 아래 랭킹 상위 10명 / 최근 6판 + 규칙 한눈에 */
@@ -628,7 +628,7 @@ input,select,textarea{font-size:16px}
  #lobby{padding-bottom:0}.ltop{margin-bottom:8px}#ruleMini .chead{margin-bottom:4px}
  #tab-home>#rkTop,#tab-home>#ruleMini{margin-bottom:0}#rkTop{align-self:stretch}
  #rkTop .rkrow{padding-top:5px;padding-bottom:5px}#rkTop .chead{margin-bottom:6px}
- #tab-home:not(.hide){grid-template-areas:"ar ar ar" "rr rr rr" "rk ai ti" "tp rc rc" "tp ru ru";grid-template-rows:auto auto auto auto 1fr;align-items:stretch}
+ #tab-home:not(.hide){grid-template-areas:"ar ar ar" "ai gc tp" "ai ti tp" "rc rc tp" "ru ru tp";grid-template-rows:auto auto auto auto 1fr;align-items:stretch}
  #tab-home .tiles{grid-template-columns:1fr;grid-auto-rows:1fr;gap:16px}
  #tab-home .tile{min-height:0;padding:0 18px;gap:14px;font-size:17px}
  #tab-home .tile .ic{width:44px;height:44px;border-radius:12px}#tab-home .tile .ic svg{width:23px;height:23px}
@@ -658,10 +658,49 @@ input,select,textarea{font-size:16px}
  .bcols{gap:4px}.bcol{padding-left:3px;padding-right:3px}
  .bhd{gap:2px;padding:0 1px 0 2px}.bhd .lab{width:18px;height:18px;font-size:11px}.bcol input{min-width:0;font-size:22px;padding-right:1px;background-size:18px 2px;background-position:right 1px bottom 4px}
 }
+
+
+/* 홈 '일반 게임' 카드: 열린 방을 바로 보여 줌 */
+#gameCard .chead{position:relative}#gameCard .chead #roomCnt{margin-left:auto}#gameCard .pip{position:static;margin-left:2px}
+#gameCard .gbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}#gameCard .gbtns .btn{min-height:46px}#gameCard .gbtns svg{width:18px;height:18px}
+#roomsHome .sub{margin:2px 2px 0}.room.join{background:color-mix(in srgb,var(--jade) 12%,var(--soft))}
+#roomsHome .more{display:block;margin:2px auto 0;font-size:13px}
+#tab-home .tiles{grid-template-columns:1fr}
+/* ===== 랭크 탭: 잠김 표시·시상대(1~3위)·순위 줄 ===== */
+.tabbar .tlk{display:none;position:absolute;top:7px;left:calc(50% + 5px);width:14px;height:14px;padding:2px;border-radius:50%;background:var(--raise);fill:none;stroke:var(--mute);stroke-width:2.6}
+.tabbar button.lk{color:var(--faint)}.tabbar button.lk .tlk{display:block}.tabbar button.lk .pip{display:none}
+.tabbar.tbw .tlk{position:static;width:16px;height:16px;padding:0;background:none;margin-left:-2px}
+#rkBoardC .chead{margin-bottom:4px}
+.pod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:8px;margin:6px 0 10px}
+.pod .pc{display:flex;flex-direction:column;align-items:center;min-width:0;text-align:center}
+.pod .pc .emb{filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
+.pod .crown{width:26px;height:18px;margin-bottom:2px}
+.pod .pn{font-size:13px;font-weight:800;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:6px}
+.pod .ps{font-size:12px;color:var(--mute);white-space:nowrap;margin-top:2px}
+.pod .base{width:100%;margin-top:8px;border-radius:12px 12px 4px 4px;display:grid;place-items:center;font-weight:800;font-size:22px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.pod .p1 .base{height:78px;background:linear-gradient(#e2bd45,#a8851b)}.pod .p2 .base{height:58px;background:linear-gradient(#aeb8c4,#768392)}.pod .p3 .base{height:44px;background:linear-gradient(#c58a4f,#8a5a2b)}
+.pod .p1 .pn{font-size:15px}.pod .me .pn{color:var(--jadeink)}
+.pod .p1 .base{font-size:26px}
+.rkrow .n i{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;font-style:normal;color:#fff;font-size:12px}
+.rkrow.r1 .n i{background:#c9a227}.rkrow.r2 .n i{background:#8b97a5}.rkrow.r3 .n i{background:#a0703c}
+.rkrow.r1,.rkrow.r2,.rkrow.r3{font-weight:800}.rkrow.r1 .nk{font-size:15px}
+.rkrow.r1{background:color-mix(in srgb,#c9a227 10%,transparent);border-radius:8px}
+#rkTierC .note{margin:10px 0 2px}
+/* 랭크 열림 안내 창 */
+.rkin h3{margin:0 0 4px;font-size:18px;display:flex;align-items:center;gap:8px}.rkin h3 svg{width:22px;height:22px;fill:none;stroke:var(--jadeink);stroke-width:2.2}
+.rkin .sub{margin:0 0 10px;font-weight:700}
+.rkin .tiers{margin:0 0 10px;font-size:13px;font-weight:700}.rkin .tiers div{min-height:28px}
+.rkin ul{margin:0;padding-left:18px;font-size:13px;font-weight:700;color:var(--mute)}.rkin li+li{margin-top:3px}
+/* 넓은 화면 랭크 탭: 왼쪽 내 티어·매칭·티어표, 오른쪽 랭킹 */
+@media (min-width:700px){
+ #tab-rank:not(.hide){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:12px;align-items:start}
+ #tab-rank>*+*{margin-top:0}#tab-rank>*{grid-column:1}#tab-rank>#rkBoardC{grid-column:2;grid-row:1/span 3}#rkResume:empty{display:none}
+}
+@media (min-width:1024px){#tab-rank:not(.hide){gap:16px;max-width:1100px;margin:0 auto}}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
-<meta name="description" content="세 칸을 고르고 점수를 몰래 걸어 돌을 놓는 2인 전략 오목. 친구 대국, 랭크전, AI 대국.">
+<meta name="description" content="세 칸을 고르고 점수를 몰래 걸어 돌을 놓는 2인 전략 오목. 일반 게임, 랭크전, AI 대국.">
 <meta property="og:site_name" content="베팅 오목">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:title" content="베팅 오목">
@@ -687,37 +726,49 @@ input,select,textarea{font-size:16px}
 
  <div class="tab" id="tab-home">
   <div id="aiResume" class="hide"></div>
+  <div class="card" id="aiCard">
+   <div class="chead"><h2><svg viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9.5 13h.01M14.5 13h.01"/></svg>AI 대국</h2><span id="aiRec"></span></div>
+   <div class="seg" id="levels"></div>
+   <div class="seg row" id="aitime" style="margin-top:8px"></div><button class="btn wide" id="soloBtn" data-act="solo" style="margin-top:10px"><svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><path d="M7 5v14l12-7z"/></svg>시작</button>
+  </div>
+  <div class="card" id="gameCard">
+   <div class="chead"><h2><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2A4.6 4.6 0 0 1 21 18.5"/></svg>일반 게임</h2><i class="pip" id="pipFriend"></i><span id="roomCnt"></span></div>
+   <div class="rooms" id="roomsHome"><p class="sub">불러오는 중</p></div>
+   <div class="gbtns"><button class="btn" data-act="sheet" data-k="friend"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>방 만들기</button><button class="btn ghost" data-act="sheet" data-k="friend" data-v="code">코드로 입장</button></div>
+  </div>
+  <div class="tiles">
+   <button class="tile" data-act="sheet" data-k="local"><span class="ic" style="background:color-mix(in srgb,var(--c) 18%,transparent);color:#ee8b33"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></span><span>한 폰 대국<small class="tsub">한 기기로 둘이서</small></span></button>
+  </div>
+  <div class="card" id="rkTop"><div class="chead"><h2>랭킹</h2><span>시즌 1 · 상위 10명</span><button class="btn ghost small" data-act="tab" data-k="rank">전체</button></div><div id="rkTopL"></div></div>
+  <div class="recent" id="recent"></div>
+  <div class="card" id="ruleMini"><div class="chead"><h2>규칙 한눈에</h2><button class="btn ghost small" data-act="tut">튜토리얼</button><button class="btn ghost small" data-act="tab" data-k="rule">전체 규칙</button></div></div>
+ </div>
+
+ <div class="tab hide" id="tab-rank">
   <div id="rkResume"></div>
   <div class="card rank" id="rankCard">
    <div id="rkMe"></div>
    <button class="btn wide" data-act="mm" id="mmBtn"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg><span>랭크전</span></button>
    <p class="status" id="mmSt"></p>
   </div>
-  <div class="card" id="aiCard">
-   <div class="chead"><h2><svg viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9.5 13h.01M14.5 13h.01"/></svg>AI 대국</h2><span id="aiRec"></span></div>
-   <div class="seg" id="levels"></div>
-   <div class="seg row" id="aitime" style="margin-top:8px"></div><button class="btn ghost wide" id="soloBtn" data-act="solo" style="margin-top:10px"><svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><path d="M7 5v14l12-7z"/></svg>시작</button>
+  <div class="card" id="rkBoardC">
+   <div class="chead"><h2>랭킹</h2><span class="tag">시즌 1</span></div>
+   <div id="rkPod"></div>
+   <div id="rkBoard"><p class="sub">불러오는 중</p></div>
   </div>
-  <div class="tiles">
-   <button class="tile" data-act="sheet" data-k="friend"><span class="ic" style="background:color-mix(in srgb,var(--b) 18%,transparent);color:#6b98ec"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2A4.6 4.6 0 0 1 21 18.5"/></svg></span><span>친구 대국<small class="tsub">방 만들기 · 코드로 입장</small></span><i class="pip" id="pipFriend"></i></button>
-   <button class="tile" data-act="sheet" data-k="local"><span class="ic" style="background:color-mix(in srgb,var(--c) 18%,transparent);color:#ee8b33"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></span><span>한 폰 대국<small class="tsub">한 기기로 둘이서</small></span></button>
+  <div class="card" id="rkTierC">
+   <div class="chead"><h2>티어</h2></div>
+   <div class="tiers" id="rkTiers"></div>
+   <p class="note">고르기 20초 · 베팅 30초 · 시작 1000점<br>점수 차 150점 안에서 매칭 · 상대가 없으면 AI가 대신 들어올 수 있어요</p>
   </div>
-  <div class="card" id="rkTop"><div class="chead"><h2>랭킹</h2><span>시즌 1 · 상위 10명</span><button class="btn ghost small" data-act="tab" data-k="rec">전체</button></div><div id="rkTopL"></div></div>
-  <div class="recent" id="recent"></div>
-  <div class="card" id="ruleMini"><div class="chead"><h2>규칙 한눈에</h2><button class="btn ghost small" data-act="tut">튜토리얼</button><button class="btn ghost small" data-act="tab" data-k="rule">전체 규칙</button></div></div>
  </div>
 
  <div class="tab hide" id="tab-rec">
-  <div class="card">
-   <div class="chead"><h2>랭킹</h2><span class="tag">시즌 1</span></div>
-   <div id="rkBoard"><p class="sub">불러오는 중</p></div>
-  </div>
   <div class="card">
    <div class="chead"><h2>지난 대국</h2><span style="margin-left:auto">이 기기 · 최근 30판</span><button class="btn ghost small" data-act="archexp">파일로 저장</button></div>
    <div class="rooms" id="archive"></div>
   </div>
   <div class="card" style="padding:4px 14px">
-   <details class="rules"><summary>티어</summary><div class="tiers" id="rkTiers"></div><p class="note">고르기 20초 · 베팅 30초 · 시작 1000점</p></details>
    <details class="rules xfer"><summary>기록 옮기기</summary>
     <p class="sub">다른 기기에 입력하면 기록 이어짐 · 공유 금지</p>
     <div class="codebox"><code id="myCode"></code><button class="btn ghost small" data-act="showcode" id="showCode">보기</button><button class="btn ghost small" data-act="copycode">복사</button></div>
@@ -755,6 +806,7 @@ input,select,textarea{font-size:16px}
      <li>정확히 5개면 승리. 6개 이상은 무효예요. 3·3,&nbsp;4·4는 괜찮아요.</li>
      <li>한 턴에 둘 다 오목이면 줄이 많은 쪽, 같으면 그 턴의 후 플레이어가 이겨요.</li>
      <li>시간을 넘기면 세 칸은 자동, 베팅은 칸마다 1점. <span class="nw">3턴 연속이면</span> 기권패.</li>
+     <li>랭크전은 점수 차 150점 안에서 짝지어요. 기다리는 사람이 없으면 AI가 대신 들어올 수 있어요.</li>
     </ol>
     <dl class="gloss">
      <dt>선 · 후 플레이어</dt><dd>세 칸을 고르는 쪽이 선 플레이어, 다른 쪽이 후 플레이어. 매 턴 바뀌어요.</dd>
@@ -781,8 +833,9 @@ input,select,textarea{font-size:16px}
  </div>
 
  <nav class="tabbar" aria-label="메뉴">
-  <button data-act="tab" data-k="home"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M3.5 9.2h17M3.5 14.8h17M9.2 3.5v17M14.8 3.5v17"/></svg><span>홈</span><i class="pip" id="pipRank"></i></button>
-  <button data-act="tab" data-k="rec"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-8"/><path d="M15 7h5v5"/><path d="M3 21h18"/></svg><span>기록</span></button>
+  <button data-act="tab" data-k="home"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M3.5 9.2h17M3.5 14.8h17M9.2 3.5v17M14.8 3.5v17"/></svg><span>대국</span></button>
+  <button data-act="tab" data-k="rank" class="tbrank"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg><span>랭크</span><i class="pip" id="pipRank"></i><svg class="tlk" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
+  <button data-act="tab" data-k="rec"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-8"/><path d="M15 7h5v5"/><path d="M3 21h18"/></svg><span>전적</span></button>
   <button data-act="tab" data-k="rule"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h7"/></svg><span>규칙</span></button>
  </nav>
 
@@ -838,8 +891,8 @@ input,select,textarea{font-size:16px}
   <div class="acct hide" id="acct"></div><button class="btn ghost wide hide" id="admDl" data-act="admdl" style="margin-top:8px">관리자 · 모든 AI 대국 기록 받기</button>
   <div class="setfoot"><a href="privacy.html" target="_blank" rel="noopener" id="privLink">개인정보처리방침</a><button class="linkbtn" data-act="delacct">계정·기록 삭제</button><span id="appVer"></span></div>
  </div>
- <div class="lsheet hide" id="sh-friend" role="dialog" aria-label="친구 대국">
-  <div class="shh"><h2>친구 대국</h2><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+ <div class="lsheet hide" id="sh-friend" role="dialog" aria-label="일반 게임">
+  <div class="shh"><h2>일반 게임</h2><button class="ibtn" data-act="shclose" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div><p class="lbl">제한 시간</p><div class="chips" id="presets"></div></div>
   <label class="sw" style="border:0">목록에서 숨김<input type="checkbox" id="privRoom"></label>
   <button class="btn wide" data-act="create" id="createBtn">방 만들기</button>
@@ -855,7 +908,7 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1032';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1149';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -1653,7 +1706,7 @@ const IC={share:'<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circl
  check:'<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',wax:'<svg viewBox="-16 -16 32 32" style="stroke:none"><use href="#wax" x="-16" y="-16" width="32" height="32"/></svg>',reset:'<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7L4 8.6"/><path d="M4 4v4.6h4.6"/></svg>',
  l:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',r:'<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>',u:'<svg viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg>',d:'<svg viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></svg>',
  replay:'<svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',home:'<svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M3.5 9.2h17M3.5 14.8h17M9.2 3.5v17M14.8 3.5v17"/></svg>'};
-const who0=(vs,id)=>{const me=vs.me;return me?(id===me?'나':UI.mode==='online'?'상대':'AI'):esc(vs.names[id]||'')};
+const who0=(vs,id)=>{const me=vs.me;return me?(id===me?'나':UI.mode==='online'||(UI.mode==='local'&&L.s&&L.s.bot)?'상대':'AI'):esc(vs.names[id]||'')};
 // 지금 행동해야 하는 사람
 function actorOf(vs,id){
  if(vs.phase==='designate')return vs.sun===id;
@@ -1662,6 +1715,7 @@ function actorOf(vs,id){
 function oppStatus(vs,id){
  if(vs.phase!=='bet')return '';
  if(UI.mode==='online')return (vs.pending||[]).includes(id)?['','고민 중']:['j',IC.wax+'봉인'];
+ if(UI.mode==='local'&&L.s&&L.s.bot)return L.s.stage!==4&&(Date.now()<(L.s.botAt||0)||!L.s.aiSeal)?['','고민 중']:['j',IC.wax+'봉인'];
  if(UI.mode==='local'&&L.s&&L.s.ai&&!L.s.aiSeal)return ['','생각 중'];
  if(UI.mode==='local'&&L.s&&L.s.ai)return ['j sealtag',IC.wax+(UI.peek&&L.s.aiSeal?`<span class="code">${L.s.aiSeal.slice(0,8)}</span>`:'봉인<span class="more" aria-hidden="true">›</span>')];
  return ''}
@@ -1806,7 +1860,7 @@ const betTip=(t,bd,cells,col)=>{if(bd&&cells&&col){const b=bd.map(r=>r.slice());
 // 힌트: 처음 3판은 자동, 설정에서 직접 켜면 계속. '오목' 위협 힌트는 AI 초보·중수 대국에서 판 수와 상관없이(설정을 끄지 않았으면)
 const hintOn=()=>{const v=lget('bo-hint');return v==='1'||(v!=='0'&&gamesPlayed()<3)};
 function hint(t){if(UI.mode==='tut'||UI.review)return'';const warn=/오목$/.test(t);
- const easyAI=UI.mode==='local'&&L.s&&(L.s.ai==='beginner'||L.s.ai==='mid');
+ const easyAI=UI.mode==='local'&&L.s&&!L.s.bot&&(L.s.ai==='beginner'||L.s.ai==='mid');
  if(!(hintOn()||(warn&&easyAI&&lget('bo-hint')!=='0')))return'';
  return `<div class="hint${warn?' warn':''}"><span>${t}</span><button data-act="hintx" aria-label="힌트 끄기">×</button></div>`}
 function betRows(cells,pts){
@@ -2028,7 +2082,8 @@ function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.re
 // 관리자: 연결된 구글 계정이 관리자 이메일일 때만 관리자 버튼이 보임(실제 권한은 서버 규칙이 다시 확인)
 const ADMIN_EMAILS=['slayersnaya@gmail.com'];
 const isAdmin=()=>{try{const g=user&&user.firebase&&user.google&&user.google();return !!g&&ADMIN_EMAILS.includes(String(g).toLowerCase())}catch(e){return false}};
-function renderAcct(){const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!isAdmin());const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
+function cfgMaster(){if(!db||!isAdmin()||!SEAT||(RK.master||[]).includes(SEAT)||cfgMaster.done)return;cfgMaster.done=1;db.doc('cfg/master').set({seats:[...(RK.master||[]),SEAT].slice(-5),at:Date.now()}).catch(()=>{cfgMaster.done=0})}
+function renderAcct(){try{cfgMaster()}catch(e){}const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!isAdmin());const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
  const g=user.google&&user.google();a.innerHTML=g?`<div class="at"><b>구글 계정 연결됨</b><span>${esc(g)}</span></div>`:`<div class="at"><b>게스트로 플레이 중</b><span>기록을 지키려면 구글 연결</span></div><button class="btn small" data-act="glink">구글 연결</button>`}
 // ===== 웹(Firebase): 앱을 지웠다 다시 깔아도 구글 계정으로 기록 복원. 닉네임·AI 전적은 본인만 읽는 prof/{uid}, 학습 집계는 ailearn/{uid} =====
 let profT=0;
@@ -2083,9 +2138,9 @@ function announce(){
 function renderAll(){document.body.classList.toggle('rvmode',!!UI.review);{const p=$('#panel');p.classList.toggle('tutp',UI.mode==='tut');p.classList.toggle('rvs',!!UI.review)}if(UI.mode==='local'&&L.s)L.save();if(UI.view!=='game')return;renderBoard();renderPlayers();renderPanel();renderLast();renderLog();try{announce()}catch(e){}
  if(UI.kbd){const ae=document.activeElement,vb=vstate();if(!ae||ae===document.body||!ae.isConnected||ae.closest('.hide')||ae.closest('#coin')||(ae.id==='board'&&vb&&vb.phase==='bet'&&$('#bi0')&&UI.kbdPh!==vb.t+'b'&&(UI.kbdPh=vb.t+'b'))){const vs0=vstate(),t=UI.review?($('[data-act=rvprev]:not([disabled])')||$('[data-act=rvnext]:not([disabled])')||$('[data-act=rvclose]')):vs0&&vs0.phase==='designate'&&$('[data-act=dconfirm]')&&!UI.sel?$('#board'):$('#bi0')||$('#panel .btn:not([disabled])')||$('#panel');if(t)setTimeout(()=>{const a2=document.activeElement;if(a2===document.body||!a2||a2===ae||(a2&&a2.closest&&a2.closest('#coin')))t.focus({preventScroll:true})},0)}}
  {const v=vstate();if(v&&v.first&&v.t===1&&!v.hist.length&&['designate','bet','reveal'].includes(v.phase))showCoin(v,'bo-coin-'+(UI.mode==='local'?'L'+L.s.id:G.gid))}
- const vs=vstate();if(vs&&vs.phase==='over'&&!revealing())$('#turnres').classList.add('hide');$('#resignBtn').classList.toggle('hide',!(vs&&vs.me&&['designate','bet','reveal','seed'].includes(vs.phase)&&UI.mode==='online'&&!UI.review));
+ const vs=vstate();if(vs&&vs.phase==='over'&&!revealing())$('#turnres').classList.add('hide');$('#resignBtn').classList.toggle('hide',!(vs&&vs.me&&['designate','bet','reveal','seed'].includes(vs.phase)&&(UI.mode==='online'||(UI.mode==='local'&&L.s&&L.s.bot))&&!UI.review));
  $('#skipBtn').classList.toggle('hide',UI.mode!=='tut'||!!(T.s&&TUT[T.s.step].end));
- $('#gttl').textContent=UI.review?'복기':G.meta&&G.meta.ranked&&UI.mode==='online'?'랭크전':UI.mode==='tut'?'튜토리얼':UI.mode==='local'?(L.s&&L.s.ai?(L.s.ai==='ultimate'?'Ultimate':`${AI_LEVELS[L.s.ai].name} AI`):'한 폰 대국'):(G.meta?`${G.meta.hostNick||''}의 방`:'베팅 오목');
+ $('#gttl').textContent=UI.review?'복기':G.meta&&G.meta.ranked&&UI.mode==='online'?'랭크전':UI.mode==='tut'?'튜토리얼':UI.mode==='local'?(L.s&&L.s.bot?'랭크전':L.s&&L.s.ai?(L.s.ai==='ultimate'?'Ultimate':`${AI_LEVELS[L.s.ai].name} AI`):'한 폰 대국'):(G.meta?`${G.meta.hostNick||''}의 방`:'베팅 오목');
 }
 
 // ===== 온라인: 저장·자동 처리 =====
@@ -2241,7 +2296,31 @@ const TIERS=[{n:'브론즈',min:0,c:'#a0703c'},{n:'실버',min:900,c:'#8b97a5'},
 const PAIRW=[1,.5,.25,0];
 function pairWeight(x,y){const pt=((RK.pairs||new Map()).get([x,y].sort().join('|'))||[]).filter(t=>Date.now()-t<864e5);return{n:pt.length,w:PAIRW[Math.min(pt.length,3)]}}
 const CHAL={n:'챌린저',top:10,c:'#CC6600'},PLACE=5,START=1000,ONE_SIDED=10*60e3;
-const RK={docs:[],map:new Map(),list:[],loaded:false};
+// ===== 랭크 AI 상대 100명: 이름·기준 점수·실력은 모든 폰에서 같게(고정 씨앗으로 만듦) =====
+// 실력: 브론즈 초보 · 실버~골드 중수 · 골드 위쪽~플래티넘 고수 · 다이아~마스터 Ultimate
+const BOTS=(()=>{let x=0x5eed0b07;const rnd=()=>{x=x+0x6D2B79F5|0;let t=Math.imul(x^x>>>15,1|x);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296},pick=a=>a[Math.floor(rnd()*a.length)];
+ const A=['졸린','배고픈','느긋한','조용한','행복한','말랑','심심한','용감한','엉뚱한','따뜻한','새벽','한밤','노란','파란','하얀','작은','바쁜','수줍은','반짝','포근한','늦잠','퇴근한'],
+  N=['고양이','감자','펭귄','수달','호랑이','두부','만두','곰','여우','토끼','부엉이','고래','판다','다람쥐','오리','거북이','참새','붕어빵','호떡','라떼','고구마','콩떡','도토리','해달','밤톨'],
+  E=['luna','mint','nova','kiki','toto','haru','sora','momo','yuni','dodo','rami','juno','bibi','coco','neo','zeze','pado','ari','teo','ian','jay','hoya','bom','dami'],
+  K=['오목','흑돌','백돌','한수','베팅','묘수','정석','바둑알','돌'],K2=['러버','장인','덕후','중독','요정','연습생','매니아','사랑','좋아'];
+ const names=new Set(),out=[];
+ const nm=()=>{const k=rnd();let n;
+  if(k<.5){n=pick(A)+pick(N);if(rnd()<.25)n+=String(1+Math.floor(rnd()*99))}
+  else if(k<.8){const e=pick(E),y=rnd();n=y<.4?e+String(Math.floor(rnd()*100)).padStart(2,'0'):y<.7?e+'_'+String(Math.floor(rnd()*1000)):e.charAt(0).toUpperCase()+e.slice(1)+String(1+Math.floor(rnd()*9))}
+  else{n=pick(K)+pick(K2);if(rnd()<.4)n+=String(Math.floor(rnd()*100))}
+  return n.slice(0,12)};
+ const bands=[[820,899,14],[900,1099,26],[1100,1299,26],[1300,1499,18],[1500,1699,11],[1700,1790,5]],rs=[];
+ for(const [lo,hi,c] of bands)for(let i=0;i<c;i++)rs.push(Math.round(lo+rnd()*(hi-lo)));
+ for(let i=rs.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[rs[i],rs[j]]=[rs[j],rs[i]]}
+ rs.forEach((r,i)=>{let n;do n=nm();while(names.has(n.replace(/[_0-9]+$/,'')));names.add(n.replace(/[_0-9]+$/,''));
+  out.push({id:'b'+String(i).padStart(2,'0'),nick:n,base:r,lv:r<900?'beginner':r<1200?'mid':r<1500?'pro':'ultimate'})});
+ return out})();
+const BOTMAP=new Map(BOTS.map(b=>[b.id,b])),BOTPRE='bot:',isBot=id=>typeof id==='string'&&id.startsWith(BOTPRE);
+// AI 상대끼리의 랭크전: 2026-11-26 0시(한국)부터 1시간마다 6판. 실력(기준 점수)이 비슷한 상대와 붙고,
+// 결과는 고정 씨앗으로 정해져서 서버 없이도 모든 폰이 같은 점수를 계산함
+const BOT_EPOCH=Date.UTC(2026,10,25,15),BOT_NEAR=BOTS.map((b,i)=>BOTS.map((c,j)=>[j,Math.abs(c.base-b.base)]).filter(([j])=>j!==i).sort((x,y)=>x[1]-y[1]).slice(0,6).map(([j])=>j));
+const MASTER_R=1750; // 개발자 계정(관리자가 서버 cfg/master에 적은 자리)은 마스터 점수에서 시작
+const RK={docs:[],bdocs:[],master:[],map:new Map(),list:[],loaded:false};
 const kOf=g=>g<10?40:24,expOf=(a,b)=>1/(1+Math.pow(10,(b-a)/400));
 // 한쪽 기록뿐이거나 두 기록이 다르면, 그 방의 기록(추가만 가능한 rv2 기록)을 직접 다시 계산해서 결과를 정함
 // (진 쪽이 결과를 안 쓰거나 거짓으로 써도 반영되게). 판정은 이 폰에 저장해 다시 읽지 않음
@@ -2270,12 +2349,29 @@ function rankCompute(){
   // 한쪽만 있으면 10분 기다린 뒤, 서로 다르면 바로: 방 기록을 다시 계산한 결과로 반영
   else if(!(mA&&mB&&mA.w===mB.w)){const x=mA||mB;if(mA&&mB||now-x.ended>ONE_SIDED){const w=gameVerified(a.gid);
    if(w&&!seenG.has(a.gid)&&seenG.add(a.gid))games.push({A:a.A,B:a.B,w,t:Math.min(...ds.map(y=>y.ended)),na:str12((mB||mA).na),nb:str12((mA||mB).nb)})}}}
+ // AI 상대 판(bres): 한 사람당 1분 간격·하루 40판까지만 반영(같은 AI와 24시간 안에 다시 두면 아래 반복 감쇠도 적용)
+ {const last=new Map(),day=new Map();
+  for(const d of (RK.bdocs||[]).slice().sort((a,b)=>a.ended-b.ended)){
+   if(!d||!okSeat(d.by)||typeof d.gid!=='string'||!/^k[0-9a-f]{8}$/.test(d.gid)||d.id!==d.by+'_'+d.gid||!BOTMAP.has(d.bot)||!['me','bot','draw'].includes(d.w)||typeof d.ended!=='number'||d.ended>now+300e3)continue;
+   if(d.ended-(last.has(d.by)?last.get(d.by):-1e15)<60e3)continue;const dk=d.by+'|'+Math.floor((d.ended+324e5)/864e5),n=day.get(dk)||0;if(n>=40)continue;
+   last.set(d.by,d.ended);day.set(dk,n+1);const b=BOTPRE+d.bot;
+   games.push({A:d.by,B:b,w:d.w==='me'?d.by:d.w==='bot'?b:'draw',t:d.ended,na:str12(d.na),nb:BOTMAP.get(d.bot).nick})}}
+ {const H=3600e3;for(let h=0,t=BOT_EPOCH;t<=now;h++,t+=H){let x=(Math.imul(h+1,2654435761)^0x9e3779b9)>>>0;const rnd=()=>{x=x+0x6D2B79F5|0;let q=Math.imul(x^x>>>15,1|x);q=q+Math.imul(q^q>>>7,61|q)^q;return((q^q>>>14)>>>0)/4294967296};
+   for(let j=0;j<6;j++){const i=Math.floor(rnd()*BOTS.length),k=BOT_NEAR[i][Math.floor(rnd()*6)],a=BOTPRE+BOTS[i].id,b=BOTPRE+BOTS[k].id,pa=expOf(BOTS[i].base,BOTS[k].base)*.98,u=rnd();
+    games.push({A:a,B:b,w:u<pa?a:u<.98?b:'draw',t:t+j*60e3,bb:1})}
+   games.push({reg:1,t:t+6*60e3})}}
  games.sort((x,y)=>x.t-y.t);
  const M=new Map(),P=(id,nk,t)=>{let p=M.get(id);if(!p){p={seat:id,nick:'',r:START,g:0,w:0,l:0,d:0,t:0};M.set(id,p)}if(nk&&t>=p.t){p.nick=nk;p.t=t}return p};
+ // AI 상대는 처음부터 배치 완료(기준 점수에서 시작해 서로 둔 판·사람과 둔 판으로 오르내림). 개발자 계정은 마스터 점수에서 시작
+ BOTS.forEach(b=>M.set(BOTPRE+b.id,{seat:BOTPRE+b.id,nick:b.nick,r:b.base,g:30,w:0,l:0,d:0,t:Infinity,bot:b}));
+ for(const x of RK.master||[])if(okSeat(x)&&!M.has(x))M.set(x,{seat:x,nick:'',r:MASTER_R,g:PLACE,w:0,l:0,d:0,t:0});
  const pairs=new Map();
- for(const x of games){const a=P(x.A,x.na,x.t),b=P(x.B,x.nb,x.t),sa=x.w==='draw'?.5:x.w===x.A?1:0,ea=expOf(a.r,b.r);
+ for(const x of games){
+  // 1시간마다 AI 상대 점수를 기준 점수 쪽으로 0.5%씩 당김(사람이 많이 이기거나 져도 끝없이 오르내리지 않게)
+  if(x.reg){for(const b of BOTS){const q=M.get(BOTPRE+b.id);q.r+=(b.base-q.r)*.005}continue}
+  const a=P(x.A,x.na,x.t),b=P(x.B,x.nb,x.t),sa=x.w==='draw'?.5:x.w===x.A?1:0,ea=expOf(a.r,b.r);
   // 같은 두 사람이 24시간 안에 다시 두면 반영을 1 → ½ → ¼ → 0 으로 줄임
-  const pk=[x.A,x.B].sort().join('|'),pt=(pairs.get(pk)||[]).filter(t=>x.t-t<864e5);pairs.set(pk,pt.concat([x.t]));const w=PAIRW[Math.min(pt.length,3)];
+  let w=1;if(!x.bb){const pk=[x.A,x.B].sort().join('|'),pt=(pairs.get(pk)||[]).filter(t=>x.t-t<864e5);pairs.set(pk,pt.concat([x.t]));w=PAIRW[Math.min(pt.length,3)]}
   // 한쪽만 배치 중이면 배치를 마친 쪽 점수는 바꾸지 않음
   const pa=a.g<PLACE,pb=b.g<PLACE;
   const da=kOf(a.g)*(sa-ea)*w*(pb&&!pa?0:1),db_=kOf(b.g)*((1-sa)-(1-ea))*w*(pa&&!pb?0:1);a.r+=da;b.r+=db_;a.g++;b.g++;
@@ -2302,7 +2398,8 @@ function emblem(t,sz){
 // 끝난 판의 점수 변동(시작 전 두 사람 점수 기준)
 // 이번 판으로 배치를 마쳤거나 티어가 바뀌면 결과 화면에 엠블럼으로 보여 줌(예상치: 두 사람 결과가 맞으면 그대로 반영)
 function tierByR(r){let t=TIERS[0];for(const x of TIERS)if(r>=x.min)t=x;return t}
-function rankMove(vs){const s=G.rkSnap,d=rankDelta(vs);if(d==null||!vs.me||vs.reason==='확인 불일치')return '';const p=s[vs.me],g2=p.g+1,r2=Math.round(p.r)+d;
+function rankMove(vs){const s=G.rkSnap,d=rankDelta(vs);if(d==null||!vs.me||vs.reason==='확인 불일치')return '';return tierMove(s[vs.me],d)}
+function tierMove(p,d){if(d==null||!p)return '';const g2=p.g+1,r2=Math.round(p.r)+d;
  const t0=p.g>=PLACE?tierByR(p.r):null,t1=g2>=PLACE?tierByR(r2):null;if(!t1||t0===t1)return '';
  const up=!t0||TIERS.indexOf(t1)>TIERS.indexOf(t0),msg=!t0?`배치 완료 · ${t1.n}`:up?`${t1.n} 승급`:`${t1.n}${(()=>{const j=(t1.n.charCodeAt(t1.n.length-1)-0xAC00)%28;return j===0||j===8?'로':'으로'})()} 내려감`;
  return `<div class="tmove${up?' up':''}">${emblem(t1,up?44:32)}<b>${msg}</b></div>`}
@@ -2326,10 +2423,13 @@ function renderRank(){
  const now=Date.now(),act=lobbyRooms.filter(r=>r.ranked&&(r.status!=='done'||!gDone(r.id))&&(r.host===SEAT||r.guest===SEAT)&&r.guest&&now-(r.created||0)<24*3600e3&&!gDone(r.id))[0];
  $('#rkResume').innerHTML=act?`<div class="card resume"><div class="rt"><b>진행 중인 랭크전</b><span>vs ${esc(act.host===SEAT?act.guestNick:act.hostNick)} · ${ago(act.created)}</span></div><button class="go" data-act="enter" data-g="${esc(act.id)}" aria-label="이어하기"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>`:'';
  renderMM();
- const top=RK.list.slice(0,20),row=(p,i)=>{const tt=tierOf(p);return `<div class="rkrow${p.seat===SEAT?' me':''}"><span class="n">${i+1}</span>${emblem(tt,22)}<span class="nk">${esc(p.nick||'플레이어')}${p.seat===SEAT?' (나)':''}</span><span class="sc">${tt.n} · ${Math.round(p.r)}</span></div>`};
- $('#rkBoard').innerHTML=UI.ready&&!db?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.map(row).join('')+(idx>=20?`<div class="rkrow"><span class="n">…</span></div>`+row(me,idx):''):'<p class="sub">랭크전 5판 후 등록</p>'):'<p class="sub">불러오는 중</p>';
- {const tl=$('#rkTopL');if(tl)tl.innerHTML=UI.ready&&!db?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.slice(0,10).map(row).join('')+(idx>=10?`<div class="rkrow"><span class="n">…</span></div>`+row(me,idx):''):`<p class="sub">랭크전 5판 후 등록</p><div class="tiers">${tierRows()}</div>`):'<p class="sub">불러오는 중</p>'}
+ const top=RK.list.slice(0,50),row=(p,i)=>{const tt=tierOf(p);return `<div class="rkrow${p.seat===SEAT?' me':''}${i<3?' r'+(i+1):''}"><span class="n">${i<3?`<i>${i+1}</i>`:i+1}</span>${emblem(tt,22)}<span class="nk">${esc(p.nick||'플레이어')}${p.seat===SEAT?' (나)':''}</span><span class="sc">${tt.n} · ${Math.round(p.r)}</span></div>`};
+ const off=UI.ready&&!db,pod=top.length>=3?`<div class="pod">${[1,0,2].map(i=>{const p=top[i],tt=tierOf(p),nk=esc(p.nick||'플레이어');return `<div class="pc p${i+1}${p.seat===SEAT?' me':''}" aria-label="${i+1}위 ${nk} ${tt.n} ${Math.round(p.r)}점">${i===0?CROWN:''}${emblem(tt,i===0?58:46)}<div class="pn" aria-hidden="true">${nk}${p.seat===SEAT?' (나)':''}</div><div class="ps" aria-hidden="true">${tt.n} · ${Math.round(p.r)}</div><div class="base" aria-hidden="true">${i+1}</div></div>`}).join('')}</div>`:'';
+ {const pe=$('#rkPod');if(pe)pe.innerHTML=off||!RK.loaded?'':pod}
+ $('#rkBoard').innerHTML=off?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.map(row).slice(pod?3:0).join('')+(idx>=50?`<div class="rkrow"><span class="n">…</span></div>`+row(me,idx):''):'<p class="sub">랭크전 5판 후 등록</p>'):'<p class="sub">불러오는 중</p>';
+ {const tl=$('#rkTopL');if(tl)tl.innerHTML=off?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.slice(0,10).map(row).join('')+(idx>=10?`<div class="rkrow"><span class="n">…</span></div>`+row(me,idx):''):`<p class="sub">랭크전 5판 후 등록</p><div class="tiers">${tierRows()}</div>`):'<p class="sub">불러오는 중</p>'}
 }
+const CROWN='<svg class="crown" viewBox="0 0 26 18" aria-hidden="true"><path d="M2 15 1 4l6.5 5L13 1l5.5 8L25 4l-1 11z" fill="#F2C94C" stroke="#a8851b" stroke-width="1"/><rect x="2" y="15" width="22" height="2.6" rx="1" fill="#e2bd45"/></svg>';
 const tierRows=()=>[...TIERS,CHAL].map((t,i)=>`<div>${emblem(t,22)}<b>${t.n}</b><span>${t===CHAL?`마스터 중 ${CHAL.top}위 안`:i===0?'900 미만':`${t.min} 이상`}</span></div>`).join('');
 function renderTiers(){
  $('#rkTiers').innerHTML=tierRows();
@@ -2344,7 +2444,7 @@ function addAiRec(level,res){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||
 // ===== 랭크 매칭: 대기 중인 사람끼리 점수가 비슷한 상대와 자동으로 짝지음 =====
 // 서버가 없어서 모든 폰이 같은 규칙으로 짝을 계산하고, 자리 id가 작은 쪽이 방을 열어 상대 알림함에 알려줌
 const MM={on:false,since:0,busy:false,peers:[],inbox:null,seen:{}};
-const mmWin=w=>w>=120e3?Infinity:150+50*Math.floor(w/10e3);
+const mmWin=w=>w>=10e3?150:100,MM_BOT=30e3; // 점수 차는 최대 150점. 30초 넘게 짝이 없으면 AI 상대
 function mmList(){
  const now=Date.now(),seen=new Map();
  for(const p of MM.peers){const x=p&&p.presence&&p.presence.mm;if(!x||typeof x!=='object')continue;
@@ -2362,16 +2462,20 @@ function mmPairs(list,now){
  return out;
 }
 function mmStart(){
- if(!rankOpen()){let top=0;LEVELS.forEach((_,x)=>{if(lvOpen(x)&&x<=1)top=x});const lv=LEVELS[top];
-  dialog('랭크전은 AI 중수를 이기면 열려요.<br>차례로 도전해 보세요.',`${lv[1]} 도전`,()=>{UI.aiLevel=lv[0];lset('bo-ai',lv[0]);renderLevels();closeSheet();leaveGame();UI.mode='local';L.start(null,lv[0]);show('game');$('#cover').classList.add('hide');renderAll()});return}
+ if(!rankOpen()){rankLockDlg();return}
  if(!needNick(mmStart))return;
  if(!UI.ready){toast('연결 확인 중');return}
  if(!db||!room){toast('랭크전 이용 불가');return}
  if(canWrite===false){toast('관전 전용 · 랭크전 불가');return}
  if(user&&user.firebase&&!(user.google&&user.google())){dialog('랭크전은 구글 계정을 연결하면 할 수 있어요. 지금까지 기록은 그대로 남아요.','구글 연결',()=>googleLink());return}
- ensureSecret();mmSub();renderTiers();lset('bo-nick',myNick());MM.on=true;MM.busy=false;MM.since=Date.now();
+ ensureSecret();mmSub();renderTiers();lset('bo-nick',myNick());MM.on=true;MM.busy=false;MM.since=Date.now();MM.botAt=MM.since+MM_BOT+Math.floor(Math.random()*8e3);
  room.presence({mm:mmMe()}).catch(()=>{});mmPeers(true);renderMM();
 }
+function rankLockDlg(){let top=0;LEVELS.forEach((_,x)=>{if(lvOpen(x)&&x<=1)top=x});const lv=LEVELS[top];
+ dialog('랭크는 AI 중수를 이기면 열려요.<br>차례로 도전해 보세요.',`${lv[1]} 도전`,()=>{UI.aiLevel=lv[0];lset('bo-ai',lv[0]);renderLevels();closeSheet();leaveGame();UI.mode='local';L.start(null,lv[0]);show('game');$('#cover').classList.add('hide');renderAll()})}
+// 랭크가 처음 열리면 한 번: 열렸다는 안내 + 티어표 간단 설명
+function rankIntro(){if(lget('bo-rkintro')==='1'||!rankOpen())return;if(shOpen||!$('#dlg').classList.contains('hide')||!$('#welcome').classList.contains('hide')){clearTimeout(rankIntro.t);rankIntro.t=setTimeout(rankIntro,4000);return}lset('bo-rkintro','1');
+ dialog(`<span class="rkin"><h3>${IC.unlock}랭크전이 열렸어요</h3><span class="sub" style="display:block">비슷한 점수끼리 겨뤄 티어를 올려요</span><span class="tiers" style="display:grid">${tierRows()}</span><ul><li>시작 1000점 · 처음 5판은 배치</li><li>이기면 오르고 지면 내려가요</li><li>마스터 중 10위 안이면 챌린저</li></ul></span>`,'랭크로 가기',()=>{goLobby();setTab('rank')},'나중에')}
 function mmSub(){if(!db||MM.inboxSeat===SEAT)return;if(MM.inbox)try{MM.inbox()}catch(e){}MM.inboxSeat=SEAT;let first=true;MM.inbox=db.doc('mm/'+SEAT).onSnapshot(x=>{const f=first;first=false;if(!x.exists)return;
   // 구독 시점에 이미 있던 초대는 지난 것 → 지움. 이후 새로 온 초대만 받음(기기 시계 비교 안 함)
   if(f&&!MM.on){db.doc('mm/'+SEAT).delete().catch(()=>{});return}mmInvite(x.data())},()=>{})}
@@ -2406,20 +2510,29 @@ function mmTick(){
  if(!MM.on||MM.busy||UI.view!=='lobby')return;
  const now=Date.now(),pr=mmPairs(mmList(),now).find(([a,b])=>a.seat===SEAT||b.seat===SEAT);
  if(pr){const q=pr[0].seat===SEAT?pr[1]:pr[0];if(SEAT<q.seat)mmHost(q)}
+ else if(MM.botAt&&now>=MM.botAt&&db&&user&&user.firebase)mmBot();
  renderMM();
 }
+// 짝이 없으면 점수 150점 안의 AI 상대(최근에 만난 상대는 피함). 150점 안에 없으면 가장 가까운 상대
+function mmBot(){
+ const my=Math.round((RK.map.get(SEAT)||{r:START}).r);let recent=[];try{recent=JSON.parse(lget('bo-blast')||'[]')}catch(e){}if(!Array.isArray(recent))recent=[];
+ const cand=BOTS.map(b=>({b,r:Math.round((RK.map.get(BOTPRE+b.id)||{r:b.base}).r)})).map(x=>({...x,d:Math.abs(x.r-my)})).sort((a,b)=>a.d-b.d);
+ let pool=cand.filter(x=>x.d<=150&&!recent.includes(x.b.id));if(!pool.length)pool=cand.filter(x=>x.d<=150);if(!pool.length)pool=cand.slice(0,1);
+ const x=pool.slice(0,6)[Math.floor(Math.random()*Math.min(6,pool.length))];
+ lset('bo-blast',JSON.stringify([x.b.id,...recent.filter(i=>i!==x.b.id)].slice(0,4)));
+ MM.on=false;MM.busy=false;MM.botAt=0;if(room)room.presence({mm:null}).catch(()=>{});mmPeers(false);
+ closeSheet();leaveGame();UI.mode='local';UI.review=false;L.start(null,x.b.lv,{bot:{id:x.b.id,nick:x.b.nick,r:x.r}});show('game');$('#cover').classList.add('hide');toast(`vs ${x.b.nick}`);renderAll()}
 function renderMM(){
  const b=$('#mmBtn'),st=$('#mmSt');if(!b)return;renderPips();b.disabled=!MM.on&&UI.ready&&(!db||!room);
  // 오프라인이면 랭크 버튼을 접고 AI 시작을 주 버튼으로
- const online=!!(UI.ready&&db&&room),off=!online&&!MM.on,ro0=rankOpen();b.classList.toggle('hide',off);const sb=$('#soloBtn');if(sb)sb.classList.toggle('ghost',!off&&ro0);$('#rankCard').classList.toggle('off',off);
+ const online=!!(UI.ready&&db&&room),off=!online&&!MM.on,ro0=rankOpen();b.classList.toggle('hide',off);$('#rankCard').classList.toggle('off',off);
  // 랭크가 아직 잠겨 있으면 AI 대국을 위로, 랭크 카드는 한 줄 안내로 접음
- {const rc=$('#rankCard'),ac=$('#aiCard');if(rc&&ac){rc.classList.toggle('rlocked',!ro0);if(!ro0&&rc.compareDocumentPosition(ac)&Node.DOCUMENT_POSITION_FOLLOWING)rc.parentElement.insertBefore(ac,rc);else if(ro0&&ac.compareDocumentPosition(rc)&Node.DOCUMENT_POSITION_FOLLOWING)ac.parentElement.insertBefore(rc,ac)}}
+ {const rc=$('#rankCard');if(rc)rc.classList.toggle('rlocked',!ro0)}renderRankLock();
  const n=mmList().filter(x=>x.seat!==SEAT).length,lb=b.querySelector('span');
  if(MM.on){const w=Date.now()-MM.since,win=mmWin(w),s=Math.floor(w/1000);
   lb.textContent='매칭 취소';b.classList.add('ghost');b.classList.add('mmon');
-  const few=s>=30&&!n,k=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · ${win===Infinity?'점수 무관':`±${win}점`} · 대기 ${n}`;
-  // 상대가 없으면 기다리는 동안 할 수 있는 일을 버튼으로(누르면 매칭은 취소)
-  if(st.dataset.k!==k+few){st.dataset.k=k+few;st.innerHTML=esc(k)+(few?'<br>기다리는 사람이 적어요 <button class="linkbtn" data-act="solo">AI와 두기</button>':'')}}
+  const k=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · ±${win}점 · 대기 ${n}`;
+  if(st.dataset.k!==k){st.dataset.k=k;st.textContent=k}}
  else{const ro=rankOpen();lb.textContent='랭크전';b.classList.remove('ghost');b.classList.remove('mmon');b.classList.toggle('rlock',!ro);st.dataset.k='';st.textContent=!ro?'AI 중수를 이기면 열려요':!UI.ready?'연결 중':off?'':n?`대기 ${n}`:''}
 }
 function loadCode(){
@@ -2434,8 +2547,9 @@ function loadCode(){
 }
 
 // ===== 로비 메뉴(아래 탭 3개 + 시트) =====
-const TABS=['home','rec','rule'];
-function setTab(k){if(!TABS.includes(k))k='home';if(UI.showCode){UI.showCode=false;try{renderTiers()}catch(e){}}UI.tab=k;lset('bo-tab',k);
+const TABS=['home','rank','rec','rule'];
+function renderRankLock(){const ro=rankOpen();document.querySelectorAll('.tabbar [data-act=tab][data-k=rank]').forEach(b=>b.classList.toggle('lk',!ro));renderPips()}
+function setTab(k,quiet){if(!TABS.includes(k))k='home';if(k==='rank'&&!rankOpen()){if(!quiet){rankLockDlg();return}k='home'}if(UI.showCode){UI.showCode=false;try{renderTiers()}catch(e){}}UI.tab=k;lset('bo-tab',k);
  TABS.forEach(t=>$('#tab-'+t).classList.toggle('hide',t!==k));
  document.querySelectorAll('.tabbar [data-act=tab]').forEach(b=>{if(b.dataset.k===k)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
  window.scrollTo(0,0);renderPips()}
@@ -2444,11 +2558,11 @@ function renderPips(){
  const pr=$('#pipRank'),pf=$('#pipFriend');if(!pr)return;
  const rk=MM.on||lobbyRooms.some(r=>r.ranked&&act(r)),fr=lobbyRooms.some(r=>!r.ranked&&act(r));
  pr.classList.toggle('on',rk);pr.classList.toggle('pulse',MM.on);pf.classList.toggle('on',fr);
- pr.parentElement.setAttribute('aria-label',MM.on?'홈 · 상대 찾는 중':'홈');
+ {const lk=!rankOpen();document.querySelectorAll('.tabbar [data-act=tab][data-k=rank]').forEach(b=>b.setAttribute('aria-label',lk?'랭크 · 잠김':MM.on?'랭크 · 상대 찾는 중':rk?'랭크 · 진행 중':'랭크'))}
 }
 let shOpen=null;
 function openSheet(k){closeSheet(true);const el=$('#sh-'+k);if(!el)return;shOpen=k;el.classList.remove('hide');$('#shbg').classList.remove('hide');document.body.classList.add('shopen');
- if(k==='friend')renderRooms();if(k==='set')syncSettings();
+ if(k==='friend')renderRooms();if(k==='set')syncSettings();if(k==='friend'&&UI.sheetV==='code')setTimeout(()=>{const c=$('#roomCode');if(c)c.focus()},60);UI.sheetV=null;
  modalOpen(el,k==='nick'?'input[type=text]':null)}
 function closeSheet(silent){if(UI.showCode){UI.showCode=false;try{renderTiers()}catch(e){}}if(!shOpen)return;$('#sh-'+shOpen).classList.add('hide');modalClose($('#sh-'+shOpen));$('#shbg').classList.add('hide');document.body.classList.remove('shopen');if(shOpen==='nick'){lset('bo-nick',myNick());syncNick();const f=UI.afterNick;UI.afterNick=null;if(f&&(($('#nick')||{}).value||'').trim())setTimeout(f,0)}shOpen=null}
 function syncNick(){const t=$('#nickTxt');if(t)t.textContent=($('#nick').value||'').trim()||'닉네임';profSave()}
@@ -2479,40 +2593,55 @@ function renderDiag(){if(!isAdmin())return;const e=$('#onlineNote');if(!e)return
 function renderRooms(){try{renderDiag()}catch(e){}
  const box=$('#rooms');if(!db){box.innerHTML='<p class="sub nw">오프라인 · 한 폰 대국만 가능</p>';return}
  const now=Date.now();
- const list=lobbyRooms.filter(r=>!r.ranked&&(!r.private||r.host===SEAT||r.guest===SEAT)&&r.created&&r.status!=='done'&&now-r.created<(r.status==='open'?6:24)*3600e3).slice(0,20);
- renderPips();if(!list.length){const msg={loading:'불러오는 중',cache:'서버 확인 중 · 방 코드로 입장 가능',timeout:'서버 응답 없음 · 네트워크 확인',err:'방 목록 불러오기 실패'+(DIAG.err?' · '+esc(DIAG.err):'')}[lobbyState]||'열린 방 없음';box.innerHTML='<p class="sub">'+msg+'</p>';return}
- box.innerHTML=list.map(r=>{const mineR=r.host===SEAT||r.guest===SEAT;
+ // 내 판 → 참가 가능한 방 → 관전 가능한 방 순서
+ const ord=r=>r.host===SEAT||r.guest===SEAT?0:r.guest?2:1;
+ const list=lobbyRooms.filter(r=>!r.ranked&&(!r.private||r.host===SEAT||r.guest===SEAT)&&r.created&&r.status!=='done'&&now-r.created<(r.status==='open'?6:24)*3600e3).sort((a,b)=>ord(a)-ord(b)||b.created-a.created).slice(0,20);
+ renderPips();
+ const hb=$('#roomsHome'),cnt=$('#roomCnt'),nOpen=list.filter(r=>ord(r)===1).length;
+ if(cnt)cnt.innerHTML=list.length?`<span class="tag${nOpen?' j':''}">${nOpen?`참가 가능 ${nOpen}`:`방 ${list.length}`}</span>`:'';
+ if(!list.length){const msg={loading:'불러오는 중',cache:'서버 확인 중 · 방 코드로 입장 가능',timeout:'서버 응답 없음 · 네트워크 확인',err:'방 목록 불러오기 실패'+(DIAG.err?' · '+esc(DIAG.err):'')}[lobbyState]||'열린 방 없음';box.innerHTML='<p class="sub">'+msg+'</p>';
+  if(hb)hb.innerHTML=`<p class="sub">${msg==='열린 방 없음'?'열린 방이 없어요 · 방을 만들어 친구를 불러 보세요':msg}</p>`;return}
+ const one=r=>{const mineR=r.host===SEAT||r.guest===SEAT;
   const lbl=r.status==='done'?'끝남':r.guest?(mineR?'대국 중':'관전 가능'):'참가 가능';
   const btn=mineR?'이어하기':r.guest?'관전':'입장';
-  return `<div class="room"><div class="rt"><b>${esc(r.hostNick||'플레이어')}${r.guestNick?` vs ${esc(r.guestNick)}`:'의 방'}</b><span>${lbl} · ${presetText(r.td,r.tb)} · ${ago(r.created)}</span></div><button class="btn small${btn==='입장'?'':' ghost'}" data-act="enter" data-g="${esc(r.id)}">${btn}</button></div>`}).join('');
+  return `<div class="room${btn==='입장'?' join':''}"><div class="rt"><b>${esc(r.hostNick||'플레이어')}${r.guestNick?` vs ${esc(r.guestNick)}`:'의 방'}</b><span>${lbl} · ${presetText(r.td,r.tb)} · ${ago(r.created)}</span></div><button class="btn small${btn==='입장'?'':' ghost'}" data-act="enter" data-g="${esc(r.id)}">${btn}</button></div>`};
+ box.innerHTML=list.map(one).join('');
+ if(hb)hb.innerHTML=list.slice(0,3).map(one).join('')+(list.length>3?`<button class="linkbtn more" data-act="sheet" data-k="friend">방 ${list.length}개 모두 보기</button>`:'');
 }
 // ===== 한 폰 모드 =====
 const L={
  s:null,
- start(first,ai){this.savedK='';if(ai==='ultimate'){lrnApply();lrnLoadShared()}const timed=!!ai&&lget('bo-aitime')==='1';const nmA=(($('#nameA')||{}).value||'').trim().slice(0,8),nmB=(($('#nameB')||{}).value||'').trim().slice(0,8);this.s={td:timed?20:0,tb:timed?30:0,ph0:0,toThis:false,names:ai?null:{A:nmA||'흑',B:nmB||'백'},ai:ai||null,mem:ai?aiNewMem(crypto.getRandomValues(new Uint32Array(1))[0]):null,id:rhex(4),firstBy:first?'loser':'coin',bd:emptyBoard(),t:0,first:first||(crypto.getRandomValues(new Uint8Array(1))[0]&1?'A':'B'),pts:{A:0,B:0},warn:{A:0,B:0},hist:[],last:null,phase:'',stage:0,bets:{},cells:null,winner:null,reason:''};this.next()},
+ start(first,ai,opt){const bot=opt&&opt.bot||null;this.savedK='';if(ai==='ultimate'){lrnApply();lrnLoadShared()}const timed=!!bot||(!!ai&&lget('bo-aitime')==='1');const nmA=(($('#nameA')||{}).value||'').trim().slice(0,8),nmB=(($('#nameB')||{}).value||'').trim().slice(0,8);this.s={bot,td:timed?20:0,tb:timed?30:0,ph0:0,toThis:false,names:ai?null:{A:nmA||'흑',B:nmB||'백'},ai:ai||null,mem:ai?aiNewMem(crypto.getRandomValues(new Uint32Array(1))[0]):null,id:rhex(4),firstBy:first?'loser':'coin',bd:emptyBoard(),t:0,first:first||(crypto.getRandomValues(new Uint8Array(1))[0]&1?'A':'B'),pts:{A:0,B:0},warn:{A:0,B:0},hist:[],last:null,phase:'',stage:0,bets:{},cells:null,winner:null,reason:''};
+  // AI 상대 랭크전: 시작할 때 두 점수를 적어 두고(결과 화면의 점수 변동용), 끝나기 전에 앱을 닫으면 다음에 열 때 패로 기록
+  if(bot){const P=id=>RK.map.get(id)||{r:START,g:0},o=BOTPRE+bot.id;this.s.rk={me:{r:P(SEAT).r,g:P(SEAT).g},op:{r:P(o).r,g:P(o).g},pw:pairWeight(SEAT,o)};lset('bo-bplay',JSON.stringify({gid:'k'+this.s.id,bot:bot.id}))}
+  this.next()},
  next(){const s=this.s;s.t++;s.toThis=false;s.ph0=Date.now();s.sun=s.t%2?s.first:(s.first==='A'?'B':'A');s.hu=s.sun==='A'?'B':'A';s.pts.A+=10;s.pts.B+=10;s.cells=null;s.bets={};s.stage=0;UI.sel=null;
-  if(!legalTriples(s.bd).length){s.phase='over';s.winner=null;s.reason='둘 곳 없음';if(s.ai)addAiRec(s.ai,'d')}else s.phase='designate';UI.panelKey='';
+  if(!legalTriples(s.bd).length){s.phase='over';s.winner=null;s.reason='둘 곳 없음';if(s.ai&&!s.bot)addAiRec(s.ai,'d');if(s.bot)botFinish(s)}else s.phase='designate';UI.panelKey='';
   if(s.ai&&s.phase==='designate'&&s.sun==='B')this.aiTurn()},
  // AI 차례: 공개 정보와 AI 자신의 정보만 넘김(사람 베팅·점수 없음)
  aiView(extra){const s=this.s;return Object.assign({level:s.ai,bd:s.bd.map(r=>r.slice()),t:s.t,aiSun:s.sun==='B',aiPts:s.pts.B,aiCol:2,mem:s.mem},extra||{})},
  aiTurn(){const s=this.s,id=s.id,t=s.t;setTimeout(()=>{if(this.s!==s||s.t!==t||s.phase!=='designate')return;
   const v=this.aiView();AIWK.call('des',v,()=>aiDesignate(this.aiView())).then(o=>{if(this.s!==s||s.t!==t||s.phase!=='designate')return;if(o.mem)s.mem=o.mem;
-   const cells=validTriple(s.bd,o.r)||legalTriples(s.bd)[0];s.cells=cells;this.startBet();renderAll()})},t===1&&s.firstBy==='coin'?(coinDone.size>1?2400:4200):t===1?2600:RV_MS+500)},
+   const cells=validTriple(s.bd,o.r)||legalTriples(s.bd)[0];s.cells=cells;this.startBet();renderAll()})},(t===1&&s.firstBy==='coin'?(coinDone.size>1?2400:4200):t===1?2600:RV_MS+500)+(s.bot?1800+Math.random()*6500:0))},
  startBet(){const s=this.s;s.phase='bet';s.ph0=Date.now();UI.sel=null;UI.panelKey='';
   // AI 베팅 계산은 화면을 먼저 그린 뒤에(저사양 폰에서 '확정' 누른 뒤 멈칫하지 않게)
-  if(s.ai){s.aiBet=null;s.aiTok=0;s.stage=1;const t=s.t;requestAnimationFrame(()=>setTimeout(()=>{if(this.s===s&&s.t===t&&s.phase==='bet')this.aiPrep()},0))}else s.stage=0},
+  if(s.ai){s.aiBet=null;s.aiTok=0;s.stage=1;const t=s.t;if(s.bot){s.botAt=Date.now()+2200+Math.random()*Math.min(11000,4000+t*500);setTimeout(()=>{if(this.s===s&&s.t===t)renderPlayers()},s.botAt-Date.now()+40)}requestAnimationFrame(()=>setTimeout(()=>{if(this.s===s&&s.t===t&&s.phase==='bet')this.aiPrep()},0))}else s.stage=0},
  aiPrep(sync){const s=this.s;if(!s||!s.ai||s.aiBet)return;const fin=b=>{s.aiBet=b;s.aiSalt=rhex(8);s.aiSeal=aiSealOf(s,s.aiBet,s.aiSalt);this.save&&this.save();UI.panelKey='';renderAll()};
   // 확정 버튼처럼 바로 값이 필요하면 지금 계산(일꾼 결과는 버림)
   if(sync){s.aiTok=0;fin(aiBid(this.aiView({cells:s.cells})));return}
   if(s.aiTok)return;const tok=s.aiTok=Math.random(),t=s.t;
   AIWK.call('bid',this.aiView({cells:s.cells}),()=>aiBid(this.aiView({cells:s.cells}))).then(o=>{if(this.s!==s||s.aiTok!==tok||s.aiBet||s.t!==t)return;s.aiTok=0;if(o.mem)s.mem=o.mem;fin(o.r)})},
  vs(){const s=this.s;const hide=h=>h&&s.ai?Object.assign({},h,{bets:{A:h.bets.A}}):h;
-  return{first:s.first,firstBy:s.firstBy,phase:s.phase,t:s.t,sun:s.sun,hu:s.hu,board:s.bd,pts:s.ai&&s.phase!=='over'?{A:s.pts.A}:s.pts,warn:s.warn,hist:s.ai?s.hist.map(hide):s.hist,last:hide(s.last),cells:s.cells,A:'A',B:'B',me:s.ai?'A':null,names:s.ai?{A:'나',B:s.ai==='ultimate'?'Ultimate':AI_LEVELS[s.ai].name+' AI'}:{A:(s.names||{}).A||'흑',B:(s.names||{}).B||'백'},actor:!s.ai&&s.phase==='bet'?this.actor():null,winner:s.winner,reason:s.reason,timers:{d:s.td||0,b:s.tb||0},spect:false}},
+  return{first:s.first,firstBy:s.firstBy,phase:s.phase,t:s.t,sun:s.sun,hu:s.hu,board:s.bd,pts:s.ai&&s.phase!=='over'?{A:s.pts.A}:s.pts,warn:s.warn,hist:s.ai?s.hist.map(hide):s.hist,last:hide(s.last),cells:s.cells,A:'A',B:'B',me:s.ai?'A':null,names:s.bot?{A:'나',B:s.bot.nick}:s.ai?{A:'나',B:s.ai==='ultimate'?'Ultimate':AI_LEVELS[s.ai].name+' AI'}:{A:(s.names||{}).A||'흑',B:(s.names||{}).B||'백'},actor:!s.ai&&s.phase==='bet'?this.actor():null,winner:s.winner,reason:s.reason,timers:{d:s.td||0,b:s.tb||0},spect:false}},
  panel(){const s=this.s,p=$('#panel'),nm=x=>esc((s.names||{})[x]||(x==='A'?'흑':'백'));
   if(s.ai){const key=['AI',s.phase,s.t,s.stage,JSON.stringify(UI.sel)].join('|');if(key===UI.panelKey){if(s.phase==='bet')updateBetSum(s.pts.A);return}UI.panelKey=key;
    const v=this.vs();
-   if(s.phase==='designate')p.innerHTML=s.sun==='A'?designPanel(v,''):waitBox('AI가 고르는 중',lastLine(v));
+   if(s.phase==='designate')p.innerHTML=s.sun==='A'?designPanel(v,''):waitBox(s.bot?'상대가 고르는 중':'AI가 고르는 중',lastLine(v));
+   else if(s.phase==='bet'&&s.stage===4)p.innerHTML=waitBox('상대 봉인 기다리는 중');
    else if(s.phase==='bet'){UI.bet=[1,1,1];UI.bcol=0;p.innerHTML=`${hint(betTip(s.t,s.bd,s.cells,1))}${betRows(s.cells,s.pts.A)}${betFoot('lsubmit','봉인')}`;updateBetSum(s.pts.A)}
+   else if(s.phase==='over'&&s.bot){const dl=botDelta(s),pw=s.rk&&s.rk.pw.n,took=s.hist.reduce((a,x)=>a+x.win.filter(w=>w==='A').length,0),cells=s.hist.reduce((a,x)=>a+x.cells.length,0);
+    p.innerHTML=overSheet(v,{vs:'랭크전 · '+esc(s.bot.nick),stats:[[took,'가져간 칸'],[cells-took,'내준 칸'],[dl==null?'–':(dl>=0?'+':'')+dl,'랭크 점수',dl==null?'':dl>=0?'up':'dn']],
+     note:(s.rk?tierMove(s.rk.me,dl):'')+(pw?`<p class="note" style="margin:0;text-align:center">같은 상대 ${pw+1}번째 · 반영 ${['','½','¼','없음'][Math.min(pw,3)]}</p>`:''),primary:'<button class="btn wide" data-act="remm">다시 매칭</button>'})}
    else if(s.phase==='over'){const u=s.unl,nx=u&&u.next?LEVELS.find(([k])=>k===u.next):null;
     // 열린 단계·랭크는 한 줄에 하나씩(가운데 점으로 이어 붙이면 좁은 화면에서 어색하게 끊김)
     const note=u?`<p class="unl">${IC.unlock}<span>${[nx?`${nx[1]} 단계가 열렸어요`:'',u.rank?'랭크전이 열렸어요':''].filter(Boolean).join('<br>')}</span></p>`:'';
@@ -2522,7 +2651,7 @@ const L={
     const o=nx?{primary:`<button class="btn wide" data-act="lnext" data-k="${nx[0]}">${nx[1]} 도전</button>`,extra:ag+(u.rank?rk:''),extraN:u.rank?2:1}
      :u&&u.rank?{primary:'<button class="btn wide" data-act="lrank">랭크전 하러 가기</button>',extra:ag,extraN:1}:{primary:'<button class="btn wide" data-act="lagain">한 판 더</button>'};
     p.innerHTML=overSheet(v,Object.assign({vs:esc(v.names.B),note:note+first},o))}
-   setSheet((s.phase==='designate'&&s.sun==='A')||s.phase==='bet');return}
+   setSheet((s.phase==='designate'&&s.sun==='A')||(s.phase==='bet'&&s.stage!==4));return}
   const key=['L',s.phase,s.t,s.stage,JSON.stringify(UI.sel)].join('|');if(key===UI.panelKey){if(s.phase==='bet')updateBetSum(s.pts[this.actor()]);return}UI.panelKey=key;
   const v=this.vs();
   if(s.phase==='designate')p.innerHTML=designPanel(v,`<span class="st ${s.sun==='A'?'k':'w'}" style="width:16px;height:16px;vertical-align:-3px"></span> ${nm(s.sun)}`);
@@ -2534,7 +2663,7 @@ const L={
   else if(s.phase==='over')p.innerHTML=overSheet(v,{title:s.winner?nm(s.winner)+' 승':'무승부',primary:'<button class="btn wide" data-act="lagain">한 판 더</button>'});
   setSheet(s.phase==='designate'||(s.phase==='bet'&&(s.stage===1||s.stage===3)));
  },
- save(){const s=this.s;if(!s)return;if(s.phase==='over'&&!s.arch){s.arch=1;const v=this.vs();archiveGame({hist:s.hist,A:'A',B:'B',names:v.names,me:v.me,winner:s.winner,reason:s.reason,ai:!!s.ai},'L'+s.id,s.ai?(s.ai==='ultimate'?'Ultimate':AI_LEVELS[s.ai].name+' AI'):'한 폰 대국')}if(!s.ai)return;if(s.phase==='over'){try{localStorage.removeItem('bo-local')}catch(e){}delete mem['bo-local']}else{const k=s.phase+'|'+s.t;if(this.savedK===k)return;this.savedK=k;
+ save(){const s=this.s;if(!s)return;if(s.phase==='over'&&!s.arch){s.arch=1;const v=this.vs();archiveGame({hist:s.hist,A:'A',B:'B',names:v.names,me:v.me,winner:s.winner,reason:s.reason,ai:!!s.ai&&!s.bot},'L'+s.id,s.bot?'랭크전 · '+s.bot.nick:s.ai?(s.ai==='ultimate'?'Ultimate':AI_LEVELS[s.ai].name+' AI'):'한 폰 대국')}if(!s.ai||s.bot)return;if(s.phase==='over'){try{localStorage.removeItem('bo-local')}catch(e){}delete mem['bo-local']}else{const k=s.phase+'|'+s.t;if(this.savedK===k)return;this.savedK=k;
   // AI의 봉인된 베팅은 저장하지 않음(이어 둘 때 새로 봉인)
   const c=Object.assign({},s);delete c.aiBet;delete c.aiSalt;delete c.aiSeal;delete c.aiTok;lset('bo-local',JSON.stringify(c))}},
  resume(){const s=loadLocal();if(!s||!s.ai){toast('이어 둘 판 없음');renderAiResume();return}if(s.td&&s.phase!=='over'){s.ph0=Date.now();s.toThis=false}
@@ -2548,16 +2677,21 @@ const L={
  actor(){const s=this.s;return s.ai?'A':s.stage<2?s.sun:s.hu},
  cover(who){const c=$('#cover'),n=esc((this.s.names||{})[who]||(who==='A'?'흑':'백'));c.innerHTML=`<button class="btn ghost small" data-act="lobby" style="position:absolute;left:16px;top:calc(14px + env(safe-area-inset-top));background:rgba(255,255,255,.08);color:#e9f0ee">홈</button><div><h2><span class="st ${who==='A'?'k':'w'}"></span>${n} 차례</h2><p>${n}에게 폰을 넘겨 주세요</p><button class="btn" data-act="uncover" style="margin-top:16px;min-width:200px">${n} 베팅 보기</button></div>`;c.classList.remove('hide')},
  submit(){const s=this.s,who=this.actor();if(!validBets(UI.bet,s.pts[who]))return;s.bets[who]=UI.bet.slice();
-  if(s.ai){this.aiPrep(true);s.bets.B=s.aiBet}
+  if(s.ai){this.aiPrep(true);s.bets.B=s.aiBet;
+   // AI 상대 랭크전: 상대가 아직 '고민 중'이면 봉인될 때까지 기다렸다가 개봉(사람과 같은 흐름)
+   if(s.bot&&Date.now()<s.botAt){s.stage=4;UI.panelKey='';const t=s.t;setTimeout(()=>{if(this.s===s&&s.t===t&&s.phase==='bet'&&s.stage===4)this.resolve()},s.botAt-Date.now());renderAll();return}}
   else if(s.stage===1){s.stage=2;UI.panelKey='';renderAll();return}
+  this.resolve()},
+ resign(){const s=this.s;if(!s||s.phase==='over')return;s.phase='over';s.winner='B';s.reason='기권';UI.panelKey='';if(s.bot)botFinish(s);else if(s.ai)addAiRec(s.ai,'l');this.save();renderAll()},
+ resolve(){const s=this.s;
   const win=settle(s.bd,s.cells,s.bets[s.sun],s.bets[s.hu],s.sun==='A'?1:2,s.hu==='A'?1:2).map(w=>w==='sun'?s.sun:s.hu);
   for(const x of ['A','B'])s.pts[x]-=s.bets[x][0]+s.bets[x][1]+s.bets[x][2];
-  s.last={t:s.t,sun:s.sun,hu:s.hu,cells:s.cells,bets:{A:s.bets.A,B:s.bets.B},win,auto:s.ai&&s.autoBet?{A:true}:{}};s.autoBet=false;if(s.ai){s.last.seal=s.aiSeal;s.last.salt=s.aiSalt;s.last.gid=s.id}s.hist.push(s.last);
+  s.last={t:s.t,sun:s.sun,hu:s.hu,cells:s.cells,bets:{A:s.bets.A,B:s.bets.B},win,auto:s.ai&&s.autoBet?{A:true}:{}};s.autoBet=false;if(s.ai&&!s.bot){s.last.seal=s.aiSeal;s.last.salt=s.aiSalt;s.last.gid=s.id}s.hist.push(s.last);
   if(s.ai)aiObserve(s.mem,s.t,s.sun==='B',s.aiBet,win.map(w=>w==='B'));
   const fA=fiveLines(s.bd,1).length,fB=fiveLines(s.bd,2).length;
   if(s.td){s.warn.A=s.toThis?s.warn.A+1:0}
-  if(fA||fB){s.phase='over';s.winner=fA>fB?'A':fB>fA?'B':s.hu;s.reason=fA&&fB?'동시 오목':'오목';UI.panelKey='';if(s.ai)s.unl=addAiRec(s.ai,s.winner==='A'?'w':'l');if(s.ai){aiLearnAfter({hist:s.hist,A:'A',B:'B',ai:true},'L'+s.id);aiGameUpload(s)}}
-  else if(s.td&&s.warn.A>=3){s.phase='over';s.winner='B';s.reason='시간 초과 3회';UI.panelKey='';addAiRec(s.ai,'l');aiLearnAfter({hist:s.hist,A:'A',B:'B',ai:true},'L'+s.id);aiGameUpload(s)}
+  if(fA||fB){s.phase='over';s.winner=fA>fB?'A':fB>fA?'B':s.hu;s.reason=fA&&fB?'동시 오목':'오목';UI.panelKey='';if(s.ai&&!s.bot)s.unl=addAiRec(s.ai,s.winner==='A'?'w':'l');if(s.unl&&s.unl.rank)setTimeout(rankIntro,3600);if(s.bot)botFinish(s);if(s.ai){aiLearnAfter({hist:s.hist,A:'A',B:'B',ai:true},'L'+s.id);aiGameUpload(s)}}
+  else if(s.td&&s.warn.A>=3){s.phase='over';s.winner='B';s.reason='시간 초과 3회';UI.panelKey='';if(s.bot)botFinish(s);else addAiRec(s.ai,'l');aiLearnAfter({hist:s.hist,A:'A',B:'B',ai:true},'L'+s.id);aiGameUpload(s)}
   else this.next();
   renderAll();
  }
@@ -2598,6 +2732,19 @@ function aiLearnAfter(d,key){try{
 function aiGameUpload(s){try{if(!(db&&SEAT&&user&&user.firebase)||!s||!s.ai||!Array.isArray(s.hist)||!s.hist.length)return;
  const hist=s.hist.slice(0,300).map(x=>({t:x.t|0,sun:x.sun,cells:x.cells,bA:x.bets.A,bB:x.bets.B,win:x.win}));
  db.doc('aigames/'+SEAT+'_'+s.id).set({by:SEAT,at:Date.now(),level:s.ai,winner:s.winner||null,reason:String(s.reason||'').slice(0,12),first:s.first==='B'?'B':'A',timed:!!s.td,v:2,hj:JSON.stringify(hist)}).catch(()=>{})}catch(e){}}
+// ===== AI 상대 랭크전 결과: 끝나면 서버 bres에 한 번 저장(실패하면 폰에 두었다가 다음에 다시) =====
+function botDelta(s){const k=s&&s.rk;if(!k)return null;const S=s.winner==null?.5:s.winner==='A'?1:0,raw=kOf(k.me.g)*(S-expOf(k.me.r,k.op.r))*k.pw.w;return Math.round(k.me.r+raw)-Math.round(k.me.r)}
+function botFinish(s){if(!s||!s.bot||s.bdone)return;s.bdone=1;lrm('bo-bplay');botQueue({gid:'k'+s.id,bot:s.bot.id,w:s.winner==='A'?'me':s.winner==='B'?'bot':'draw',turns:s.t|0,why:String(s.reason||'').slice(0,20)})}
+const botQ=()=>{let q=[];try{q=JSON.parse(lget('bo-bpend')||'[]')}catch(e){}return Array.isArray(q)?q.filter(x=>x&&typeof x==='object'&&typeof x.gid==='string'):[]};
+function botQueue(r){const q=botQ();if(!q.some(x=>x.gid===r.gid))q.push({...r,at:Date.now()});lset('bo-bpend',JSON.stringify(q.slice(-20)));botFlush()}
+function botDrop(gid){lset('bo-bpend',JSON.stringify(botQ().filter(x=>x.gid!==gid)))}
+function botFlush(){if(botFlush.busy||!(db&&SEAT&&user&&user.firebase))return;
+ // 끝내지 않고 닫은 판은 패
+ {let p=null;try{p=JSON.parse(lget('bo-bplay')||'null')}catch(e){}if(p&&typeof p.gid==='string'&&!(L.s&&L.s.bot&&'k'+L.s.id===p.gid)){lrm('bo-bplay');const q=botQ();if(!q.some(x=>x.gid===p.gid)){q.push({gid:p.gid,bot:p.bot,w:'bot',turns:0,why:'나감',at:Date.now()});lset('bo-bpend',JSON.stringify(q.slice(-20)))}}}
+ const q=botQ();if(!q.length)return;botFlush.busy=true;
+ (async()=>{for(const r of q){if(!/^k[0-9a-f]{8}$/.test(r.gid)||!BOTMAP.has(r.bot)||!['me','bot','draw'].includes(r.w)||Date.now()-(r.at||0)>7*864e5){botDrop(r.gid);continue}
+   try{await db.doc('bres/'+SEAT+'_'+r.gid).set({by:SEAT,gid:r.gid,bot:r.bot,na:myNick(),w:r.w,turns:r.turns|0,why:String(r.why||'').slice(0,20),ended:Date.now()});botDrop(r.gid)}catch(e){}}
+  botFlush.busy=false})()}
 async function aiGameDownload(){if(!db){toast('오프라인');return}toast('불러오는 중');try{const qs=await db.collection('aigames').orderBy('at','desc').limit(2000).get();const games=qs.docs.map(x=>{const d=x.data()||{};if(typeof d.hj==='string'){try{d.hist=JSON.parse(d.hj)}catch(e){d.hist=[]}delete d.hj}return d});
  const blob=new Blob([JSON.stringify({v:1,app:'betting-omok',kind:'aigames',at:Date.now(),games})],{type:'application/json'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='betting-omok-aigames.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);toast(games.length+'판 저장됨')}catch(e){toast(e&&e.code==='invalid_argument'?'관리자 권한 없음':'받기 실패 · '+((e&&e.code)||''))}}
 // AI 봉인: 사람이 입력하기 전에 AI 베팅을 해시로 고정해 보여주고, 복기에서 같은 값인지 다시 계산해 확인
@@ -2608,7 +2755,7 @@ const RV={d:null,i:0,
   leaveGame();UI.mode='archive';this.d=x.d;this.i=x.d.hist.length-1;UI.review=true;UI.rvR=0;UI.panelKey='';UI.animT=-1;show('game');renderAll()},
  open(){
   let d=null;
-  if(UI.mode==='local'&&L.s&&L.s.phase==='over'){const v=L.vs();d={hist:L.s.hist,A:'A',B:'B',names:v.names,me:v.me,winner:L.s.winner,reason:L.s.reason,ai:!!L.s.ai}}
+  if(UI.mode==='local'&&L.s&&L.s.phase==='over'){const v=L.vs();d={hist:L.s.hist,A:'A',B:'B',names:v.names,me:v.me,winner:L.s.winner,reason:L.s.reason,ai:!!L.s.ai&&!L.s.bot}}
   else if(UI.mode==='online'&&G.lastOver)d=G.lastOver;
   if(!d||!d.hist||!d.hist.length){toast('복기할 턴 없음');return}
   this.d=d;this.i=d.hist.length-1;UI.review=true;UI.rvR=0;$('#turnres').classList.add('hide');UI.panelKey='';UI.animT=-1;UI.full=false;renderAll();const f=$('[data-act=rvnext]:not([disabled]),[data-act=rvprev]');if(f)f.focus({preventScroll:true});say(`복기. ${d.hist.length}턴`)},
@@ -2704,6 +2851,7 @@ document.addEventListener('click',e=>{
  else if(a==='create'){lset('bo-nick',myNick());createRoom()}
  else if(a==='enter')enterGame(b.dataset.g);
  else if((a==='lobby'||a==='leave')&&UI.mode==='tut')T.skip();
+ else if((a==='lobby'||a==='leave')&&UI.mode==='local'&&L.s&&L.s.bot&&L.s.phase!=='over')dialog('나가면 기권패로 기록돼요.','나가기',()=>{L.resign();goLobby();setTab('rank',true)});
  else if(a==='lobby'||a==='leave'){if(UI.mode==='local'&&L.s&&!L.s.ai&&L.s.phase!=='over')dialog('나가면 이 판은 끝나요.','나가기',leaveRoom);else{if(UI.mode==='local'&&L.s&&L.s.ai&&L.s.phase!=='over')toast('저장됨 · 홈에서 이어하기');leaveRoom()}}
  else if(a==='lresume')L.resume();
  else if(a==='again'){wmine('again',{again:true});UI.panelKey='';renderAll()}
@@ -2754,7 +2902,7 @@ document.addEventListener('click',e=>{
  else if(a==='lsubmit')L.submit();
  else if(a==='mm'){if(MM.on)mmStop();else mmStart()}
  else if(a==='tab')setTab(b.dataset.k);
- else if(a==='remm'){leaveRoom().then(()=>mmStart())}
+ else if(a==='remm'){leaveRoom().then(()=>{setTab('rank',true);mmStart()})}
  else if(a==='showcode'){UI.showCode=!UI.showCode;renderTiers()}
  else if(a==='copycode'){const c=myCode();if(!c){toast('랭크전 1판 후 생성');return}(navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).then(()=>toast('복사됨'),()=>{UI.showCode=true;renderTiers();const r=document.createRange();r.selectNodeContents($('#myCode'));const se=getSelection();se.removeAllRanges();se.addRange(r);toast('길게 눌러 복사')})}
  else if(a==='loadcode')loadCode();
@@ -2775,9 +2923,9 @@ document.addEventListener('click',e=>{
  else if(a==='archexp'){const a2=archList();if(!a2.length){toast('저장할 대국 없음');return}try{const blob=new Blob([JSON.stringify({v:1,app:'betting-omok',at:Date.now(),games:a2})],{type:'application/json'}),u=URL.createObjectURL(blob),x=document.createElement('a');x.href=u;x.download='betting-omok-games.json';document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);toast('대국 기록 파일 저장됨')}catch(e){toast('저장 실패')}}
  else if(a==='admdl'){aiGameDownload()}
  else if(a==='reload'){location.reload()}
- else if(a==='delacct'){closeSheet();dialog('내 계정과 기록을 모두 지워요.<br>닉네임 · AI 전적 · 학습 통계<br>AI 대국 기록 · 이 기기 기록<br>랭크·친구 대국의 판 기록은<br>상대 기록 때문에 남아요.<br>되돌릴 수 없어요.','삭제',()=>deleteMyData(),'취소')}
+ else if(a==='delacct'){closeSheet();dialog('내 계정과 기록을 모두 지워요.<br>닉네임 · AI 전적 · 학습 통계<br>AI 대국 기록 · 이 기기 기록<br>랭크·일반 게임의 판 기록은<br>상대 기록 때문에 남아요.<br>되돌릴 수 없어요.','삭제',()=>deleteMyData(),'취소')}
  else if(a==='wskip'){lset('bo-tut-done','1');$('#welcome').classList.add('hide');toast('규칙 탭에서 언제든 배울 수 있어요')}
- else if(a==='sheet')openSheet(b.dataset.k);
+ else if(a==='sheet'){UI.sheetV=b.dataset.v||null;openSheet(b.dataset.k)}
  else if(a==='peek'){UI.peek=!UI.peek;renderPlayers()}
  else if(a==='shclose')closeSheet();
  else if(a==='theme')setTheme(b.dataset.v);
@@ -2793,9 +2941,9 @@ document.addEventListener('click',e=>{
  else if(a==='tsolo'){UI.aiLevel='beginner';lset('bo-ai','beginner');renderLevels();leaveGame();UI.mode='local';L.start(null,'beginner');show('game');renderAll()}
  else if(a==='lagain'){L.start(null,L.s.ai);UI.panelKey='';renderAll()}
  else if(a==='lnext'){const k=b.dataset.k;if(k&&LEVELS.some(([x])=>x===k)){UI.aiLevel=k;lset('bo-ai',k);renderLevels();L.start(null,k);UI.panelKey='';renderAll()}}
- else if(a==='lrank'){goLobby();setTimeout(()=>{const c=$('#rankCard');if(c)c.scrollIntoView({behavior:'smooth',block:'center'});const m=$('#mmBtn');if(m)m.focus()},120)}
+ else if(a==='lrank'){goLobby();setTab('rank');setTimeout(()=>{const m=$('#mmBtn');if(m)m.focus()},120);setTimeout(rankIntro,200)}
  else if(a==='uncover'){$('#cover').classList.add('hide');L.s.stage++;UI.panelKey='';renderAll()}
- else if(a==='resign')dialog('기권할까요?','기권',()=>wmine('resign',{resign:true}));
+ else if(a==='resign'){if(UI.mode==='local'&&L.s&&L.s.bot)dialog('기권할까요?','기권',()=>L.resign());else dialog('기권할까요?','기권',()=>wmine('resign',{resign:true}))}
  else if(a==='coin'){}
  else if(a==='dlgno'){dialogClose()}
  else if(a==='dlgok'){dialogClose();if(dialog.ok)dialog.ok()}
@@ -2887,7 +3035,7 @@ setTheme(lget('bo-theme')||'dark');
 $('#nick').value=lget('bo-nick')||'';syncNick();
 {const lv=lget('bo-ai');UI.aiLevel=lv&&Object.prototype.hasOwnProperty.call(AI_LEVELS,lv)?lv:'beginner'}if(lget('bo-big')==='1')document.body.classList.add('big');
 // 저장값 하나가 깨져도 나머지 시작(온라인 연결 포함)은 계속되게 하나씩 실행
-for(const f of [renderLevels,()=>setTab(lget('bo-tab')||'home'),renderArchive,renderAiTime,renderAiResume,renderAiRec,renderTiers,renderRank,syncSettings,renderPresets,renderRooms])try{f()}catch(e){console.warn(e)}
+for(const f of [renderLevels,()=>setTab(lget('bo-tab')||'home',true),renderRankLock,()=>setTimeout(()=>{if(UI.view==='lobby'&&$('#welcome').classList.contains('hide'))rankIntro()},1800),renderArchive,renderAiTime,renderAiResume,renderAiRec,renderTiers,renderRank,syncSettings,renderPresets,renderRooms])try{f()}catch(e){console.warn(e)}
 // 처음 연 사람만 연습 4단계로 바로 시작(건너뛰기 가능)
 // 첫 방문: 갑자기 튜토리얼로 넘어가지 않고 환영 카드로 물어봄
 function welcomeArt(){
@@ -2924,7 +3072,15 @@ const use=n=>window.claude&&typeof window.claude.use==='function'?Promise.resolv
    const since=cache.length?Math.max(...cache.map(x=>x.ended))-120e3:0,map=new Map(cache.map(x=>[x.id,x]));RK.docs=[...map.values()].sort((a,b)=>a.ended-b.ended);if(RK.docs.length){rankCompute();renderRank()}
    // 새로 생긴 결과만 읽음(앱을 열 때마다 300건씩 읽지 않게)
    db.collection('res').where('ended','>',since).orderBy('ended','desc').limit(1000).onSnapshot(qs=>{qs.docs.forEach(x=>{const v=x.data();if(v&&typeof v==='object'&&typeof v.ended==='number')map.set(x.id,{...v,id:x.id})});
-    const all=[...map.values()].sort((a,b)=>a.ended-b.ended).slice(-3000);RK.docs=all;try{lset('bo-res',JSON.stringify(all))}catch(e){}clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)},()=>{RK.loaded=true;renderRank()})}
+    const all=[...map.values()].sort((a,b)=>a.ended-b.ended).slice(-3000);RK.docs=all;try{lset('bo-res',JSON.stringify(all))}catch(e){}clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)},()=>{RK.loaded=true;renderRank()});
+   // AI 상대와 둔 랭크전 결과(bres)도 같은 방식으로(폰에 저장해 두고 새로 생긴 것만 읽음)
+   {let bc=[];try{bc=JSON.parse(lget('bo-bres')||'[]')}catch(e){}if(!Array.isArray(bc))bc=[];bc=bc.filter(x=>x&&typeof x==='object'&&typeof x.id==='string'&&typeof x.ended==='number');
+    const bs=bc.length?Math.max(...bc.map(x=>x.ended))-120e3:0,bm=new Map(bc.map(x=>[x.id,x]));RK.bdocs=[...bm.values()];
+    db.collection('bres').where('ended','>',bs).orderBy('ended','desc').limit(1000).onSnapshot(qs=>{qs.docs.forEach(x=>{const v=x.data();if(v&&typeof v==='object'&&typeof v.ended==='number')bm.set(x.id,{...v,id:x.id})});
+     const all=[...bm.values()].sort((a,b)=>a.ended-b.ended).slice(-3000);RK.bdocs=all;try{lset('bo-bres',JSON.stringify(all))}catch(e){}clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)},()=>{})}
+   // 개발자 계정 마스터 시작(관리자만 쓸 수 있는 cfg/master)
+   db.doc('cfg/master').onSnapshot(x=>{const d=x.exists?x.data():null;RK.master=d&&Array.isArray(d.seats)?d.seats.filter(okSeat).slice(0,5):[];cfgMaster();clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)},()=>{});
+   setTimeout(botFlush,1500)}
   else db.collection('res').orderBy('ended','desc').limit(2000).onSnapshot(qs=>{RK.docs=qs.docs.map(x=>{const v=x.data();return v&&typeof v==='object'?{...v,id:x.id}:null}).filter(Boolean).reverse();clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)},()=>{RK.loaded=true;renderRank()});
   mmSub();
   const m=/^#g-(g[0-9a-f]{8})$/.exec(location.hash);if(m)enterGame(m[1]);
