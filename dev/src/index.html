@@ -5629,7 +5629,7 @@ const ecoToday=()=>{const w=ECO.w;return w&&w.d===ecoDay()?w.dc:0};
 function ecoWrite(kind,mut){const p=ECO.q.then(async()=>{for(let i=0;i<2;i++){if(!ECO.w||!ECO.ok)return false;const b=ecoBase(ECO.w),n=JSON.parse(JSON.stringify(b));if(mut(n,b)===false)return false;n.k=kind;
    if(!ecoSrv()){ECO.w=n;lset('bo-wal',JSON.stringify(n));return true}
    try{await db.doc('wal/'+SEAT).set(Object.assign({},n,{at:SRV_TS}));ECO.w=n;lset('bo-wal',JSON.stringify(n));return true}
-   catch(e){if(i===0&&!(e&&e.code==='quota_exceeded')){try{const x=await db.doc('wal/'+SEAT).get();if(x.exists)ECO.w=ecoNorm(x.data())}catch(_){}continue}console.warn('eco',kind,e&&e.code);return false}}return false}).catch(()=>false);
+   catch(e){if(i===0&&!(e&&e.code==='quota_exceeded')){try{const x=await db.doc('wal/'+SEAT).get();if(x.exists)ECO.w=ecoNorm(x.data())}catch(_){}continue}console.warn('eco',kind,e&&e.code);ECO.lastErr=(e&&(e.code||e.message))||'?';return false}}return false}).catch(e=>{ECO.lastErr='x '+(e&&e.message||'');return false});
  ECO.q=p.then(()=>{},()=>{});return p.then(ok=>{ecoPaint();return ok})}
 async function ecoLoad(){let loc=null;try{loc=JSON.parse(lget('bo-wal')||'null')}catch(e){}
  if(!ecoSrv()){ECO.w=ecoNorm(loc);ECO.ok=true;ECO.ready();ecoAfterLoad();return}
@@ -6024,8 +6024,14 @@ async function mailClaim(ids){if(MAIL.claiming||!ECO.ok||!ECO.w||!mailSrv())retu
  let g=0;const its=[];let fail=0,full=0;
  try{for(const m of L){const r=await mailClaimOne(m);if(r&&typeof r==='object'){g+=r.g;if(r.it)its.push(r.it)}else if(r==='full')full++;else if(r!=='dup')fail++}}finally{MAIL.claiming=0}
  if(g||its.length){snd('reward');const p=its.map(x=>ecoItem(x).n);if(g)p.push(`옥돌 +${ecoFmt(g)}`);toast(p.join(' · '))}
- else if(full)toast('받은 우편이 많아요 · 잠시 뒤 다시');else if(fail){snd('error');toast('받지 못했어요 · 잠시 뒤 다시');mailFetch(true)}
+ else if(full)toast('받은 우편이 많아요 · 잠시 뒤 다시');else if(fail){snd('error');toast('받지 못했어요 · 원인 확인 중');mailDiag(L[0]).then(t=>toast(t,6000));mailFetch(true)}
  mailPaint()}
+// 받기 실패 진단(한 줄): 서버 시각과 이 기기 시계 차이 · 우편 기간 · 오류 코드
+async function mailDiag(m){const code=ECO.lastErr||'?';let sv=0,loc=0;
+ try{const t0=Date.now();await db.doc('on/'+SEAT).update({at:SRV_TS});const x=await db.doc('on/'+SEAT).get();const t1=Date.now(),a=x.exists?(x.data()||{}).at:null;sv=a&&typeof a.toMillis==='function'?a.toMillis():typeof a==='number'?a:0;loc=(t0+t1)/2}catch(e){}
+ const p=[];if(sv){const d=Math.round((loc-sv)/1000);if(Math.abs(d)>=20)p.push(`이 기기 시계가 서버보다 ${Math.abs(d)}초 ${d>0?'빨라요':'느려요'}`);if(m&&m.from>sv)p.push(`우편 시작까지 ${Math.ceil((m.from-sv)/1000)}초`);if(m&&m.until<=sv)p.push('우편 기간 끝')}
+ console.warn('mail diag',{code,sv,loc,from:m&&m.from,until:m&&m.until,id:m&&m.id});
+ return `받지 못했어요 · ${p.length?p.join(' · '):'코드 '+code}`}
 // ----- 화면: 머리줄 우편 버튼(안 읽은 수) · 우편함 시트 · 관리자 보내기 시트 -----
 const MAIL_IC='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.4"/><path d="M3.6 7.4l8.4 6.1 8.4-6.1"/></svg>';
 function mailDom(){if($('#hMail'))return;const hg=$('#hGem');if(hg){const b=document.createElement('button');b.className='ibtn hmail';b.id='hMail';b.dataset.act='mailopen';b.setAttribute('aria-label','우편함');b.innerHTML=MAIL_IC+'<b class="mbn" aria-hidden="true"></b>';hg.after(b)}
