@@ -3731,7 +3731,7 @@ function setTheme(v){v=v==='light'?'light':'dark';document.documentElement.datas
 // ===== 로비 =====
 const LEVELS=[['beginner','Easy'],['mid','Normal'],['pro','Hard'],['ultimate','Godlike']];
 // 난이도 한 줄 소개(고른 난이도 아래)
-const LV_LINE={beginner:'처음이라면 여기서',mid:'기본기를 익히는 단계',pro:'본격적인 심리전',ultimate:'아직 이긴 사람이 거의 없는 AI'};
+const LV_LINE={beginner:'처음이라면 여기서',mid:'기본기를 익히는 단계',pro:'본격적인 심리전',ultimate:'불패의 신급 AI'};
 // 단계 열기: 앞 단계(또는 그 위 단계)를 한 번이라도 이기면 다음 단계가 열림. 랭크전은 고수 이상을 이겨야 열림
 function aiWinsMap(){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}return r&&typeof r==='object'&&!Array.isArray(r)?r:{}}
 function aiTopWin(){const r=aiWinsMap();let top=-1;LEVELS.forEach(([k],i)=>{const x=r[k];if(x&&typeof x==='object'&&int(x.w)>0)top=i});return top}

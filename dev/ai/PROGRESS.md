@@ -114,3 +114,4 @@
 - 11:35 봇 4종(200판 s0, 현Ult→r5a): human 200→198, hoardT 197→200, uhSave 159→149 ✗, mimicU 136→149. uhSave 하락은 u3(dT.6/opK1.3) 탓(u3 151, cap15 149). main에 알림
 - 11:55 uhSave s200 200판: 현Ult 159, r5a 155 → 400판 합 현Ult 318(79.5%) vs r5a 304(76.0%). 후보 X(dT.45), Y(dT.3, opK1.3만) uhSave 선별 중
 - 12:05 uhSave 400판: X(r5a+dThreat.45) 316(79.0%) ≈ 현Ult 318 / Y(dThreat.3) 305. → X 본평가
+- 12:15 X 고수 s0 93.8 s600 94.8 s1200 94.3 s1800 94.3 → 2264/2400=94.3% ✗ (dT.45는 uhSave 회복, 고수 손해). 조정자: r5a 본선 배포됨(화면 이름만 Easy/Normal/Hard/Godlike). r5b 목표 = 고수≥95 + uhSave≥159/200, 다음 diff는 r5a 반영 본선 기준

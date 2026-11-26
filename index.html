@@ -1695,7 +1695,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1930';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1951';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3845,7 +3845,7 @@ function setTheme(v){v=v==='light'?'light':'dark';document.documentElement.datas
 // ===== 로비 =====
 const LEVELS=[['beginner','Easy'],['mid','Normal'],['pro','Hard'],['ultimate','Godlike']];
 // 난이도 한 줄 소개(고른 난이도 아래)
-const LV_LINE={beginner:'처음이라면 여기서',mid:'기본기를 익히는 단계',pro:'본격적인 심리전',ultimate:'아직 이긴 사람이 거의 없는 AI'};
+const LV_LINE={beginner:'처음이라면 여기서',mid:'기본기를 익히는 단계',pro:'본격적인 심리전',ultimate:'불패의 신급 AI'};
 // 단계 열기: 앞 단계(또는 그 위 단계)를 한 번이라도 이기면 다음 단계가 열림. 랭크전은 고수 이상을 이겨야 열림
 function aiWinsMap(){let r={};try{r=JSON.parse(lget('bo-airec')||'{}')||{}}catch(e){}return r&&typeof r==='object'&&!Array.isArray(r)?r:{}}
 function aiTopWin(){const r=aiWinsMap();let top=-1;LEVELS.forEach(([k],i)=>{const x=r[k];if(x&&typeof x==='object'&&int(x.w)>0)top=i});return top}
