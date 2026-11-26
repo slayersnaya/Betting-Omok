@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="color-scheme" content="dark light">
 <title>베팅 오목</title>
 <style>
@@ -19,7 +19,7 @@
 --r:14px;--sheetsh:0 -12px 30px rgba(0,0,0,.4);--pri:#008282;--sel:rgba(0,153,153,.12)}
 :root[data-theme=light]{color-scheme:light;--pri:#008282;--bg:#f1eee7;--card:#fffdf9;--soft:#f6f3ec;--raise:#ebe6db;--ink:#17211f;--mute:#54625f;--faint:#8b9692;--line:#dfd9cd;--jadeink:#007a7a;--warn:#b3261e;--sheetsh:0 -10px 26px rgba(60,40,10,.14)}
 *{box-sizing:border-box;min-width:0}
-html,body,*{touch-action:manipulation}
+html,body,*{touch-action:manipulation}html,body{overflow-x:hidden}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 NS,"NanumSquare","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;overflow-x:clip;word-break:keep-all;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 button,input{font:inherit;color:inherit}
 .wrap{max-width:1180px;margin:0 auto;padding:10px max(4vw,12px) 32px}
@@ -944,7 +944,7 @@ input,select,textarea{font-size:16px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.1212';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.1215';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2459,13 +2459,15 @@ function renderRank(){
  const now=Date.now(),act=lobbyRooms.filter(r=>r.ranked&&(r.status!=='done'||!gDone(r.id))&&(r.host===SEAT||r.guest===SEAT)&&r.guest&&now-(r.created||0)<24*3600e3&&!gDone(r.id))[0];
  $('#rkResume').innerHTML=act?`<div class="card resume"><div class="rt"><b>진행 중인 랭크전</b><span>vs ${esc(act.host===SEAT?act.guestNick:act.hostNick)} · ${ago(act.created)}</span></div><button class="go" data-act="enter" data-g="${esc(act.id)}" aria-label="이어하기"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>`:'';
  renderMM();
- const top=RK.list.slice(0,50),row=(p,i)=>{const tt=tierOf(p);return `<div class="rkrow${p.seat===SEAT?' me':''}${i<3?' r'+(i+1):''}"><span class="n">${i<3?`<i>${i+1}</i>`:i+1}</span>${emblem(tt,22)}<span class="nk">${esc(p.nick||'플레이어')}${p.seat===SEAT?' (나)':''}</span><span class="sc">${tt.n} · ${Math.round(p.r)}</span></div>`};
- const off=UI.ready&&!db,pod=top.length>=3?`<div class="pod">${[1,0,2].map(i=>{const p=top[i],tt=tierOf(p),nk=esc(p.nick||'플레이어');return `<div class="pc p${i+1}${p.seat===SEAT?' me':''}" aria-label="${i+1}위 ${nk} ${tt.n} ${Math.round(p.r)}점">${i===0&&tt!==CHAL?CROWN:''}${emblem(tt,i===0?58:46)}<div class="pn" aria-hidden="true">${nk}${p.seat===SEAT?' (나)':''}</div><div class="ps" aria-hidden="true">${tt.n} · ${Math.round(p.r)}</div><div class="base" aria-hidden="true">${i+1}</div></div>`}).join('')}</div>`:'';
+ const top=RK.list.slice(0,50),row=(p,i)=>{const tt=tierOf(p);return `<div class="rkrow${p.seat===SEAT?' me':''}${i<3?' r'+(i+1):''}"><span class="n">${i<3?`<i>${i+1}</i>`:i+1}</span>${emblem(tt,22)}<span class="nk">${esc(rkNick(p))}${p.seat===SEAT?' (나)':''}</span><span class="sc">${tt.n} · ${Math.round(p.r)}</span></div>`};
+ const off=UI.ready&&!db,pod=top.length>=3?`<div class="pod">${[1,0,2].map(i=>{const p=top[i],tt=tierOf(p),nk=esc(rkNick(p));return `<div class="pc p${i+1}${p.seat===SEAT?' me':''}" aria-label="${i+1}위 ${nk} ${tt.n} ${Math.round(p.r)}점">${i===0&&tt!==CHAL?CROWN:''}${emblem(tt,i===0?58:46)}<div class="pn" aria-hidden="true">${nk}${p.seat===SEAT?' (나)':''}</div><div class="ps" aria-hidden="true">${tt.n} · ${Math.round(p.r)}</div><div class="base" aria-hidden="true">${i+1}</div></div>`}).join('')}</div>`:'';
  {const pe=$('#rkPod');if(pe)pe.innerHTML=off||!RK.loaded?'':pod}
  {const lim=UI.rkAll?50:10,more=$('#rkMore');$('#rkBoard').innerHTML=off?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.slice(0,lim).map(row).slice(pod?3:0).join('')+(idx>=lim?`<div class="rkrow gap" aria-hidden="true"><span class="n">⋮</span></div>`+row(me,idx):''):'<p class="sub">랭크전 5판 후 등록</p>'):'<p class="sub">불러오는 중</p>';
   if(more){const on=!off&&RK.loaded&&top.length>10;more.classList.toggle('hide',!on);more.textContent=UI.rkAll?'접기':`11~${top.length}위 보기`;more.setAttribute('aria-expanded',UI.rkAll?'true':'false')}}
  {const tl=$('#rkTopL');if(tl)tl.innerHTML=off?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.slice(0,10).map(row).join('')+(idx>=10?`<div class="rkrow"><span class="n">…</span></div>`+row(me,idx):''):`<p class="sub">랭크전 5판 후 등록</p><div class="tiers">${tierRows()}</div>`):'<p class="sub">불러오는 중</p>'}
 }
+// 내 줄은 지금 닉네임으로(서버 기록에 닉네임이 아직 없어도)
+const rkNick=p=>(p.seat===SEAT?myNick():p.nick)||'플레이어';
 const CROWN='<svg class="crown" viewBox="0 0 26 18" aria-hidden="true"><path d="M2 15 1 4l6.5 5L13 1l5.5 8L25 4l-1 11z" fill="#F2C94C" stroke="#a8851b" stroke-width="1"/><rect x="2" y="15" width="22" height="2.6" rx="1" fill="#e2bd45"/></svg>';
 const tierRows=()=>[...TIERS,CHAL].map((t,i)=>`<div>${emblem(t,22)}<b>${t.n}</b><span>${t===CHAL?`마스터 중 ${CHAL.top}위 안`:i===0?'900 미만':`${t.min} 이상`}</span></div>`).join('');
 function renderTiers(){
