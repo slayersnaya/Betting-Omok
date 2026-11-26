@@ -1614,7 +1614,7 @@ html{scroll-padding-top:64px}
   <div>
    <label class="sw">큰 글씨<input type="checkbox" id="setBig"></label>
    <label class="sw">진동<input type="checkbox" id="setVib"></label>
-   <label class="sw">효과음<input type="checkbox" id="setSnd"></label>
+   <label class="sw">효과음<input type="checkbox" id="setSnd"></label><label class="sw">배경음<input type="checkbox" id="setBgm"></label>
    <label class="sw">힌트 표시<input type="checkbox" id="setHint"></label>
    <label class="sw">상대 이모트 보기<input type="checkbox" id="setEmo"></label>
   </div>
@@ -2542,9 +2542,10 @@ function renderBoard(){
 // 심리전 보호: 상대가 칩을 올리고 내리는 소리는 절대 안 냄(내 조작에만). 상대는 '봉인 완료'만 알림
 let actx=null,SNDM=null,SNDN=null;
 const sndOn=()=>lget('bo-snd')!=='0'&&!document.hidden;
-function sndCtx(){if(!sndOn())return null;try{if(!actx){actx=new (window.AudioContext||window.webkitAudioContext)();SNDM=actx.createGain();SNDM.gain.value=1;SNDM.connect(actx.destination);
+function aCtx(){try{if(!actx){actx=new (window.AudioContext||window.webkitAudioContext)();SNDM=actx.createGain();SNDM.gain.value=1;SNDM.connect(actx.destination);
   const n=actx.createBuffer(1,actx.sampleRate*.5,actx.sampleRate),d=n.getChannelData(0);for(let k=0;k<d.length;k++)d[k]=Math.random()*2-1;SNDN=n}
  if(actx.state==='suspended'&&actx.resume)actx.resume().catch(()=>{});return actx}catch(e){return null}}
+function sndCtx(){return sndOn()?aCtx():null}
 // 기본 재료: 음(osc)·잡음(noise). t=지금부터 몇 초 뒤
 function sTone(f,d,o={}){const c=sndCtx();if(!c)return;const t=c.currentTime+(o.at||0),os=c.createOscillator(),g=c.createGain();os.type=o.type||'sine';os.frequency.setValueAtTime(f,t);if(o.to)os.frequency.exponentialRampToValueAtTime(o.to,t+d);
  const v=(o.v||.08)*SG;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+(o.a||.004));g.gain.exponentialRampToValueAtTime(.0001,t+d);os.connect(g).connect(SNDM);os.start(t);os.stop(t+d+.02)}
@@ -2606,10 +2607,32 @@ const SND={
 };
 // 소리별 음량 보정(측정해서 맞춤: 버튼류 최고점 약 0.12, 돌·칩 0.3, 연출 0.3 안팎)
 let SG=1;const SNDG={tap:2.79,soft:2.5,tab:2.73,pick:2.5,toggleOn:2.67,toggleOff:2.75,page:4.67,open:7.0,close:4.29,tick:2.55,chipUp:5.81,chipDown:5.56,chipStack:4.76,chipReset:4.57,stone:1.08,seal:1.65,crack:2.63,over:4.17,oppSeal:2.8,coinFlip:3.57,coinLand:1.3,five:1.81,voidLine:1.71,win:1.86,lose:3.61,draw:3.6,tickLate:2.46,timeout:2.94,turn:2.63,reward:2.37,coin1:2.78,buy:3.06,equip:2.63,error:2.54,notify:2.42,msg:3.5,match:2.41,pop:2.41,correct:2.44,wrong:3.05,tierUp:1.86,tierPiece:2.69,tierDown:3.75};
-function snd(k,...a){try{if(SND[k]){SG=SNDG[k]||1;SND[k](...a);SG=1}}catch(e){SG=1}}
+function snd(k,...a){try{if(SND[k]){SG=SNDG[k]||1;SND[k](...a);SG=1;if(k==='win'||k==='lose'||k==='five'||k==='tierUp')bgmDuck(3000)}}catch(e){SG=1}}
 function beep(){snd('tick')} // 예전 호출 호환
-// 첫 터치 때 소리 장치를 깨움(브라우저 정책)
-['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{sndCtx()}catch(e){}},{once:true,capture:true}));
+// ===== 배경음(파일): 은은하게(음량 낮게·천천히 커짐), 장면별로 바뀔 때 부드럽게 넘어감, 곡 끝에서 겹쳐 이어 붙여 끊김 없이 반복 =====
+// 파일은 sounds/ 에 두고 아래 표에 등록. 없는 장면은 조용히(로비 곡을 대국 중에 틀지 않음). 설정 '배경음'(bo-bgm, 기본 켬)
+const BGM_FILES={lobby:'sounds/bgm_lobby.mp3',game:'sounds/bgm_game.mp3'};
+const BGM_VOL={lobby:.24,game:.15,tense:.18,match:.22,puzzle:.18};
+const BG={u:[],cur:-1,scene:'',duck:1,ok:false};
+const bgmOn=()=>lget('bo-bgm')!=='0';
+function bgmScene(){if(!bgmOn()||document.hidden||!BG.ok)return'';let k='lobby';
+ if(UI.view==='game')k=UI.mode==='tut'?'':'game';else if(shOpen==='puz')k='puzzle';else if(typeof MM!=='undefined'&&MM.on)k='match';
+ return BGM_FILES[k]?k:(k==='puzzle'||k==='match')&&BGM_FILES.lobby?'lobby':''}
+function bgmUnit(){const c=aCtx();if(!c)return null;const el=new Audio();el.preload='auto';el.loop=false;const g=c.createGain();g.gain.value=0;try{c.createMediaElementSource(el).connect(g).connect(c.destination)}catch(e){return null}
+ const u={el,g,k:''};el.addEventListener('timeupdate',()=>{if(BG.u[BG.cur]!==u||!el.duration||u.x)return;if(el.duration-el.currentTime<4){u.x=1;bgmPlay(u.k,4,true)}});return u}
+function bgmGain(u,v,sec){const c=aCtx();if(!c||!u)return;const t=c.currentTime;u.g.gain.cancelScheduledValues(t);u.g.gain.setValueAtTime(u.g.gain.value,t);u.g.gain.linearRampToValueAtTime(v,t+sec)}
+function bgmPlay(k,fade,loop){if(!BG.u.length){const a=bgmUnit(),b=bgmUnit();if(!a||!b)return;BG.u=[a,b]}
+ const old=BG.u[BG.cur],ni=BG.cur===0?1:0,nu=BG.u[ni];
+ if(old){bgmGain(old,0,loop?4:1.5);const o=old;setTimeout(()=>{if(BG.u[BG.cur]!==o)try{o.el.pause()}catch(e){}},(loop?4:1.5)*1000+200)}
+ if(!k){BG.cur=-1;BG.scene='';return}
+ nu.k=k;nu.x=0;if(!nu.el.src.endsWith(BGM_FILES[k]))nu.el.src=BGM_FILES[k];try{nu.el.currentTime=0}catch(e){}
+ nu.g.gain.value=0;const pr=nu.el.play();if(pr&&pr.catch)pr.catch(()=>{});BG.cur=ni;BG.scene=k;bgmGain(nu,(BGM_VOL[k]||.2)*BG.duck,fade)}
+function bgmUpdate(){try{const k=bgmScene();if(k===BG.scene)return;bgmPlay(k,BG.scene?2.5:6,false)}catch(e){}}
+// 연출(승리·패배·오목·승급) 동안 잠깐 줄였다가 되돌림
+function bgmDuck(ms){const u=BG.u[BG.cur];if(!u)return;BG.duck=.35;bgmGain(u,(BGM_VOL[BG.scene]||.2)*.35,.3);clearTimeout(bgmDuck.t);bgmDuck.t=setTimeout(()=>{BG.duck=1;const v=BG.u[BG.cur];if(v)bgmGain(v,BGM_VOL[BG.scene]||.2,1.5)},ms)}
+setInterval(bgmUpdate,800);document.addEventListener('visibilitychange',bgmUpdate);
+// 첫 터치 때 소리 장치를 깨움(브라우저 정책). 배경음도 이때부터
+['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{aCtx();BG.ok=true;bgmUpdate()}catch(e){}},{once:true,capture:true}));
 // 버튼마다 기본 소리: 특별한 소리가 나는 버튼은 그 함수에서 냄(아래 표는 탭 소리를 생략할 버튼)
 const SND_SKIP=new Set(['fxpzgo','rwclaim','ecoatt']);
 const SND_ACT={bp:'chipUp',b5:'chipStack',bq:'chipStack',bm:'chipDown',breset:'chipReset',beven:'chipReset',bsubmit:'seal',lsubmit:'seal',tsubmit:'seal',dconfirm:'stone',tab:'tab',sheet:'open',shclose:'close',ecoopen:'open',ecocat:'open',fxpuz:'open',frchat:'open',prof:'open',frprof:'open',rvprev:'page',rvnext:'page',level:'soft',preset:'soft',aitime:'soft',bcol:'soft',theme:'soft',dlgno:'soft',fxemo:'pop',fxemobtn:'soft'};
@@ -4661,12 +4684,13 @@ $('#board').addEventListener('keydown',e=>{
  else if(e.key==='Enter'){e.preventDefault();const b=document.querySelector('[data-act=dconfirm]');if(b&&!b.disabled)b.click()}
  if(UI.sel&&UI.sel.cells)$('#srsel').textContent='가운데 '+coord(UI.sel.r,UI.sel.c)+', '+UI.sel.cells.map((c,i)=>LBL[i]+' '+coord(c[0],c[1])).join(', ')+'.'+nearText(vs.board,UI.sel.cells);
 });
-function syncSettings(){$('#setBig').checked=document.body.classList.contains('big');$('#setVib').checked=lget('bo-vib')!=='0';$('#setSnd').checked=lget('bo-snd')!=='0';$('#setHint').checked=hintOn();setTheme(document.documentElement.dataset.theme)}
+function syncSettings(){$('#setBig').checked=document.body.classList.contains('big');$('#setVib').checked=lget('bo-vib')!=='0';$('#setSnd').checked=lget('bo-snd')!=='0';{const b=$('#setBgm');if(b)b.checked=lget('bo-bgm')!=='0'}$('#setHint').checked=hintOn();setTheme(document.documentElement.dataset.theme)}
 document.addEventListener('change',e=>{const id=e.target.id;
  if(id==='setBig'){document.body.classList.toggle('big',e.target.checked);lset('bo-big',e.target.checked?'1':'0')}
  else if(id==='setVib')lset('bo-vib',e.target.checked?'1':'0');
  else if(id==='setHint')lset('bo-hint',e.target.checked?'1':'0');
- else if(id==='setSnd'){lset('bo-snd',e.target.checked?'1':'0');if(e.target.checked)snd('toggleOn')}});
+ else if(id==='setSnd'){lset('bo-snd',e.target.checked?'1':'0');if(e.target.checked)snd('toggleOn')}
+ else if(id==='setBgm'){lset('bo-bgm',e.target.checked?'1':'0');BG.ok=true;bgmUpdate()}});
 $('#nick').addEventListener('input',()=>{$('#nickErr').textContent=''});
 $('#nick').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nickCommit()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#dlg').classList.contains('hide')){dialogClose();return}if(shOpen)closeSheet();else if(!$('#welcome').classList.contains('hide')){lset('bo-tut-done','1');$('#welcome').classList.add('hide')}else if(UI.review&&UI.view==='game')RV.close()}});
