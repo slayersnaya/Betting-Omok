@@ -6097,7 +6097,7 @@ function mailAdmCheck(){const f=mailAdmRead(),now=Date.now();
  if(f.to!=='all'&&!(MAIL.tgt&&MAIL.tgt.ok&&MAIL.tgt.nk===f.nk))return{e:'받는 사람을 먼저 찾아 주세요'};
  if(!f.t)return{e:'제목을 넣어 주세요'};if(!f.g&&!f.it&&!f.msg)return{e:'선물이나 내용을 넣어 주세요'};
  const a=mailDayMs(f.d0),b=mailDayMs(f.d1);if(!isFinite(a)||!isFinite(b))return{e:'기간을 확인해 주세요'};
- const from=Math.max(a,a<=now?now-60e3:a),until=b+864e5;if(until<=from||until<=now)return{e:'끝나는 날을 확인해 주세요'};if(until-from>31*864e5)return{e:'기간은 31일까지예요'};
+ const from=a<=now?Math.min(a,now-30*60e3):a,until=b+864e5;if(until<=from||until<=now)return{e:'끝나는 날을 확인해 주세요'};if(until-from>31*864e5)return{e:'기간은 31일까지예요'};
  return{f,from,until}}
 function mailSendAsk(){const c=mailAdmCheck();if(c.e){toast(c.e);return}const f=c.f,it=f.it?ecoItem(f.it):null,gift=[it&&it.n,f.g?`옥돌 ${ecoFmt(f.g)}`:''].filter(Boolean).join(' · ')||'선물 없음(공지)';
  dialog(`<div class="mconf"><b>${esc(f.t)}</b><span>${f.to==='all'?'기간 안에 앱을 연 모든 사람':esc(MAIL.tgt.nk)}</span><span>${esc(gift)}</span><span>${mailDate(c.from)} ~ ${mailDate(c.until-1)}</span></div>`,'보내기',()=>mailSend(c),'취소')}
