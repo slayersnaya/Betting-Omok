@@ -2385,7 +2385,7 @@ function boardSVG(bd,o){
  if(o.preview)o.preview.forEach(([r,c],i)=>{s+=chipPick(X(c),Y(r),i)});
  // 6목 이상: 빨간 줄(승리 아님) + '무효' 글씨는 그 줄이 처음 생겼을 때 한 번만(2.5초 뒤 사라짐). 다시 그려도 이어서 흐려지게 시작 시각을 기억
  if(o.overs)o.overs.forEach(([p0,p1])=>{const x1=X(p0[1]),y1=Y(p0[0]),x2=X(p1[1]),y2=Y(p1[0]);const L=Math.hypot(x2-x1,y2-y1)||1,ux=(x2-x1)/L,uy=(y2-y1)/L;let bx=x2+ux*36,by=y2+uy*36;if(bx<26||bx>SZ-26||by<18||by>SZ-18){bx=x1-ux*36;by=y1-uy*36}bx=Math.max(26,Math.min(SZ-26,bx));by=Math.max(18,Math.min(SZ-18,by));
-  const k=[p0,p1].map(p=>p.join(',')).sort().join('|'),now=Date.now();if(!OVSEEN.has(k))OVSEEN.set(k,now);const el=now-OVSEEN.get(k);
+  const k=[p0,p1].map(p=>p.join(',')).sort().join('|'),now=Date.now();if(!OVSEEN.has(k)){OVSEEN.set(k,now);setTimeout(()=>snd('voidLine'),60)}const el=now-OVSEEN.get(k);
   s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#fff" stroke-opacity=".75" stroke-width="8" stroke-linecap="round"/><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#E5484D" stroke-width="4.5" stroke-linecap="round"/>`;
   if(el<2500)s+=`<g transform="translate(${bx} ${by})"><g class="ovtag" style="animation-delay:-${(el/1000).toFixed(2)}s"><rect x="-24" y="-13" width="48" height="26" rx="13" fill="#E5484D" stroke="#fff" stroke-width="1.5"/><text y="5.5" text-anchor="middle" font-family="NS,sans-serif" font-weight="800" font-size="16" fill="#fff">무효</text></g></g>`});
  if(o.tap)s+=`<g transform="translate(${X(o.tap[1])} ${Y(o.tap[0])})"><circle class="tapring" r="15" fill="none" stroke="#FBF6EA" stroke-width="3"/><circle r="4" fill="#FBF6EA" opacity=".9"/></g>`;
@@ -2449,7 +2449,7 @@ function renderPlayers(){
  const bar=(id,mine)=>{const isSun=live&&!rv&&vs.sun===id,w=vs.warn[id]||0;
   const off=!mine&&!over&&oppOff(id);
   let tags=live&&!rv?`<span class="tag${isSun?' j':''}">${isSun?'선':'후'}<span class="tl"> 플레이어</span></span>`:'';
-  if(!mine){const os=rv?'':oppStatus(vs,id);tags+=`<span class="tag${os&&os[0]?' '+os[0]:''}${os?'':' hide'}" id="oppTag"${os&&os[0].includes('sealtag')?' data-act="peek" role="button" aria-label="AI 봉인 코드"':''}>${os?os[1]:''}</span>`}
+  if(!mine){const os=rv?'':oppStatus(vs,id);if(os&&os[0]&&os[0].split(' ')[0]==='j'&&vs.phase==='bet'){const sk=(UI.mode==='online'?G.gid:L.s&&L.s.id)+':'+vs.t;if(UI.oppSealK!==sk){UI.oppSealK=sk;if(UI.view==='game')snd('oppSeal')}}tags+=`<span class="tag${os&&os[0]?' '+os[0]:''}${os?'':' hide'}" id="oppTag"${os&&os[0].includes('sealtag')?' data-act="peek" role="button" aria-label="AI 봉인 코드"':''}>${os?os[1]:''}</span>`}
   // 관리자만: 랭크전 AI 상대의 실제 모델 표시(연승·연패로 바뀐 경우 원래 모델도)
   if(!mine&&UI.mode==='local'&&L.s&&L.s.bot&&L.s.ai&&isAdmin()){const base=(BOTMAP.get(L.s.bot.id)||{}).lv;tags=`<span class="tag j" id="admModel">${lvName(L.s.ai)}${base&&base!==L.s.ai?' · 원래 '+lvName(base):''}</span>`+tags}
   if(off)tags+='<span class="tag w">연결 끊김</span>';
@@ -2491,7 +2491,7 @@ function renderTimer(){
  if((ck.left===10||ck.left===5)&&renderTimer.said!==ck.left){renderTimer.said=ck.left;say(ck.left+'초 남음')}
  ring.classList.remove('hide');txt.textContent=ck.left;arc.style.strokeDashoffset=125.7*(1-Math.max(0,ck.dur-ck.el)/ck.dur);
  const late=ck.left<=5&&ck.left>0;ring.classList.toggle('late',late);arc.style.stroke=late?'var(--warn)':'';
- if(late&&renderTimer.last!==ck.left){ring.classList.remove('tick');void ring.offsetWidth;ring.classList.add('tick');if(actorOf(vs,vs.me||'A'))beep([1200],.03)}renderTimer.last=ck.left;
+ if(late&&renderTimer.last!==ck.left){ring.classList.remove('tick');void ring.offsetWidth;ring.classList.add('tick');if(actorOf(vs,vs.me||'A'))snd('tickLate')}else if(ck.left===10&&renderTimer.last!==10)snd('tick');renderTimer.last=ck.left;
 }
 // 판 보는 범위 바꾸기: 부드럽게(0.3초)
 function setViewBox(to){const b=$('#board'),cur=(b.getAttribute('viewBox')||'').split(' ').map(Number),tv=to.split(' ').map(Number);
@@ -2538,8 +2538,83 @@ function renderBoard(){
  const fb=$('#fullBtn');if(fb){fb.classList.toggle('hide',!can||rv);fb.setAttribute('aria-label',UI.full?'가까이':'전체 판');fb.setAttribute('aria-pressed',String(!!UI.full))}
 }
 // 효과음: 기본 꺼짐. 베팅 크기와 상관없이 같은 소리
-let actx=null;function beep(fs,d){if(lget('bo-snd')!=='1')return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();let t=actx.currentTime;
- for(const f of fs){const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(actx.destination);o.start(t);o.stop(t+d);t+=d}}catch(e){}}
+// ===== 효과음(합성음): 파일 없이 Web Audio로 만듦. 설정 '효과음'(bo-snd, 기본 켬). 첫 터치 뒤에만 소리 남(브라우저 정책) =====
+// 심리전 보호: 상대가 칩을 올리고 내리는 소리는 절대 안 냄(내 조작에만). 상대는 '봉인 완료'만 알림
+let actx=null,SNDM=null,SNDN=null;
+const sndOn=()=>lget('bo-snd')!=='0'&&!document.hidden;
+function sndCtx(){if(!sndOn())return null;try{if(!actx){actx=new (window.AudioContext||window.webkitAudioContext)();SNDM=actx.createGain();SNDM.gain.value=1;SNDM.connect(actx.destination);
+  const n=actx.createBuffer(1,actx.sampleRate*.5,actx.sampleRate),d=n.getChannelData(0);for(let k=0;k<d.length;k++)d[k]=Math.random()*2-1;SNDN=n}
+ if(actx.state==='suspended'&&actx.resume)actx.resume().catch(()=>{});return actx}catch(e){return null}}
+// 기본 재료: 음(osc)·잡음(noise). t=지금부터 몇 초 뒤
+function sTone(f,d,o={}){const c=sndCtx();if(!c)return;const t=c.currentTime+(o.at||0),os=c.createOscillator(),g=c.createGain();os.type=o.type||'sine';os.frequency.setValueAtTime(f,t);if(o.to)os.frequency.exponentialRampToValueAtTime(o.to,t+d);
+ const v=(o.v||.08)*SG;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+(o.a||.004));g.gain.exponentialRampToValueAtTime(.0001,t+d);os.connect(g).connect(SNDM);os.start(t);os.stop(t+d+.02)}
+function sNoise(d,o={}){const c=sndCtx();if(!c||!SNDN)return;const t=c.currentTime+(o.at||0),src=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();src.buffer=SNDN;f.type=o.ft||'bandpass';f.frequency.setValueAtTime(o.f||2000,t);if(o.to)f.frequency.exponentialRampToValueAtTime(o.to,t+d);f.Q.value=o.q||1;
+ const v=(o.v||.1)*SG;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+(o.a||.002));g.gain.exponentialRampToValueAtTime(.0001,t+d);src.connect(f).connect(g).connect(SNDM);src.start(t,Math.random()*.3);src.stop(t+d+.02)}
+// 종소리: 기본음 + 배음(부드러운 금속성)
+function sBell(f,d,o={}){const v=o.v||.06;sTone(f,d,{...o,v});sTone(f*2.76,d*.6,{...o,v:v*.35});sTone(f*5.4,d*.35,{...o,v:v*.15})}
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const SND={
+ tap(){sTone(rnd(1350,1450),.045,{type:'triangle',to:900,v:.045});sNoise(.012,{f:3500,q:2,v:.02})},
+ soft(){sTone(rnd(780,820),.05,{type:'sine',to:620,v:.04})},
+ tab(){sTone(660,.06,{type:'sine',to:560,v:.045});sTone(990,.05,{v:.02,at:.01})},
+ open(){sNoise(.14,{f:500,to:1800,q:1.2,v:.035})},
+ close(){sNoise(.12,{f:1800,to:500,q:1.2,v:.03})},
+ toggleOn(){sTone(700,.05,{v:.045});sTone(1050,.06,{v:.045,at:.05})},
+ toggleOff(){sTone(1050,.05,{v:.04});sTone(700,.06,{v:.04,at:.05})},
+ pick(){sTone(rnd(1100,1200),.05,{type:'triangle',v:.05,to:1500})},
+ // 바둑돌 '딱': 나무판에 부딪히는 짧은 잡음 + 낮은 울림
+ stone(){sNoise(.05,{f:rnd(2100,2700),q:3.5,v:.34});sNoise(.03,{f:5200,q:2,v:.08});sTone(rnd(150,175),.09,{v:.22,to:110});sTone(rnd(850,950),.035,{type:'triangle',v:.06})},
+ // 칩: 플라스틱 칩 두 번 짤깍(올림) / 한 번(내림)
+ chipUp(){sNoise(.014,{f:4300,q:6,v:.16});sNoise(.014,{f:4600,q:6,v:.12,at:.032})},
+ chipDown(){sNoise(.016,{f:3200,q:6,v:.13})},
+ chipStack(){[0,.045,.085].forEach((a,k)=>sNoise(.014,{f:4000+k*250,q:6,v:.14,at:a}))},
+ chipReset(){[0,.03,.06,.09].forEach((a,k)=>sNoise(.012,{f:3600-k*150,q:5,v:.1,at:a}))},
+ over(){sTone(240,.08,{type:'square',v:.025,to:200})},
+ // 봉인: 찰칵 + 잠김
+ seal(){sNoise(.02,{f:2600,q:3,v:.22});sTone(320,.12,{to:170,v:.14,at:.015});sNoise(.03,{f:900,q:2,v:.1,at:.03})},
+ oppSeal(){sBell(1320,.25,{v:.035})},
+ // 개봉: 도장 깨짐
+ crack(){sNoise(.07,{f:1500,q:1.5,v:.2});sNoise(.04,{f:3800,q:2,v:.08,at:.01})},
+ // 동전: 튀어 올라 빙글빙글(점점 느려지는 짤랑) → 착지
+ coinFlip(){sNoise(.04,{f:6000,q:4,v:.1});for(let k=0;k<11;k++){const at=.05+k*.13+k*k*.004;sBell(rnd(3000,3300),.06,{v:.03,at})}},
+ coinLand(){sTone(180,.1,{v:.18,to:120});sBell(2100,.55,{v:.07,at:.01});sBell(2350,.4,{v:.04,at:.09});sNoise(.03,{f:5000,q:3,v:.08})},
+ five(){[1046.5,1318.5,1568,2093].forEach((f,k)=>sBell(f,1.4,{v:.06,at:k*.07}))},
+ voidLine(){sTone(230,.14,{v:.12,to:190});sTone(165,.18,{v:.11,to:140,at:.13});sNoise(.05,{f:700,q:2,v:.08})},
+ win(){[523.3,659.3,784,1046.5].forEach((f,k)=>sTone(f,.16,{type:'triangle',v:.07,at:k*.09}));[1046.5,1318.5,1568].forEach(f=>sBell(f,1.1,{v:.045,at:.38}))},
+ lose(){[440,392,349.2,293.7].forEach((f,k)=>sTone(f,.32,{type:'sine',v:.06,at:k*.16}))},
+ draw(){sTone(587,.25,{v:.05});sTone(587,.3,{v:.05,at:.22})},
+ tick(){sTone(1000,.025,{type:'triangle',v:.05});sNoise(.01,{f:3000,q:3,v:.03})},
+ tickLate(){sTone(1500,.035,{type:'triangle',v:.07});sNoise(.012,{f:4000,q:3,v:.04})},
+ timeout(){sTone(330,.18,{type:'triangle',v:.07});sTone(262,.25,{type:'triangle',v:.07,at:.16})},
+ turn(){sBell(880,.3,{v:.04});sBell(1320,.35,{v:.035,at:.08})},
+ reward(){sBell(1318.5,.45,{v:.06});sBell(1975.5,.6,{v:.055,at:.1})},
+ coin1(){sBell(2637,.35,{v:.05});sBell(3136,.4,{v:.04,at:.06})},
+ stamp(){sTone(130,.22,{v:.38,to:55});sNoise(.08,{ft:'lowpass',f:500,q:.7,v:.3});sNoise(.03,{f:2000,q:2,v:.06})},
+ buy(){SND.coin1();[1568,2093,2637].forEach((f,k)=>sBell(f,.3,{v:.035,at:.18+k*.06}))},
+ equip(){sTone(880,.06,{v:.05});sBell(1320,.25,{v:.04,at:.05})},
+ error(){sTone(310,.09,{type:'triangle',v:.06});sTone(260,.12,{type:'triangle',v:.06,at:.1})},
+ notify(){sBell(784,.3,{v:.045});sBell(1046.5,.4,{v:.045,at:.12})},
+ msg(){sTone(1180,.07,{v:.04});sTone(1580,.1,{v:.035,at:.06})},
+ match(){[659.3,880,1318.5].forEach((f,k)=>sBell(f,.5,{v:.05,at:k*.1}))},
+ pop(){sTone(500,.08,{to:1100,v:.06})},
+ correct(){[784,988,1318.5].forEach((f,k)=>sBell(f,.45,{v:.05,at:k*.08}))},
+ wrong(){sTone(392,.2,{type:'triangle',v:.06});sTone(330,.3,{type:'triangle',v:.06,at:.15})},
+ tierUp(){[523.3,659.3,784,1046.5,1318.5].forEach((f,k)=>sTone(f,.2,{type:'triangle',v:.06,at:k*.11}));sNoise(.6,{ft:'highpass',f:3000,to:9000,q:.7,v:.04,at:.3});[1046.5,1318.5,1568,2093].forEach(f=>sBell(f,1.6,{v:.04,at:.62}))},
+ tierPiece(k){sTone(1200+k*180,.08,{type:'triangle',v:.05});sNoise(.02,{f:5000,q:3,v:.05})},
+ tierDown(){sTone(523,.25,{v:.04});sTone(392,.35,{v:.04,at:.18})},
+ page(){sNoise(.05,{f:2500,to:1200,q:1,v:.03})},
+};
+// 소리별 음량 보정(측정해서 맞춤: 버튼류 최고점 약 0.12, 돌·칩 0.3, 연출 0.3 안팎)
+let SG=1;const SNDG={tap:2.79,soft:2.5,tab:2.73,pick:2.5,toggleOn:2.67,toggleOff:2.75,page:4.67,open:7.0,close:4.29,tick:2.55,chipUp:5.81,chipDown:5.56,chipStack:4.76,chipReset:4.57,stone:1.08,seal:1.65,crack:2.63,over:4.17,oppSeal:2.8,coinFlip:3.57,coinLand:1.3,five:1.81,voidLine:1.71,win:1.86,lose:3.61,draw:3.6,tickLate:2.46,timeout:2.94,turn:2.63,reward:2.37,coin1:2.78,buy:3.06,equip:2.63,error:2.54,notify:2.42,msg:3.5,match:2.41,pop:2.41,correct:2.44,wrong:3.05,tierUp:1.86,tierPiece:2.69,tierDown:3.75};
+function snd(k,...a){try{if(SND[k]){SG=SNDG[k]||1;SND[k](...a);SG=1}}catch(e){SG=1}}
+function beep(){snd('tick')} // 예전 호출 호환
+// 첫 터치 때 소리 장치를 깨움(브라우저 정책)
+['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{sndCtx()}catch(e){}},{once:true,capture:true}));
+// 버튼마다 기본 소리: 특별한 소리가 나는 버튼은 그 함수에서 냄(아래 표는 탭 소리를 생략할 버튼)
+const SND_SKIP=new Set(['fxpzgo','rwclaim','ecoatt']);
+const SND_ACT={bp:'chipUp',b5:'chipStack',bq:'chipStack',bm:'chipDown',breset:'chipReset',beven:'chipReset',bsubmit:'seal',lsubmit:'seal',tsubmit:'seal',dconfirm:'stone',tab:'tab',sheet:'open',shclose:'close',ecoopen:'open',ecocat:'open',fxpuz:'open',frchat:'open',prof:'open',frprof:'open',rvprev:'page',rvnext:'page',level:'soft',preset:'soft',aitime:'soft',bcol:'soft',theme:'soft',dlgno:'soft',fxemo:'pop',fxemobtn:'soft'};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled||b.getAttribute('aria-disabled')==='true')return;const a=b.dataset.act;if(SND_SKIP.has(a))return;snd(SND_ACT[a]||'tap')},true);
+document.addEventListener('change',e=>{const t=e.target;if(t&&t.type==='checkbox'&&t.id!=='setSnd')snd(t.checked?'toggleOn':'toggleOff')},true);
 // 개봉 시작: 약 2초 동안 다음 턴 화면을 미루고, 다음 턴 시간도 그만큼 늦게 시작(양쪽 같은 연출이라 공평)
 function startReveal(vs){
  const now=Date.now();{const t=$('#toast');clearTimeout(toastT);t.classList.remove('on')}UI.rv={t:vs.last.t,at:now,until:now+(vs.phase==='over'?WIN_T.sheet:RV_MS)};if(vs.phase==='over'){setTimeout(()=>{if(UI.rv&&UI.rv.at===now)renderBoard()},WIN_T.view+30);setTimeout(()=>{if(UI.rv&&UI.rv.at===now)renderPlayers()},WIN_T.sheet+350)}
@@ -2547,7 +2622,8 @@ function startReveal(vs){
  if(UI.mode==='local'&&L.s&&L.s.td&&L.s.phase==='designate')L.s.ph0=Math.max(L.s.ph0,now+RV_MS);
  clearTimeout(startReveal.t);startReveal.t=setTimeout(()=>{UI.panelKey='';renderAll();const p=$('#panel');if(!p.classList.contains('rise')){p.classList.remove('pin');void p.offsetWidth;p.classList.add('pin')}},UI.rv.until-now+30);
  const vib=lget('bo-vib')!=='0';
- [0,1,2].forEach(i=>setTimeout(()=>{beep([620+i*120],.06);try{if(vib&&navigator.vibrate)navigator.vibrate(15)}catch(e){}},(i*RS+RL)*1000));
+ [0,1,2].forEach(i=>{setTimeout(()=>snd('crack'),i*RS*1000);setTimeout(()=>{snd('stone');try{if(vib&&navigator.vibrate)navigator.vibrate(15)}catch(e){}},(i*RS+RL)*1000)});
+ if(vs.phase==='over'&&vs.winner){const me=vs.me||(UI.mode==='local'?'A':null),t0=(3*RS+RL)*1000+250;setTimeout(()=>snd('five'),t0);if(me&&!vs.spect)setTimeout(()=>snd(vs.winner===me?'win':'lose'),WIN_T.sheet)}
 }
 // 개봉 카드(시트 안): A→B→C 차례로 도장이 깨지고 돌이 놓임. 칸마다 누구 돌인지 + 내가 건 점수(내 것)만
 const WAXD0=['#007A7A','#244F9E','#A35200'],WAXD1=['#16a39c','#4f7fd6','#d0772c'];let WAXD=WAXD0;
@@ -2761,8 +2837,8 @@ function showCoin(vs,key){
  const el=$('#coinEl'),end=(vs.first===vs.A?1800:1980)+'deg',loser=vs.firstBy==='loser';
  el.style.animation='none';void el.offsetWidth;el.style.setProperty('--end',end);
  const label=`선 플레이어 · ${nm(vs.first)}`;
- if(loser){el.style.transform=`rotateY(${end})`;$('#ctext').textContent=label;$('#csub').textContent='지난 판에 진 쪽이 먼저'}
- else{el.style.transform='';el.style.animation='';$('#ctext').textContent='';$('#csub').textContent='';if(matchMedia('(prefers-reduced-motion: reduce)').matches){el.style.animation='none';el.style.transform=`rotateY(${end})`;$('#ctext').textContent=label}else setTimeout(()=>{$('#ctext').textContent=label},1950)}
+ if(loser){el.style.transform=`rotateY(${end})`;$('#ctext').textContent=label;$('#csub').textContent='지난 판에 진 쪽이 먼저';snd('coinLand')}
+ else{el.style.transform='';el.style.animation='';$('#ctext').textContent='';$('#csub').textContent='';if(matchMedia('(prefers-reduced-motion: reduce)').matches){el.style.animation='none';el.style.transform=`rotateY(${end})`;$('#ctext').textContent=label;snd('coinLand')}else{snd('coinFlip');setTimeout(()=>snd('coinLand'),1750)}if(!matchMedia('(prefers-reduced-motion: reduce)').matches)setTimeout(()=>{$('#ctext').textContent=label},1950)}
  const c=$('#coin'),hold=loser?2200:3600;c.classList.remove('hide');clearTimeout(showCoin.t);showCoin.t=setTimeout(()=>{c.classList.add('hide');renderPlayers();const ae=document.activeElement;if(UI.kbd&&(!ae||ae===document.body||ae.closest('#coin'))){UI.panelKey='';renderAll()}},hold);
  // 동전이 떨어진 뒤부터 첫 턴 시간을 잼(양쪽 폰 모두 같은 연출을 보므로 공평)
  if(UI.mode==='online')openAt(vs.t+':'+vs.phase,Date.now()+hold);else if(UI.mode==='local'&&L.s)L.s.ph0=Date.now()+hold;
@@ -2799,7 +2875,7 @@ function renderAiResume(){const c=$('#aiResume');if(!c)return;const s=loadLocal(
  if(!s||!s.ai||s.phase==='over'){c.classList.add('hide');return}c.classList.remove('hide');c.className='card resume';
  c.innerHTML=`<svg class="thumb" viewBox="0 0 44 44" aria-hidden="true"><rect width="44" height="44" rx="10" fill="#d9a95e"/><path d="M0 11H44M0 22H44M0 33H44M11 0V44M22 0V44M33 0V44" stroke="#5a3a14" stroke-opacity=".5"/><circle cx="11" cy="22" r="5" fill="#141617"/><circle cx="22" cy="22" r="5" fill="#f6f3ec"/><circle cx="22" cy="11" r="5" fill="#141617"/><circle cx="33" cy="33" r="5" fill="#f6f3ec"/></svg><div class="rt"><b>이어하기</b><span>vs ${esc(AI_LEVELS[s.ai].name+' AI')} · ${s.t}턴</span></div><button class="go" data-act="lresume" aria-label="이어서 두기"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>`}
 // 화면 읽기 프로그램용 진행 알림(보이지 않는 알림 영역). 대국 중 비공개 원칙대로 내 정보와 돌 결과만 읽음
-function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.review)return;if(!$('#coin').classList.contains('hide')){setTimeout(()=>showMyTurn(vs,what),500);return}const v=vstate();if(!v||v.phase!==vs.phase||v.t!==vs.t)return;
+function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.review)return;if(!$('#coin').classList.contains('hide')){setTimeout(()=>showMyTurn(vs,what),500);return}snd('turn');const v=vstate();if(!v||v.phase!==vs.phase||v.t!==vs.t)return;
  e.querySelector('.st').className='st '+(vs.me===vs.A?'k':'w');e.querySelector('small').textContent=what;e.classList.remove('on');void e.offsetWidth;e.classList.add('on');clearTimeout(showMyTurn.t);showMyTurn.t=setTimeout(()=>e.classList.remove('on'),1550);
  const mb=$('#mebar');if(mb){mb.classList.remove('turnpulse');void mb.offsetWidth;mb.classList.add('turnpulse')}
  try{if(navigator.vibrate)navigator.vibrate(25)}catch(e){}}
@@ -3515,7 +3591,7 @@ function tierUp(t0,t1,k){if(!k||!t1||TUPC.pend[k]||tupSeen(k))return;TUPC.pend[k
   delete TUPC.pend[k];tupMark(k);tupShow(t0,t1)};
  // 결과 시트가 올라오고(panelRise) 한 박자 뒤
  setTimeout(go,Math.max(0,UI.rv?UI.rv.at+WIN_T.sheet-Date.now():0)+750)}
-function tupShow(t0,t1){
+function tupShow(t0,t1){snd('tierUp');
  const P=EMB_P[t1.n]||EMB_P[''],ro=n=>{const j=(n.charCodeAt(n.length-1)-0xAC00)%28;return j===0||j===8?'로':'으로'},top=t1.n==='마스터'||t1.n==='챌린저';
  const h=t0?`${t1.n}${ro(t1.n)} 올랐어요`:`배치 완료 · ${t1.n}`,sub=t0?`${t0.n} → ${t1.n}`:'첫 티어를 받았어요',
   sr=t0?`티어가 ${t0.n}에서 ${t1.n}${ro(t1.n)} 올랐어요`:`배치를 마쳤어요. 첫 티어는 ${t1.n}${(t1.n.charCodeAt(t1.n.length-1)-0xAC00)%28?'이에요':'예요'}`;
@@ -3641,7 +3717,7 @@ async function mmHost(q){
   await db.doc('g/'+gid).set({host:SEAT,hostNick:nick,guest:q.seat,guestNick:q.nick,created:Date.now(),td:20,tb:30,status:'playing',ranked:true,...RV2()});
   await db.doc(`g/${gid}/p/${SEAT}`).set({seat:SEAT,nick,joined:Date.now()});
   await db.doc('mm/'+q.seat).set({gid,from:SEAT,nick,at:Date.now()});
-  MM.on=false;MM.busy=false;mmPeers(false);enterGame(gid);
+  MM.on=false;MM.busy=false;mmPeers(false);snd('match');enterGame(gid);
  }catch(e){MM.busy=false;if(MM.on&&room)room.presence({mm:mmMe()}).catch(()=>{});toast('다시 찾는 중')}
 }
 function mmInvite(d){
@@ -3654,7 +3730,7 @@ function mmInvite(d){
  db.doc('g/'+d.gid).get().then(x=>{const m=x.exists?normMeta(x.data()):null;
   if(!m||!m.ranked||m.host!==d.from||m.guest!==SEAT||m.td!==20||m.tb!==30||m.first||m.status!=='playing'||(user&&user.firebase&&m.rv!==2)){MM.busy=false;return}
   MM.on=false;MM.busy=false;if(room)room.presence({mm:null}).catch(()=>{});mmPeers(false);
-  toast(`vs ${String(d.nick||'상대').slice(0,12)}`);enterGame(d.gid)}).catch(()=>{MM.busy=false});
+  toast(`vs ${String(d.nick||'상대').slice(0,12)}`);snd('match');enterGame(d.gid)}).catch(()=>{MM.busy=false});
 }
 function mmTick(){
  if(!MM.on||MM.busy||UI.view!=='lobby')return;
@@ -3681,7 +3757,7 @@ function mmBot(){
  lset('bo-blast',JSON.stringify([x.b.id,...recent.filter(i=>i!==x.b.id)].slice(0,4)));
  MM.on=false;MM.busy=false;MM.botAt=0;if(room)room.presence({mm:null}).catch(()=>{});mmPeers(false);
  let lv=curWs()>=ULT_WS?'ultimate':x.b.lv;{const cap=lsCap(curLs());if(cap&&LVN.indexOf(lv)>LVN.indexOf(cap))lv=cap}
- closeSheet();leaveGame();UI.mode='local';UI.review=false;L.start(null,lv,{bot:{id:x.b.id,nick:x.b.nick,r:x.r}});show('game');$('#cover').classList.add('hide');toast(`vs ${x.b.nick}`+(isAdmin()?' · '+lvName(lv):''));renderAll()}
+ closeSheet();leaveGame();UI.mode='local';UI.review=false;L.start(null,lv,{bot:{id:x.b.id,nick:x.b.nick,r:x.r}});show('game');$('#cover').classList.add('hide');toast(`vs ${x.b.nick}`+(isAdmin()?' · '+lvName(lv):''));snd('match');renderAll()}
 function renderMM(){
  const b=$('#mmBtn'),st=$('#mmSt');if(!b)return;renderPips();b.disabled=!MM.on&&UI.ready&&(!db||!room);
  // 오프라인이면 랭크 버튼을 접고 AI 시작을 주 버튼으로
@@ -4041,7 +4117,7 @@ function frGate(){if(!frFb()||!db){toast('웹·앱 버전에서 쓸 수 있어�
 
 // ----- 구독 -----
 function frStart(){if(!frOk()||FR.started===SEAT)return;FR.started=SEAT;FR.subs.forEach(f=>{try{f()}catch(e){}});FR.subs=[];FR.got={a:0,b:0};FR.base=false;
- const take=(m,k)=>qs=>{m.clear();qs.docs.forEach(x=>{const v=frNorm(x.id,x.data());if(v)m.set(x.id,v)});FR.got[k]=1;FR.err=false;FR.pairs=new Map([...FR.qa,...FR.qb]);frChanged()};
+ const take=(m,k)=>qs=>{m.clear();qs.docs.forEach(x=>{const v=frNorm(x.id,x.data());if(v)m.set(x.id,v)});FR.got[k]=1;FR.err=false;FR.pairs=new Map([...FR.qa,...FR.qb]);{const un=[...FR.pairs.values()].reduce((t,p)=>t+frUnread(p),0);if(FR.snd0!=null&&un>FR.snd0)snd('msg');FR.snd0=un}frChanged()};
  FR.subs.push(db.collection('fp').where('a','==',SEAT).limit(150).onSnapshot(take(FR.qa,'a'),()=>{FR.err=true;frRender()}));
  FR.subs.push(db.collection('fp').where('b','==',SEAT).limit(150).onSnapshot(take(FR.qb,'b'),()=>{FR.err=true;frRender()}));
  db.collection('bk').where('by','==',SEAT).limit(200).get().then(qs=>{FR.bk=new Map(qs.docs.map(x=>{const d=x.data()||{};return [d.who,str12(d.nk)]}).filter(([w])=>okSeat(w)));frRender()}).catch(()=>{});
@@ -4585,12 +4661,12 @@ $('#board').addEventListener('keydown',e=>{
  else if(e.key==='Enter'){e.preventDefault();const b=document.querySelector('[data-act=dconfirm]');if(b&&!b.disabled)b.click()}
  if(UI.sel&&UI.sel.cells)$('#srsel').textContent='가운데 '+coord(UI.sel.r,UI.sel.c)+', '+UI.sel.cells.map((c,i)=>LBL[i]+' '+coord(c[0],c[1])).join(', ')+'.'+nearText(vs.board,UI.sel.cells);
 });
-function syncSettings(){$('#setBig').checked=document.body.classList.contains('big');$('#setVib').checked=lget('bo-vib')!=='0';$('#setSnd').checked=lget('bo-snd')==='1';$('#setHint').checked=hintOn();setTheme(document.documentElement.dataset.theme)}
+function syncSettings(){$('#setBig').checked=document.body.classList.contains('big');$('#setVib').checked=lget('bo-vib')!=='0';$('#setSnd').checked=lget('bo-snd')!=='0';$('#setHint').checked=hintOn();setTheme(document.documentElement.dataset.theme)}
 document.addEventListener('change',e=>{const id=e.target.id;
  if(id==='setBig'){document.body.classList.toggle('big',e.target.checked);lset('bo-big',e.target.checked?'1':'0')}
  else if(id==='setVib')lset('bo-vib',e.target.checked?'1':'0');
  else if(id==='setHint')lset('bo-hint',e.target.checked?'1':'0');
- else if(id==='setSnd'){lset('bo-snd',e.target.checked?'1':'0');if(e.target.checked)beep([660,880],.07)}});
+ else if(id==='setSnd'){lset('bo-snd',e.target.checked?'1':'0');if(e.target.checked)snd('toggleOn')}});
 $('#nick').addEventListener('input',()=>{$('#nickErr').textContent=''});
 $('#nick').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nickCommit()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#dlg').classList.contains('hide')){dialogClose();return}if(shOpen)closeSheet();else if(!$('#welcome').classList.contains('hide')){lset('bo-tut-done','1');$('#welcome').classList.add('hide')}else if(UI.review&&UI.view==='game')RV.close()}});
@@ -4964,7 +5040,7 @@ function emoCtx(){if(UI.view!=='game'||UI.review)return null;const vs=vstate();i
 const emoCol=(vs,id)=>id===vs.A?1:2;
 function emoWait(){const now=Date.now(),s=FX.emo.sent.filter(t=>now-t<EMO_WIN);FX.emo.sent=s;let w=0;if(s.length)w=Math.max(w,s[s.length-1]+EMO_GAP-now);if(s.length>=EMO_MAX)w=Math.max(w,s[s.length-EMO_MAX]+EMO_WIN-now);return Math.max(0,w)}
 // 말풍선: 보낸 사람 바(위 = 상대, 아래 = 나) 옆에 잠깐 떴다가 사라짐. 누를 수 없음(대국 조작을 막지 않게)
-function emoShow(id,k,fromMe){const c=emoCtx();if(!c||!EMO[k])return;const vs=c.vs;const mine=id===(vs.me||vs.A);if(!fromMe&&emoMuted())return;
+function emoShow(id,k,fromMe){const c=emoCtx();if(!c||!EMO[k])return;const vs=c.vs;const mine=id===(vs.me||vs.A);if(!fromMe&&emoMuted())return;if(!fromMe)snd('pop');
  const bar=$(mine?'#mebar':'#oppbar');if(!bar||!bar.getClientRects().length)return;const r=bar.getBoundingClientRect(),S=Math.max(64,Math.min(84,r.height*1.7));
  document.querySelectorAll('.emob[data-who="'+(mine?'me':'op')+'"]').forEach(e=>e.remove());
  const el=document.createElement('div');el.className='emob '+(mine?'me':'op')+(fxReduce()?' rm':'');el.dataset.who=mine?'me':'op';el.setAttribute('aria-hidden','true');el.innerHTML=emoSVG(k,emoCol(vs,id));
@@ -5079,7 +5155,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
   const v=$('#pzv'+i);if(v)v.textContent=PZ.bet[i];const sm=$('#pzsum'),sum=PZ.bet[0]+PZ.bet[1]+PZ.bet[2];if(sm){sm.textContent=`합 ${sum} / ${pz.P}${PTU}`;sm.classList.toggle('over',sum>pz.P)}}
  else if(a==='fxpzpick'){PZ.pick=i;renderPz();const f=$(`[data-act=fxpzpick][data-i="${i}"]`);if(f)f.focus({preventScroll:true})}
  else if(a==='fxpzgo'){const pz=pzMake(fxDate(Date.now()));if(!pz||pzState())return;const ans=pz.type==='pick'?PZ.pick:PZ.bet.slice();if(pz.type==='pick'&&ans<0)return;
-  const ok=pzJudge(pz,ans);pzRecord(ok,ans);/* ECO */try{ecoEv('pz')}catch(e){}renderPz();renderPzTile();say(ok?'정답':'아쉬워요. 풀이를 확인하세요');const r=$('.pzres');if(r){r.setAttribute('tabindex','-1');r.focus({preventScroll:false})}}
+  const ok=pzJudge(pz,ans);pzRecord(ok,ans);snd(ok?'correct':'wrong');/* ECO */try{ecoEv('pz')}catch(e){}renderPz();renderPzTile();say(ok?'정답':'아쉬워요. 풀이를 확인하세요');const r=$('.pzres');if(r){r.setAttribute('tabindex','-1');r.focus({preventScroll:false})}}
  else if(a==='fxemobtn')emoPick();
  else if(a==='fxemo'){emoSend(i)}
  else if(a==='fxrcx')recapClose();
@@ -5121,7 +5197,7 @@ function rwPaint(){const el=$('#rwBar');if(!el)return;const L=rwItems(),rd=L.fil
  const rest=[];
  const chips=rest.length?`<div class="rwchips">${rest.slice(0,4).map(x=>`<span class="rwchip ${esc(x.st)}">${esc(x.t)}${x.p?` <i class="num">${esc(x.p)}</i>`:''}</span>`).join('')}</div>`:'';
  const k=head+chips;if(el.dataset.k!==k){el.dataset.k=k;el.innerHTML=`<div class="rwh">${head}</div>${chips}`}}
-async function rwClaim(){if(RW.busy)return;RW.busy=true;rwPaint();for(const p of RW.prov.values())if(typeof p.claim==='function'){try{await p.claim()}catch(e){}}RW.busy=false;rwPaint()}
+async function rwClaim(){if(RW.busy)return;snd('reward');RW.busy=true;rwPaint();for(const p of RW.prov.values())if(typeof p.claim==='function'){try{await p.claim()}catch(e){}}RW.busy=false;rwPaint()}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act=rwclaim]');if(b)rwClaim()});
 // 배지가 늘 맞게: 승급·업적 조건(랭킹 불러오기 등)은 지갑 변화 없이 바뀌므로 로비에서 2초마다 다시 셈(로컬 값만, 바뀔 때만 DOM 갱신)
 setInterval(()=>{if(UI.view==='lobby'&&document.visibilityState==='visible')try{rwPaint()}catch(e){}},2000);
@@ -5410,9 +5486,9 @@ function ecoItemTap(id){const it=ecoItem(id);if(!it)return;const own=ecoHas(id),
  if(need>0){dialog(head+`<p class="edq">옥돌 <b class="num">${ecoFmt(need)}</b>개 더 필요해요</p>`,'확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
  dialog(head+(free?`<p class="edq">관리자 · 옥돌 없이 받기</p>`:`<p class="edq">옥돌 <b class="num">${ecoFmt(it.p)}</b>으로 살까요?</p>`),free?'받기':'사기',()=>ecoBuy(id))}
 function ecoBuy(id){const it=ECO_BY.get(id);if(!it)return;
- const free=isAdmin();ecoWrite('buy',n=>{if(n.own.includes(id)||(!free&&n.g<it.p))return false;if(!free)n.g-=it.p;n.own.push(id);n.eq[it.c]=id}).then(ok=>{if(ok){toast(`${it.n} · 장착했어요`);ecoLook();ecoSyncPub()}else toast('사지 못했어요 · 잠시 뒤 다시')})}
+ const free=isAdmin();ecoWrite('buy',n=>{if(n.own.includes(id)||(!free&&n.g<it.p))return false;if(!free)n.g-=it.p;n.own.push(id);n.eq[it.c]=id}).then(ok=>{snd(ok?'buy':'error');if(ok){toast(`${it.n} · 장착했어요`);ecoLook();ecoSyncPub()}else toast('사지 못했어요 · 잠시 뒤 다시')})}
 function ecoEquip(c,id){if(!ECO_SLOTS.includes(c))return;if(id&&!ecoHas(id))return;
- ecoWrite('equip',n=>{if((n.eq[c]||'')===id)return false;if(id)n.eq[c]=id;else delete n.eq[c]}).then(ok=>{if(ok){toast(id?'장착했어요':'기본으로 바꿨어요');ecoLook();ecoSyncPub();try{renderRank()}catch(e){}}})}
+ ecoWrite('equip',n=>{if((n.eq[c]||'')===id)return false;if(id)n.eq[c]=id;else delete n.eq[c]}).then(ok=>{if(ok){snd(id?'equip':'soft');toast(id?'장착했어요':'기본으로 바꿨어요');ecoLook();ecoSyncPub();try{renderRank()}catch(e){}}})}
 // 보상 탭(#rwdBody: 오늘 — 출석체크·오늘의 과제 / 업적 / 보상 기준) + 상점 탭 다시 그리기. 서버 읽기·쓰기 없음(지갑 값만 읽음)
 function ecoPaint(){try{const c=$('#rwdBody');if(c){const w=ECO.w,ms=ecoMis(),v=ecoProgGet(),dq=w&&w.d===ecoDay()?w.dq:[],t=ecoToday();c.dataset.d=String(ecoDay());
   const sr=ECO.sr,szc=sr&&sr.st==='ok'?`<div class="eszr">${emblem(fxTierOfIx(sr.t),36)}<span><b>시즌 ${sr.n} 보상</b><small>옥돌 ${ecoFmt(sr.amt)} · ${esc(ecoTierN(sr.t))} 테두리</small></span><button class="btn small" data-act="ecosz">받기</button></div>`:sr&&sr.st==='wait'?`<p class="note eszw">시즌 ${sr.n} 보상은 집계가 끝나면 받을 수 있어요</p>`:'';
@@ -5450,7 +5526,7 @@ function attStamp(){if(!ECO.ok||!ECO.w||attDone()||ECO.attBusy)return Promise.re
  let amt=0;return ecoWrite('att',n=>{const old=n.am===M&&Array.isArray(n.ad)?n.ad:[];if(old.includes(T.d))return false;amt=attAmt(old.length+1);n.am=M;n.ad=old.concat([T.d]);n.g=Math.min(ECO_MAX,n.g+amt)})
   .then(ok=>{ECO.attBusy=0;if(ok)attShow(T.d,amt);else ECO.attFail=Date.now();return ok})}
 // 이번 달 달력. at=오늘 막 찍은 날(도장 애니메이션), -1이면 보기만
-function attShow(at,amt){const T=attNow(),days=attDays(),first=new Date(Date.UTC(T.y,T.m-1,1)).getUTCDay(),dim=new Date(Date.UTC(T.y,T.m,0)).getUTCDate(),n=days.length;
+function attShow(at,amt){if(at>0){setTimeout(()=>snd('stamp'),250);setTimeout(()=>snd('reward'),650)}else snd('open');const T=attNow(),days=attDays(),first=new Date(Date.UTC(T.y,T.m-1,1)).getUTCDay(),dim=new Date(Date.UTC(T.y,T.m,0)).getUTCDate(),n=days.length;
  let cells='';for(let i=0;i<first;i++)cells+='<span class="acd e"></span>';
  for(let d=1;d<=dim;d++){const on=days.includes(d),k=on?days.indexOf(d)+1:0;cells+=`<span class="acd${on?' on':''}${d===at?' new':''}${d===T.d?' td':''}${d>T.d?' fu':''}"><i class="num">${d}</i>${on?`<b class="stp" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-9"/></svg></b>`:''}</span>`}
  const ms=ATT_MS.map(x=>`<span class="${n>=x?'ok':''}"><b class="num">${x}일</b> <span class="gdot" aria-hidden="true"></span>${attAmt(x)}</span>`).join('');
