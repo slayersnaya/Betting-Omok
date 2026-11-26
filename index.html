@@ -756,6 +756,7 @@ input,select,textarea{font-size:16px}
 .rkin .rklgem{display:flex;margin:2px auto 0;font-size:13px}
 .rkin .rklgb{display:flex;flex-direction:column;gap:8px;margin-top:10px}.rkin .rklgb .btn{width:100%;min-height:46px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;white-space:nowrap}.rkin .rklgb .btn svg{width:20px;height:20px;flex:none}.rkin .rkem svg{fill:none;stroke:currentColor;stroke-width:2}.rkin .rkgoo svg{background:#fff;border-radius:50%;padding:2px;width:22px;height:22px}
 .rkin .rklater-t{display:block;margin-top:10px;text-align:center;font-size:12px;font-weight:700;color:var(--mute);white-space:nowrap}#dlg .rklater{flex:1}
+.cntin .cntdemo{display:flex;justify-content:center;margin:12px 0 6px}.cntin .cntdemo .pp{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:99px;background:var(--soft);font-size:20px;font-weight:800;color:var(--mute)}.cntin .cntdemo small{font-size:12px;font-weight:800}.cntin .cntdemo .coin{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe9a8,#d9ad4a 60%,#9c7420);opacity:.8}.cntin ul li{white-space:nowrap}
 .rkin .rknk{display:block;margin-top:10px;padding:9px 12px;border-radius:12px;border:1.5px dashed color-mix(in srgb,var(--jade) 55%,transparent);color:var(--ink);font-size:13px;font-weight:800;text-align:center;white-space:nowrap}.rkin .rknote{display:block;font-size:13px;font-weight:700;color:var(--mute);white-space:nowrap}
 /* ===== 랭크 탭: 잠김 표시·시상대(1~3위)·순위 줄 ===== */
 .tabbar .tlk{display:none;position:absolute;top:7px;left:calc(50% + 5px);width:14px;height:14px;padding:2px;border-radius:50%;background:var(--raise);fill:none;stroke:var(--mute);stroke-width:2.6}
@@ -1867,7 +1868,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.07';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.08';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -4061,6 +4062,7 @@ function mmStart(){
  if(RANK_MAINT){dialog('랭크 게임은 지금 점검 중이에요.<br>점검이 끝나면 다시 열려요.','확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
  if(!rankOpen()){rankLockDlg();return}
  if(!rkNickAsk(mmStart))return;
+ if(!rkCntAsk())return;
  if(!UI.ready){toast('연결 확인 중');return}
  if(!db||!room){toast('랭크 게임 이용 불가');return}
  if(canWrite===false){toast('관전 전용 · 랭크 게임 불가');return}
@@ -4081,6 +4083,10 @@ function rankIntro(){if(!rankOpen())return;if(!(user&&user.firebase)&&window.__B
  dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}랭크 게임이 열렸어요</h3><span class="sub" style="display:block">비슷한 점수끼리 겨뤄 티어를 올려요</span><span class="tiers" style="display:grid">${tierRows()}</span><ul><li>처음 5판은 배치 · 시즌은 3달마다</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li></ul>${lg}${nk}</span>`,'랭크로 가기',toRank,'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH');lgFix()}
 const rkHasNick=()=>!!(lget('bo-nick')||($('#nick')||{}).value||'').trim();
 const rkNickLine=()=>rkHasNick()?'':'<span class="rknk">랭크 게임 전에 닉네임을 정해 주세요</span>';
+// 랭크 시작 전: 상대 칩 계산 도움 안내(골드까지). [확인]은 다음에도 보여 주고, [다시 보지 않기]는 이 기기에서 그만
+function rkCntAsk(){if(UI.cntPass){UI.cntPass=false;return true}if(!cntOn()||lget('bo-cntok'))return true;
+ dialog(`<span class="rkin cntin"><h3 id="rkinH">상대 칩 계산 도움</h3><span class="cntdemo" aria-hidden="true"><span class="pp q cnt"><span class="coin"></span><small>최대</small>14</span></span><ul><li>골드까지는 상대 칩 자리에 <b>최대치</b>가 보여요</li><li>지금까지 결과로 계산한 값이에요</li><li>실제 상대 칩은 이 숫자와 같거나 적어요</li><li>플래티넘부터는 사라져요 · 실력으로 승부!</li></ul></span>`,'확인',()=>{UI.cntPass=true;mmStart()},'다시 보지 않기');
+ const d=$('#dlg'),no=d.querySelector('[data-act=dlgno]');if(no)no.dataset.act='cntnever';d.setAttribute('aria-labelledby','rkinH');return false}
 // 랭크 매칭 전: 닉네임이 없으면 안내 창 → 닉네임 정하기(처음 한 번은 무료)
 function rkNickAsk(then){if(rkHasNick())return true;dialog(`<span class="rkin"><h3 id="rkinH">${IC.unlock}닉네임을 정해 주세요</h3><span class="sub" style="display:block">순위표와 상대 화면에 보이는 이름이에요</span><span class="rknote">처음 한 번은 무료로 정할 수 있어요</span></span>`,'닉네임 정하기',()=>{UI.afterNick=then||null;openSheet('nick')},'나중에');$('#dlg').setAttribute('aria-labelledby','rkinH');return false}
 // 랭크 게임 로그인 권유(구글·이메일 + 나중에 하기)
@@ -5256,6 +5262,7 @@ document.addEventListener('click',e=>{
  else if(a==='glink')googleLink();
  else if(a==='acc')openAcct();
  else if(a==='rkacc'){dialogClose();openAcct(()=>{goLobby();setTab('rank')})}
+ else if(a==='cntnever'){lset('bo-cntok','1');dialogClose();UI.cntPass=true;mmStart()}
  else if(a==='rkgoo'){dialogClose();googleLink().then(r=>{if(r==='linked'){goLobby();setTab('rank')}})}
  else if(a==='wemail'){$('#welcome').classList.add('hide');openAcct()}
  else if(a==='emlink')accRun('link');
