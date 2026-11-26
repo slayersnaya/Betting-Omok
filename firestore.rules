@@ -1,5 +1,6 @@
 rules_version = '2';
 // 베팅 오목 — Firestore 보안 규칙 (2026-11 강화판)
+// 2026-11 친구 기능: fp(친구·대화)·on(접속)·fc(친구 코드)·bk(차단)·rep(신고) 추가, nicks에 표시용 n
 // 핵심: ① 대국 기록은 '추가만'(이미 쓴 값 수정·삭제 금지) ② 시각은 서버 시각으로 검사
 //       ③ 랭크 결과는 실제 랭크 방·구글 계정에만 묶음 ④ 키·크기·시각 범위 제한
 service cloud.firestore {
@@ -105,6 +106,8 @@ service cloud.firestore {
 
       // 방장만. 시작 전 방, 끝난 친구 대국, 손님이 들어오지 않은 방, 하루 지난 방만 지울 수 있음
       // (랭크 방은 결과 확인에 쓰이므로 끝나도 남김 — 지는 쪽이 방을 지워 결과를 없애지 못하게)
+      // 관리자: 지난 시즌 정리(만든 지 하루 넘은 방)
+      allow delete: if isAdmin() && resource.data.created is int && resource.data.created < nowMs() - 86400000;
       allow delete: if signedIn() && resource.data.host == me()
         && (resource.data.status == 'open'
             // 끝난 친구 대국: 손님이 '한 판 더'를 눌렀을 때만(대국 중 done으로 바꾸고 지우는 것 방지). 나머지는 하루 뒤
@@ -149,13 +152,17 @@ service cloud.firestore {
           !exists(/databases/$(database)/documents/g/$(gid))
           || (gdoc(gid).status == 'open' && (seat == me() || gdoc(gid).host == me()))
           || (seat == me() && gdoc(gid).status == 'playing'
-              && (gdoc(gid).get('guest', null) == null || !exists(pPath(gid, gdoc(gid).guest)))));
+              && (gdoc(gid).get('guest', null) == null || !exists(pPath(gid, gdoc(gid).guest))))
+          // 관리자: 지난 시즌 정리(만든 지 하루 넘은 방의 참가 기록)
+          || (isAdmin() && gdoc(gid).get('created', nowMs()) < nowMs() - 86400000));
       }
     }
 
-    // ===== 랭크 결과: 구글 계정, 실제 랭크 방의 두 사람, 본인 이름으로 한 번, 수정·삭제 불가 =====
+    // ===== 랭크 결과: 구글 계정, 실제 랭크 방의 두 사람, 본인 이름으로 한 번, 수정 불가.
+    //       삭제는 관리자만: 지난 시즌 점수표(cfg/s{n}) 기록 뒤 지난 시즌 결과 정리(하루 넘은 것만) =====
     match /res/{id} {
       allow read: if signedIn();
+      allow delete: if isAdmin() && resource.data.ended is int && resource.data.ended < nowMs() - 86400000;
       allow create: if google()
         && request.resource.data.keys().hasOnly(['gid','A','B','na','nb','ended','w','by','why','turns'])
         && request.resource.data.by == me()
@@ -175,42 +182,55 @@ service cloud.firestore {
         && (request.resource.data.why != '상대 부재' || 'ab' in gdoc(request.resource.data.gid));
     }
 
-    // ===== AI 상대 랭크전 결과: 구글 계정, 본인 이름으로 한 판에 한 번, 수정·삭제 불가 =====
+    // ===== AI 상대 랭크전 결과: 구글 계정, 본인 이름으로 한 판에 한 번, 수정 불가. 삭제는 관리자만(위 res와 같음) =====
     match /bres/{id} {
       allow read: if signedIn();
+      allow delete: if isAdmin() && resource.data.ended is int && resource.data.ended < nowMs() - 86400000;
       allow create: if google()
-        && request.resource.data.keys().hasOnly(['by','gid','bot','na','w','turns','why','ended'])
+        && request.resource.data.keys().hasOnly(['by','gid','bot','na','w','turns','why','ended','st'])
         && request.resource.data.by == me()
         && request.resource.data.gid is string && request.resource.data.gid.matches('^k[0-9a-f]{8}$')
         && id == me() + '_' + request.resource.data.gid
-        && request.resource.data.bot is string && request.resource.data.bot.matches('^b[0-9]{2}$')
+        && request.resource.data.bot is string && request.resource.data.bot.matches('^b([0-9]{2}|1[0-9]{2})$')
         && nick(request.resource.data.na)
         && request.resource.data.w in ['me', 'bot', 'draw']
         && request.resource.data.turns is int && request.resource.data.turns >= 0 && request.resource.data.turns <= 400
         && request.resource.data.why is string && request.resource.data.why.size() <= 20
-        && nearNow(request.resource.data.ended, 600000, 120000);
+        && nearNow(request.resource.data.ended, 600000, 120000)
+        // st: 대국 시작 시각(점수 계산 시점). 올린 시각보다 앞, 7일 안
+        && (!('st' in request.resource.data) || (request.resource.data.st is int && request.resource.data.st <= request.resource.data.ended && request.resource.data.st > request.resource.data.ended - 604800000));
     }
 
-    // ===== 운영 설정(개발자 계정 마스터 시작 등): 누구나 읽기, 관리자만 쓰기 =====
+    // ===== 운영 설정: 누구나 읽기, 관리자만 쓰기 =====
+    //  cfg/season{n}: 시즌 n 최종 기록(관리자 폰이 시즌이 끝난 뒤 한 번 기록, 다른 폰은 읽기만). 다음 시즌 시작 점수와 (나중의) 시즌 보상이 같은 문서를 씀.
+    //   n: 시즌 번호, at: 기록 시각, v: 형식 번호, p: { 자리: [최종 티어 0~6, 최종 점수, 그 시즌 랭크 판 수, (뒤에 덧붙일 칸)] }
+    //   final·top·amt·rw: 재화·보상팀이 나중에 붙일 칸(지금은 안 씀). 고치기는 처음 기록 뒤 24시간 안에만(실수 대비). 문서 한도 1MiB
+    //  (개발자 계정 1750점 시작용 cfg/master는 없앰)
     match /cfg/{id} {
       allow read: if signedIn();
-      allow create, update: if isAdmin() && id == 'master'
-        && request.resource.data.keys().hasOnly(['seats','at'])
-        && request.resource.data.seats is list && request.resource.data.seats.size() <= 5
-        && me() in request.resource.data.seats
-        && request.resource.data.at is int;
+      function seasonDoc(id) { return id.matches('^season[0-9]{1,3}$')
+        && request.resource.data.keys().hasAll(['n','at','p'])
+        && request.resource.data.keys().hasOnly(['n','at','v','p','final','top','amt','rw'])
+        && request.resource.data.n is int && id == 'season' + string(request.resource.data.n)
+        && request.resource.data.at is int && request.resource.data.p is map; }
+      allow create: if isAdmin() && seasonDoc(id);
+      allow update: if isAdmin() && seasonDoc(id) && resource.data.at is int && resource.data.at > nowMs() - 86400000;
+      allow delete: if isAdmin();
     }
 
     // ===== 닉네임 주인 표시(중복 막기): 문서 id = 닉네임 코드. 비어 있거나 내 것일 때만 쓰기,
     //       게스트(구글 미연결)가 30일 넘게 안 쓴 닉네임은 다른 사람이 가져갈 수 있음. 지우기는 본인만 =====
     match /nicks/{id} {
       allow read: if signedIn();
+      // n: 검색 결과에 보여 줄 닉네임(12자 이하). 앱이 nickKey(n) == 문서 id 인지 다시 확인함
       allow create: if signedIn() && id.matches('^n[0-9a-f]{2,100}$')
-        && request.resource.data.keys().hasOnly(['by','g','at'])
+        && request.resource.data.keys().hasOnly(['by','g','at','n'])
+        && (!('n' in request.resource.data) || nick(request.resource.data.n))
         && request.resource.data.by == me() && request.resource.data.g == google()
         && nearNow(request.resource.data.at, 300000, 300000);
       allow update: if signedIn() && id.matches('^n[0-9a-f]{2,100}$')
-        && request.resource.data.keys().hasOnly(['by','g','at'])
+        && request.resource.data.keys().hasOnly(['by','g','at','n'])
+        && (!('n' in request.resource.data) || nick(request.resource.data.n))
         && request.resource.data.by == me() && request.resource.data.g == google()
         && nearNow(request.resource.data.at, 300000, 300000)
         && (resource.data.by == me() || (resource.data.g == false && resource.data.at < nowMs() - 2592000000));
@@ -245,19 +265,37 @@ service cloud.firestore {
     }
 
     // ===== 접속 중 표시: 본인 것만, 서버 시각 =====
+    // 대국 중 이모트(새 기능): presence.emo = {k: 그림 번호 0~11, t: 보낸 시각(폰 시계, ms)}. 대국 방(g-)에서만.
+    //  · 처음 만들 때는 못 넣음(지웠다 다시 만들어 간격 검사를 건너뛰지 못하게)
+    //  · 한 번 넣으면 빼지 못함(넣었다 뺐다 하며 간격 검사를 건너뛰지 못하게)
+    //  · 바뀔 때만 검사: 지난 이모트보다 6초 이상 뒤, 서버 시각 기준 10분 전 ~ 1분 뒤(폰 시계 오차 허용). 그대로면(20초 '살아 있음') 통과
+    function emoOk(e) {
+      return e is map && e.keys().hasOnly(['k','t']) && e.k is int && e.k >= 0 && e.k < 12 && e.t is int
+        && e.t > request.time.toMillis() - 600000 && e.t < request.time.toMillis() + 60000;
+    }
+    function emoChange(room) {
+      return (!('emo' in request.resource.data.presence) && !('emo' in resource.data.presence))
+        || ('emo' in request.resource.data.presence && 'emo' in resource.data.presence && resource.data.presence.emo == request.resource.data.presence.emo)
+        || (room.matches('^g-g[0-9a-f]{8}$') && emoOk(request.resource.data.presence.emo)
+            && (!('emo' in resource.data.presence) || request.resource.data.presence.emo.t >= resource.data.presence.emo.t + 6000));
+    }
     match /rt/{room}/p/{uid} {
       allow read: if signedIn();
-      allow create, update: if signedIn() && uid == me()
+      allow create: if presOk(room, uid) && !('emo' in request.resource.data.presence);
+      allow update: if presOk(room, uid) && resource.data.presence is map && emoChange(room);
+      allow delete: if signedIn() && uid == me();
+    }
+    function presOk(room, uid) {
+      return signedIn() && uid == me()
         && room.matches('^(lobby|g-g[0-9a-f]{8})$')
         && request.resource.data.keys().hasOnly(['presence','at'])
-        && request.resource.data.presence is map && request.resource.data.presence.keys().hasOnly(['seat','mm'])
+        && request.resource.data.presence is map && request.resource.data.presence.keys().hasOnly(['seat','mm','emo'])
         && (!('seat' in request.resource.data.presence) || seatId(request.resource.data.presence.seat))
         && (!('mm' in request.resource.data.presence)
             || (request.resource.data.presence.mm is map && request.resource.data.presence.mm.keys().hasOnly(['seat','r','since','nick'])
                 && seatId(request.resource.data.presence.mm.seat) && nick(request.resource.data.presence.mm.nick)
                 && request.resource.data.presence.mm.r is number && request.resource.data.presence.mm.get('since', 0) is int))
         && request.resource.data.at == request.time;
-      allow delete: if signedIn() && uid == me();
     }
 
     // ===== AI 대국 기록(닉네임 없음): 본인·관리자만 읽기, 본인 것만 한 번 저장, 본인만 삭제 =====
@@ -302,6 +340,142 @@ service cloud.firestore {
         && request.resource.data.g is int
         && nearNow(request.resource.data.ts, 31536000000, 300000);
       allow delete: if signedIn() && uid == me();
+    }
+
+    // ===== 친구 기능 (구글 계정 연결자만) =====
+    // fp/{a_b}: 두 사람(a < b)마다 한 문서 = 친구 관계 + 최근 대화 50개 + 읽음 위치 + 대국 초대
+    //   st: 'req'(요청) → 'ok'(친구) / 'no'(거절: 요청한 쪽은 7일 뒤에 다시 요청 가능)
+    //   m: [{i 번호, s 'a'|'b', t 글(1~200자), a 보낸 시각(ms), e 반응 대상 번호, k 대국 신청 기록 종류}] — 한 번에 하나씩 끝에 붙임(가득 차면 맨 앞이 빠짐)
+    //   q: 마지막 번호, ra/rb: 각자 읽은 번호, wa/wb: 각자 마지막으로 보낸 서버 시각(1초 안에 또 못 보냄)
+    //   ga/gb: a·b가 보낸 대국 신청 {gid, at, t 시간 설정} — 신청한 사람이 방장인 열린 방만, 한 번에 하나
+    function pid(x, y) { return x < y ? x + '_' + y : y + '_' + x; }
+    function fpPath(id) { return /databases/$(database)/documents/fp/$(id); }
+    function bkPath(x, y) { return /databases/$(database)/documents/bk/$(x + '_' + y); }
+    function onPath(u) { return /databases/$(database)/documents/on/$(u); }
+    function noBlock(x, y) { return !exists(bkPath(x, y)) && !exists(bkPath(y, x)); }
+    function otherOf(d) { return d.a == me() ? d.b : d.a; }
+    function sideOf(d) { return d.a == me() ? 'a' : 'b'; }
+    function oSideOf(d) { return d.a == me() ? 'b' : 'a'; }
+    // 상대가 '친구 요청 받지 않기'를 켜지 않았는지
+    function takesReq(u) { return !exists(onPath(u)) || get(onPath(u)).data.get('nr', false) != true; }
+    // 초대 링크 토큰(7일)이 맞으면 요청 없이 바로 친구
+    function tokenOk(u, tk) { return exists(onPath(u)) && get(onPath(u)).data.get('tk', '') == tk
+      && get(onPath(u)).data.get('tka', 0) > nowMs() - 604800000; }
+    function fmsg(v, s, i) { return v is map && v.keys().hasOnly(['i','s','t','a','e','k']) && v.keys().hasAll(['i','s','t','a'])
+      && (!('k' in v) || v.k in ['inv','acc','dec','can','exp'])
+      && v.i == i && v.s == s && v.t is string && v.t.size() >= 1 && v.t.size() <= 200 && nearNow(v.a, 120000, 120000)
+      && (!('e' in v) || (v.e is int && v.e >= 1 && v.e < i)); }
+    // 새 목록 = 지난 목록 + 하나(50개가 차 있으면 맨 앞 하나를 빼고). 내가 본 목록이 서버 것과 다르면 거부 → 앱이 다시 시도
+    function shifted(o, n) { return n is list
+      && ((o.size() < 50 && n.size() == o.size() + 1 && n[0:o.size()] == o)
+          || (o.size() >= 50 && n.size() == 50 && n[0:49] == o[o.size() - 49:o.size()])); }
+    function fpAccept(d, r, k, s) { return d.st == 'req' && d.by != me() && r.st == 'ok' && k.hasOnly(['st','sa','n' + s])
+      && r.sa == request.time && nick(r.get('n' + s, '')); }
+    function fpDecline(d, r, k) { return d.st == 'req' && d.by != me() && r.st == 'no' && k.hasOnly(['st','sa']) && r.sa == request.time; }
+    function fpAgain(d, r, k, s) { return d.st == 'no' && d.by == me() && d.sa < request.time - duration.value(7, 'd')
+      && r.st == 'req' && k.hasOnly(['st','sa','n' + s]) && r.sa == request.time && nick(r.get('n' + s, ''))
+      && takesReq(otherOf(d)) && noBlock(me(), otherOf(d)); }
+    function fpNick(r, k, s) { return k.hasOnly(['n' + s]) && nick(r.get('n' + s, '')); }
+    function fpMsg(d, r, k, s) { return d.st == 'ok' && k.hasOnly(['m','q','w' + s,'r' + s])
+      && r.q == d.q + 1 && r.get('r' + s, 0) == r.q
+      && r.get('w' + s, null) == request.time
+      && (!(('w' + s) in d) || request.time > d['w' + s] + duration.value(1, 's'))
+      && shifted(d.m, r.m) && fmsg(r.m[r.m.size() - 1], s, r.q); }
+    function fpRead(d, r, k, s) { return k.hasOnly(['r' + s]) && r['r' + s] is int
+      && r['r' + s] >= d.get('r' + s, 0) && r['r' + s] <= d.q; }
+    function fpInvite(d, r, k, s) { return d.st == 'ok' && k.hasOnly(['g' + s])
+      && (r.get('g' + s, null) == null
+          || (d.get('g' + s, null) == null
+              && r['g' + s] is map && r['g' + s].keys().hasOnly(['gid','at','t']) && gid8(r['g' + s].gid)
+              && (!('t' in r['g' + s]) || (r['g' + s].t is int && r['g' + s].t >= 0 && r['g' + s].t <= 3))
+              && nearNow(r['g' + s].at, 120000, 120000)
+              && gdoc(r['g' + s].gid).host == me() && gdoc(r['g' + s].gid).status == 'open')); }
+    function fpInvClear(r, k, o) { return k.hasOnly(['g' + o]) && r.get('g' + o, null) == null; }
+
+    match /fp/{id} {
+      allow read: if signedIn() && (resource.data.a == me() || resource.data.b == me());
+      allow create: if google()
+        && request.resource.data.keys().hasOnly(['a','b','by','st','at','sa','na','nb','tk','m','q','ra','rb'])
+        && request.resource.data.a is string && request.resource.data.b is string
+        && seatId(request.resource.data.a) && seatId(request.resource.data.b)
+        && request.resource.data.a < request.resource.data.b
+        && id == request.resource.data.a + '_' + request.resource.data.b
+        && (request.resource.data.a == me() || request.resource.data.b == me())
+        && request.resource.data.by == me()
+        && request.resource.data.at == request.time && request.resource.data.sa == request.time
+        && nick(request.resource.data.na) && nick(request.resource.data.nb)
+        && request.resource.data.m == [] && request.resource.data.q == 0
+        && request.resource.data.ra == 0 && request.resource.data.rb == 0
+        && noBlock(me(), otherOf(request.resource.data))
+        && ((request.resource.data.st == 'req' && !('tk' in request.resource.data) && takesReq(otherOf(request.resource.data)))
+            || (request.resource.data.st == 'ok' && request.resource.data.tk is string
+                && tokenOk(otherOf(request.resource.data), request.resource.data.tk)));
+      allow update: if google() && (resource.data.a == me() || resource.data.b == me())
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st','sa','na','nb','m','q','ra','rb','wa','wb','ga','gb'])
+        && (fpAccept(resource.data, request.resource.data, request.resource.data.diff(resource.data).affectedKeys(), sideOf(resource.data))
+            || fpDecline(resource.data, request.resource.data, request.resource.data.diff(resource.data).affectedKeys())
+            || fpAgain(resource.data, request.resource.data, request.resource.data.diff(resource.data).affectedKeys(), sideOf(resource.data))
+            || fpNick(request.resource.data, request.resource.data.diff(resource.data).affectedKeys(), sideOf(resource.data))
+            || fpMsg(resource.data, request.resource.data, request.resource.data.diff(resource.data).affectedKeys(), sideOf(resource.data))
+            || fpRead(resource.data, request.resource.data, request.resource.data.diff(resource.data).affectedKeys(), sideOf(resource.data))
+            || fpInvite(resource.data, request.resource.data, request.resource.data.diff(resource.data).affectedKeys(), sideOf(resource.data))
+            || fpInvClear(request.resource.data, request.resource.data.diff(resource.data).affectedKeys(), oSideOf(resource.data)));
+      // 친구 끊기(둘 다), 보낸 요청 취소, 거절한 쪽이 거절 기록 지우기, 차단한 사람은 언제든
+      // (요청을 받은 쪽은 지우지 않고 '거절'로 남김 → 요청한 쪽이 곧바로 다시 보내 괴롭히지 못하게)
+      allow delete: if signedIn() && (resource.data.a == me() || resource.data.b == me())
+        && (resource.data.st == 'ok' || (resource.data.st == 'req' && resource.data.by == me())
+            || (resource.data.st == 'no' && resource.data.by != me()) || exists(bkPath(me(), otherOf(resource.data))));
+    }
+
+    // on/{uid}: 접속 상태(앱을 열 때·10분마다·닫을 때). 본인과 친구만 읽음(모르는 사람이 접속 시각을 보지 못하게)
+    //   st: on 접속 · off 나감 · g 일반 대국 중 · r 랭크전 중 / fc 친구 코드 / tk·tka 초대 링크 토큰 / nr 요청 안 받기 / hs 상태 숨김
+    function onFields(r) { return r.keys().hasOnly(['at','st','fc','tk','tka','nr','hs'])
+      && r.at == request.time && r.st in ['on','off','g','r']
+      && (!('tk' in r) || (r.tk is string && r.tk.matches('^[0-9a-f]{16}$')))
+      && (!('nr' in r) || r.nr is bool) && (!('hs' in r) || r.hs is bool); }
+    function fcMine(c) { return c is string && c.matches('^[A-HJ-NP-Z2-9]{8}$')
+      && get(/databases/$(database)/documents/fc/$(c)).data.by == me(); }
+    match /on/{uid} {
+      allow read: if signedIn() && (uid == me() || get(fpPath(pid(uid, me()))).data.st == 'ok');
+      allow create: if google() && uid == me() && onFields(request.resource.data)
+        && (!('fc' in request.resource.data) || fcMine(request.resource.data.fc))
+        && (!('tka' in request.resource.data) || nearNow(request.resource.data.tka, 120000, 120000));
+      allow update: if google() && uid == me() && onFields(request.resource.data)
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['fc']) || fcMine(request.resource.data.fc))
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['tka']) || nearNow(request.resource.data.tka, 120000, 120000));
+      allow delete: if signedIn() && uid == me();
+    }
+
+    // fc/{코드}: 친구 코드 → 주인 uid(+ 보여 줄 닉네임 n). 코드는 먼저 만든 사람 것, 주인만 닉네임을 고침
+    match /fc/{code} {
+      allow read: if signedIn();
+      allow create: if google() && code.matches('^[A-HJ-NP-Z2-9]{8}$')
+        && request.resource.data.keys().hasOnly(['by','n']) && request.resource.data.by == me()
+        && (!('n' in request.resource.data) || nick(request.resource.data.n));
+      allow update: if google() && resource.data.by == me() && request.resource.data.by == me()
+        && request.resource.data.keys().hasOnly(['by','n']) && nick(request.resource.data.get('n', ''));
+      allow delete: if signedIn() && resource.data.by == me();
+    }
+
+    // bk/{나_상대}: 차단. 차단한 사람만 보고 지움(차단당한 사람은 모름). 친구 요청·초대·대화는 fp 규칙이 막음
+    match /bk/{id} {
+      allow read, delete: if signedIn() && resource.data.by == me();
+      allow create: if google() && request.resource.data.keys().hasOnly(['by','who','nk','at'])
+        && request.resource.data.by == me() && seatId(request.resource.data.who) && request.resource.data.who != me()
+        && id == me() + '_' + request.resource.data.who
+        && nick(request.resource.data.nk) && request.resource.data.at == request.time;
+    }
+
+    // rep/{나_시각}: 신고. 관리자만 읽고 지움. 대화 사본(최근 20개)은 2000자까지
+    match /rep/{id} {
+      allow read, delete: if isAdmin();
+      allow create: if signedIn() && request.resource.data.keys().hasOnly(['by','who','nk','why','txt','at'])
+        && request.resource.data.by == me() && id.matches('^' + me() + '_[0-9]{10,15}$')
+        && request.resource.data.who is string && request.resource.data.who.size() <= 40 && request.resource.data.who != me()
+        && nick(request.resource.data.nk)
+        && request.resource.data.why in ['abuse','spam','nick','etc']
+        && request.resource.data.txt is string && request.resource.data.txt.size() <= 2000
+        && request.resource.data.at == request.time;
     }
   }
 }

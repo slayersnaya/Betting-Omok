@@ -4,7 +4,7 @@
 const V='https://www.gstatic.com/firebasejs/10.12.2/';
 const cfg=window.BO_FIREBASE_CONFIG,FB=window.__BO_FB;
 try{
- const [{initializeApp},{getAuth,signInAnonymously,onAuthStateChanged,GoogleAuthProvider,linkWithPopup,signInWithCredential,reauthenticateWithPopup,EmailAuthProvider,linkWithCredential,signInWithEmailAndPassword,sendPasswordResetEmail,reauthenticateWithCredential},{initializeFirestore,doc,collection,getDoc,getDocs,setDoc,deleteDoc,onSnapshot,query,orderBy,limit,where,serverTimestamp}]=
+ const [{initializeApp},{getAuth,signInAnonymously,onAuthStateChanged,GoogleAuthProvider,linkWithPopup,signInWithCredential,reauthenticateWithPopup,EmailAuthProvider,linkWithCredential,signInWithEmailAndPassword,sendPasswordResetEmail,reauthenticateWithCredential},{initializeFirestore,doc,collection,getDoc,getDocs,setDoc,deleteDoc,onSnapshot,query,orderBy,limit,where,serverTimestamp,documentId}]=
   await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-auth.js'),import(V+'firebase-firestore.js')]);
  const app=initializeApp(cfg),auth=getAuth(app),fs=initializeFirestore(app,{experimentalForceLongPolling:true,ignoreUndefinedProperties:true});
  // 로그인: 처음이면 익명(게스트)으로 바로 시작
@@ -37,9 +37,10 @@ try{
   // 메타데이터 변화(캐시 → 서버 확인)도 받아야 '서버에서 확인됨' 신호를 놓치지 않음
   onSnapshot:(cb,err)=>onSnapshot(ref,MD,s=>cb(snapDoc(s)),e=>err&&err(e))}};
  const C=(path,cons=[])=>{const q=()=>query(collection(fs,path),...cons);return{
-  orderBy:(f,dir)=>C(path,[...cons,orderBy(f,dir||'asc')]),
+  // '__name__' = 문서 id(친구 검색: 닉네임 코드 앞부분 범위)
+  orderBy:(f,dir)=>C(path,[...cons,orderBy(f==='__name__'&&documentId?documentId():f,dir||'asc')]),
   limit:n=>C(path,[...cons,limit(n)]),
-  where:(a,o,b)=>C(path,[...cons,where(a,o,b)]),
+  where:(a,o,b)=>C(path,[...cons,where(a==='__name__'&&documentId?documentId():a,o,b)]),
   doc:id=>D(path+'/'+id),
   get:()=>wrapErr(getDocs(q())).then(qs=>({docs:qs.docs.map(snapDoc),metadata:{fromCache:qs.metadata.fromCache}})),
   onSnapshot:(cb,err)=>onSnapshot(q(),MD,qs=>cb({docs:qs.docs.map(snapDoc),metadata:{fromCache:qs.metadata.fromCache}}),e=>err&&err(e))}};
@@ -48,12 +49,13 @@ try{
  // 접속 표시(presence): rt/{방}/p/{uid}에 20초마다 '살아 있음'을 쓰고, 60초 안에 쓴 사람만 접속 중으로 봄
  const rooms=new Set();
  const Room=name=>{let pres={},hb=null,un=null,tick=null,last=[];const ref=doc(fs,`rt/${name}/p/${uid}`);
-  const beat=()=>setDoc(ref,{presence:pres,at:serverTimestamp()}).catch(()=>{});
+  // (새 기능팀) send: 쓰기 결과를 돌려줌 → 이모트 쓰기가 규칙에 막히면 게임 코드가 알고 되돌릴 수 있음(되돌리지 않으면 20초 '살아 있음'까지 계속 실패)
+  const send=()=>wrapErr(setDoc(ref,{presence:pres,at:serverTimestamp()})),beat=()=>send().catch(()=>{});
   const r={
    presence(p){pres=Object.assign({},pres,p);for(const k in pres)if(pres[k]==null)delete pres[k];
     // 표시할 것이 없으면 '살아 있음' 쓰기를 멈추고 문서도 지움(매칭 취소 후 20초마다 쓰던 문제)
     if(!Object.keys(pres).length){clearInterval(hb);hb=null;rooms.delete(r);return deleteDoc(ref).catch(()=>{})}
-    beat();if(!hb)hb=setInterval(beat,20000);rooms.add(r);return Promise.resolve()},
+    const w=send();w.catch(()=>{});if(!hb)hb=setInterval(beat,20000);rooms.add(r);return w},
    // 접속 판정은 '내 폰이 그 사람의 갱신을 받은 시각' 기준(폰마다 시계가 달라도 됨)
    onPeers(cb){const seen={};const emit=()=>{const now=Date.now();cb({peers:last.filter(p=>p.you||now-(seen[p.id]?seen[p.id].t:0)<60000)})};
     un=onSnapshot(collection(fs,`rt/${name}/p`),qs=>{const now=Date.now();last=qs.docs.map(d=>{const v=d.data()||{},at=+v.at||0,o=seen[d.id];
