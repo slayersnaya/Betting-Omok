@@ -577,7 +577,7 @@ service cloud.firestore {
       && (!exists(onPath(u)) || (get(onPath(u)).data.get('sp', true) != false && get(onPath(u)).data.get('hs', false) != true)); }
     // 중계 한 판 기록(공개 정보만): 판의 돌·턴별 세 칸과 칸 주인·차례·끝난 결과. 베팅·남은 칩·봉인 값 칸은 아예 없음
     //   k: a AI 대전(실시간) · r 랭크(2턴 늦게, 끝나면 전체) / h: 턴 기록 문자열(턴당 10자) / me: 주인이 흑(A)·백(B) 중 어느 쪽
-    function lvOk(d) { return d.keys().hasOnly(['v','id','k','at','na','nb','me','al','t','ph','sun','c','h','w','why'])
+    function lvOk(d) { return d.keys().hasOnly(['v','id','k','at','na','nb','me','al','t','ph','sun','c','h','b','w','why'])
       && d.keys().hasAll(['v','id','k','at','na','nb','me','t','ph','h'])
       && d.v == 1 && d.id is string && d.id.matches('^[0-9a-f]{8}$') && d.k in ['a','r'] && d.at == request.time
       && nick(d.na) && nick(d.nb) && d.me in ['A','B'] && d.t is int && d.t >= 0 && d.t <= 400
@@ -586,6 +586,7 @@ service cloud.firestore {
       // 랭크 중계는 지금 턴 정보(선·세 칸)를 싣지 않음
       && (!('sun' in d) || (d.k == 'a' && d.sun in ['A','B']))
       && (!('c' in d) || (d.k == 'a' && d.c is string && d.c.matches('^[a-s]{6}$')))
+      && (!('b' in d) || (d.b is string && d.b.size() <= 8000 && d.b.matches('^[0-9.,-]*$')))
       && (!('w' in d) || d.w in ['A','B','D','']) && (!('why' in d) || (d.why is string && d.why.size() <= 20)); }
     match /lv/{u} {
       allow read: if signedIn() && (u == me() || watchOk(u));

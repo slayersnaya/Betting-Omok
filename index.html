@@ -979,6 +979,9 @@ body.palguest #palFind,body.palguest #palReq,body.palguest #palList,body.palgues
 .pfnote{text-align:center;margin-top:10px}
 /* 대화 */
 .chatsh{display:flex;flex-direction:column;height:86vh;height:86dvh;overflow:hidden}
+/* 관전: 칸마다 흑·백 칩(이긴 쪽 굵게) */
+.strip.wbs>span{gap:4px}.wbp{display:inline-flex;align-items:center;gap:3px;white-space:nowrap;font-size:13px}.wbp b{font-weight:600;color:var(--mute);min-width:1ch;text-align:center}.wbp b.on{font-weight:900;color:var(--ink)}.wbp i{font-style:normal;color:var(--mute)}.wbp .mini{width:11px;height:11px}
+.wlog{margin-top:8px;font-size:13px}.wlog summary{cursor:pointer;font-weight:800;color:var(--mute);padding:6px 2px;list-style:none}.wlog summary::-webkit-details-marker{display:none}.wlog summary::after{content:' ▾'}.wlog[open] summary::after{content:' ▴'}.wlog ol{list-style:none;margin:0;padding:0;display:grid;gap:4px;max-height:200px;overflow-y:auto}.wlog li{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;padding:5px 8px;border-radius:10px;background:var(--soft);overflow-x:auto}.wlog li>span{display:inline-flex;align-items:center;gap:4px}.wlog .tn{font-weight:800;color:var(--mute);min-width:32px}
 /* 폰 키보드가 올라오면 시트를 키보드 위 보이는 영역 안으로(머리글이 위로 밀려 안 보이던 문제) */
 @media (max-width:599px){html.kbon .lsheet{bottom:var(--kb,0px);max-height:calc(var(--vvh,86dvh) - 8px)}html.kbon .chatsh{height:calc(var(--vvh,86dvh) - 8px)}}
 .chatsh>*+*:not(.shh){margin-top:0}
@@ -1706,7 +1709,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.2207';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.2217';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2848,8 +2851,15 @@ function updateBetSum(pts){
  {const c=document.querySelector('.bcol');if(c&&tg)c.classList.toggle('tgo',UI.bet[tg[0]]!==tg[1]);if(btn&&tg){const t=UI.bet[tg[0]]===tg[1]?'봉인':UI.bet[tg[0]]>tg[1]?'A는 정확히 3':'A에 3 걸기';if(btn.dataset.t!==t){btn.dataset.t=t;btn.innerHTML=(t==='봉인'?IC.lock:'')+t}}}
  const w=$('#bwhy');if(w)w.textContent=ok?'':tg&&validBets(UI.bet,pts)?'':s>pts?ptT(`${s-pts}{P} 초과`):ptT('칸마다 1{P} 이상');
 }
-function lastLine(vs){const h=vs&&vs.last;if(!h)return'';const me=vs.me,bt=me&&h.bets[me];
+function lastLine(vs){const h=vs&&vs.last;if(!h)return'';const me=vs.me,bt=me&&h.bets[me],two=!me&&wBets(vs,h);
+ if(two)return `<div class="strip wbs"><span class="tn">${h.t}턴</span>${h.cells.map((c,i)=>`<span><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span>${wBetPair(vs,h,i)}</span>`).join('')}</div>`+wLog(vs);
  return `<div class="strip"><span class="tn">${h.t}턴</span>${h.cells.map((c,i)=>`<span><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span><span class="mini st ${h.win[i]===vs.A?'k':'w'}"></span>${bt?`<small>내 ${bt[i]}</small>`:me?'':`<small>${esc(vs.names[h.win[i]]||'')}</small>`}</span>`).join('')}</div>`}
+// 관전: 두 사람 칩을 흑·백 순서로, 이긴 쪽 숫자를 굵게
+const wBets=(vs,h)=>{const a=h&&h.bets&&h.bets[vs.A],b=h&&h.bets&&h.bets[vs.B];return Array.isArray(a)&&Array.isArray(b)&&a.length===3&&b.length===3};
+const wBetPair=(vs,h,i)=>{const a=h.bets[vs.A][i],b=h.bets[vs.B][i],wa=h.win[i]===vs.A;return `<span class="wbp"><span class="mini st k"></span><b class="${wa?'on':''}">${a}</b><i>:</i><b class="${wa?'':'on'}">${b}</b><span class="mini st w"></span></span>`};
+// 관전: 지난 턴들(최근 순, 최대 12턴)
+function wLog(vs){const H=vs.hist.filter(h=>wBets(vs,h)).slice(-13,-1).reverse();if(!H.length)return'';
+ return `<details class="wlog"><summary>지난 턴 보기</summary><ol>${H.map(h=>`<li><span class="tn">${h.t}턴</span>${h.cells.map((c,i)=>`<span><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span>${wBetPair(vs,h,i)}</span>`).join('')}</li>`).join('')}</ol></details>`}
 const waitBox=(t,extra)=>`<div class="wait"><span class="dots"><i></i><i></i><i></i></span><span>${t}</span></div>${extra||''}`;
 function designPanel(vs,title){
  const sel=UI.sel;
@@ -4664,16 +4674,19 @@ const lvAllow=()=>!!(frOk()&&FR.mineLoaded&&FR.mine&&FR.mine.sp!==false&&!FR.min
 function lvSnap(c){let o;
  if(c.src==='L'){const s=L.s;if(!s.t)return null;
   o={id:s.id,na:myNick(),nb:s.bot?str12(s.bot.nick):AI_LEVELS[s.ai].name+' AI',me:'A',al:s.bot?'':s.ai,t:s.t,ph:s.phase,sun:s.sun,cells:s.cells,
-   H:s.hist.map(h=>h.sun+h.cells.map(lvCell).join('')+h.win.join('')),w:s.winner,why:s.reason}}
+   H:s.hist.map(h=>h.sun+h.cells.map(lvCell).join('')+h.win.join('')),Bt:s.hist.map(h=>lvBet(h.bets.A,h.bets.B)),w:s.winner,why:s.reason}}
  else{const m=G.meta,st=G.st,A=m.host,ab=u=>u===A?'A':'B';if(!st.t&&!c.over)return null;
   const nk=u=>str12((G.docs[u]||{}).nick)||str12(u===A?m.hostNick:m.guestNick)||'플레이어';
   o={id:sha256('lv|'+G.gid).slice(0,8),na:nk(A),nb:nk(m.guest),me:ab(SEAT),t:st.t,ph:st.phase,sun:st.sun?ab(st.sun):'',cells:st.cells,
-   H:st.hist.map(h=>ab(h.sun)+h.cells.map(lvCell).join('')+h.win.map(ab).join('')),w:st.winner?ab(st.winner):null,why:st.reason}}
+   H:st.hist.map(h=>ab(h.sun)+h.cells.map(lvCell).join('')+h.win.map(ab).join('')),Bt:st.hist.map(h=>lvBet(h.bets[A],h.bets[m.guest])),w:st.winner?ab(st.winner):null,why:st.reason}}
  const d={v:1,id:/^[0-9a-f]{8}$/.test(o.id)?o.id:sha256(String(o.id)).slice(0,8),k:c.k,na:str12(o.na)||'플레이어',nb:str12(o.nb)||'플레이어',me:o.me,t:Math.max(0,Math.min(400,o.t|0))};let H=o.H;
  if(c.over){d.ph='over';d.w=o.w==='A'||o.w==='B'?o.w:'D';d.why=String(o.why||'').slice(0,20)}
  else if(c.k==='r'){d.ph='live';H=H.slice(0,Math.max(0,H.length-LV_D))}
  else{d.ph=o.ph==='bet'?'bet':'designate';if(o.sun==='A'||o.sun==='B')d.sun=o.sun;if(o.ph==='bet'&&o.cells)d.c=o.cells.map(lvCell).join('')}
- if(c.k==='a')d.al=o.al||'';d.h=H.join(',');return d}
+ const Bt=(o.Bt||[]).slice(0,H.length);
+ if(c.k==='a')d.al=o.al||'';d.h=H.join(',');if(Bt.length===H.length&&Bt.every(Boolean))d.b=Bt.join(',');return d}
+// 한 턴 베팅: '1.2.3-4.0.1'(A-B). 값이 이상하면 빈 글자(그 판은 베팅 표시 안 함)
+const lvBet=(a,b)=>{const ok=x=>Array.isArray(x)&&x.length===3&&x.every(v=>Number.isInteger(v)&&v>=0&&v<1000);return ok(a)&&ok(b)?a.join('.')+'-'+b.join('.'):''};
 // 두는 사람 쪽: 1초마다(frTick) 관전자 목록 구독·중계 쓰기·상대에게 관전 수 알림
 function lvTick(){const c=lvCtx(),want=!!(c&&lvAllow()&&db);
  if(want&&!LV.unsub&&Date.now()-LV.err>30e3){LV.docs=new Map();LV.unsub=db.collection('lv/'+SEAT+'/w').onSnapshot(qs=>{const m=new Map();qs.docs.forEach(x=>{const v=x.data()||{};if(okSeat(x.id)&&x.id!==SEAT)m.set(x.id,+v.at||0)});LV.docs=m;lvCount()},()=>{LV.err=Date.now();lvOff()})}
@@ -4716,11 +4729,12 @@ function wRelay(u,k){if(!db)return;leaveGame();UI.mode='online';UI.review=false;
 function lvParse(d){if(!d||typeof d!=='object'||d.v!==1||!['a','r'].includes(d.k)||typeof d.h!=='string'||d.h.length>4400||!/^[0-9a-f]{8}$/.test(d.id||''))return null;
  const H=d.h?d.h.split(','):[];if(!H.every(x=>/^[AB][a-s]{6}[AB]{3}$/.test(x)))return null;
  return{id:d.id,k:d.k,at:+d.at||0,na:str12(d.na)||'흑',nb:str12(d.nb)||'백',me:d.me==='B'?'B':'A',t:int(d.t),ph:['designate','bet','live','over'].includes(d.ph)?d.ph:'live',sun:d.sun==='B'?'B':d.sun==='A'?'A':'',
-  c:typeof d.c==='string'&&/^[a-s]{6}$/.test(d.c)?d.c:'',H,w:['A','B'].includes(d.w)?d.w:null,why:str12(String(d.why||'')),al:typeof d.al==='string'?d.al:''}}
+  c:typeof d.c==='string'&&/^[a-s]{6}$/.test(d.c)?d.c:'',H,Bt:lvBets(d.b,H.length),w:['A','B'].includes(d.w)?d.w:null,why:str12(String(d.why||'')),al:typeof d.al==='string'?d.al:''}}
 const lvXY=s=>[LVC.indexOf(s[0]),LVC.indexOf(s[1])];
+function lvBets(b,n){if(typeof b!=='string'||b.length>8000||!b)return null;const T=b.split(',');if(T.length!==n||!T.every(x=>/^\d{1,3}\.\d{1,3}\.\d{1,3}-\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(x)))return null;return T.map(x=>x.split('-').map(y=>y.split('.').map(Number)))}
 function lvState(d){const bd=emptyBoard(),hist=[];
  for(let i=0;i<d.H.length;i++){const x=d.H[i],sun=x[0],hu=sun==='A'?'B':'A',cells=[lvXY(x.slice(1,3)),lvXY(x.slice(3,5)),lvXY(x.slice(5,7))],win=[x[7],x[8],x[9]];
-  cells.forEach(([r,c],j)=>{bd[r][c]=win[j]==='A'?1:2});hist.push({t:i+1,sun,hu,cells,win,bets:{},auto:{}})}
+  cells.forEach(([r,c],j)=>{bd[r][c]=win[j]==='A'?1:2});hist.push({t:i+1,sun,hu,cells,win,bets:d.Bt&&d.Bt[i]?{A:d.Bt[i][0],B:d.Bt[i][1]}:{},auto:{}})}
  const over=d.ph==='over',live=d.ph==='live',ph=over?'over':live?'live':d.ph,cells=ph==='bet'&&d.c?[lvXY(d.c.slice(0,2)),lvXY(d.c.slice(2,4)),lvXY(d.c.slice(4,6))]:null;
  const sun=!over&&!live?d.sun||null:null;
  return{phase:ph,t:live?hist.length:over?hist.length:Math.max(d.t,hist.length+1),board:bd,pts:{},warn:{A:0,B:0},hist,A:'A',B:'B',last:hist[hist.length-1]||null,
@@ -4784,7 +4798,11 @@ document.addEventListener('change',e=>{const id=e.target&&e.target.id;if(id!=='f
 {const vv=window.visualViewport;if(vv){const R=document.documentElement;let raf=0;const fit=()=>{raf=0;const kb=Math.max(0,Math.round(innerHeight-vv.height-vv.offsetTop)),on=innerWidth<600&&(kb>60||innerHeight-vv.height>60);
  R.classList.toggle('kbon',on);if(on){R.style.setProperty('--kb',kb+'px');R.style.setProperty('--vvh',Math.round(vv.height)+'px');if(vv.offsetTop>0&&!document.querySelector('.lsheet:not(.hide) input:focus,.lsheet:not(.hide) textarea:focus'))scrollTo(0,0);const l=$('#chLog');if(l&&!$('#sh-chat').classList.contains('hide'))l.scrollTop=l.scrollHeight}else{R.style.removeProperty('--kb');R.style.removeProperty('--vvh')}};
  const q=()=>{if(!raf)raf=requestAnimationFrame(fit)};vv.addEventListener('resize',q);vv.addEventListener('scroll',q)}}
-{const f=$('#chForm');if(f)f.addEventListener('submit',e=>{e.preventDefault();const i=$('#chIn');if(frSend(i.value))i.value=''})}
+{const f=$('#chForm');if(f)f.addEventListener('submit',e=>{e.preventDefault();const i=$('#chIn');if(frSend(i.value))i.value='';try{i.focus({preventScroll:true})}catch(x){}})}
+// 보내기 버튼을 눌러도 입력칸 포커스 유지(폰 키보드가 내려가지 않게)
+{const b=$('#chSend');if(b){const keep=e=>{if(document.activeElement===$('#chIn'))e.preventDefault()};b.addEventListener('mousedown',keep);b.addEventListener('pointerdown',keep);b.addEventListener('touchstart',e=>{if(document.activeElement===$('#chIn')){e.preventDefault();b.closest('form').requestSubmit()}},{passive:false})}}
+// 대화 내용: 맨 아래를 보고 있었으면 창 크기가 바뀌어도(키보드 올라옴) 맨 아래 유지
+{const l=$('#chLog');if(l&&window.ResizeObserver){let atB=true;l.addEventListener('scroll',()=>{atB=l.scrollHeight-l.scrollTop-l.clientHeight<40},{passive:true});new ResizeObserver(()=>{if(atB)l.scrollTop=l.scrollHeight}).observe(l)}}
 window.addEventListener('hashchange',()=>{if(/^#f-/.test(location.hash))try{frHash()}catch(e){}});
 
 // ===== 이벤트 =====

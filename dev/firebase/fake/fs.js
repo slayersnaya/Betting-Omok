@@ -274,11 +274,11 @@ export const documentId=()=>'__name__';
  try{const x=new XMLHttpRequest();x.open('GET','firestore.rules',false);x.send();SPEC=x.status===200&&x.responseText.includes('function watchOk(')}catch(e){SPEC=false}
  const on=()=>SPEC===true,pidOf=(x,y)=>x<y?x+'_'+y:y+'_'+x;
  const watchOk=u=>{const me=uid();if(typeof u!=='string'||!u||u===me)return false;const f=store['fp/'+pidOf(u,me)];if(!f||f.st!=='ok')return false;const o=store['on/'+u];return !o||(o.sp!==false&&o.hs!==true)};
- const lvOk=d=>{const K=['v','id','k','at','na','nb','me','al','t','ph','sun','c','h','w','why'];
+ const lvOk=d=>{const K=['v','id','k','at','na','nb','me','al','t','ph','sun','c','h','b','w','why'];
   return !!d&&only(Object.keys(d),K)&&['v','id','k','at','na','nb','me','t','ph','h'].every(k=>k in d)&&d.v===1&&typeof d.id==='string'&&/^[0-9a-f]{8}$/.test(d.id)&&['a','r'].includes(d.k)
    &&nick(d.na)&&nick(d.nb)&&['A','B'].includes(d.me)&&int(d.t)&&d.t>=0&&d.t<=400&&['designate','bet','live','over'].includes(d.ph)&&typeof d.h==='string'&&d.h.length<=4400&&/^[A-Ba-s,]*$/.test(d.h)
    &&(!('al' in d)||(d.k==='a'&&typeof d.al==='string'&&/^[a-z]{0,12}$/.test(d.al)))&&(!('sun' in d)||(d.k==='a'&&['A','B'].includes(d.sun)))
-   &&(!('c' in d)||(d.k==='a'&&typeof d.c==='string'&&/^[a-s]{6}$/.test(d.c)))&&(!('w' in d)||['A','B','D',''].includes(d.w))&&(!('why' in d)||(typeof d.why==='string'&&d.why.length<=20))};
+   &&(!('c' in d)||(d.k==='a'&&typeof d.c==='string'&&/^[a-s]{6}$/.test(d.c)))&&(!('b' in d)||(typeof d.b==='string'&&d.b.length<=8000&&/^[0-9.,-]*$/.test(d.b)))&&(!('w' in d)||['A','B','D',''].includes(d.w))&&(!('why' in d)||(typeof d.why==='string'&&d.why.length<=20))};
  window.__lvWrites=0;window.__lvwWrites=0;window.__onWrites=0;
  check=function(op,p,raw,merge){if(!on())return _check3(op,p,raw,merge);const seg=p.split('/'),me=uid(),cur=store[p];
   if(seg[0]==='lv'){if(!me)deny(op+' '+p);const G2=google();
