@@ -1695,7 +1695,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='261126.2022';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='261126.2023';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2719,9 +2719,14 @@ const SND={
  tierDown(){sTone(523,.25,{v:.04});sTone(392,.35,{v:.04,at:.18})},
  page(){sNoise(.05,{f:2500,to:1200,q:1,v:.03})},
 };
+// 파일 효과음(Suno 등): 있으면 합성음 대신 재생. 첫 터치 뒤 한 번 내려받아 둠. 없거나 못 받으면 합성음 그대로
+const SND_FILES={win:'sounds/jingle_win.mp3',lose:'sounds/jingle_lose.mp3',tierUp:'sounds/jingle_tierup.mp3'};
+const SND_FVOL={win:.5,lose:.45,tierUp:.5};const SNDF={};
+function sndLoad(){const c=aCtx();if(!c||sndLoad.done)return;sndLoad.done=1;for(const [k,u] of Object.entries(SND_FILES))fetch(u).then(r=>r.ok?r.arrayBuffer():Promise.reject()).then(b=>new Promise((ok,no)=>c.decodeAudioData(b,ok,no))).then(buf=>{SNDF[k]=buf}).catch(()=>{})}
+function sndFile(k){const buf=SNDF[k],c=sndCtx();if(!buf||!c)return false;const src=c.createBufferSource(),g=c.createGain();g.gain.value=SND_FVOL[k]||.5;src.buffer=buf;src.connect(g).connect(c.destination);src.start();return true}
 // 소리별 음량 보정(측정해서 맞춤: 버튼류 최고점 약 0.12, 돌·칩 0.3, 연출 0.3 안팎)
 let SG=1;const SNDG={tap:2.79,soft:2.5,tab:2.73,pick:2.5,toggleOn:2.67,toggleOff:2.75,page:4.67,open:7.0,close:4.29,tick:2.55,chipUp:5.81,chipDown:5.56,chipStack:4.76,chipReset:4.57,stone:1.08,seal:1.65,crack:2.63,over:4.17,oppSeal:2.8,coinFlip:3.57,coinLand:1.3,five:1.81,voidLine:1.71,win:1.86,lose:3.61,draw:3.6,tickLate:2.46,timeout:2.94,turn:2.63,reward:2.37,coin1:2.78,buy:3.06,equip:2.63,error:2.54,notify:2.42,msg:3.5,match:2.41,pop:2.41,correct:2.44,wrong:3.05,tierUp:1.86,tierPiece:2.69,tierDown:3.75};
-function snd(k,...a){try{if(SND[k]){SG=SNDG[k]||1;SND[k](...a);SG=1;if(k==='win'||k==='lose'||k==='five'||k==='tierUp')bgmDuck(3000)}}catch(e){SG=1}}
+function snd(k,...a){try{if(SND[k]||SNDF[k]){if(!sndFile(k)){SG=SNDG[k]||1;SND[k](...a);SG=1}if(k==='win'||k==='lose'||k==='five'||k==='tierUp')bgmDuck(SNDF[k]?SNDF[k].duration*1000+600:3000)}}catch(e){SG=1}}
 function beep(){snd('tick')} // 예전 호출 호환
 // ===== 배경음(파일): 은은하게(음량 낮게·천천히 커짐), 장면별로 바뀔 때 부드럽게 넘어감, 곡 끝에서 겹쳐 이어 붙여 끊김 없이 반복 =====
 // 파일은 sounds/ 에 두고 아래 표에 등록. 없는 장면은 조용히(로비 곡을 대국 중에 틀지 않음). 설정 '배경음'(bo-bgm, 기본 켬)
@@ -2750,7 +2755,7 @@ function bgmUpdate(){try{const k=bgmScene();if(k===BG.scene)return;bgmPlay(k,BG.
 function bgmDuck(ms){const u=BG.u[BG.cur];if(!u)return;BG.duck=.35;bgmGain(u,(BGM_VOL[BG.scene]||.2)*.35,.3);clearTimeout(bgmDuck.t);bgmDuck.t=setTimeout(()=>{BG.duck=1;const v=BG.u[BG.cur];if(v)bgmGain(v,BGM_VOL[BG.scene]||.2,1.5)},ms)}
 setInterval(bgmUpdate,800);document.addEventListener('visibilitychange',bgmUpdate);
 // 첫 터치 때 소리 장치를 깨움(브라우저 정책). 배경음도 이때부터
-['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{aCtx();BG.ok=true;bgmUpdate()}catch(e){}},{once:true,capture:true}));
+['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{aCtx();BG.ok=true;bgmUpdate();sndLoad()}catch(e){}},{once:true,capture:true}));
 // 버튼마다 기본 소리: 특별한 소리가 나는 버튼은 그 함수에서 냄(아래 표는 탭 소리를 생략할 버튼)
 const SND_SKIP=new Set(['fxpzgo','rwclaim','ecoatt']);
 const SND_ACT={bp:'chipUp',b5:'chipUp',bq:'chipUp',bm:'chipDown',breset:'chipReset',beven:'chipReset',bsubmit:'seal',lsubmit:'seal',tsubmit:'seal',dconfirm:'stone',tab:'tab',sheet:'open',shclose:'close',ecoopen:'open',ecocat:'open',fxpuz:'open',frchat:'open',prof:'open',frprof:'open',rvprev:'page',rvnext:'page',level:'soft',preset:'soft',aitime:'soft',bcol:'soft',theme:'soft',dlgno:'soft',fxemo:'pop',fxemobtn:'soft'};
