@@ -1549,6 +1549,11 @@ html{scroll-padding-top:64px}
 #sh-stg[data-s="3"] .stgph .tag.j{background:color-mix(in srgb,var(--stggold) 85%,transparent);color:#241a05}
 @media (max-width:330px){#stgTile .stgmini{display:none}}
 #sh-stg[data-s="3"] .stgph .stgpw i.on{background:var(--stggold)}
+
+/* 앱처럼: 글자 드래그·길게 눌러 선택·그림 끌기 막기(입력칸은 그대로) */
+html,body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+img,svg,a{-webkit-user-drag:none}
 </style>
 </head>
 <body>
@@ -4831,6 +4836,7 @@ document.addEventListener('change',e=>{const id=e.target&&e.target.id;if(id!=='f
 {const vv=window.visualViewport;if(vv){const R=document.documentElement;let raf=0;const fit=()=>{raf=0;const kb=Math.max(0,Math.round(innerHeight-vv.height-vv.offsetTop)),on=innerWidth<600&&(kb>60||innerHeight-vv.height>60);
  R.classList.toggle('kbon',on);if(on){R.style.setProperty('--kb',kb+'px');R.style.setProperty('--vvh',Math.round(vv.height)+'px');if(vv.offsetTop>0&&!document.querySelector('.lsheet:not(.hide) input:focus,.lsheet:not(.hide) textarea:focus'))scrollTo(0,0);const l=$('#chLog');if(l&&!$('#sh-chat').classList.contains('hide'))l.scrollTop=l.scrollHeight}else{R.style.removeProperty('--kb');R.style.removeProperty('--vvh')}};
  const q=()=>{if(!raf)raf=requestAnimationFrame(fit)};vv.addEventListener('resize',q);vv.addEventListener('scroll',q)}}
+document.addEventListener('dragstart',e=>{const t=e.target;if(!(t&&t.closest&&t.closest('input,textarea')))e.preventDefault()});
 {const f=$('#chForm');if(f)f.addEventListener('submit',e=>{e.preventDefault();const i=$('#chIn');if(frSend(i.value))i.value='';try{i.focus({preventScroll:true})}catch(x){}})}
 // 보내기 버튼을 눌러도 입력칸 포커스 유지(폰 키보드가 내려가지 않게)
 {const b=$('#chSend');if(b){const keep=e=>{if(document.activeElement===$('#chIn'))e.preventDefault()};b.addEventListener('mousedown',keep);b.addEventListener('pointerdown',keep);b.addEventListener('touchstart',e=>{if(document.activeElement===$('#chIn')){e.preventDefault();b.closest('form').requestSubmit()}},{passive:false})}}

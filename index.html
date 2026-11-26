@@ -1549,6 +1549,11 @@ html{scroll-padding-top:64px}
 #sh-stg[data-s="3"] .stgph .tag.j{background:color-mix(in srgb,var(--stggold) 85%,transparent);color:#241a05}
 @media (max-width:330px){#stgTile .stgmini{display:none}}
 #sh-stg[data-s="3"] .stgph .stgpw i.on{background:var(--stggold)}
+
+/* 앱처럼: 글자 드래그·길게 눌러 선택·그림 끌기 막기(입력칸은 그대로) */
+html,body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+img,svg,a{-webkit-user-drag:none}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -1854,7 +1859,7 @@ html{scroll-padding-top:64px}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.01';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.02';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -4945,6 +4950,7 @@ document.addEventListener('change',e=>{const id=e.target&&e.target.id;if(id!=='f
 {const vv=window.visualViewport;if(vv){const R=document.documentElement;let raf=0;const fit=()=>{raf=0;const kb=Math.max(0,Math.round(innerHeight-vv.height-vv.offsetTop)),on=innerWidth<600&&(kb>60||innerHeight-vv.height>60);
  R.classList.toggle('kbon',on);if(on){R.style.setProperty('--kb',kb+'px');R.style.setProperty('--vvh',Math.round(vv.height)+'px');if(vv.offsetTop>0&&!document.querySelector('.lsheet:not(.hide) input:focus,.lsheet:not(.hide) textarea:focus'))scrollTo(0,0);const l=$('#chLog');if(l&&!$('#sh-chat').classList.contains('hide'))l.scrollTop=l.scrollHeight}else{R.style.removeProperty('--kb');R.style.removeProperty('--vvh')}};
  const q=()=>{if(!raf)raf=requestAnimationFrame(fit)};vv.addEventListener('resize',q);vv.addEventListener('scroll',q)}}
+document.addEventListener('dragstart',e=>{const t=e.target;if(!(t&&t.closest&&t.closest('input,textarea')))e.preventDefault()});
 {const f=$('#chForm');if(f)f.addEventListener('submit',e=>{e.preventDefault();const i=$('#chIn');if(frSend(i.value))i.value='';try{i.focus({preventScroll:true})}catch(x){}})}
 // 보내기 버튼을 눌러도 입력칸 포커스 유지(폰 키보드가 내려가지 않게)
 {const b=$('#chSend');if(b){const keep=e=>{if(document.activeElement===$('#chIn'))e.preventDefault()};b.addEventListener('mousedown',keep);b.addEventListener('pointerdown',keep);b.addEventListener('touchstart',e=>{if(document.activeElement===$('#chIn')){e.preventDefault();b.closest('form').requestSubmit()}},{passive:false})}}
