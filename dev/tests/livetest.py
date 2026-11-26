@@ -157,9 +157,20 @@ async def main():
         await asyncio.sleep(1.2)
         d=json.loads(await ev(p3,"JSON.stringify((()=>{const w=G.watch,S=w.S,now=Date.now();let done=0;while(done<S.r.H.length&&S.ln.ends[done]<=now)done++;return{done,h:vstate().hist.length,t:w.rl.t}})())"))
         pl=await txt(p3,'#panel')
-        chk('AI끼리 판 관전: 2턴 늦게(지금 턴 표시)',ok and d['h']==max(0,d['done']-2) and d['t']==d['done']+1 and '2턴 늦게' in pl,(d,pl))
+        chk('AI끼리 판 관전: 2턴 늦게(지금 턴 표시)',ok and d['h']==max(0,d['done']-3) and d['t']==d['done']+1 and '3턴 늦게' in pl,(d,pl))
         chk('관전 화면: 턴마다 두 사람 칩',d['h']==0 or await p3.evaluate("()=>document.querySelectorAll('#panel .wbp').length")>=3,await txt(p3,'#panel'))
         await p3.screenshot(path='/home/claude/eval/live/shots/t_botwatch_360.png')
+        # 한 턴씩 보여 주기(세 칸 → 칩 공개 → 돌): 느린 재생으로 한 턴 더 넣어 봄
+        h0=await ev(p3,"vstate().hist.length")
+        await ev(p3,"(window.__wsFast=false,(()=>{const w=G.watch,S=w.S;let done=0;const now=Date.now();while(done<S.r.H.length&&S.ln.ends[done]<=now)done++;const d=blSnap(w.bot,S,S.ln.ends[done]+1);window.__gb=w.bot;w.bot={};w.rl=d;wShow(d);return 0})())")
+        await asyncio.sleep(0.5);a1=await txt(p3,'#panel');c1=await ev(p3,"vstate().phase+'|'+!!vstate().cells+'|'+vstate().hist.length")
+        await asyncio.sleep(1.7);a2=await txt(p3,'#panel');n2=await p3.evaluate("()=>document.querySelectorAll('#panel .wpend .wbp').length")
+        await p3.screenshot(path='/home/claude/eval/live/shots/t_botwatch_reveal_360.png')
+        await asyncio.sleep(2.4);c3=await ev(p3,"vstate().hist.length")
+        chk('관전 재생: ① 세 칸 표시(돌은 아직)',('세 칸' in a1) and c1==f'bet|true|{h0}',(a1,c1,h0))
+        chk('관전 재생: ② 두 사람 칩 공개',('칩 공개' in a2) and n2==3,(a2,n2))
+        chk('관전 재생: ③ 돌 놓임',c3==h0+1,(c3,h0))
+        await ev(p3,"(window.__wsFast=true,G.watch.bot=window.__gb,G.watch.k2='',G.watch.shown=null,0)")
         # 끝 화면: 시각을 앞당겨 바로 끝나게 해서 승자 확인
         await ev(p3,"(()=>{const w=G.watch,g=w.bot;g.t=Date.now()+2500;w.S.ln=blLine(g,w.S.r);w.k2='';return 0})()")
         await asyncio.sleep(8)
@@ -189,7 +200,7 @@ async def main():
             if await ev(p1,"L.s.phase")=='over': break
             dl.append((await ev(p1,"L.s.hist.length"),await ev(p3,"vstate().hist.length")))
         lv=STORE.get('lv/'+A,{})
-        chk('공개 관전 2턴 지연',len(dl)>=1 and all(h3==max(0,h1-2) for h1,h3 in dl),dl)
+        chk('공개 관전 2턴 지연',len(dl)>=1 and all(h3==max(0,h1-3) for h1,h3 in dl),dl)
         chk('중계: 랭크(k r)·지금 턴 정보 없음',lv.get('k')=='r' and 'sun' not in lv and 'c' not in lv,lv)
         if await ev(p1,"L.s.phase")=='over':
             ok=await waitfor(lambda: ev(p3,"vstate()&&vstate().phase==='over'"),40)

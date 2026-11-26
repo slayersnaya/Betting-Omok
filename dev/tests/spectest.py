@@ -130,7 +130,8 @@ async def main():
                 await asyncio.sleep(0.3)
         await asyncio.sleep(1.5)
         chk('베팅 중 세 칸이 관전 화면에 보임',await ev(p3,"vstate().phase")=='bet' and await ev(p3,"!!vstate().cells") and await p3.evaluate("()=>document.querySelectorAll('#bov .bchip').length")==3,(await ev(p3,"vstate().phase"),await txt(p3,'#panel')))
-        chk('관전 화면엔 칩 숫자 없음(? 표시)',await p3.evaluate("()=>document.querySelectorAll('#oppbar .pp.q,#mebar .pp.q').length")==2,await txt(p3,'#game'))
+        pv=await p3.evaluate("()=>[...document.querySelectorAll('#oppbar .pp.num .ch,#mebar .pp.num .ch')].map(e=>+e.textContent)");pr=await ev(p1,"[L.s.pts.A,L.s.pts.B]")
+        chk('관전 화면에 두 사람 남은 칩(실제와 같음)',len(pv)==2 and sorted(pv)==sorted(pr),(pv,pr))
         w1=await p1.evaluate("()=>window.__lvWrites")
         chk('중계 쓰기 수(턴당 2번 이하)',w1<=2*(await ev(p1,"L.s.t"))+1,w1)
         # 끝: 로비로 → '접속 중' 복귀, 관전 화면 안내(판이 끝나 있으면 새 판을 열고 나감)
@@ -160,15 +161,15 @@ async def main():
             h1=await ev(p1,"L.s.hist.length");h3=await ev(p3,"vstate().hist.length");dl.append((h1,h3));lvl=dict(STORE.get('lv/'+A,{}))
             for _ in range(30):
                 pl=await txt(p3,'#panel')
-                if '2턴 늦게' in pl: break
+                if '3턴 늦게' in pl: break
                 await asyncio.sleep(0.1)
-        chk('랭크 AI전 2턴 지연(턴마다)',len(dl)>=1 and all(h3==max(0,h1-2) for h1,h3 in dl) and dl[-1][0]>=1,dl)
+        chk('랭크 AI전 2턴 지연(턴마다)',len(dl)>=1 and all(h3==max(0,h1-3) for h1,h3 in dl) and dl[-1][0]>=1,dl)
         lv=lvl or {}
         chk('랭크 중계에 지금 턴 정보(선·세 칸) 없음',lv.get('ph')=='live' and 'sun' not in lv and 'c' not in lv and 'al' not in lv,lv)
         chk('랭크 중계 칩도 같은 2턴 지연',('b' not in lv and lv.get('h','')=='') or len(lv.get('b','').split(','))==len(lv.get('h','').split(',')),(lv.get('h'),lv.get('b')))
         bn=await ev(p1,"L.s.bot.nick");js=json.dumps(lv,ensure_ascii=False)
         chk('랭크 AI 상대: 사람 닉네임만(AI·봇 id 없음)',lv.get('nb')==bn and 'AI' not in js and 'bot' not in js and lv.get('k')=='r',js[:200])
-        chk('관전 화면 안내 "2턴 늦게"',('2턴 늦게' in pl),pl)
+        chk('관전 화면 안내 "3턴 늦게"',('3턴 늦게' in pl),pl)
         h1=await ev(p1,"L.s.hist.length")
         await ev(p1,"(L.resign(),0)");await asyncio.sleep(2.5)
         chk('랭크 AI전 끝 → 관전 화면에 전체 공개',await ev(p3,"vstate().phase")=='over' and await ev(p3,"vstate().hist.length")==h1,(await ev(p3,"vstate().phase"),await txt(p3,'#panel')))
@@ -258,7 +259,7 @@ async def main():
             for k in range(3): res.append(await online_turn(p1,p2,k+6))
             await asyncio.sleep(1.5)
             h1=await ev(p1,"G.st.hist.length");h3=await ev(p3,"vstate().hist.length")
-            chk('랭크 사람전 2턴 지연',h1>=3 and h3==h1-2,(res,h1,h3))
+            chk('랭크 사람전 2턴 지연',h1>=3 and h3==h1-3,(res,h1,h3))
             lv=STORE.get('lv/'+A,{})
             chk('랭크 중계 id는 방 id가 아님',lv.get('id')!=rg and rg[1:] not in json.dumps(lv),lv.get('id'))
             ok=await waitfor(lambda: p2.evaluate("()=>document.querySelector('#gmid .wcnt')?.getAttribute('aria-label')==='관전 1명'"),40)

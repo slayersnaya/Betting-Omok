@@ -2640,7 +2640,7 @@ function renderPlayers(){
   if(timed&&w)tags+=`<span class="tag w">시간 초과 ${w}/3</span>`;
   // 내 점수는 늘 보임, 상대 점수는 대국이 끝난 뒤에만
   const late=over&&UI.rv&&vs.last&&UI.rv.t===vs.last.t&&Date.now()<UI.rv.at+2800;
-  const see=vs.phase==='review'||(vs.me&&id===vs.me)||(over&&vs.me&&!rv&&!late);let pp='';
+  const see=vs.phase==='review'||(vs.me&&id===vs.me)||(over&&vs.me&&!rv&&!late)||(vs.spect&&!vs.me&&Number.isInteger(vs.pts&&vs.pts[id]));let pp='';
   if(see){const v=vs.pts[id]??0,k='p'+id+(UI.mode==='online'?G.gid:UI.mode==='local'&&L.s?L.s.id:'');UI.ptsSeen=UI.ptsSeen||{};const old=UI.ptsSeen[k];
    if(rv&&old!=null)pp=`<div class="pp num"><span class="coin"></span><span class="ch">${old}</span></div>`;
    else{const fromQ=old==null&&over&&!mine&&UI.rv&&vs.last&&UI.rv.t===vs.last.t;UI.ptsSeen[k]=v;const roll=(old!=null&&old!==v&&vs.phase!=='review')||fromQ;const o0=fromQ?0:old;
@@ -4730,7 +4730,7 @@ addEventListener('pagehide',()=>{try{frPresence(1)}catch(e){}try{wUnreg()}catch(
 // · 일반 게임(사람끼리): 방 기록(g/*/p)을 바로 구독(서버 규칙: 두 사람·관전 허용한 친구만). 봉인은 해시라 개봉 전 칩은 안 보임
 // · AI 대전·랭크 게임(사람·AI 상대 같음): 두는 사람 폰이 공개 정보만 lv/{나}에 중계. 관전자가 있을 때만 씀. 랭크는 2턴 늦게, 끝나면 전체
 // · 관전자 표시: 관전 화면을 연 친구가 lv/{친구}/w/{나}에 시각만(2분마다). 두는 사람은 대국 중에만 이 목록을 구독해 '관전 n명'
-const LV_D=2,LV_HB=120e3,LV_FRESH=300e3,LVC='abcdefghijklmnopqrs';
+const LV_D=3,LV_HB=120e3,LV_FRESH=300e3,LVC='abcdefghijklmnopqrs';
 const lvCell=([r,c])=>LVC[r]+LVC[c];
 const FR_ICO_W='<svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
 const WT={u:null,hb:0,last:0};
@@ -4797,12 +4797,12 @@ function wRelay(u,k,pub,rt){if(!db)return;leaveGame();UI.mode='online';UI.review
  Object.assign(G,{gid:null,meta:null,docs:Object.create(null),st:null,open:{},inflight:new Set(),q:Promise.resolve(),created:false,missing:false,lostSecret:false,hadMeta:false,ready:{m:false,p:false},rkSnap:null,lastOver:null,sent:{},pj:{},chg:{},pDenied:false,enterAt:Date.now(),oppWn:0,oppNp:false,oppSeen:false,
   watch:{u,k,pub:!!pub,retry:rt||0,rl:null,ok:false,den:false}});
  UI.sel=null;UI.panelKey='';UI.animT=-1;if(location.hash)history.replaceState(null,'',location.pathname+location.search);show('game');wReg(u);
+ G.unsubs.push(()=>{const w=G.watch;if(w)clearTimeout(w.tm)});
  G.unsubs.push(db.doc('lv/'+u).onSnapshot(x=>{const w=G.watch;if(!w||w.u!==u)return;const d=x.exists?lvParse(x.data()):null;
   // 처음 받은 것이 지난 판 기록이면(끝난 판·오래된 것) 친구 폰이 새로 보낼 때까지 기다림
   // 공개 목록에서 막 끝난 판을 열었으면(3분 안) 결과를 바로 보여 줌
   if(!w.ok){const fin=w.pub&&d&&d.ph==='over'&&Date.now()-d.at<180e3;if(!fin&&(!d||d.ph==='over'||Date.now()-d.at>45e3))return renderAll();w.ok=true}
-  if(!d)return;if(w.rl&&w.rl.id!==d.id){UI.animT=-1;UI.panelKey=''}w.rl=d;w.k=d.k;
-  G.meta={host:'A',guest:'B',hostNick:d.na,guestNick:d.nb,td:0,tb:0,status:d.ph==='over'?'done':'playing',ranked:d.k==='r',rv:2,created:0};G.docs={A:{nick:d.na},B:{nick:d.nb}};G.hadMeta=true;G.st=lvState(d);renderAll()},
+  if(!d)return;if(w.rl&&w.rl.id!==d.id){UI.animT=-1;UI.panelKey=''}w.rl=d;w.k=d.k;wShow(d)},
   ()=>{const w=G.watch;if(w&&w.u===u){if(w.pub&&!w.retry){w.retry=1;setTimeout(()=>{if(G.watch===w)wRelay(u,k,true,1)},2500);return}w.den=true;renderAll()}}));
  renderAll()}
 // 받은 중계 확인(친구 폰이 쓴 것이라 모양을 다시 검사)
@@ -4817,8 +4817,23 @@ function lvState(d){const bd=emptyBoard(),hist=[];
   cells.forEach(([r,c],j)=>{bd[r][c]=win[j]==='A'?1:2});hist.push({t:i+1,sun,hu,cells,win,bets:d.Bt&&d.Bt[i]?{A:d.Bt[i][0],B:d.Bt[i][1]}:{},auto:{}})}
  const over=d.ph==='over',live=d.ph==='live',ph=over?'over':live?'live':d.ph,cells=ph==='bet'&&d.c?[lvXY(d.c.slice(0,2)),lvXY(d.c.slice(2,4)),lvXY(d.c.slice(4,6))]:null;
  const sun=!over&&!live?d.sun||null:null;
- return{phase:ph,t:live?hist.length:over?hist.length:Math.max(d.t,hist.length+1),board:bd,pts:{},warn:{A:0,B:0},hist,A:'A',B:'B',last:hist[hist.length-1]||null,
+ let pts={};if(d.Bt&&d.Bt.length>=d.H.length){const n=d.H.length,sp=X=>hist.reduce((a,h)=>a+(h.bets[X]||[0,0,0]).reduce((x,y)=>x+y,0),0),add=over?n:n+1;pts={A:10*add-sp('A'),B:10*add-sp('B')}}
+ return{pend:d.pend||null,phase:ph,t:live?hist.length:over?hist.length:Math.max(d.t,hist.length+1),board:bd,pts,warn:{A:0,B:0},hist,A:'A',B:'B',last:hist[hist.length-1]||null,
   sun,hu:sun?(sun==='A'?'B':'A'):null,cells,key:cells?cellsKey(cells):'',sealed:{},auto:{},pending:[],winner:over?d.w:null,reason:over?d.why:'',waitOn:[]}}
+// 관전 재생(11/27): 받은 기록에 새 턴이 있으면 한 턴씩 ① 세 칸 표시 ② 두 사람 칩 공개 ③ 돌 놓기 순서로 보여 줌(처음 들어올 때는 바로)
+const WS_A=()=>window.__wsFast?0:1500,WS_B=()=>window.__wsFast?0:1900,WS_C=()=>window.__wsFast?0:450;
+function wShow(d){const w=G.watch;if(!w)return;w.full=d;if(w.shown==null||w.shownId!==d.id){w.shownId=d.id;w.shown=d.H.length;clearTimeout(w.tm);w.tm=null;w.stg=null;wApply(d)}
+ else if(!w.tm)wStep();else if(w.stg==null)wApply(d)}
+function wDisp(d,n,stg){const x=Object.assign({},d,{H:d.H.slice(0,n),Bt:d.Bt?d.Bt.slice(0,n):null,pend:null});
+ if(n<d.H.length){const e=d.H[n];if(stg!=null){x.ph='bet';x.c=e.slice(1,7);x.sun=e[0];x.t=n+1;if(stg===1&&d.Bt&&d.Bt[n])x.pend={bets:{A:d.Bt[n][0],B:d.Bt[n][1]},win:[e[7],e[8],e[9]],cells:[lvXY(e.slice(1,3)),lvXY(e.slice(3,5)),lvXY(e.slice(5,7))],t:n+1}}else{x.ph='live';x.t=n}}
+ return x}
+function wApply(x){const w=G.watch;G.meta={host:'A',guest:'B',hostNick:x.na,guestNick:x.nb,td:0,tb:0,status:x.ph==='over'?'done':'playing',ranked:x.k==='r',rv:2,created:0};G.docs={A:{nick:x.na},B:{nick:x.nb}};G.hadMeta=true;G.st=lvState(x);w.lastC=x.ph==='bet'?x.c:'';renderAll()}
+function wStep(){const w=G.watch;if(!w||!w.full)return;const d=w.full;
+ if(w.shown>=d.H.length){w.tm=null;w.stg=null;wApply(d);return}
+ const e=d.H[w.shown],same=w.lastC===e.slice(1,7);
+ if(w.stg==null&&!same){w.stg=0;wApply(wDisp(d,w.shown,0));snd('pick');w.tm=setTimeout(wStep,WS_A());return}
+ if(w.stg==null||w.stg===0){w.stg=1;wApply(wDisp(d,w.shown,1));snd('reveal');w.tm=setTimeout(wStep,WS_B());return}
+ w.stg=null;w.shown++;snd('stone');wApply(wDisp(d,w.shown,w.shown<d.H.length?null:undefined));w.tm=setTimeout(wStep,WS_C())}
 // 친구가 대국 화면을 나갔는지(접속 표시 기준)
 function wGone(){const w=G.watch;if(!w)return false;if(w.pub)return !!(!w.bot&&w.rl&&w.rl.ph!=='over'&&Date.now()-w.rl.at>180e3);const o=FR.ons.get(w.u);if(!o)return false;const fresh=o.at&&Date.now()-o.at<FR_FRESH;return !(fresh&&['g','r','a'].includes(o.st))}
 function wPanel(){const p=$('#panel'),w=G.watch,vs=vstate();setSheet(false);let key,h;
@@ -4826,7 +4841,9 @@ function wPanel(){const p=$('#panel'),w=G.watch,vs=vstate();setSheet(false);let 
  else if(!vs||!w.rl){const late=w.pub&&!w.bot&&Date.now()-G.enterAt>20e3;key='load'+wGone()+late;h=wGone()||late?`<h3>${late?'지금은 볼 수 없어요':'지금은 대국 중이 아니에요'}</h3><button class="btn wide" data-act="lobby">나가기</button>`:waitBox('불러오는 중')}
  else if(vs.phase==='over'){key='over|'+w.rl.id+'|'+vs.winner+'|'+vs.hist.length;h=overSheet(vs,{home:'lobby',norv:true,vs:w.k==='r'?'랭크 게임':w.k==='c'?'일반 게임':'AI 대전'})}
  else{const gone=wGone();key=[w.rl.id,vs.phase,vs.t,vs.hist.length,w.rl.t,(vs.cells||[]).join(),gone].join('|');
-  h=waitBox(gone?(w.pub?'중계가 멈췄어요':'친구가 대국 화면을 나갔어요'):w.k==='r'?`2턴 늦게 보는 중 · 지금 ${w.rl.t}턴`:`관전 중 · ${phaseName(vs.phase)}`,lastLine(vs))}
+  const pd=vs.pend,ph=pd?'칩 공개':vs.phase==='bet'?'세 칸 · 베팅':phaseName(vs.phase);key+='|'+(pd?'p':'');
+  const pl=pd?`<div class="strip wbs wpend"><span class="tn">${pd.t}턴</span>${pd.cells.map((c,i)=>`<span><span class="lab" style="--k:${LCOL[i]}">${LBL[i]}</span>${wBetPair(vs,pd,i)}</span>`).join('')}</div>`:'';
+  h=waitBox(gone?(w.pub?'중계가 멈췄어요':'친구가 대국 화면을 나갔어요'):w.k==='r'?`${LV_D}턴 늦게 보는 중 · ${ph}`:`관전 중 · ${ph}`,pl||lastLine(vs))}
  if(UI.panelKey===key)return;UI.panelKey=key;p.innerHTML=h}
 function frBoot(){if(!frFb()&&UI.tab==='pal')setTab('home',true);frStart();frRender();setTimeout(frHash,800)}
 // ===== 공개 랭크 관전 · AI 방 (2026-11) =====
@@ -4864,7 +4881,7 @@ function blSim(g){const c=BL.res.get(g.key);if(c)return c.p;
 // 턴마다 끝나는 시각: 판 길이 = 턴 수 × 턴당 11~17초(1분 30초~16분), 턴마다 씨앗으로 조금씩 다르게. 마지막 턴은 정확히 t에 끝남
 function blLine(g,r){const T=r.H.length,D=Math.max(90e3,Math.min(16*60e3,T*g.pace)),st=g.t-D;let x=g.hs||1;const rn=()=>{x=(Math.imul(x,1103515245)+12345)>>>0;return x/4294967296};
  const w=r.H.map(()=>.6+.8*rn()),sum=w.reduce((a,b)=>a+b,0);let c=0;const ends=w.map(v=>{c+=v;return st+D*c/sum});ends[T-1]=g.t;return{st,ends}}
-// 지금 시각의 관전 화면 자료(중계와 같은 모양, 2턴 늦게)
+// 지금 시각의 관전 화면 자료(중계와 같은 모양, LV_D턴 늦게)
 function blSnap(g,S,now){const r=S.r,over=now>=g.t;let done=0;while(done<r.H.length&&S.ln.ends[done]<=now)done++;if(over)done=r.H.length;
  const n=over?done:Math.max(0,done-LV_D),H=r.H.slice(0,n);
  return{id:(g.hs>>>0).toString(16).padStart(8,'0'),k:'r',at:now,na:blNick(S.sw?g.b:g.a),nb:blNick(S.sw?g.a:g.b),me:'A',t:over?done:done+1,ph:over?'over':'live',sun:'',c:'',
@@ -4873,9 +4890,8 @@ function wBot(g){leaveGame();UI.mode='online';UI.review=false;RV.d=null;
  Object.assign(G,{gid:null,meta:null,docs:Object.create(null),st:null,open:{},inflight:new Set(),q:Promise.resolve(),created:false,missing:false,lostSecret:false,hadMeta:false,ready:{m:false,p:false},rkSnap:null,lastOver:null,sent:{},pj:{},chg:{},pDenied:false,enterAt:Date.now(),oppWn:0,oppNp:false,oppSeen:false,
   watch:{u:null,k:'r',bot:g,pub:true,rl:null,ok:false,den:false}});
  UI.sel=null;UI.panelKey='';UI.animT=-1;if(location.hash)history.replaceState(null,'',location.pathname+location.search);show('game');
- const tick=()=>{const w=G.watch;if(!w||w.bot!==g||!w.S)return;const d=blSnap(g,w.S,Date.now()),k=d.H.length+'|'+d.ph+'|'+d.t;if(k===w.k2)return;w.k2=k;w.ok=true;w.rl=d;
-  G.meta={host:'A',guest:'B',hostNick:d.na,guestNick:d.nb,td:0,tb:0,status:d.ph==='over'?'done':'playing',ranked:true,rv:2,created:0};G.docs={A:{nick:d.na},B:{nick:d.nb}};G.hadMeta=true;G.st=lvState(d);renderAll()};
- const tm=setInterval(tick,1000);G.unsubs.push(()=>clearInterval(tm));
+ const tick=()=>{const w=G.watch;if(!w||w.bot!==g||!w.S)return;const d=blSnap(g,w.S,Date.now()),k=d.H.length+'|'+d.ph+'|'+d.t;if(k===w.k2)return;w.k2=k;w.ok=true;w.rl=d;wShow(d)};
+ const tm=setInterval(tick,1000);G.unsubs.push(()=>{clearInterval(tm);const w=G.watch;if(w)clearTimeout(w.tm)});
  blSim(g).then(S=>{const w=G.watch;if(!w||w.bot!==g)return;if(!S){w.den=true;renderAll();return}w.S=S;tick()},()=>{const w=G.watch;if(w&&w.bot===g){w.den=true;renderAll()}});
  renderAll()}
 
