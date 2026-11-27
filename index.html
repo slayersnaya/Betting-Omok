@@ -1889,7 +1889,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.20';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.21';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6774,7 +6774,7 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
    // 앱에서 연 링크(맞춤 탭)는 바로, 그 밖에는 설치 신호가 3초 안에 안 오면 크롬 앱으로(하루 한 번, 이사로 온 경우는 늘)
    // 기록 가져오기 같은 안내 창이 열려 있으면 닫힐 때까지 기다림(가져온 기록은 크롬과 같이 씀)
    const fromApp=/^android-app:\/\//.test(document.referrer||'');
-   setTimeout(()=>{if(ev)return;notInstalled().then(ok=>{if(!ok||ev)return;card(CH_TXT,'크롬으로',goChrome);if(want||autoOk())whenFree(()=>{if(!ev)goChrome()})})},fromApp?300:3000)}
+   setTimeout(()=>{if(ev)return;notInstalled().then(ok=>{if(!ok||ev)return;card(CH_TXT,'크롬으로',goChrome);if(want||autoOk()){const w=n=>{const d=document.getElementById('dlg');if(ev)return;if(!d||d.classList.contains('hide'))goChrome();else if(n<120)setTimeout(()=>w(n+1),1000)};w(0)}})},fromApp?300:3000)}
   else if(inApp&&isIOS)card('··· 메뉴 → Safari로 열기 후 설치');
   else if(isSafari){card('공유 버튼 → 홈 화면에 추가');
    if(want||(!hidden()&&!sheetSeen()))whenFree(()=>{
