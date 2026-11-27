@@ -1268,8 +1268,8 @@ ul.rknote li{text-wrap:balance}
 .ctt{display:inline-block;font-size:11px;font-weight:800;color:var(--jadeink);white-space:nowrap;letter-spacing:-.01em;line-height:1.3}
 .ctt.rw{color:#c99a1c}:root[data-theme=light] .ctt.rw{color:#8a6a0c}.ctt.none{color:var(--faint)}
 .cfr{position:relative;display:inline-grid;place-items:center;width:var(--z);height:var(--z);flex:none;vertical-align:middle}
-.cfr>.cring{position:absolute;left:50%;top:50%;width:calc(var(--z)*1.3);height:calc(var(--z)*1.3);transform:translate(-50%,-50%);pointer-events:none;overflow:visible}
-.cfr>.emb,.cfr>.st{display:block}
+.cfr>.cring{position:absolute;left:50%;top:50%;width:calc(var(--z)*1.62);height:calc(var(--z)*1.62);transform:translate(-50%,-50%);pointer-events:none;overflow:visible}
+.cfr>.emb,.cfr>.st{display:block}.cfr>.emb.ei{transform:scale(.88)}
 .rkrow .nk.hasT{display:flex;flex-direction:column;justify-content:center;line-height:1.22}.rkrow .nk.hasT>*{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pfh .pft .ctt{display:block;font-size:12px;margin:1px 0 2px}
 .pbar .pn .ctt{flex:0 3 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:11px;color:var(--mute)}
@@ -1332,7 +1332,7 @@ ul.rknote li{text-wrap:balance}
 .art.at,.art.an{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1px;font-weight:800;font-size:14px;white-space:nowrap;max-width:100%}
 .art.at .nkx,.art.an .cn{max-width:100%;overflow:hidden;text-overflow:ellipsis}
 .art.an{overflow:hidden}.art.an .cn{font-size:15px;padding:0 2px 5px}
-.art.af .cfr .cring{width:calc(var(--z)*1.3);height:calc(var(--z)*1.3)}
+.art.af .cfr .cring{width:calc(var(--z)*1.62);height:calc(var(--z)*1.62)}
 .art.as .sl{width:40px;height:40px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 .einv{display:flex;flex-wrap:wrap;gap:6px}
 .echip{min-height:40px;padding:0 12px;border-radius:12px;border:2px solid transparent;background:var(--soft);color:var(--ink);font-weight:800;font-size:13px;white-space:nowrap;cursor:pointer}
@@ -1647,7 +1647,7 @@ html.xmas .pod .p1 .xpw{z-index:0;isolation:isolate}
 .art.aimg{position:static!important;height:60px!important;width:auto!important;inset:auto!important;transform:none!important;margin:0 auto}
 .art.aimg img,.etile .art.aimg img{width:60px!important;height:60px!important;max-width:none!important;position:static!important;inset:auto!important;transform:none!important;border-radius:12px;display:block;margin:0!important}
 
-.cfr>.cring.cimg{object-fit:contain}
+.cfr>.cring.cimg{object-fit:contain;width:calc(var(--z)*1.74);height:calc(var(--z)*1.74)}
 img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertical-align:-.3em}
 .mysl img.simg,.shprev .pvs img.simg{width:22px;height:22px}
 
@@ -1969,7 +1969,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.91';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.92';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
