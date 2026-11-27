@@ -1947,7 +1947,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.65';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.66';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6558,7 +6558,7 @@ const mailUnread=()=>{const rd=mailRd();return mailLive().filter(m=>mailGift(m)?
 //  앱을 열 때: 전체 1시간·내 우편 6시간에 한 번 · 화면으로 돌아올 때: 전체 2시간 · 우편함을 열 때: 둘 다 2분에 한 번(이 기기에 저장해 둔 목록을 먼저 보여 줌)
 //  → 1000명이 매일 3번씩 열어도 하루 약 8천~1만 읽기(무료 5만). 받기 = 쓰기 1 + 규칙 확인 읽기 1
 function mailFetch(force,kind){if(!mailSrv())return Promise.resolve();if(MAIL.busy)return MAIL.busy;const now=Date.now();
- const doA=kind!=='p'&&(force===true||now-MAIL.at>(force||120e3)),doP=kind!=='a'&&(force===true||now-MAIL.atP>(kind==='boot'?6*3600e3:(force||120e3)));if(!doA&&!doP)return Promise.resolve();
+ const doA=kind!=='p'&&(force===true||now-MAIL.at>(force||120e3)),doP=kind!=='a'&&(force===true||now-MAIL.atP>(kind==='boot'?10*60e3:(force||120e3)));if(!doA&&!doP)return Promise.resolve();
  MAIL.busy=(async()=>{try{const Q=[doA?db.collection('mail').where('to','==','all').limit(30).get():null,doP?db.collection('mail').where('to','==',SEAT).limit(30).get():null];const [a,b]=await Promise.all(Q.map(q=>q||Promise.resolve(null)));
    const keep=MAIL.list.filter(m=>m.to==='all'?!a:!b),seen=new Set(keep.map(m=>m.id)),L=keep.slice();
    for(const x of [...(a?a.docs:[]),...(b?b.docs:[])]){if(seen.has(x.id))continue;seen.add(x.id);const m=mailNorm(x.id,x.data());if(m)L.push(m)}
@@ -6566,7 +6566,7 @@ function mailFetch(force,kind){if(!mailSrv())return Promise.resolve();if(MAIL.bu
 function mailBoot(){if(MAIL.booted||!mailSrv())return;MAIL.booted=1;mailDom();
  try{const c=JSON.parse(lget('bo-mail')||'null');if(c&&c.u===SEAT&&Array.isArray(c.l)){MAIL.list=c.l.map(m=>mailNorm(m&&m.id,m)).filter(Boolean);MAIL.at=Number.isFinite(c.at)?c.at:0;MAIL.atP=Number.isFinite(c.ap)?c.ap:0}}catch(e){}
  mailPaint();mailFetch(60*60e3,'boot');
- document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')mailFetch(120*60e3,'a')});
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){mailFetch(120*60e3,'a');mailFetch(15*60e3,'p')}});
  setInterval(()=>{if(document.visibilityState==='visible')mailPaintHdr()},30e3)}
 // ----- 받기: 우편 하나 = 지갑 쓰기 한 번(규칙이 우편 문서 1개를 확인) -----
 function mailPrune(mr){const lim=Date.now()-MAIL_SKEW;return mr.filter(id=>!(MAIL_IDRE.test(id)&&+id.slice(1,14)<lim))}
