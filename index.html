@@ -1629,6 +1629,8 @@ html.xmas .pod .p1 .xpw{z-index:0;isolation:isolate}
 
 .wartx{display:none}html.xmas .wartx{display:block;width:100%;max-width:360px;margin:0 auto 6px;border-radius:14px;aspect-ratio:720/321;object-fit:cover}html.xmas #wart{display:none}
 @media (max-height:760px){html.xmas .wartx{max-height:102px;width:auto}}
+
+.xlogo{width:40px;height:40px;flex:none;display:block}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -1938,7 +1940,7 @@ html.xmas .pod .p1 .xpw{z-index:0;isolation:isolate}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.59';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.60';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2361,7 +2363,7 @@ function xmasOn(){return Date.now()<XMAS_END}
   let h='';for(let i=0;i<26;i++){const z=(3+Math.random()*5).toFixed(1);h+=`<i style="left:${(Math.random()*100).toFixed(1)}%;width:${z}px;height:${z}px;opacity:${(.35+Math.random()*.5).toFixed(2)};animation-duration:${(8+Math.random()*10).toFixed(1)}s;animation-delay:-${(Math.random()*18).toFixed(1)}s;--dx:${(Math.random()*60-30).toFixed(0)}px"></i>`}
   sn.innerHTML=h;document.body.appendChild(sn);
   // 로고에 산타 모자(로고 그림 안에 그려 넣음)
-  document.querySelectorAll('svg.logo').forEach(g=>{if(g.querySelector('.xhat'))return;g.insertAdjacentHTML('beforeend','<g class="xhat"><path d="M3 15 C6 5 14 1 23 4 L20 9 C15 6 10 9 9 15Z" fill="#c8323c"/><circle cx="23" cy="4.5" r="2.6" fill="#fff"/><rect x="1.5" y="13.5" width="10" height="3.6" rx="1.8" fill="#fff"/></g>')})};
+  document.querySelectorAll('svg.logo').forEach(g=>{if(g.nextElementSibling&&g.nextElementSibling.classList.contains('xlogo'))return;g.insertAdjacentHTML('afterend','<img class="xlogo" src="xmas-logo.webp" alt="" aria-hidden="true">');g.style.display='none'})};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go()})();
 // 크리스마스 랭킹 1·2·3위 꾸미기: 1위 산타 썰매, 2위 루돌프, 3위 눈사람
 const XPOD=['<span class="xp x1" aria-hidden="true">🛷</span><span class="xp x1b" aria-hidden="true">🦌</span>','<span class="xp x2" aria-hidden="true">🦌</span>','<span class="xp x3" aria-hidden="true">⛄</span>'];
