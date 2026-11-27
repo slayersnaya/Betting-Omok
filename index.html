@@ -1890,7 +1890,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.24';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.25';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2679,12 +2679,13 @@ const MV_KEYS=['bo-nick','bo-theme','bo-snd','bo-bgm','bo-vib','bo-big','bo-hint
 const MV_MAX=40000;
 const mvB64=t=>btoa(unescape(encodeURIComponent(t))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const mvUnB64=t=>decodeURIComponent(escape(atob(t.replace(/-/g,'+').replace(/_/g,'/'))));
-function mvPack(lk){const d={};let n=0;for(const k of MV_KEYS){if(k==='bo-nick'&&!lk)continue;let v=null;try{v=localStorage.getItem(k)}catch(e){}if(typeof v!=='string'||!v||v.length>20000||n+v.length>MV_MAX)continue;d[k]=v;n+=v.length}
+function mvPack(lk,max){max=max||MV_MAX;const d={};let n=0;for(const k of MV_KEYS){if(k==='bo-nick'&&!lk)continue;let v=null;try{v=localStorage.getItem(k)}catch(e){}if(typeof v!=='string'||!v||v.length>20000||n+v.length>max)continue;d[k]=v;n+=v.length}
  return mvB64(JSON.stringify({v:1,at:Date.now(),lk:lk||'',d}))}
 // 새 주소: 열자마자 # 기록을 꺼내 두고 주소창에서 지움(다른 코드가 #을 읽기 전에)
-(()=>{if(MV_OLD)return;const h=location.hash;if(!/^#mv=[A-Za-z0-9_-]+$/.test(h))return;
- try{const o=JSON.parse(mvUnB64(h.slice(4)));if(o&&o.v===1&&o.d&&typeof o.d==='object')sessionStorage.setItem('bo-mvpend',JSON.stringify(o))}catch(e){}
- try{history.replaceState(history.state,'',location.pathname+location.search)}catch(e){}})();
+(()=>{if(MV_OLD)return;const h=location.hash;let q=null;try{q=new URL(location.href).searchParams.get('mvq')}catch(e){}
+ let t=/^#mv=[A-Za-z0-9_-]+$/.test(h)?h.slice(4):q&&/^[A-Za-z0-9_-]+$/.test(q)?q:null;if(!t)return;
+ try{const o=JSON.parse(mvUnB64(t));if(o&&o.v===1&&o.d&&typeof o.d==='object')sessionStorage.setItem('bo-mvpend',JSON.stringify(o))}catch(e){}
+ try{const u=new URL(location.href);u.searchParams.delete('mvq');history.replaceState(history.state,'',u.pathname+u.search)}catch(e){}})();
 function mvImport(o){let n=0;for(const k of MV_KEYS){const v=o.d[k];if(typeof v!=='string'||v.length>20000)continue;if(k==='bo-nick'&&(!o.lk||v.length>24))continue;try{localStorage.setItem(k,v);n++}catch(e){}}
  try{localStorage.setItem('bo-moved',JSON.stringify({at:Date.now(),lk:o.lk==='google'||o.lk==='email'?o.lk:''}))}catch(e){}return n}
 const MV={go:0,ask:0};
@@ -2697,7 +2698,10 @@ function mvRender(){const ov=$('#mvOv');if(!ov)return;const fb=!!(user&&user.fir
  ov.innerHTML=`<div class="mvcard" role="dialog" aria-modal="true" aria-labelledby="mvT"><img src="icons/icon-192.png" alt=""><h2 id="mvT">새 주소로 이사했어요</h2><p class="mvsub">새 버전에서 이어서 할 수 있어요</p>${acc}${foot}${sa?'<p class="mvnote">옮긴 뒤에는 이 아이콘을 지워 주세요</p>':''}</div>`}
 function mvGo(){const lk=user&&user.firebase&&user.provider?user.provider()||'':'';let u=MV_NEW+'?inst=1#mv='+mvPack(lk);
  try{localStorage.setItem('bo-movedout',String(Date.now()))}catch(e){}MV.go=1;
- const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;if(sa){const w=window.open(u,'_blank');if(w)return}location.href=u}
+ const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+ // 안드로이드 설치 앱: 앱 안 임시 창이 아니라 크롬 앱으로 바로 엶(설치는 크롬에서만 됨). # 은 못 넘기므로 작은 기록만 주소에 담음
+ if(sa&&/Android/i.test(navigator.userAgent)){const v=MV_NEW+'?inst=2&mvq='+mvPack(lk,2500);location.href='intent://'+v.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(u)+';end';return}
+ if(sa){const w=window.open(u,'_blank');if(w)return}location.href=u}
 function mvOld(){if(!MV_OLD||$('#mvOv'))return;const ov=document.createElement('div');ov.id='mvOv';document.body.appendChild(ov);mvRender();
  ov.addEventListener('click',e=>{const b=e.target.closest('[data-mv]');if(!b)return;const a=b.dataset.mv;
   if(a==='goo'){googleLink().then(()=>{MV.ask=0;mvRender()})}
