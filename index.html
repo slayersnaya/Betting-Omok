@@ -1634,6 +1634,10 @@ html.xmas .pod .p1 .xpw{z-index:0;isolation:isolate}
 
 .art.aimg{position:static!important;height:60px!important;width:auto!important;inset:auto!important;transform:none!important;margin:0 auto}
 .art.aimg img,.etile .art.aimg img{width:60px!important;height:60px!important;max-width:none!important;position:static!important;inset:auto!important;transform:none!important;border-radius:12px;display:block;margin:0!important}
+
+.cfr>.cring.cimg{object-fit:contain}
+img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertical-align:-.3em}
+.mysl img.simg,.shprev .pvs img.simg{width:22px;height:22px}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -1943,7 +1947,7 @@ html.xmas .pod .p1 .xpw{z-index:0;isolation:isolate}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.61';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.62';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6291,6 +6295,7 @@ function ecoPbar(vs,id){const st=`<span class="st ${id===vs.A?'k':'w'}"></span>`
 function ecoRkNk(p){const e=cosOf(p.seat),t=cosTitle(p.seat,e),nm=cosName(p.seat,esc(rkNick(p)),e)+(p.seat===SEAT?' (나)':'');return t?`<span class="nk hasT"><span>${nm}</span>${t}</span>`:`<span class="nk">${nm}</span>`}
 // ----- 그림: 테두리 링 · 인장 · 돌 · 판 · 완성 연출 -----
 function ecoRing(id){const it=ecoItem(id);if(!it)return '';let g='';
+ if(/^f[1-4]$/.test(id))return `<img class="cring cimg" src="shop/${id}c.webp" alt="" aria-hidden="true">`;
  if(id==='f1')g=`<circle cx="32" cy="32" r="29.5" fill="none" stroke="#009999" stroke-width="2.6" stroke-dasharray="7 4.5"/>${[0,90,180,270].map(a=>`<g transform="rotate(${a} 32 32)"><circle cx="32" cy="2.6" r="3.2" fill="#F3EBDD" stroke="#006b6b" stroke-width="1.4"/></g>`).join('')}`;
  else if(id==='f2'){let d='';for(let i=0;i<=72;i++){const a=i/72*Math.PI*2,r=29+1.8*Math.sin(a*12);d+=(i?'L':'M')+(32+r*Math.cos(a)).toFixed(2)+' '+(32+r*Math.sin(a)).toFixed(2)}g=`<path d="${d}Z" fill="none" stroke="#99CC00" stroke-width="2.4" stroke-linejoin="round"/><circle cx="32" cy="32" r="26" fill="none" stroke="#2bbdb5" stroke-width="1" opacity=".7"/>`}
  else if(id==='f4'){g=`<circle cx="32" cy="32" r="29.5" fill="none" stroke="#1f8a50" stroke-width="2.6"/><circle cx="32" cy="32" r="29.5" fill="none" stroke="#c8323c" stroke-width="2.6" stroke-dasharray="5 5"/>${[45,135,225,315].map(a=>`<g transform="rotate(${a} 32 32)"><path d="M32 0.5c4 1 6 3 7 6-3-1-5-1-7 1-2-2-4-2-7-1 1-3 3-5 7-6z" fill="#1f8a50"/><circle cx="30.5" cy="4.6" r="2" fill="#d6404a"/><circle cx="33.8" cy="4.8" r="2" fill="#d6404a"/></g>`).join('')}`}
@@ -6320,7 +6325,7 @@ function ecoDefs(){if($('#ecoDefs'))return;const s=document.createElementNS('htt
  <symbol id="sB_w2" overflow="visible">${sh}<circle r="14.6" fill="url(#ecoW2b)"/><path d="M-12 3C-6 0-2 6 4 4S10-2 13 1" fill="none" stroke="#5fae9c" stroke-width=".8" opacity=".45"/><ellipse cx="-4.6" cy="-6" rx="5.4" ry="3.1" transform="rotate(-32 -4.6 -6)" fill="#cfeee6" opacity=".35"/></symbol>
  <symbol id="sW_w2" overflow="visible">${sh}<circle r="14.6" fill="url(#ecoW2w)"/><path d="M-12 3C-6 0-2 6 4 4S10-2 13 1" fill="none" stroke="#6fb3a0" stroke-width=".9" opacity=".5"/><circle r="14.35" fill="none" stroke="#7fa898" stroke-width=".4" opacity=".5"/><ellipse cx="-4.4" cy="-5.8" rx="6.2" ry="3.7" transform="rotate(-32 -4.4 -5.8)" fill="#fff" opacity=".85"/></symbol>`;
  s.innerHTML=`<defs>${seal}${stones}</defs>`;document.body.appendChild(s)}
-function ecoSealSvg(id,cls){const d=ECO_SEAL[id];return d?`<svg class="${cls||''}" viewBox="-16 -16 32 32" style="stroke:none" aria-hidden="true"><use href="#ecoS_${id}" x="-16" y="-16" width="32" height="32"/></svg>`:IC.wax}
+function ecoSealSvg(id,cls){if(/^s[1-4]$/.test(id))return `<img class="${cls||''} simg" src="shop/${id}c.webp" alt="" aria-hidden="true">`;const d=ECO_SEAL[id];return d?`<svg class="${cls||''}" viewBox="-16 -16 32 32" style="stroke:none" aria-hidden="true"><use href="#ecoS_${id}" x="-16" y="-16" width="32" height="32"/></svg>`:IC.wax}
 // 봉인 태그(oppStatus·dynPanel 훅): 그 사람이 장착한 인장 모양. 크기·시간은 같음(심리전 정보 없음)
 function ecoSealIc(seat){try{if(UI.mode!=='online')return IC.wax;const s=cosOf(seat).s;return s?ecoSealSvg(s):IC.wax}catch(e){return IC.wax}}
 function ecoMySeal(){try{const s=ecoEqOf('s');return `<span class="mysl${s?'':' df'}" aria-hidden="true">${s?ecoSealSvg(s):IC.wax}</span>`}catch(e){return ''}}
