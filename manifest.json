@@ -1,7 +1,7 @@
 {
  "id": "./",
- "name": "베팅 오목",
- "short_name": "베팅 오목",
+ "name": "베팅 오목 V1.1",
+ "short_name": "베팅 오목 V1.1",
  "description": "베팅 승자가 착수하는 2인 전략 오목",
  "lang": "ko",
  "start_url": "./",
