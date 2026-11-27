@@ -1892,7 +1892,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.45';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.46';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6730,7 +6730,8 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
 (()=>{
  const ua=navigator.userAgent||'',standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
- if(standalone)return;
+ // 설치 앱 화면처럼 보여도(옛 앱에서 연 임시 창은 standalone으로 잡힘) 새 앱이 실제로 깔려 있지 않으면 설치 안내를 돌림
+ const main=()=>{
  // 시험 7: 삼성 인터넷으로 왔으면 바로 크롬 앱으로 넘김(크롬 밖의 앱에서 부르면 진짜 크롬 창이 열림)
  try{const u=new URL(location.href);if(u.searchParams.get('tc')==='1'&&/SamsungBrowser/.test(navigator.userAgent)){u.searchParams.delete('tc');location.href='intent://'+u.toString().replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;end';return}}catch(e){}
  // 옛 주소(이사 안내 중)에서는 설치를 권하지 않음
@@ -6846,6 +6847,8 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
     if(isPad){const ios=document.querySelector('#instSheet .ios div');if(ios)ios.firstChild.nextSibling.textContent='위쪽 공유 버튼 '}})}
   else if(isIOS)card('Safari로 열면 설치할 수 있어요');
  });
+};
+ if(!standalone)main();else if(navigator.getInstalledRelatedApps)navigator.getInstalledRelatedApps().then(a=>{if(!a||!a.length)main()}).catch(()=>{});
 })();
 </script>
 </body>
