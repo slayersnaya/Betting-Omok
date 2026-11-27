@@ -1958,7 +1958,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.86';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.87';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2210,7 +2210,9 @@ const AI_LEVELS={
   // 막아야 하는 턴(지면 상대 오목)은 항상 최선 대응(초보에게 점수가 더 많은데도 1,1,1로 지던 약점 보완), 대신 평소 최선 대응 비율 0.8→0.7로 낮춰 중수 상대 세기는 유지
   brCrit:1,
   // 지면 끝나는 판에서 상대가 낼 수 있는 최대치보다 많이 걸어 확실히 막을 수 있으면 막음(칩을 쥔 채 1,1,1로 지던 문제 수정)
-  ins:1.1,insMax:true},
+  ins:1.1,insMax:true,
+  // 사람이 칩을 모아 두면 추정이 낮게 나오므로, 상대가 쓸 수 있는 확실한 최대치로도 막을 수 있으면 막음(실제 랭크 기록 재현으로 확인)
+  hardIns:1},
  ultimate:{name:'Ultimate',noRest:1,nrTry:8,rand:0,noise:0,jitter:.03,bidNoise:.15,res:.3,infer:true,eval2:true,lamK:.45,top:1,see5:1,crit3:1,types:[-2,-3,-4],aib:[0,3000,1000,500],nsK:2,learn:true,
   // 2세대: 상대 점수 추적(입자 필터) + 최선 대응 + 질 수 있는 판의 보험·비축 + 비슷한 수 섞기
   br:true,desp:.5,ins:1.1,insAdd:0,insSmooth:true,resv:.6,insMax:true,mixT:3,
@@ -3487,7 +3489,7 @@ function showMyTurn(vs,what){const e=$('#myturn');if(!e||UI.view!=='game'||UI.re
 const ADMIN_EMAILS=['slayersnaya@gmail.com'];
 const isAdmin=()=>{try{const g=user&&user.firebase&&user.google&&user.google()&&(!user.provider||user.provider()==='google')&&user.google();return !!g&&ADMIN_EMAILS.includes(String(g).toLowerCase())}catch(e){return false}};
 // 관리자 폰을 열면 하루 한 번: 학습에 안 쓰는 예전 AI 연습판(초보·중수·고수, 랭크 게임 아님)을 서버에서 지움(한 번에 최대 300건)
-function adminClean(){if(!db||!isAdmin()||adminClean.done)return;adminClean.done=1;const k='bo-admclean';if(Date.now()-(+lget(k)||0)<864e5)return;
+function adminClean(){return;if(!db||!isAdmin()||adminClean.done)return;adminClean.done=1;const k='bo-admclean';if(Date.now()-(+lget(k)||0)<864e5)return;
  (async()=>{let n=0;for(const lv of ['beginner','mid','pro']){try{const qs=await db.collection('aigames').where('level','==',lv).limit(100).get();
    for(const x of qs.docs){const d=x.data()||{};if(d.rk)continue;try{await db.doc('aigames/'+x.id).delete();n++}catch(e){}}}catch(e){}}
   lset(k,String(Date.now()));if(n)toast(`예전 연습판 기록 ${n}건 정리`)})()}
@@ -4620,10 +4622,10 @@ function aiLearnAfter(d,key){try{
  clearTimeout(lrnT);lrnT=setTimeout(()=>{const doc=aiLearnDoc(agg);if(doc&&db&&SEAT)(user&&user.firebase?db.doc('ailearn/'+SEAT).set(lrnOut(doc)):db.doc('ailearn/'+SEAT).update(doc)).catch(()=>{})},1500)
 }catch(e){}}
 // ===== AI 대국 기록 모으기: 끝난 판(공개된 베팅)을 닉네임 없이 서버에 저장 → Ultimate 개선 자료 =====
-// 학습 자료로 쌓는 판: Ultimate 대국 전부 + 랭크 게임 AI 상대 대국 전부(초보·중수·고수 연습판·AI 일반 방은 안 쌓음 — 쓰기 아끼기)
-function aiGameUpload(s){try{if(!(db&&SEAT&&user&&user.firebase)||!s||!s.ai||s.cas||!(s.bot||s.ai==='ultimate')||!Array.isArray(s.hist)||!s.hist.length)return;
+// 사람이 AI와 둔 판은 단계·방 종류 상관없이 전부 쌓음(구글 로그인·게스트 모두, 한 판에 쓰기 1번)
+function aiGameUpload(s){try{if(!(db&&SEAT&&user&&user.firebase)||!s||!s.ai||!Array.isArray(s.hist)||!s.hist.length)return;
  const hist=s.hist.slice(0,300).map(x=>({t:x.t|0,sun:x.sun,cells:x.cells,bA:x.bets.A,bB:x.bets.B,win:x.win}));
- db.doc('aigames/'+SEAT+'_'+s.id).set(Object.assign({by:SEAT,at:Date.now(),level:s.ai,winner:s.winner||null,reason:String(s.reason||'').slice(0,12),first:s.first==='B'?'B':'A',timed:!!s.td,v:2,hj:JSON.stringify(hist)},s.bot?{rk:true,bot:s.bot.id}:{})).catch(()=>{})}catch(e){}}
+ db.doc('aigames/'+SEAT+'_'+s.id).set(Object.assign({by:SEAT,at:Date.now(),level:s.ai,winner:s.winner||null,reason:String(s.reason||'').slice(0,12),first:s.first==='B'?'B':'A',timed:!!s.td,v:2,hj:JSON.stringify(hist)},s.bot&&!s.cas?{rk:true,bot:s.bot.id}:{})).catch(()=>{})}catch(e){}}
 // ===== AI 상대 랭크 게임 결과: 끝나면 서버 bres에 한 번 저장(실패하면 폰에 두었다가 다음에 다시) =====
 function botDelta(s){const k=s&&s.rk;if(!k||snNew(k))return null;const S=s.winner==null?.5:s.winner==='A'?1:0,raw=gainOf(k.me,k.op,S,k.pw.w);return Math.round(k.me.r+raw)-Math.round(k.me.r)}
 function botFinish(s){if(!s||!s.bot||s.cas||s.bdone)return;s.bdone=1;lrm('bo-bplay');botQueue({gid:'k'+s.id,st:s.rk&&typeof s.rk.st==='number'?s.rk.st:undefined,bot:s.bot.id,w:s.winner==='A'?'me':s.winner==='B'?'bot':'draw',turns:s.t|0,why:String(s.reason||'').slice(0,20)})}
