@@ -1954,7 +1954,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.80';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.81';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3833,12 +3833,12 @@ const KST=324e5,SEASON1=Date.UTC(2026,10,25,15);
 const RESET=[900,900,900,1100,1300,1500,1500],SOFT0=900,SNAP_WAIT=20*60e3,SNAP_MAX=14000; // RESET[지난 티어 0브론즈~5마스터, 6챌린저]
 const startOf=(SS,lt)=>SS.n===1?START:lt==null?SOFT0:RESET[lt];
 // 시즌 1 시작 점수 예외: 관리자가 cfg/start {s:{자리:점수}}에 적은 계정만(모든 폰이 같은 문서를 읽음). 관리자 계정은 1250에서 시작
-const ADMIN_START=1250;
+const ADMIN_START=1300,ADMIN_RT=29929465; // 11/27 관리자 전적 초기화: 이 시각(분) 전 판은 관리자 점수에 안 셈
 const stx=(SS,id,lt)=>SS.n===1&&RK.sx&&Number.isInteger(RK.sx[id])?RK.sx[id]:startOf(SS,lt);
 function startSub(){if(!db||RK.sxSub)return;RK.sxSub=1;
- db.doc('cfg/start').onSnapshot(x=>{const d=x.exists?x.data():null,o={};if(d&&d.s&&typeof d.s==='object')for(const [k,v] of Object.entries(d.s))if(okSeat(k)&&Number.isInteger(v)&&v>=0&&v<=3000)o[k]=v;
-  if(JSON.stringify(o)!==JSON.stringify(RK.sx||{})){RK.sx=o;RK.ck=null;clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)}
-  if(isAdmin()&&SEAT&&o[SEAT]!==ADMIN_START&&!RK.sxW){RK.sxW=1;db.doc('cfg/start').set({s:Object.assign({},o,{[SEAT]:ADMIN_START}),at:Date.now()}).catch(e=>{RK.sxW=0;console.warn('cfg start',e&&e.code)})}},()=>{})}
+ db.doc('cfg/start').onSnapshot(x=>{const d=x.exists?x.data():null,o={},rt={};if(d&&d.s&&typeof d.s==='object')for(const [k,v] of Object.entries(d.s)){if(okSeat(k)&&Number.isInteger(v)&&v>=0&&v<=3000)o[k]=v;else if(k.startsWith('t:')&&okSeat(k.slice(2))&&Number.isInteger(v)&&v>0)rt[k.slice(2)]=v}
+  if(JSON.stringify([o,rt])!==JSON.stringify([RK.sx||{},RK.rt||{}])){RK.sx=o;RK.rt=rt;RK.ck=null;clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)}
+  if(isAdmin()&&SEAT&&(o[SEAT]!==ADMIN_START||rt[SEAT]!==ADMIN_RT)&&!RK.sxW){RK.sxW=1;db.doc('cfg/start').set({s:Object.assign({},d&&d.s||{},{[SEAT]:ADMIN_START,['t:'+SEAT]:ADMIN_RT}),at:Date.now()}).catch(e=>{RK.sxW=0;console.warn('cfg start',e&&e.code)})}},()=>{})}
 function seasonOf(now){const s2=Date.UTC(2027,2,1)-KST;if(now<s2)return{n:1,start:SEASON1,end:s2};
  const d=new Date(now+KST);let y=d.getUTCFullYear(),m=d.getUTCMonth(),sm=m>=2?m-((m-2)%3):11;if(m<2)y--;
  return{n:2+((y-2027)*12+sm-2)/3,start:Date.UTC(y,sm,1)-KST,end:Date.UTC(y,sm+3,1)-KST}}
@@ -3940,14 +3940,18 @@ function rankEngine(SS,LT){
    play(a,b,sa,rs?BOT_W:1);fix(i);fix(k);j++}};
  const game=y=>{adv(y.t);const a=P(y.A,y.na,y.t),b=P(y.B,y.nb,y.t),sa=y.w==='draw'?.5:y.w===y.A?1:0;
   // 같은 두 사람(사람·AI)이 24시간 안에 다시 두면 반영을 1 → ½ → ¼ → 0 으로 줄임
-  const pk=[y.A,y.B].sort().join('|'),pt=(pairs.get(pk)||[]).filter(q=>y.t-q<864e5);pairs.set(pk,pt.concat([y.t]));play(a,b,sa,PAIRW[Math.min(pt.length,3)])};
+  const pk=[y.A,y.B].sort().join('|'),pt=(pairs.get(pk)||[]).filter(q=>y.t-q<864e5);pairs.set(pk,pt.concat([y.t]));
+   // 전적 초기화한 자리: 초기화 전 판은 그 자리 점수·전적에 안 셈(상대 쪽은 그대로 반영)
+   const rz=id=>RK.rt&&RK.rt[id]&&y.t<RK.rt[id]*6e4,za=rz(y.A),zb=rz(y.B);if(za&&zb)return;
+   const kp=p=>({r:p.r,g:p.g,w:p.w,l:p.l,d:p.d,ws:p.ws,ls:p.ls}),ka=za?kp(a):null,kb=zb?kp(b):null;
+   play(a,b,sa,PAIRW[Math.min(pt.length,3)]);if(ka)Object.assign(a,ka);if(kb)Object.assign(b,kb)};
  const dup=m=>new Map([...m].map(([k,v])=>[k,Array.isArray(v)?v.slice():{...v}]));
  return {get M(){return M},get pairs(){return pairs},P,adv,game,onBot:f=>{hook=f},
   save:()=>({M:dup(M),pairs:dup(pairs),ord:ord.slice(),h,t,j,x,rs}),
   load:z=>{M=dup(z.M);pairs=dup(z.pairs);BS=BOTS.map(b=>M.get(BOTPRE+b.id));ord=z.ord.slice();ord.forEach((i,p)=>pos[i]=p);h=z.h;t=z.t;j=z.j;x=z.x;rs=!!z.rs}}}
 // 중간 저장을 폰에도 남김(앱을 새로 열어도 시즌 처음부터 다시 계산하지 않게. 저사양 폰에서 첫 계산 300ms대 → 수십 ms).
 // 시즌·지난 시즌 티어표가 같고, 저장한 지점 앞의 판 목록이 그대로일 때만 씀(rankCalc가 확인). 아니면 처음부터 계산해서 결과는 같음
-function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v4:'+SS.n+':'+JSON.stringify(RK.sx||{})+':'+(LT?LT.size+':'+h:'-')}
+function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v4:'+SS.n+':'+JSON.stringify([RK.sx||{},RK.rt||{}])+':'+(LT?LT.size+':'+h:'-')}
 function ckLoad(ck,SS,LT){try{const v=JSON.parse(lget('bo-rkck')||'null');if(!v||v.k!==ckKey(SS,LT))return;const e=v.e;
  if(e.M.some(([id,p])=>p.bot&&!BOTMAP.has(p.bot)))return;const M=new Map(e.M.map(([id,p])=>[id,p.bot?{...p,bot:BOTMAP.get(p.bot),t:Infinity}:p]));
  ck.st={LT,tc:v.tc,gi:v.gi,sig:v.sig,e:{M,pairs:new Map(e.pairs),ord:e.ord,h:e.h,t:e.t,j:e.j,x:e.x}}}catch(e){}}
