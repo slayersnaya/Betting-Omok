@@ -1626,6 +1626,9 @@ html.xmas .pod .p1 .xpw{z-index:0;isolation:isolate}
 #wtaste small{font-size:12px;color:var(--mute);white-space:nowrap}
 @media (max-height:760px){#welcome .wart{max-height:96px}#welcome h2{margin-top:4px}}
 #wtaste{margin:2px 0 8px;gap:6px}
+
+.wartx{display:none}html.xmas .wartx{display:block;width:100%;max-width:360px;margin:0 auto 6px;border-radius:14px;aspect-ratio:720/321;object-fit:cover}html.xmas #wart{display:none}
+@media (max-height:760px){html.xmas .wartx{max-height:102px;width:auto}}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -1831,7 +1834,7 @@ html.xmas .pod .p1 .xpw{z-index:0;isolation:isolate}
 </div>
 <div id="coin" class="hide" role="dialog" aria-label="선 플레이어 정하기"><div class="cstage"><div class="coin" id="coinEl"><div class="face f1"><span class="cst st k"></span><b id="cn1"></b></div><div class="face f2"><span class="cst st w"></span><b id="cn2"></b></div></div><p class="ctext" id="ctext"></p><p class="csub" id="csub"></p></div></div>
 <div id="cover" class="hide"></div>
-<div id="welcome" class="hide" role="dialog" aria-modal="true" aria-labelledby="wlT"><div class="wcard"><svg class="wart" id="wart" viewBox="0 0 240 132" aria-hidden="true"></svg><div><h2 id="wlT">처음 오셨네요</h2><p><span data-ptu>세 칸에 {P을} 몰래 걸고</span><br><span>더 건 쪽이 돌을 놓는 오목</span><br><small class="wsub">1분이면 배워요</small></p><div id="wtaste"><b>한 칸에 몇 칩 걸래요?</b><span class="wtb"><button class="btn ghost" data-act="wtaste" data-v="1">1</button><button class="btn ghost" data-act="wtaste" data-v="3">3</button><button class="btn ghost" data-act="wtaste" data-v="5">5</button></span><div class="wtr" aria-live="polite"></div></div><button class="btn wide" data-act="wtut">튜토리얼 시작</button><button class="btn ghost wide" data-act="wskip">바로 둘래요</button><button class="btn ghost wide wgl" data-act="wglink">구글로 기록 불러오기</button><button class="linkbtn wgl" data-act="wemail" style="display:block;margin:2px auto 0">이메일로 불러오기</button></div></div></div>
+<div id="welcome" class="hide" role="dialog" aria-modal="true" aria-labelledby="wlT"><div class="wcard"><svg class="wart" id="wart" viewBox="0 0 240 132" aria-hidden="true"></svg><img class="wartx" src="xmas-welcome.webp" alt="" aria-hidden="true"><div><h2 id="wlT">처음 오셨네요</h2><p><span data-ptu>세 칸에 {P을} 몰래 걸고</span><br><span>더 건 쪽이 돌을 놓는 오목</span><br><small class="wsub">1분이면 배워요</small></p><div id="wtaste"><b>한 칸에 몇 칩 걸래요?</b><span class="wtb"><button class="btn ghost" data-act="wtaste" data-v="1">1</button><button class="btn ghost" data-act="wtaste" data-v="3">3</button><button class="btn ghost" data-act="wtaste" data-v="5">5</button></span><div class="wtr" aria-live="polite"></div></div><button class="btn wide" data-act="wtut">튜토리얼 시작</button><button class="btn ghost wide" data-act="wskip">바로 둘래요</button><button class="btn ghost wide wgl" data-act="wglink">구글로 기록 불러오기</button><button class="linkbtn wgl" data-act="wemail" style="display:block;margin:2px auto 0">이메일로 불러오기</button></div></div></div>
 <!-- 시트는 화면(로비·대국) 밖에 둠: 대국 화면에서도 닉네임 등을 열 수 있게 -->
  <div class="shbg hide" data-act="shclose" id="shbg"></div>
  <div class="lsheet hide" id="sh-acc" role="dialog" aria-label="계정 연결">
@@ -1935,7 +1938,7 @@ html.xmas .pod .p1 .xpw{z-index:0;isolation:isolate}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.58';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.59';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
