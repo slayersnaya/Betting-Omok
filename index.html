@@ -1947,7 +1947,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.74';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.75';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -4634,7 +4634,7 @@ const RV={d:null,i:0,
 
 // ===== 튜토리얼: 4단계, 첫 실행 때만. 끝나면 바로 실전(초보 AI) =====
 const TUT=[
- {k:'info',n:1,title:'정확히 5개면 승리',text:'가로·세로·대각선 어디든&nbsp;<b>5개</b> <span style="white-space:nowrap">· 6개 이상은 무효</span><br><span style="white-space:nowrap">동시에 오목이면 같은 줄 수일 때 후 플레이어 승</span>',setup(s){for(let c=7;c<=11;c++)s.bd[9][c]=1;s.bd[8][9]=2;s.bd[10][8]=2;s.bd[8][11]=2;s.bd[10][12]=2;s.demo=[[[9,7],[9,11]]]}},
+ {k:'info',n:1,title:'정확히 5개면 승리',text:'가로·세로·대각선 어디든&nbsp;<b>5개</b> <span style="white-space:nowrap">· 6개 이상은 무효</span><br><span style="white-space:nowrap">동시 오목은 줄 많은 쪽 · 같으면 후 플레이어</span>',setup(s){for(let c=7;c<=11;c++)s.bd[9][c]=1;s.bd[8][9]=2;s.bd[10][8]=2;s.bd[8][11]=2;s.bd[10][12]=2;s.demo=[[[9,7],[9,11]]]}},
  {k:'designate',n:2,tap:[9,8],title:'이어진 빈칸 세 개 고르기',text:'세 칸을 고르는 사람이 <b>선 플레이어</b> · 이번엔 나',setup(s){s.bd=emptyBoard();s.bd[9][9]=1;s.bd[8][10]=2;s.bd[10][7]=1;s.bd[11][10]=2;s.last=null;s.hist=[];s.sun='A';s.hu='B'}},
  {k:'bet',n:3,title:'몰래 나눠 걸기',opp:[2,2,2],text:ptT('합계는 내 {P}까지<br>상대 베팅은 안 보여요')},
  {k:'result',n:3,title:'몰래 나눠 걸기',text:ptT('건 {P은} 사라짐 · 매 턴 <b>+10</b>{P}')},
