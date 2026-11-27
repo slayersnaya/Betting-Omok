@@ -1609,7 +1609,7 @@ html.xmas .card,html.xmas .lcard{backdrop-filter:blur(2px)}
 .pod .xp{position:absolute;pointer-events:none;line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
 .pod .xp.x1{font-size:44px;left:50%;bottom:-22px;transform:translateX(-50%);z-index:-1}
 .pod .xp.x1b{font-size:26px;right:-34px;bottom:-14px;transform:scaleX(-1)}
-html.xmas .pod .p1 .xpw{margin-bottom:24px;z-index:0;isolation:isolate}
+html.xmas .pod .p1 .xpw{z-index:0;isolation:isolate}
 .pod .xp.x2{font-size:28px;left:-26px;bottom:-4px;transform:scaleX(-1)}
 .pod .xp.x3{font-size:28px;right:-24px;bottom:-4px}
 </style>
@@ -1921,7 +1921,7 @@ html.xmas .pod .p1 .xpw{margin-bottom:24px;z-index:0;isolation:isolate}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.54';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.55';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -4176,7 +4176,7 @@ function renderRank(){
  $('#rkResume').innerHTML=act?`<div class="card resume"><div class="rt"><b>진행 중인 랭크 게임</b><span>vs ${esc(act.host===SEAT?act.guestNick:act.hostNick)} · ${ago(act.created)}</span></div><button class="go" data-act="enter" data-g="${esc(act.id)}" aria-label="이어하기"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>`:'';
  renderMM();
  const top=RK.list.slice(0,50),row=(p,i)=>{const tt=tierOf(p);return `<div class="rkrow${p.seat===SEAT?' me':''}${i<3?' r'+(i+1):''}" data-act="prof" data-u="${esc(p.seat)}" role="button" tabindex="0" aria-label="${esc(rkNick(p))} 프로필"><span class="n">${i<3?`<i>${i+1}</i>`:i+1}</span>${cosFrame(p.seat,emblem(tt,22),22)}${ecoRkNk(p)}<span class="sc">${tt.n} · ${Math.round(p.r)}</span></div>`};
- const off=UI.ready&&!db,pod=top.length>=3?`<div class="pod">${[1,0,2].map(i=>{const p=top[i],tt=tierOf(p),nk=esc(rkNick(p));return `<div class="pc p${i+1}${p.seat===SEAT?' me':''}" data-act="prof" data-u="${esc(p.seat)}" role="button" tabindex="0" aria-label="${i+1}위 ${nk} ${tt.n} ${Math.round(p.r)}점">${i===0&&tt!==CHAL?CROWN:''}<span class="xpw">${cosFrame(p.seat,emblem(tt,i===0?58:46),i===0?58:46)}${xmasOn()?XPOD[i]:''}</span><div class="pn" aria-hidden="true">${cosName(p.seat,nk)}${p.seat===SEAT?' (나)':''}</div><div class="ps" aria-hidden="true">${tt.n} · ${Math.round(p.r)}</div><div class="base" aria-hidden="true">${i+1}</div></div>`}).join('')}</div>`:'';
+ const off=UI.ready&&!db,pod=top.length>=3?`<div class="pod">${[1,0,2].map(i=>{const p=top[i],tt=tierOf(p),nk=esc(rkNick(p));return `<div class="pc p${i+1}${p.seat===SEAT?' me':''}" data-act="prof" data-u="${esc(p.seat)}" role="button" tabindex="0" aria-label="${i+1}위 ${nk} ${tt.n} ${Math.round(p.r)}점">${i===0&&tt!==CHAL?CROWN:''}<span class="xpw">${cosFrame(p.seat,emblem(tt,i===0?58:46),i===0?58:46)}</span><div class="pn" aria-hidden="true">${cosName(p.seat,nk)}${p.seat===SEAT?' (나)':''}</div><div class="ps" aria-hidden="true">${tt.n} · ${Math.round(p.r)}</div><div class="base" aria-hidden="true">${i+1}</div></div>`}).join('')}</div>`:'';
  {const pe=$('#rkPod');if(pe)pe.innerHTML=off||!RK.loaded?'':pod}
  {const lim=UI.rkAll?50:10,more=$('#rkMore');$('#rkBoard').innerHTML=off?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.slice(0,lim).map(row).slice(pod?3:0).join('')+(idx>=lim?`<div class="rkrow gap" aria-hidden="true"><span class="n">⋮</span></div>`+row(me,idx):''):'<p class="sub">랭크 게임 5판 후 등록</p>'):'<p class="sub">불러오는 중</p>';
   if(more){const on=!off&&RK.loaded&&top.length>10;more.classList.toggle('hide',!on);more.textContent=UI.rkAll?'접기':`11~${top.length}위 보기`;more.setAttribute('aria-expanded',UI.rkAll?'true':'false')}}
