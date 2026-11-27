@@ -1947,7 +1947,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.64';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.65';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -5612,7 +5612,7 @@ const use=n=>window.claude&&typeof window.claude.use==='function'?Promise.resolv
  // Firebase(웹·어플) 모드: 자리 id는 로그인 id(uid). 규칙으로 '본인 문서만 쓰기'가 보장됨
  if(user&&user.firebase){try{const id=await user.id();if(id){SEAT=id;SECRET=null}}catch(e){}document.body.classList.add('fbmode');try{renderAcct()}catch(e){}profLoad().catch(()=>{})}
  // 시험 중: 이사 안내는 관리자 계정에서만(확인되면 MV_ON으로 모두에게)
- try{if(MV_OLD){if(MV_ON||isAdmin())mvOld()}else{setTimeout(mvNew,600);setTimeout(mvDiag,7000)}}catch(e){console.warn('mv',e)}
+ try{if(MV_OLD){if(MV_ON)mvOld()}else{setTimeout(mvNew,600);setTimeout(mvDiag,7000)}}catch(e){console.warn('mv',e)}
  // 프로필 이름(실명일 수 있음)은 공유 DB에 남지 않게 닉네임으로 자동 입력하지 않음
  if(user){try{canWrite=await user.can('data.write')}catch(e){}}
  const note=$('#onlineNote');
