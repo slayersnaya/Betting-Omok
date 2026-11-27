@@ -1890,7 +1890,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.25';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.26';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2702,13 +2702,18 @@ function mvGo(){const lk=user&&user.firebase&&user.provider?user.provider()||'':
  // 안드로이드 설치 앱: 앱 안 임시 창이 아니라 크롬 앱으로 바로 엶(설치는 크롬에서만 됨). # 은 못 넘기므로 작은 기록만 주소에 담음
  if(sa&&/Android/i.test(navigator.userAgent)){const v=MV_NEW+'?inst=2&mvq='+mvPack(lk,2500);location.href='intent://'+v.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(u)+';end';return}
  if(sa){const w=window.open(u,'_blank');if(w)return}location.href=u}
+// 옛 주소: 안내 창이 낡은 버전이면(브라우저 캐시) 새로 고침 버튼을 기다리지 않고 바로 최신으로 다시 엶(한 번만)
+function mvFresh(){return fetch('version.json',{cache:'no-store'}).then(r=>r.json()).then(j=>{const v=j&&j.v;if(!v||v===window.BO_VER)return false;
+ let n=0;try{n=+sessionStorage.getItem('bo-mvre')||0}catch(e){}if(n>=2)return false;try{sessionStorage.setItem('bo-mvre',String(n+1))}catch(e){}
+ location.replace(location.pathname+'?r='+Date.now());return true}).catch(()=>false)}
 function mvOld(){if(!MV_OLD||$('#mvOv'))return;const ov=document.createElement('div');ov.id='mvOv';document.body.appendChild(ov);mvRender();
  ov.addEventListener('click',e=>{const b=e.target.closest('[data-mv]');if(!b)return;const a=b.dataset.mv;
   if(a==='goo'){googleLink().then(()=>{MV.ask=0;mvRender()})}
   else if(a==='em'){ov.classList.add('hide');openAcct(()=>{MV.ask=0;ov.classList.remove('hide');mvRender()})}
-  else if(a==='go'){if(mvGuest()){MV.ask=1;mvRender()}else mvGo()}
+  else if(a==='go'){mvFresh().then(re=>{if(re)return;if(mvGuest()){MV.ask=1;mvRender()}else mvGo()})}
   else if(a==='back'){MV.ask=0;mvRender()}
-  else if(a==='force')mvGo()});
+  else if(a==='force')mvFresh().then(re=>{if(!re)mvGo()})});
+ mvFresh();
  // 이메일 창을 그냥 닫으면 안내 창을 다시 보여 줌
  setInterval(()=>{if(ov.classList.contains('hide')&&!shOpen){ov.classList.remove('hide');mvRender()}},700)}
 function mvNew(){if(MV_OLD)return;let o=null;try{o=JSON.parse(sessionStorage.getItem('bo-mvpend')||'null')}catch(e){}
