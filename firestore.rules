@@ -381,8 +381,8 @@ service cloud.firestore {
       && n.own is list && n.own.size() <= 300 && n.own.toSet().size() == n.own.size()
       && n.cl is list && n.cl.size() <= 400 && n.eq is map && n.eq.keys().hasOnly(['t','n','f','s','w','b','x'])
       && n.own.concat(['']).hasAll(n.eq.values())
-      && slotOk(n.eq, 't', '^(t[0-9]{1,2}|zt[0-9]{1,3}_[56])$') && slotOk(n.eq, 'n', '^(n[0-9]{1,2}|zn[0-9]{1,3})$')
-      && slotOk(n.eq, 'f', '^(f[0-9]{1,2}|z[0-9]{1,3}_[0-6])$') && slotOk(n.eq, 's', '^s[0-9]{1,2}$')
+      && slotOk(n.eq, 't', '^(t[0-9]{1,2}|zt[0-9]{1,3}_[5-7])$') && slotOk(n.eq, 'n', '^(n[0-9]{1,2}|zn[0-9]{1,3})$')
+      && slotOk(n.eq, 'f', '^(f[0-9]{1,2}|z[0-9]{1,3}_[0-7])$') && slotOk(n.eq, 's', '^s[0-9]{1,2}$')
       && slotOk(n.eq, 'w', '^w[0-9]{1,2}$') && slotOk(n.eq, 'b', '^b[0-9]{1,2}$') && slotOk(n.eq, 'x', '^x[0-9]{1,2}$')
       && n.at == request.time; }
     // 날짜가 바뀌면 오늘 받은 양·오늘 항목은 0부터
@@ -418,14 +418,14 @@ service cloud.firestore {
       let sn = int(key.replace('s', ''));
       let sd = get(/databases/$(database)/documents/cfg/$('season' + string(sn))).data;
       let v = sd.p[me()];
-      let amt = sd.get('amt', [200,400,700,1000,1400,1800,2500])[v[0]];
+      let amt = sd.get('amt', [200,400,700,1000,1400,1800,2100,2500])[v[0]];
       return sd.n == sn && v[2] >= 10 && amt is int && amt >= 0 && amt <= 2500
         && n.g == o.g + amt && n.own == o.own.concat(rwItems(sn, v[0])); }
     function walClaim(o, n) {
       let key = n.cl[n.cl.size() - 1];
       return n.cl == o.cl.concat([key]) && !(key in o.cl) && key is string && sameDay(o, n)
-        && ((key.matches('^p[0-9]{1,3}_[1-6]$') && int(key.split('_')[0].replace('p', '')) <= seasonNow()
-             && n.g == o.g + [0,50,100,150,200,300,300][int(key.split('_')[1])] && n.own == o.own)
+        && ((key.matches('^p[0-9]{1,3}_[1-7]$') && int(key.split('_')[0].replace('p', '')) <= seasonNow()
+             && n.g == o.g + [0,50,100,150,200,300,300,300][int(key.split('_')[1])] && n.own == o.own)
             || (key in ecoAch() && (key != 'a_link' || google()) && n.g == o.g + ecoAch()[key] && n.own == o.own)
             || (key.matches('^s[0-9]{1,3}$') && seasonRw(o, n, key))); }
     function walBuy(o, n) {
