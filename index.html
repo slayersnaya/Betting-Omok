@@ -1728,7 +1728,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
   <div class="card" id="rkTierC">
    <div class="chead"><h2>티어</h2></div>
    <div class="tiers" id="rkTiers"></div>
-   <details class="rules rkhelp"><summary><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01"/></svg>랭크 게임 규칙</summary><ul class="rknote"><li>고르기 20초 · 베팅 30초 · 처음 5판은 배치</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li><li>2연승부터 더 오르고 2연패부터 더 내려가요</li><li>시즌은 3달마다 · 새 시즌은 모두 1000점부터</li><li>챌린저는 매일 0시 그랜드마스터 상위 5명</li><li>골드까지는 상대 칩 예상 범위를 보여 줘요</li><li>점수가 비슷한 사람부터 · 사람끼리 먼저 매칭</li><li>상대가 없으면 AI가 대신 들어올 수 있어요</li></ul></details>
+   <details class="rules rkhelp"><summary><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01"/></svg>랭크 게임 규칙</summary><ul class="rknote"><li>고르기 20초 · 베팅 30초 · 처음 5판은 배치</li><li>티어가 낮을수록 많이 오르고 덜 깎여요</li><li>2연승부터 더 오르고 2연패부터 더 내려가요</li><li>시즌은 3달마다 · 새 시즌은 한 단계 아래 최저점부터</li><li>챌린저는 매일 0시 그랜드마스터 상위 5명</li><li>골드까지는 상대 칩 예상 범위를 보여 줘요</li><li>점수가 비슷한 사람부터 · 사람끼리 먼저 매칭</li><li>상대가 없으면 AI가 대신 들어올 수 있어요</li></ul></details>
   </div>
  </div>
 
@@ -1789,7 +1789,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
      <li>랭크 게임은 사람끼리 먼저, 점수가 비슷한 상대부터 짝지어요. 10~15초 기다려도 사람이 없으면 AI가 대신 들어와요.</li>
      <li>일반 게임 방과 랭크 게임에 AI가 <span class="nw">함께할 수 있어요.</span></li>
      <li>랭크 점수는 티어가 낮을수록 많이 오르고 덜 깎여요. 높을수록 덜 오르고 더 깎여요. 2연승·2연패부터는 더 오르고 더 내려가요.</li>
-     <li>시즌은 3달마다 새로 시작해요. 새 시즌에는 모두(AI 포함) 1000점에서 배치 5판부터 다시 해요.</li>
+     <li>시즌은 3달마다 새로 시작해요. 지난 시즌 티어의 한 단계 아래 최저점에서 배치 5판부터 다시 해요(마스터 이상은 다이아 1700점, 실버 이하와 기록이 없으면 1000점).</li>
     </ol>
     <dl class="gloss">
      <dt>선 · 후 플레이어</dt><dd>세 칸을 고르는 쪽이 선 플레이어, 상대가 후 플레이어예요. 매 턴 바뀌어요.</dd>
@@ -1971,7 +1971,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.95';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.96';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3862,8 +3862,8 @@ const BOT_W=.65;
 //  · AI끼리 판에서 진 쪽은 BOT_LF배만 깎임(AI 전체가 시즌 동안 조금씩 올라감). 사람이 낀 판은 그대로
 //  · 처음 배치는 최고 1650점(Easy 700~950 · Normal 900~1200 · Hard 1150~1450 · Ultimate 1350~1650)
 //  → 시뮬레이션(사람 판 제외): Ultimate 평균 30일 약 1740 · 60일 1860 · 90일 1950, 시즌 말 마스터 몇 명. Easy는 시즌 내내 브론즈
-// 진 판 깎임 배율: 시즌 1(AI 처음 배치 최고 1650)은 .99, 시즌 2부터(모두 1000점 시작)는 .979 → 두 경우 모두 시즌 말 마스터 AI 몇 명
-const BOT_SC=320,lfOf=SS=>SS&&SS.n===1?.99:.979;let BOT_LF=.99;
+// 진 판 깎임 배율 .99: 시즌 1(AI 처음 배치 최고 1650)·시즌 2부터(한 단계 아래 최저점, 마스터 이상 1700) 모두 시작 평균이 비슷해 같은 값
+const BOT_SC=320,lfOf=SS=>.99;let BOT_LF=.99;
 // 11/27 티어 개편 환산: 이 시각에 사람 점수를 예전 티어 안의 같은 위치로 한 번 옮김(예전 플래티넘 1300~1500 → 새 플래티넘 1450~1700).
 //  그 뒤 처음 랭크 게임을 하는 사람은 1000점(브론즈)에서 시작. 사람도 진 판은 BOT_LF배만 깎임(AI와 같게)
 const HUM_CONV=Date.UTC(2026,10,27,12,3),CONV_O=[0,900,1100,1300,1500,1700],CONV_N=[0,1100,1250,1450,1700,2000];
@@ -3880,7 +3880,7 @@ const RK={docs:[],bdocs:[],map:new Map(),list:[],loaded:false,snap:{},snapSt:{},
 // 마스터·챌린저 1500 · 다이아 1300 · 플래티넘 1100 · 골드·실버·브론즈와 기록 없음(안 했거나 배치를 못 끝냄)은 900(실버 최저점: 브론즈 최저 0은 너무 낮고,
 // 기록 없는 사람이 골드로 끝낸 사람보다 높게 시작하지 않게). 연승·연패는 새로 셈
 const KST=324e5,SEASON1=Date.UTC(2026,10,25,15);
-const RESET=[1000,1000,1000,1000,1000,1000,1000,1000],SOFT0=1000,SNAP_WAIT=20*60e3,SNAP_MAX=14000; // RESET[지난 티어 0브론즈~5마스터, 6그랜드마스터, 7챌린저]
+const RESET=[1000,1000,1100,1250,1450,1700,1700,1700],SOFT0=1000,SNAP_WAIT=20*60e3,SNAP_MAX=14000; // RESET[지난 티어 0브론즈~5마스터, 6그랜드마스터, 7챌린저]
 const startOf=(SS,lt)=>SS.n===1?START:lt==null?SOFT0:RESET[lt];
 // 시즌 1 시작 점수 예외: 관리자가 cfg/start {s:{자리:점수}}에 적은 계정만(모든 폰이 같은 문서를 읽음). 관리자 계정은 1250에서 시작
 const ADMIN_START=1300,ADMIN_RT=29929465; // 11/27 관리자 전적 초기화: 이 시각(분) 전 판은 관리자 점수에 안 셈
@@ -6071,7 +6071,7 @@ document.addEventListener('pointerdown',()=>{if($('#emoTip'))emoTipOff()},true);
 // ===== 7. 시즌 결산: 시즌이 바뀐 뒤 처음 앱을 열면 한 번(랭크 게임을 둔 사람만) =====
 // FEAT-MERGE(rank3): 랭크 개편팀 사본의 rankCalc(SS,LT,docs,bdocs)·RESET·cfg/season{n}(시즌 n 최종 기록 {n,at,v,p:{자리:[티어,점수,판수]}})이 있으면 그것을 씀.
 //  지금 코드(base)에는 없어서: ① rankCompute를 '그 시즌 마지막 순간'으로 시계를 돌려 한 번 계산(끝나면 원래대로) ② 다음 시즌 시작 점수는 rank3 회의 결정값(FX_RESET)
-const FX_RESET=[1000,1000,1000,1000,1000,1000,1000,1000]; // 지난 시즌 티어(0브론즈~5마스터, 6챌린저) → 다음 시즌 시작 점수(한 단계 아래 티어 최저점, 브론즈·기록 없음 900)
+const FX_RESET=[1000,1000,1100,1250,1450,1700,1700,1700]; // 지난 시즌 티어(0브론즈~5마스터, 6챌린저) → 다음 시즌 시작 점수(한 단계 아래 티어 최저점, 브론즈·기록 없음 900)
 const fxReset=ix=>{try{if(typeof RESET!=='undefined'&&Array.isArray(RESET))return RESET[ix]}catch(e){}return FX_RESET[ix]},FX_SOFT0=900;
 const fxTierIx=t=>!t?-1:t===CHAL?7:TIERS.indexOf(t),fxTierOfIx=ix=>ix===7?CHAL:TIERS[ix]||null;
 function recapCalc(PS){
