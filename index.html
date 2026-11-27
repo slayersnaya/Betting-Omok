@@ -1890,7 +1890,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.30';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.31';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6762,9 +6762,9 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
  const free=()=>{const q=id=>document.getElementById(id),w=q('welcome'),d=q('dlg'),lb=q('lobby');return !!lb&&!lb.classList.contains('hide')&&(!w||w.classList.contains('hide'))&&(!d||d.classList.contains('hide'))&&!document.body.classList.contains('shopen')};
  function whenFree(f,n){if(free())f();else if((n||0)<60)setTimeout(()=>whenFree(f,(n||0)+1),1500)}
  let prevFocus=null;
- function sheet(html,onOk,cls){if(document.getElementById('instSheet'))return;ls(KS,String(Date.now()));prevFocus=document.activeElement;
+ function sheet(html,onOk,cls,okT){if(document.getElementById('instSheet'))return;ls(KS,String(Date.now()));prevFocus=document.activeElement;
   const s=document.createElement('div');s.id='instSheet';if(cls)s.className=cls;s.setAttribute('role','dialog');s.setAttribute('aria-modal','true');s.setAttribute('aria-labelledby','instT');
-  s.innerHTML=`<div class="box"><div class="hd"><img src="icons/icon-192.png" alt=""><div><h2 id="instT">베팅 오목 앱으로 설치</h2><p>홈 화면에서 바로 열려요</p></div></div>${html}<div class="row"><button class="btn ghost" type="button" data-later>나중에</button>${onOk?'<button class="btn" type="button" data-ok>설치</button>':'<button class="btn" type="button" data-done>확인</button>'}</div></div>`;
+  s.innerHTML=`<div class="box"><div class="hd"><img src="icons/icon-192.png" alt=""><div><h2 id="instT">베팅 오목 앱으로 설치</h2><p>홈 화면에서 바로 열려요</p></div></div>${html}<div class="row"><button class="btn ghost" type="button" data-later>나중에</button>${onOk?'<button class="btn" type="button" data-ok>${okT||'설치'}</button>':'<button class="btn" type="button" data-done>확인</button>'}</div></div>`;
   const close=later=>{if(later)ls(K,String(Date.now()));s.remove();const a=document.getElementById('instArrow');if(a)a.remove();try{prevFocus&&prevFocus.focus&&prevFocus.focus()}catch(e){}};
   s.addEventListener('click',e=>{if(e.target===s)close(true)});s.querySelector('[data-later]').onclick=()=>close(true);{const d=s.querySelector('[data-done]');if(d)d.onclick=()=>close(false)}
   if(onOk)s.querySelector('[data-ok]').onclick=async()=>{close(false);await onOk()};
@@ -6790,11 +6790,12 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
    if(!tried)setTimeout(()=>wt(0),1200);
    card(isIOS?'사파리에서 열어 설치':'크롬에서 열어 설치',isIOS?'사파리로':'크롬으로',toOut)}
   else if(isAnd&&isChrome&&hop){
-   // 크롬으로 넘어왔는데 크롬이 설치 신호를 안 주면(전에 설치 창을 닫았거나 이미 설치됨): 메뉴로 설치하는 방법을 바로 보여 줌
+   // 크롬으로 보냈는데도 설치 신호가 없으면(앱 안 임시 창에 그대로 열렸거나, 전에 설치 창을 닫음): 닫았던 기록과 상관없이 방법을 크게 보여 줌
    setTimeout(()=>{if(ev||document.getElementById('instSheet'))return;notInstalled().then(ok=>{if(ev)return;
     if(!ok){card('이미 설치돼 있어요 · 홈 화면에서 열기');return}
-    card('⋮ 메뉴 → 앱 설치');whenFree(()=>{if(ev||document.getElementById('instSheet'))return;
-     sheet(`<div class="ios"><div><b>1</b>오른쪽 위 ⋮ 메뉴 누르기</div><div><b>2</b>'앱 설치' 또는 '홈 화면에 추가'</div></div>`,null)})})},4000)}
+    const fin=()=>{try{const u=new URL(location.href);u.searchParams.set('inst','2');location.href='intent://'+u.toString().replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;end'}catch(e){}};
+    const w=n=>{const d=document.getElementById('dlg');if(ev||document.getElementById('instSheet'))return;if(d&&!d.classList.contains('hide')&&n<60){setTimeout(()=>w(n+1),1500);return}
+     sheet(`<div class="ios"><div><b>1</b>오른쪽 위 ⋮ 메뉴 누르기</div><div><b>2</b>'Chrome에서 열기' 또는 '앱 설치'</div></div>`,fin,'','크롬으로')};w(0)})},4000)}
   else if(isAnd&&isChrome&&!hop){
    // 앱에서 연 링크(맞춤 탭)는 바로, 그 밖에는 설치 신호가 3초 안에 안 오면 크롬 앱으로(하루 한 번, 이사로 온 경우는 늘)
    // 기록 가져오기 같은 안내 창이 열려 있으면 닫힐 때까지 기다림(가져온 기록은 크롬과 같이 씀)
