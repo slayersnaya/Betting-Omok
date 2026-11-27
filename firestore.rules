@@ -511,7 +511,7 @@ service cloud.firestore {
         && ((m.it == '' && n.own == o.own && mailG(o, n, m.g))
           || (m.it != '' && (m.it in o.own) && n.own == o.own && mailG(o, n, m.g + ecoPrice()[m.it]))
           || (m.it != '' && !(m.it in o.own) && n.own == o.own.concat([m.it]) && mailG(o, n, m.g))); }
-    //  우편 문서: to 'all'(그 기간에 앱을 연 모두) 또는 한 사람 uid · t 제목 · msg 내용 · g 옥돌(0~10000) · it 상점 아이템 id 또는 ''
+    //  우편 문서: to 'all'(그 기간에 앱을 연 모두) 또는 한 사람 uid · t 제목 · msg 내용 · g 옥돌(0~99999) · it 상점 아이템 id 또는 ''
     //  from~until 받을 수 있는 기간(ms, 최대 31일) · nk 받는 사람 닉네임(관리자 표시용) · by 보낸 관리자 · at 서버 시각
     //  읽기: 받는 사람(전체 우편은 모두)·관리자 · 만들기·지우기: 관리자만 · 고치기 금지(잘못 보냈으면 지우고 다시)
     match /mail/{id} {
@@ -522,7 +522,7 @@ service cloud.firestore {
         && (request.resource.data.to == 'all' || seatId(request.resource.data.to))
         && request.resource.data.t is string && request.resource.data.t.size() >= 1 && request.resource.data.t.size() <= 30
         && request.resource.data.msg is string && request.resource.data.msg.size() <= 200
-        && request.resource.data.g is int && request.resource.data.g >= 0 && request.resource.data.g <= 10000
+        && request.resource.data.g is int && request.resource.data.g >= 0 && request.resource.data.g <= 99999
         && (request.resource.data.it == '' || request.resource.data.it in ecoPrice())
         && (request.resource.data.g > 0 || request.resource.data.it != '' || request.resource.data.msg.size() > 0)
         && request.resource.data.from is int && request.resource.data.until is int

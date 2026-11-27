@@ -1947,7 +1947,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.67';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.68';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6535,7 +6535,7 @@ rwAdd({id:'eco',order:0,
 //   이미 가진 아이템이면 상점 가격만큼 옥돌로 대신 · 끝난 우편 id 는 목록에서 빼도 됨(id 안의 끝시각으로 규칙이 확인) → 목록이 커지지 않음(최대 20)
 // 공지(선물 없는 우편)는 서버에 쓰지 않고 이 기기에 '읽음'만 기록. 읽기 비용은 mailFetch 설명 참고
 var MAIL={list:[],at:0,atP:0,busy:null,err:0,adm:null,admBusy:0,tgt:null,claiming:0,booted:0};
-const MAIL_MAX=60,MAIL_GMAX=10000,MAIL_IDRE=/^m[0-9]{13}_[a-z0-9]{6}$/,MAIL_SKEW=10*60e3;
+const MAIL_MAX=60,MAIL_GMAX=99999,MAIL_IDRE=/^m[0-9]{13}_[a-z0-9]{6}$/,MAIL_SKEW=10*60e3;
 const MAIL_BETA={t:'Beta Test 참여 감사 선물',msg:'베타 테스트에 함께해 주셔서 고마워요\n물결 테두리를 보내 드려요.',it:'f2',g:0,end:Date.UTC(2026,11,2,15)}; // 준비값 · 알림 줄은 12/3 0시(한국)까지
 const mailSrv=()=>{try{return ecoSrv()}catch(e){return false}};
 function mailNorm(id,d){if(!MAIL_IDRE.test(id||'')||!d||typeof d!=='object')return null;const I=v=>Number.isInteger(v)?v:null;
