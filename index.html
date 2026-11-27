@@ -1947,7 +1947,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.69';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.70';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2390,7 +2390,7 @@ function aiDesignate(v){
  const any=bd.some(r=>r.some(x=>x));
  let cand=legalTriples(bd).filter(t=>any?t.some(([r,c])=>aiNear(bd,r,c,2)):t.every(([r,c])=>Math.abs(r-9)<=1&&Math.abs(c-9)<=1));
  if(!cand.length)cand=legalTriples(bd);
- if(lv.rand>=.7&&rnd()<.55)return cand[Math.floor(rnd()*cand.length)];
+ 
  const useL=lv.learn&&AI_LRN.on,trust=useL?aiLrTrust(v.mem):0;AI_LRN.t=v.t;
  let dPts=v.aiPts;if(lv.resvD){const th=aiThreat(bd,3-v.aiCol);if(th<=3)dPts=Math.max(3,v.aiPts-aiReserve(th,om,aiPFom(v.mem,lv),lv))}
  const tbase=lv.dThreat?aiThrBase(bd,3-v.aiCol):null;
@@ -2400,7 +2400,9 @@ function aiDesignate(v){
  if(lv.dPre&&cand.length>lv.dPre){const q=cand.map(t=>{const V=aiOutcomes2(bd,t,v.aiCol,true,false,lv);let s=0;for(const x of V)s+=Math.min(Math.abs(x),3e4);if(V.some(x=>Math.abs(x)>=AI_WIN))s+=1e9;if(myF.size&&t.some(([r,c])=>myF.has(r*N+c)))s+=1e9;return{t,s:s+Math.max(0,V[7])}});q.sort((a,b)=>b.s-a.s);cand=q.slice(0,lv.dPre).map(x=>x.t)}
  const scored=cand.map(t=>{let V=lv.eval2?aiOutcomes2(bd,t,v.aiCol,true,false,lv):aiOutcomes(bd,t,v.aiCol,false,lv.see5,rnd);if(tbase){let sp=3;if(lv.dtReal){const l0=aiLam(v,lv,om,V),b0=aiOptimize(V,dPts,true,om,l0,null,0,lv).b;sp=b0[0]+b0[1]+b0[2]}V=aiDesThreat(bd,t,V,v,lv,om,tbase,sp)}const lam=aiLam(v,lv,om,V);
    if(useL){const f=aiLrFeat(V),ph=aiLrPhase(v.t),pb=aiLrPB(om.oppEst);AI_LRN.ctx={trust,q:[0,1,2].map(i=>aiLrHist(f.rank[i],0,f.crit[i],ph,pb))}}
-   let sc=aiOptimize(V,dPts,true,om,lam,null,0,lv).e;AI_LRN.ctx=null;if(lv.tempo&&Math.abs(V[7])<AI_WIN)sc+=lv.tempo*Math.max(0,V[7]);if(myF.size&&t.some(([r,c])=>myF.has(r*N+c)))sc+=lv.force*lam*Math.min(om.oppEst,v.aiPts);if(lv.noise)sc+=Math.abs(sc)*(rnd()-.5)*lv.noise;return{t,sc}}).sort((a,b)=>b.sc-a.sc);
+   let sc=aiOptimize(V,dPts,true,om,lam,null,0,lv).e;AI_LRN.ctx=null;if(lv.tempo&&Math.abs(V[7])<AI_WIN)sc+=lv.tempo*Math.max(0,V[7]);if(myF.size&&t.some(([r,c])=>myF.has(r*N+c)))sc+=lv.force*lam*Math.min(om.oppEst,v.aiPts);const raw=sc;if(lv.noise)sc+=Math.abs(sc)*(rnd()-.5)*lv.noise;return{t,sc,raw}}).sort((a,b)=>b.raw-a.raw);
+ // 약한 단계도 말이 안 되는 세 칸은 안 고르게: 제대로 계산한 상위 몇 개 안에서만 흔들기
+ if(lv.noise&&!lv.br){scored.splice(Math.max(4,Math.ceil(scored.length*.12)));scored.sort((a,b)=>b.sc-a.sc)}
  if(lv.br&&lv.dk){AI_JOINT=!!lv.joint;const top=scored.slice(0,lv.dk),om2=aiPFom(v.mem,lv);
   for(const x of top){const V=aiOutcomes2(bd,x.t,v.aiCol,true,false,lv),lam=aiLam(v,lv,om2,V),smp=aiOppSamples(v.mem,lv,V,true,v.aiPts,lv.dS||10,rnd);x.sc2=(lv.smooth?aiBRsmooth(V,smp,v.aiPts,true,lam,rnd,Object.assign({},lv,{temp:0})):aiBRsamples(V,smp,v.aiPts,true,lam,rnd,0)).e}
   top.sort((a,b)=>b.sc2-a.sc2);const best=top[0].sc2,near=top.filter(x=>x.sc2>=best-Math.abs(best)*(lv.jitter||0)-1).slice(0,3);return near[Math.floor(rnd()*near.length)].t}
