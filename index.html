@@ -1953,7 +1953,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.77';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.78';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2098,7 +2098,7 @@ function fiveLines(bd,col){const out=[];for(const [dr,dc] of DIRS)for(let r=0;r<
 // 상대 칩 계산 도움(11/27): 랭크 점수 1300(플래티넘) 미만이면 상대 남은 칩의 '예상 범위'를 계산해 보여 줌(대국 중인 본인 화면만)
 //  상대 수입(턴마다 10) − 확실히 쓴 칩: 내가 이긴 칸은 상대가 최소 1, 상대가 이긴 칸은 내 칩 이상(상대가 선 플레이어면 +1)
 const CNT_MAX_R=1300;
-function cntOn(){try{if(UI.mode==='tut'||UI.review)return false;if(UI.mode==='local'&&L.s&&L.s.ai==='ultimate'&&!L.s.bot)return false;/* Godlike AI 대국은 도움 없음(랭크 상대는 실력이 드러나지 않게 그대로) */const P=rkP(SEAT);return !(P&&P.r>=CNT_MAX_R)}catch(e){return false}}
+function cntOn(){try{if(UI.mode==='tut'||UI.review)return false;if(UI.mode==='local'&&L.s&&L.s.ai==='ultimate'&&!L.s.bot)return false;/* Ultimate AI 대국은 도움 없음(랭크 상대는 실력이 드러나지 않게 그대로) */const P=rkP(SEAT);return !(P&&P.r>=CNT_MAX_R)}catch(e){return false}}
 // 범위 [작은 쪽, 큰 쪽]: 턴마다 +10. 큰 쪽은 '확실히 쓴 칩'만큼, 작은 쪽은 '쓸 수 있었던 최대'만큼 뺌
 //  내가 이긴 칸: 상대 칩 1 ~ (상대가 선이면 내 칩, 후면 내 칩−1) / 상대가 이긴 칸: (상대가 선이면 내 칩+1, 후면 내 칩) ~ 제한 없음
 function cntRange(vs,opp){if(!vs||!vs.me||!opp||opp===vs.me||!cntOn())return null;const me=vs.me;let lo=0,hi=0,n=0;
@@ -2204,7 +2204,7 @@ const AI_LEVELS={
  pro:{name:'Hard',rand:0,noise:1,jitter:.5,bidNoise:.3,res:.3,infer:true,eval2:true,lamK:.8,top:1,see5:1,crit3:1,types:[-2,-3],aib:[0,3000,1000,500],nsK:2,br:true,desp:.5,S:6,np:14,mixT:6,tempo:.45,force:1,brP:.7,
   // 막아야 하는 턴(지면 상대 오목)은 항상 최선 대응(초보에게 점수가 더 많은데도 1,1,1로 지던 약점 보완), 대신 평소 최선 대응 비율 0.8→0.7로 낮춰 중수 상대 세기는 유지
   brCrit:1},
- ultimate:{name:'Godlike',rand:0,noise:0,jitter:.03,bidNoise:.15,res:.3,infer:true,eval2:true,lamK:.45,top:1,see5:1,crit3:1,types:[-2,-3,-4],aib:[0,3000,1000,500],nsK:2,learn:true,
+ ultimate:{name:'Ultimate',rand:0,noise:0,jitter:.03,bidNoise:.15,res:.3,infer:true,eval2:true,lamK:.45,top:1,see5:1,crit3:1,types:[-2,-3,-4],aib:[0,3000,1000,500],nsK:2,learn:true,
   // 2세대: 상대 점수 추적(입자 필터) + 최선 대응 + 질 수 있는 판의 보험·비축 + 비슷한 수 섞기
   br:true,desp:.5,ins:1.1,insAdd:0,insSmooth:true,resv:.6,insMax:true,mixT:3,
   // 4세대: 지정할 때 내 줄을 키우는 칸을 더 높이 치고(tempo), 다음 턴 상대의 한 턴 오목 위험을 줄이는 칸을 고름(dThreat)
@@ -4355,10 +4355,10 @@ function curWs(){let ws=rkP(SEAT).ws||0;const seen=new Set((RK.bdocs||[]).filter
 function curLs(){let ls=rkP(SEAT).ls||0;const seen=new Set((RK.bdocs||[]).filter(d=>d&&d.by===SEAT).map(d=>d.gid));
  for(const r of botQ())if(!seen.has(r.gid))ls=r.w==='bot'?ls+1:0;return ls}
 const lsCap=ls=>ls>=5?'beginner':ls>=4?'mid':ls>=2?'pro':null;
-// 랭크 AI 실력(11/27): 상대 AI의 이름·점수는 그대로, 실제로 두는 실력은 '내 점수 구간'에서 뽑음(높은 티어일수록 Godlike가 벽)
-//  브론즈 Easy70·Normal30 / 실버 Easy30·Normal60·Hard10 / 골드 Normal30·Hard60·Godlike10 / 플래티넘 Normal10·Hard70·Godlike20 / 다이아 Hard80·Godlike20 / 마스터 Hard50·Godlike50
+// 랭크 AI 실력(11/27): 상대 AI의 이름·점수는 그대로, 실제로 두는 실력은 '내 점수 구간'에서 뽑음(높은 티어일수록 Ultimate가 벽)
+//  브론즈 Easy70·Normal30 / 실버 Easy30·Normal60·Hard10 / 골드 Normal30·Hard60·Ultimate10 / 플래티넘 Normal10·Hard70·Ultimate20 / 다이아 Hard80·Ultimate20 / 마스터 Hard50·Ultimate50
 //  승률 보정: 최근 AI 상대 10판(5판 이상일 때) 승률 40% 미만이면 한 단계 낮게, 60% 초과면 한 단계 높게(마스터 점수대는 보정 없음)
-//  그 뒤 5연승 Godlike·연패 보호는 예전 그대로
+//  그 뒤 5연승 Ultimate·연패 보호는 예전 그대로
 const RK_LVMIX=[[0,900,[70,30,0,0]],[900,1100,[30,60,10,0]],[1100,1300,[0,30,60,10]],[1300,1500,[0,10,70,20]],[1500,1700,[0,0,80,20]],[1700,1e9,[0,0,50,50]]],RK_WRN=10,RK_WRMIN=5;
 function rkRecentWr(){const mine=(RK.bdocs||[]).filter(d=>d&&d.by===SEAT).sort((a,b)=>(a.ended||0)-(b.ended||0)),seen=new Set(mine.map(d=>d.gid));
  const L=mine.map(d=>d.w).concat(botQ().filter(r=>!seen.has(r.gid)).map(r=>r.w)).slice(-RK_WRN);if(L.length<RK_WRMIN)return null;return L.filter(w=>w==='me').length/L.length}
@@ -4420,7 +4420,7 @@ function closeSheet(silent){if(UI.showCode){UI.showCode=false;try{renderTiers()}
 function syncNick(){const t=$('#nickTxt');if(t)t.textContent=(lget('bo-nick')||'').trim()||'닉네임';try{hdrFit()}catch(e){}profSave();try{seenBeat.go&&seenBeat.go()}catch(e){}}
 function setTheme(v){v=v==='light'?'light':'dark';document.documentElement.dataset.theme=v;{const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',v==='light'?'#f1eee7':'#0f1716')}lset('bo-theme',v);document.querySelectorAll('#themeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)))}
 // ===== 로비 =====
-const LEVELS=[['beginner','Easy'],['mid','Normal'],['pro','Hard'],['ultimate','Godlike']];
+const LEVELS=[['beginner','Easy'],['mid','Normal'],['pro','Hard'],['ultimate','Ultimate']];
 // 난이도 한 줄 소개(고른 난이도 아래)
 const LV_LINE={beginner:'처음이라면 여기서 시작해요',mid:'기본기를 익히는 단계',pro:'본격적인 심리전',ultimate:'불패의 신급 AI'};
 // 단계 열기: 앞 단계(또는 그 위 단계)를 한 번이라도 이기면 다음 단계가 열림. 랭크 게임은 고수 이상을 이겨야 열림
@@ -5737,7 +5737,7 @@ function rvaiJob(i){const d=RV.d,me=d.me||d.A,col=me===d.A?1:2;if(FX.rv.dref!==d
  return{key:FX.rv.key,col,i,seed:parseInt(FX.rv.key.slice(0,8),16)>>>0,turns:d.hist.slice(0,i+1).map(h=>({t:h.t,sun:h.sun===me,cells:h.cells,bets:ok(h.bets[me])?h.bets[me]:[1,1,1],won:h.win.map(w=>w===me)}))}}
 function rvaiKick(i){if(!rvaiAllowed()||!rvaiOn())return;const job=rvaiJob(i),key=job.key;if(FX.rv.res[i]||FX.rv.busy.has(i))return;FX.rv.busy.add(i);
  FXWK.call(job).then(r=>{if(FX.rv.key!==key)return;FX.rv.busy.delete(i);if(r)FX.rv.res[i]=r;else FX.rv.err[i]=1;
-  if(rvaiAllowed()&&RV.i===i){const el=$('#rvai');if(el)el.outerHTML=rvaiBlock(RV.d,i,true);if(r&&r.des)renderBoard();if(r&&FX.rv.said!==key+i){FX.rv.said=key+i;setTimeout(()=>say('Godlike라면 '+r.bid.map((x,j)=>LBL[j]+' '+x).join(', ')+(r.des?'. 판에 Ultimate가 골랐을 세 칸 표시':'')),900)}}
+  if(rvaiAllowed()&&RV.i===i){const el=$('#rvai');if(el)el.outerHTML=rvaiBlock(RV.d,i,true);if(r&&r.des)renderBoard();if(r&&FX.rv.said!==key+i){FX.rv.said=key+i;setTimeout(()=>say('Ultimate라면 '+r.bid.map((x,j)=>LBL[j]+' '+x).join(', ')+(r.des?'. 판에 Ultimate가 골랐을 세 칸 표시':'')),900)}}
   // 다음 턴을 미리(한 턴씩만)
   if(rvaiAllowed()&&RV.i===i&&i+1<RV.d.hist.length&&!FX.rv.res[i+1])setTimeout(()=>{if(rvaiAllowed()&&RV.i===i)rvaiKick(i+1)},400)})}
 // 복기 패널 안 'AI라면?' 줄: 내 베팅 바로 아래에 같은 A·B·C 칩 색으로
@@ -5747,8 +5747,8 @@ function rvaiBlock(d,i,noKick){if(!rvaiAllowed())return '';const me=d.me||d.A,h=
  const mine=h.bets[me]||[];
  const body=r?`<div class="rvaic">${r.bid.map((x,j)=>`<span class="aic"><span class="lab" style="--k:${LCOL[j]}">${LBL[j]}</span><b class="num">${int(x)}</b>${Number.isInteger(mine[j])?`<small aria-hidden="true" class="${x>mine[j]?'up':x<mine[j]?'dn':''}">${x>mine[j]?'▲':x<mine[j]?'▼':'='}</small>`:''}</span>`).join('')}</div>`
   :err?'<p class="rvain">계산하지 못했어요</p>':'<div class="rvaic wait" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span></div>';
- const note=r?`<p class="rvain"><span class="nw">${who} ${PTU} ${int(r.pts)} 기준</span>${r.des?' · <span class="nw">점선 = Godlike의 세 칸</span>':''}</p>`:'';
- return `<div class="rvai" id="rvai" role="group" aria-label="Godlike라면"><div class="rvaih"><span class="aib">${FX_IC.bulb}AI라면?</span><span class="aiw">Ultimate가 ${who.trim()==='내'?'내':who.trim()} 자리라면</span><button class="linkbtn" data-act="fxrvai" aria-pressed="true">숨기기</button></div>${body}${note}</div>`}
+ const note=r?`<p class="rvain"><span class="nw">${who} ${PTU} ${int(r.pts)} 기준</span>${r.des?' · <span class="nw">점선 = Ultimate의 세 칸</span>':''}</p>`:'';
+ return `<div class="rvai" id="rvai" role="group" aria-label="Ultimate라면"><div class="rvaih"><span class="aib">${FX_IC.bulb}AI라면?</span><span class="aiw">Ultimate가 ${who.trim()==='내'?'내':who.trim()} 자리라면</span><button class="linkbtn" data-act="fxrvai" aria-pressed="true">숨기기</button></div>${body}${note}</div>`}
 function rvaiGhost(){if(!rvaiAllowed()||!rvaiOn())return;const r=FX.rv.res[RV.i];if(!r||!r.des)return;
  $('#bov').insertAdjacentHTML('beforeend','<g class="aighost" aria-hidden="true" pointer-events="none">'+r.des.map(([y,x],j)=>`<circle cx="${X(x)}" cy="${Y(y)}" r="13.5" fill="#FBF6EA" fill-opacity=".28" stroke="${HEX[j]}" stroke-width="2.6" stroke-dasharray="4 3.2"/><text x="${X(x)}" y="${Y(y)+4.5}" text-anchor="middle" font-family="NS,sans-serif" font-weight="800" font-size="12.5" fill="#3A2510" fill-opacity=".8">${LBL[j]}</text>`).join('')+'</g>')}
 const FX_IC={bulb:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg>',
@@ -6167,7 +6167,7 @@ const ECO_PAID=[];
 const ECO_BY=new Map(ECO_ITEMS.map(x=>[x.id,x]));
 // 시즌 종료 보상(최종 티어 0브론즈~5마스터, 6챌린저). 관리자 기록 cfg/season{n}.amt가 있으면 그 값(규칙도 같은 값으로 확인)
 const ECO_SAMT=[200,400,700,1000,1400,1800,2500],ECO_PAMT=[0,50,100,150,200,300,300];
-const ECO_ACH=[{k:'a_link',n:'계정 연결',g:50},{k:'a_place',n:'랭크 배치 완료',g:50},{k:'a_ai1',n:'AI Easy 첫 승',g:50},{k:'a_ai2',n:'AI Normal 첫 승',g:80},{k:'a_ai3',n:'AI Hard 첫 승',g:120},{k:'a_ai4',n:'AI Godlike 첫 승',g:300}];
+const ECO_ACH=[{k:'a_link',n:'계정 연결',g:50},{k:'a_place',n:'랭크 배치 완료',g:50},{k:'a_ai1',n:'AI Easy 첫 승',g:50},{k:'a_ai2',n:'AI Normal 첫 승',g:80},{k:'a_ai3',n:'AI Hard 첫 승',g:120},{k:'a_ai4',n:'AI Ultimate 첫 승',g:300}];
 // 보상 전용 꾸미기: z{n}_{t} 시즌 티어 테두리 · zn{n} 다이아빛(닉네임) · zt{n}_{t} 시즌 칭호(마스터·챌린저)
 const ecoTierN=t=>t===6?CHAL.n:(TIERS[t]||TIERS[0]).n,ecoTierC=t=>t===6?CHAL.c:(TIERS[t]||TIERS[0]).c;
 function ecoItem(id){if(typeof id!=='string')return null;const x=ECO_BY.get(id);if(x)return x;let m;
@@ -6702,7 +6702,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.i
 {const _h=hdrFit;hdrFit=function(){const r=_h.apply(this,arguments);try{const h=$('#lobby .ltop'),t=$('#nickTxt'),m=$('#hMail');if(h&&t){h.classList.remove('tight2');if(m&&!m.classList.contains('hide')&&h.classList.contains('tight')&&innerWidth<=440&&t.scrollWidth>t.clientWidth)h.classList.add('tight2')}}catch(e){}return r}}
 {const _r=renderAcct;renderAcct=function(){const r=_r.apply(this,arguments);try{const a=$('#admMail');if(a)a.classList.toggle('hide',!isAdmin())}catch(e){}return r}}
 // ===== MAIL END =====
-// ===== STG START (단계별 묘수 풀이 11/26: Easy·Normal·Hard·Godlike 각 20문제) =====
+// ===== STG START (단계별 묘수 풀이 11/26: Easy·Normal·Hard·Ultimate 각 20문제) =====
 // 병합 메모: 이 블록은 새 함수·데이터만 담음. 기존 코드에 끼운 곳은 '/* STG */' 표시가 붙은 곳뿐(홈 타일·시트 HTML, CSS 묶음, BGM 한 줄)
 // 문제: 오프라인 생성기(eval/stage/gen)가 게임 판정(fxOutcomes·pzSolve·pzGood)으로 만들고 검사한 80문제를 데이터로 넣음(모든 폰 같음, 서버 읽기 없음)
 //  한 줄 = 흑돌|백돌|세 칸|선후(s/h)·목표(b 막기/w 이기기)|상대 칩|내 칩|정답 합|판 보기(행,열,크기)  좌표는 글자 a~s(0~18). 나는 늘 흑
@@ -6710,7 +6710,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.i
 // 진행: 지갑 wal.sp=[E,N,H,G](깬 문제 수)와 이 기기 기록 bo-stg:{SEAT} 중 큰 값. 깨면 이 기기에 먼저 +1 → 지갑에 한 칸씩 반영하며 옥돌
 // 규칙(firestore.rules walStg): 한 번에 한 단계 +1 · 앞 단계 10문제 이상 · 정해진 옥돌 · 지갑 마지막 쓰기에서 10초. 같은 문제 두 번 보상 없음
 const STG_DATA={"E":["khlhpi|gjhjigijkjmemj|hhiijj|hb|6|7|6|fdj","fkipjijllipk|dhhjijlgmjnenfngnhnl|mhnioj|hb|6|11|6|hdk","hhjikjlkml|epnp|lmmmnm|hw|6|8|6|fgl","gigjglgmjmkdkonmpgph|dignijkgpl|flgkhj|hw|6|14|6|dfl","ghjongni|brcqdmdpeokhofojom|fmfnfo|sb|5|10|6|agn","fognjokgki|eghghjimkjmgngogpiqg|niohpg|sb|5|6|6|jdj","fgghgnmg|fdhfhghhhjnl|hiijjk|hb|6|9|6|cel","efkfkjpi|fjhhihjhlhop|kgkhki|hb|6|14|6|gcl","jomjnfnkolpm|klmk|lhlilj|sw|5|11|6|iek","ddfefjhjiplloeofogoi|fifnglmnoj|mhnhoh|sw|5|13|6|jdj","fgkopnpopqpr|epglllmm|nnoopp|hw|6|14|6|jkj","dmfdffhknenfnhniolpi|dggdgmilkglgnm|mgngog|hw|6|7|6|hdk","dgeggggmhglo|diehfmil|fggfhe|hw|6|8|6|bcj","fpfqgpinjmlk|elfmhemi|gnhoip|hw|7|15|7|dik","hfjiojpfpiqhrg|ehiepl|njnknl|sw|7|14|8|hcm","eienfjpd|eeeofngmhgiklh|gkhlim|sb|5|6|6|dfl","dejdjjljmkmnpi|ehfhhfnknmnnno|nlompn|sb|6|9|7|jhj","lonmqjrk|mgnioepgphqfre|ngohpi|sb|6|13|7|kdj","dgfhflhojhne|fkhiijjgjokfleoi|ghhhih|sb|6|10|7|edj","gjgngphchdhehfmkoo|egkfmhmjpm|hgigjg|hw|12|17|12|dbl"],"N":["flgghmiljkjmkjkllkmjodofpl|ihjhlgnh|limini|hw|15|15|14|gel","doenfjgkhlhoijimkmoi|dgegjjjkjljmnfnhok|injnkn|hb|13|17|13|dfn","jflhofoh|ekfjhoogop|gihhig|hb|15|16|13|ddk","dfhfjhof|dmfokflgmhninopepfpgph|nkojpi|hb|9|18|15|gdn","dddjiljmlompnoop|eminjnnepk|knlnmn|sw|7|14|8|hik","hpigiijjndnm|chdhehelenhdhihjhkhljhpf|fhghhh|hb|14|29|24|bcl","gjkmmm|glhkhqidipirjojqkplmlo|knlnmn|hb|14|30|25|eil","gmikipjjkiljlnpg|deefeihmhnkj|hjhkhl|hb|9|15|7|dgk","dhdoegenjhnh|djeijmlkmhnopp|fhgghf|sb|10|17|11|cdj","hlje|gehfigkjlfmjnjoioj|jhkilj|hb|22|46|40|fdl","dogehkmpnh|gohhikjkkeknkokplklmmkof|kkklkm|hb|22|45|40|fgl","dgffhlkf|hihoiljijjjljmlfllmlpf|jkkllm|sb|7|14|13|ghj","dfdjeknjpn|ifjgkhkkkmlkmkofokon|limjnk|sb|9|23|17|hej","gpnf|fnieihikjikekjlelkme|hgifje|sb|10|27|19|gdj","dhdmeieneofjhlillelf|dnekemkllpmomppk|flgkhj|hb|20|22|18|cen","eohd|cfdgdkehhjhlhmhnlg|figjhk|sb|14|31|27|bdm","hmkfklmfmnninoooop|fjjkmdnmogom|kmlmmm|sb|15|21|16|gik","ieljmlpn|hokl|mknlom|hw|6|18|12|jhj","eifhhnleljpo|hhiijjjmjnjojpkdkpllninjodok|imjlkk|sb|10|20|19|dfn","edffhgijikpk|djfhmnnpon|igihii|hw|7|23|15|bck"],"H":["enepfmjhkhlhminhnknopkqlrm|kfkplgmfmkneoe|mhnioj|sb|21|24|22|idl","fjhjljlomhnhohoo|fnghhhhlieihikimjjkikjkp|jhkhlh|sb|16|38|31|fdl","fpihlillmink|fighgihehijglhlpmgndnfoepg|iijiki|sb|18|38|35|ebm","gfgohfhghhigjfjkok|fphdhlhmhniilfnh|hihjhk|hb|11|13|10|dcn","dofjfkgkhminjoniop|dlelfhflfohjpo|glhlil|hb|13|17|12|cij","elghgnhoipjpnn|efglhliljlkono|flfmfn|hb|9|9|8|djj","fgfmgnipjdjqlioopk|epgmhlhpimjijlkkljnknlnp|hmhnho|hb|10|10|9|dhl","dpedikjjlilklllmmg|ffjdjejfjgjp|jhkilj|hb|13|17|12|ecm","gngohgnpod|ejgikm|gkglgm|sw|12|37|33|dhj","eohnjgkjkklgmingnjokph|gegkikinjjjllhmg|kgkhki|hw|14|39|36|fbm","ffhojgkgknlkoj|eijjmfngnhninj|lmmlnk|sw|9|24|24|hfk","dkeiejfdgenn|hnhoifihiiijlg|hfigjh|sw|10|31|27|dbk","fkhjimjflplqlrmi|fpigjokommmonmnoogompm|lmlnlo|hb|9|21|14|gil","gdngnlnnpfppqfrf|ddfoiojfkdkfkhlflglhmgneodoepdpn|mfnfof|hb|9|15|14|ial","dkejenfignjekdlc|dpefffgfhehfhhhijk|ghhgif|hb|9|18|14|cbl","edehgjjhknlnmn|dheiiemoompepkplpmpoqk|nnonpn|hb|16|31|28|jij","elmjnhogpf|fphfklkmknkolklllmln|kkljmi|hb|17|33|30|een","dlejemfmgmhmhninknlgln|eegeikjjkilhli|hlimjn|hw|9|10|8|cfl","fkhmjgjmkmlmneohpmqmrm|dheeikjjkjkklkllmlnnon|mmnmom|hb|22|44|40|gen","fmfogggmhdhmjmkgkhkikj|fefjgihjikkmpe|imjlkk|hw|11|17|10|efj"],"G":["ejjkjlkfkgkhljminh|lelh|kikjkk|sw|11|15|12|hej","jhjonhnnpk|fijdlkmcmdmemimjmkmp|mfmgmh|hb|9|16|8|hbl","dedkejfijekdlcmdmiodoipf|hdihknldpmpp|ghhgif|sw|11|28|21|cbl","hfifijjfmemgmhmipo|ghnfofpfpp|kflfmf|hw|21|21|20|gcl","efffiljljnjpkllkmkmlnkok|emgghhiimmnlnnoo|jjkkll|hb|14|14|13|eem","dfekfdfjgihhljlomkmmndngnlol|fogehehfnfpk|igjhki|sw|11|17|12|dbm","fhgohehfhghkhlhmkilhmemp|dfelfkfpgjgmihmkmo|hhhihj|sw|9|19|17|cdn","dhgeiciejdkelfno|dkfogmjgkglgoopgqgrg|mgngog|hb|21|21|20|ham","dgegehenfgfojonl|fhhhiejfkeldnkoopi|gghgig|hb|9|14|8|cbn","eeffggjikkllmmop|elieifigih|hhiijj|sw|19|40|37|ddl","hdof|elfmgmhmlmmmnm|imjmkm|hb|22|24|21|ehl","fcfhgdgmhejgjijjlfmfnf|dpicidieigjlkhnl|ifjfkf|hw|10|16|9|ebl","fnhoinjmkelkoppd|glhdhlilmlngnlokolpf|jlklll|hb|18|24|17|fil","djigkllmmfmimmnooooppo|dfdlinkioeompkpmqjqmrirm|mnnmol|hb|9|12|8|hgm","gghfjpkhkjkkkl|fmifjhjjjkjlmimjniofoi|jikili|hb|19|26|18|edm","effffogfgphehoifikjejhkele|hdidkdkhldpepg|hfiejd|sb|9|12|10|dak","defnfphhhihkhljijjjkjmml|igihiiijneofom|hjikjl|sb|9|14|10|dfm","dddkehhoiojoko|fhhlhmikiljjjkjpkgkikj|gmgngo|hb|9|19|11|chk","dpeeephhhijikjlkmlno|fpjnkfmmmnmonfokonpjpnqiqn|nlnmnn|hb|9|13|11|igk","difohkifjgkflimhmjniogojpd|gejejhjjjkjlkgknpn|jikhlg|sw|9|16|14|gdk"]};
-const STG_LV=[{k:'E',n:'Easy'},{k:'N',n:'Normal'},{k:'H',n:'Hard'},{k:'G',n:'Godlike'}];
+const STG_LV=[{k:'E',n:'Easy'},{k:'N',n:'Normal'},{k:'H',n:'Hard'},{k:'G',n:'Ultimate'}];
 const STG_AMT=[5,10,20,30],STG_BIG=[50,100,250,600],STG_OPEN=10,STG_GAP=11500,STG_N=20;
 const stgAmt=(s,c)=>c===STG_N?STG_BIG[s]:STG_AMT[s];
 const STG={v:'list',s:0,i:0,bet:[1,1,1],res:null,cache:new Map(),busy:false,tm:0,fail:0};
@@ -6782,7 +6782,7 @@ function stgExplain(pz){const ex=pz.ex,B=stgShow(pz,ex),P=PTU,win=pz.goal==='win
  for(const om of [1,2,4]){const d=pz.det&&pz.det[7^om];if(B.includes(om)||!d||!d.fo||pz.O[7^om]==='op')continue;const c=stgCells(om)[0];
   L.push(`<li><b>내줘도 되는 칸</b> · ${stgLab(c)} 칸은 상대가 가져가도 나도 오목이 돼요. ${d.fm>d.fo?'줄이 더 많은 내가':'줄 수가 같아 후 플레이어인 내가'} 이겨요. 그래서 ${stgLab(c)}에는 1칩이면 충분해요.</li>`)}
  const cost=B.map(om=>{const k=stgCost(pz,ex,om);return k?`<span class="nw">${nm(om)} 가져가려면 ${k.c}${P}</span>`:`<span class="nw">${nm(om)} 가져가는 데 0칩</span>`});
- L.push(`<li><b>정답 ${ex.map((v,j)=>stgLab(j)+v).join(' ')}</b> · 이렇게 걸면 상대는 ${cost.join(', ')}이 필요해요. 상대 칩은 ${pz.X}${P}뿐이라 ${win?'어느 쪽으로도 못 막아요':'어느 쪽으로도 못 뚫어요'}.</li>`);
+ L.push(`<li><b>정답 ${ex.map((v,j)=>stgLab(j)+v).join(' ')}</b> · 이렇게 걸면 상대는 ${cost.join(', ')}이 필요해요. 상대 칩은 ${pz.X}${P}뿐이라 ${B.length>1?'어느 쪽으로도 ':''}${win?'못 막아요':'못 뚫어요'}.</li>`);
  L.push(`<li>합이 ${pz.best-1}${P} 이하면 어떻게 나눠도 한 군데는 ${win?'막혀요':'뚫려요'}. 그래서 ${pz.best}${P}이 가장 적게 드는 답이에요.</li>`);
  return `<ul class="pzex stgex">${L.join('')}</ul>`}
 
