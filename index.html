@@ -1947,7 +1947,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.63';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.64';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3244,7 +3244,7 @@ function designPanel(vs,title){
  const tile=(d,i,on)=>{const [dr,dc]=DIRS[d];return `<svg viewBox="0 0 46 46">${[-1,0,1].map(k=>`<circle cx="${23+dc*13*k}" cy="${23+dr*13*k}" r="6.2" fill="${on?HEX[k+1]:'currentColor'}" ${on?'':'opacity=".55"'}/>`).join('')}</svg>`};
  const names=['가로','세로','대각선','반대 대각선'];
  let opts=[1,1,1,1];if(sel)opts=DIRS.map(([dr,dc])=>[[sel.r-dr,sel.c-dc],[sel.r,sel.c],[sel.r+dr,sel.c+dc]].every(([y,x])=>inB(y,x)&&!vs.board[y][x])?1:0);
- const hn=sel?'':UI.kbd?'<p class="note kbdh">화살표 이동 · 1~4 방향 · Enter 확정 <span class="nw">· S 돌 목록</span></p>':hint('방향만 눌러도 추천 위치가 보여요');
+ const hn=sel?'':UI.kbd?'<p class="note kbdh">화살표 이동 · 1~4 방향 · Enter 확정 <span class="nw">· S 돌 목록</span></p>':hint('방향만 눌러도 추천 위치를 골라 줘요');
  const head=title||(!sel&&!hn)?`<div class="phead">${title?`<b>${title}</b>`:''}${!sel&&!hn?'<span class="lbl">빈칸이나 방향 선택</span>':''}</div>`:sel?'<div class="pstat">끌어서 옮기기 · 방향 · 확정</div>':'';
  return `${hn}${head}<div class="dirs">${[0,1,2,3].map(i=>`<button data-act="dir" data-i="${i}" aria-label="${names[i]}" aria-pressed="${!!(sel&&sel.dir===i)}" ${opts[i]?'':'disabled'}>${tile(i,i,sel&&sel.dir===i)}${UI.kbd?`<i class="kn">${i+1}</i>`:''}</button>`).join('')}</div><button class="btn wide" data-act="dconfirm" ${sel&&sel.cells?'':'disabled'}>${IC.check}확정</button>`;
 }
@@ -3312,7 +3312,7 @@ function renderPanel2(){
   else if(m.ranked){const dl=rankDelta(vs),pw=G.rkSnap&&G.rkSnap.pw.n,frz=G.rkSnap&&vs.me&&G.rkSnap[oppId].g<PLACE&&G.rkSnap[vs.me].g>=PLACE;
    const took=vs.hist.reduce((a,x)=>a+x.win.filter(w=>w===me).length,0),cells=vs.hist.reduce((a,x)=>a+x.cells.length,0);
    h=overSheet(vs,{vs:'랭크 게임 · '+op,home:'leave',stats:[[took,'가져간 칸'],[cells-took,'내준 칸'],[dl==null?'–':(dl>=0?'+':'')+dl,'랭크 점수',dl==null?'':dl>=0?'up':'dn']],
-    note:rankMove(vs)+(G.rkSnap&&vs.me&&dl!=null&&!(G.rkSnap[oppId].g<PLACE&&G.rkSnap[vs.me].g>=PLACE)?streakNote(G.rkSnap[vs.me],vs.winner==null?.5:vs.winner===vs.me?1:0,G.rkSnap.pw.w):'')+(snNew(G.rkSnap)?'<p class="note" style="margin:0;text-align:center">시즌이 바뀌면 새 시즌 점수에 반영돼요</p>':'')+(vs.reason==='상대 부재'?'<p class="note" style="margin:0;text-align:center">부재승은 확인 뒤 랭크에 반영돼요(최대 10분)</p>':'')+(pw?`<p class="note" style="margin:0;text-align:center">같은 상대 ${pw+1}번째 · 반영 ${['','½','¼','없음'][Math.min(pw,3)]}</p>`:'')+(frz?'<p class="note" style="margin:0;text-align:center">상대 배치 중이에요 · 내 점수 그대로</p>':''),
+    note:rankMove(vs)+(G.rkSnap&&vs.me&&dl!=null&&!(G.rkSnap[oppId].g<PLACE&&G.rkSnap[vs.me].g>=PLACE)?streakNote(G.rkSnap[vs.me],vs.winner==null?.5:vs.winner===vs.me?1:0,G.rkSnap.pw.w):'')+(snNew(G.rkSnap)?'<p class="note" style="margin:0;text-align:center">시즌이 바뀌어 새 시즌 점수에 반영돼요</p>':'')+(vs.reason==='상대 부재'?'<p class="note" style="margin:0;text-align:center">부재승은 확인 뒤 랭크에 반영돼요(최대 10분)</p>':'')+(pw?`<p class="note" style="margin:0;text-align:center">같은 상대 ${pw+1}번째 · 반영 ${['','½','¼','없음'][Math.min(pw,3)]}</p>`:'')+(frz?'<p class="note" style="margin:0;text-align:center">상대 배치 중이에요 · 내 점수 그대로</p>':''),
     primary:'<button class="btn wide" data-act="remm">다시 매칭</button>'});
   }else h=overSheet(vs,{vs:op,home:'leave',primary:`<button class="btn wide" data-act="again" ${mine.again?'disabled':''}>${mine.again?'상대 기다리는 중':'한 판 더'}</button>`,status:od.again?'상대 준비 완료':''});
  }else if(vs.spect){
@@ -4206,7 +4206,7 @@ function renderRank(){
  else if(t.n==='마스터')bar=`<div class="rec">매일 0시 상위 ${CHAL.top}명 챌린저 · 지금 ${idx+1}위</div>`;
  else if(t!==CHAL){const i=TIERS.indexOf(t),nx=TIERS[i+1]||CHAL,lo=t.min,hi=nx.min;bar=`<div class="bar"><i style="width:${Math.max(3,Math.min(100,(me.r-lo)/(hi-lo)*100))}%"></i></div><div class="rec">${nx.n}까지 ${Math.max(0,Math.ceil(hi-me.r))}점</div>`}
  const rec=me.g?`${me.w}승 ${me.l}패${me.d?` ${me.d}무`:''}${t?` · ${idx+1}위`:''}`:'';
- $('#rkMe').innerHTML=`<div class="rkme">${emblem(t,58)}<div style="flex:1;min-width:0"><div class="lbl">${t?t.n:'배치 중'}<span class="tag">시즌 ${(RK.season||seasonOf(Date.now())).n}</span>${me.ws>=2?`<span class="tag strk w">${me.ws}연승</span>`:me.ls>=2?`<span class="tag strk l">${me.ls}연패</span>`:''}${UI.ready&&(!db||!room)?'<span class="tag">오프라인</span>':''}</div><div class="score num">${Math.round(me.r)}</div>${bar}${rec&&t?`<div class="rec">${rec}</div>`:''}${startLine(me)}${(()=>{const n=botQ().length;return n?`<div class="rec">서버 반영을 기다리는 중 ${n}판</div>`:''})()}</div></div>`;
+ $('#rkMe').innerHTML=`<div class="rkme">${emblem(t,58)}<div style="flex:1;min-width:0"><div class="lbl">${t?t.n:'배치 중'}<span class="tag">시즌 ${(RK.season||seasonOf(Date.now())).n}</span>${me.ws>=2?`<span class="tag strk w">${me.ws}연승</span>`:me.ls>=2?`<span class="tag strk l">${me.ls}연패</span>`:''}${UI.ready&&(!db||!room)?'<span class="tag">오프라인</span>':''}</div><div class="score num">${Math.round(me.r)}</div>${bar}${rec&&t?`<div class="rec">${rec}</div>`:''}${startLine(me)}${(()=>{const n=botQ().length;return n?`<div class="rec">서버 반영 대기 ${n}판</div>`:''})()}</div></div>`;
  // 상대가 상태를 '끝남'으로 바꿔도, 이 기기에서 끝난 것을 본 적이 없는 판은 이어하기로 보여 줌
  const now=Date.now(),act=lobbyRooms.filter(r=>r.ranked&&(r.status!=='done'||!gDone(r.id))&&(r.host===SEAT||r.guest===SEAT)&&r.guest&&now-(r.created||0)<24*3600e3&&!gDone(r.id))[0];
  $('#rkResume').innerHTML=act?`<div class="card resume"><div class="rt"><b>진행 중인 랭크 게임</b><span>vs ${esc(act.host===SEAT?act.guestNick:act.hostNick)} · ${ago(act.created)}</span></div><button class="go" data-act="enter" data-g="${esc(act.id)}" aria-label="이어하기"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>`:'';
@@ -4227,7 +4227,7 @@ const CROWN='<svg class="crown" viewBox="0 0 26 18" aria-hidden="true"><path d="
 const tierPts=i=>[Math.round(kOf(PLACE*2)*.5*TUP[i]),Math.round(kOf(PLACE*2)*.5*TDN[i])];
 const tierRows=pts=>[...TIERS,CHAL].map((t,i)=>{const [u,d]=tierPts(Math.min(i,TIERS.length-1));return `<div>${emblem(t,22)}<b>${t.n}</b><span>${t===CHAL?`매일 0시 마스터 상위 ${CHAL.top}명`:i===0?'900 미만':`${t.min} 이상`}</span>${pts?`<em class="tpts" aria-label="이기면 ${u}점 오르고 지면 ${d}점 내려가요"><i class="u">+${u}</i><i class="d">−${d}</i></em>`:''}</div>`}).join('');
 function renderTiers(){
- $('#rkTiers').innerHTML=`<div class="thd"><span>같은 점수끼리 대결해요</span><em class="tpts"><i>이기면</i><i>지면</i></em></div>`+tierRows(1);
+ $('#rkTiers').innerHTML=`<div class="thd"><span>같은 점수끼리 한 판</span><em class="tpts"><i>이기면</i><i>지면</i></em></div>`+tierRows(1);
  const c=myCode();$('#myCode').textContent=c?(UI.showCode?c:'K'+'•'.repeat(10)+c.slice(-4)):'랭크 게임 1판 후 생성돼요';const sb=$('#showCode');if(sb){sb.classList.toggle('hide',!c);sb.textContent=UI.showCode?'숨김':'보기'}
 }
 function renderAiRec(){
@@ -4330,7 +4330,7 @@ function mmTick(){
  renderMM();
 }
 // 짝이 없으면 점수 150점 안의 AI 상대(최근에 만난 상대는 피함). 150점 안에 없으면 가장 가까운 상대
-// 연승이 ULT_WS판 이상 이어지면(서버 반영을 기다리는 중 중인 판까지 셈) 그 판의 AI 실력만 티어와 무관하게 Ultimate. 상대 이름·점수·화면 표시는 평소와 같음
+// 연승이 ULT_WS판 이상 이어지면(서버 반영 대기 중인 판까지 셈) 그 판의 AI 실력만 티어와 무관하게 Ultimate. 상대 이름·점수·화면 표시는 평소와 같음
 // (사람끼리 매칭은 그대로. 시뮬레이션: 5연승 기준이면 AI 판의 약 2%가 바뀌고, 실력 좋은 신규가 플래티넘까지 가는 판 수는 약 4판 늘어남)
 const ULT_WS=5;
 function curWs(){let ws=rkP(SEAT).ws||0;const seen=new Set((RK.bdocs||[]).filter(d=>d&&d.by===SEAT).map(d=>d.gid));
@@ -4368,7 +4368,7 @@ function renderMM(){
   lb.textContent='매칭 취소';b.classList.add('ghost');b.classList.add('mmon');
   const k=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · ±${win}점`;
   if(st.dataset.k!==k){st.dataset.k=k;st.textContent=k}}
- else{const ro=rankOpen();lb.textContent=RANK_MAINT?'랭크 게임을 점검 중이에요':'랭크 게임';b.classList.toggle('rlock',RANK_MAINT);b.classList.remove('ghost');b.classList.remove('mmon');b.classList.toggle('rlock',RANK_MAINT||!ro);st.dataset.k='';st.textContent=RANK_MAINT?'':!ro?'AI Normal을 이기면 열려요':!UI.ready?'연결 중이에요':''}
+ else{const ro=rankOpen();lb.textContent=RANK_MAINT?'랭크 게임 점검 중':'랭크 게임';b.classList.toggle('rlock',RANK_MAINT);b.classList.remove('ghost');b.classList.remove('mmon');b.classList.toggle('rlock',RANK_MAINT||!ro);st.dataset.k='';st.textContent=RANK_MAINT?'':!ro?'AI Normal을 이기면 열려요':!UI.ready?'연결 중이에요':''}
 }
 function loadCode(){
  const v=($('#codeIn').value||'').trim();let seat=null,sec=null;
@@ -4440,7 +4440,7 @@ function renderRooms(){try{renderDiag()}catch(e){}
  renderPips();
  const hb=$('#roomsHome'),cnt=$('#roomCnt'),nOpen=list.filter(r=>ord(r)===1).length;
  if(cnt)cnt.innerHTML=list.length?`<span class="tag${nOpen?' j':''}">${nOpen?`참가 가능 ${nOpen}`:`방 ${list.length}`}</span>`:'';
- if(!list.length){const msg={loading:'불러오는 중',cache:'서버 확인 중 · 방 코드로 들어가기 가능',timeout:'서버 응답이 없어요 · 네트워크를 확인해 주세요',err:'방 목록을 불러오지 못했어요'+(DIAG.err?' · '+esc(DIAG.err):'')}[lobbyState]||'열린 방이 없어요';box.innerHTML='<p class="sub">'+msg+'</p>';
+ if(!list.length){const msg={loading:'불러오는 중',cache:'서버 확인 중 · 방 코드로 들어갈 수 있어요',timeout:'서버 응답이 없어요 · 네트워크를 확인해 주세요',err:'방 목록을 불러오지 못했어요'+(DIAG.err?' · '+esc(DIAG.err):'')}[lobbyState]||'열린 방이 없어요';box.innerHTML='<p class="sub">'+msg+'</p>';
   if(hb)hb.innerHTML=`<p class="sub">${msg==='열린 방이 없어요'?'열린 방이 없어요 · 방을 만들어 친구를 초대해 보세요':msg}</p>`;return}
  const one=r=>{if(r.fk)return r.guest?`<div class="room"><div class="rt"><b>${esc(r.hostNick)} vs ${esc(r.guestNick)}</b><span>대국 시작 · ${presetText(r.td,r.tb)} · ${ago(r.created)}</span></div><span class="rbusy">대국 중</span></div>`
    :`<div class="room join"><div class="rt"><b>${esc(r.hostNick)}의 방</b><span>참가 가능 · ${presetText(r.td,r.tb)} · ${ago(r.created)}</span></div><button class="btn small" data-act="fkenter" data-g="${esc(r.id)}">입장</button></div>`;
@@ -4486,7 +4486,7 @@ const L={
    else if(s.phase==='over'&&s.cas)p.innerHTML=s.cas.wait?waitBox('상대 기다리는 중'):overSheet(v,{vs:esc(s.bot.nick),primary:'<button class="btn wide" data-act="fkagain">한 판 더</button>'});
    else if(s.phase==='over'&&s.bot){const dl=botDelta(s),pw=s.rk&&s.rk.pw.n,took=s.hist.reduce((a,x)=>a+x.win.filter(w=>w==='A').length,0),cells=s.hist.reduce((a,x)=>a+x.cells.length,0);
     p.innerHTML=overSheet(v,{vs:'랭크 게임 · '+esc(s.bot.nick),stats:[[took,'가져간 칸'],[cells-took,'내준 칸'],[dl==null?'–':(dl>=0?'+':'')+dl,'랭크 점수',dl==null?'':dl>=0?'up':'dn']],
-     note:(s.rk&&dl!=null?tierMove(s.rk.me,dl)+streakNote(s.rk.me,s.winner==null?.5:s.winner==='A'?1:0,s.rk.pw.w):'')+(snNew(s.rk)?'<p class="note" style="margin:0;text-align:center">시즌이 바뀌면 새 시즌 점수에 반영돼요</p>':'')+(pw?`<p class="note" style="margin:0;text-align:center">같은 상대 ${pw+1}번째 · 반영 ${['','½','¼','없음'][Math.min(pw,3)]}</p>`:''),primary:'<button class="btn wide" data-act="remm">다시 매칭</button>'})}
+     note:(s.rk&&dl!=null?tierMove(s.rk.me,dl)+streakNote(s.rk.me,s.winner==null?.5:s.winner==='A'?1:0,s.rk.pw.w):'')+(snNew(s.rk)?'<p class="note" style="margin:0;text-align:center">시즌이 바뀌어 새 시즌 점수에 반영돼요</p>':'')+(pw?`<p class="note" style="margin:0;text-align:center">같은 상대 ${pw+1}번째 · 반영 ${['','½','¼','없음'][Math.min(pw,3)]}</p>`:''),primary:'<button class="btn wide" data-act="remm">다시 매칭</button>'})}
    else if(s.phase==='over'){const u=s.unl,nx=u&&u.next?LEVELS.find(([k])=>k===u.next):null;
     // 열린 단계·랭크는 한 줄에 하나씩(가운데 점으로 이어 붙이면 좁은 화면에서 어색하게 끊김)
     const note=u?`<p class="unl">${IC.unlock}<span>${[nx?`${nx[1]} 단계가 열렸어요`:'',u.rank?'랭크 게임이 열렸어요':''].filter(Boolean).join('<br>')}</span></p>`:'';
@@ -5456,7 +5456,7 @@ document.addEventListener('click',e=>{
  else if(a==='admusers')admUsers();
  else if(a==='admflt'){ADM.flt=b.dataset.k;admRender()}
  else if(a==='reload'){location.reload()}
- else if(a==='delacct'){closeSheet();dialog('계정과 기록을 모두 삭제해요.<br>닉네임 · AI 전적 · 학습 통계<br>AI 대국 기록 · 친구 · 대화<br>이 기기 기록<br>랭크·일반 게임의 판 기록은<br>상대 기록에도 남아요.<br>삭제하면 되돌릴 수 없어요.','삭제',()=>deleteMyData(),'취소')}
+ else if(a==='delacct'){closeSheet();dialog('계정과 기록을 모두 삭제해요.<br>닉네임 · AI 전적 · 학습 통계<br>AI 대국 기록 · 친구 · 대화<br>이 기기 기록<br>랭크·일반 게임의 판 기록은<br>상대 기록이기도 해서 지워지지 않아요.<br>삭제하면 되돌릴 수 없어요.','삭제',()=>deleteMyData(),'취소')}
  else if(a==='wskip'){lset('bo-tut-done','1');$('#welcome').classList.add('hide');toast('규칙 탭에서 언제든 배울 수 있어요')}
  else if(a==='sheet'){UI.sheetV=b.dataset.v||null;openSheet(b.dataset.k)}
  else if(a==='nickok')nickCommit();
@@ -6499,7 +6499,7 @@ rwAdd({id:'inv',order:1,items:()=>invReady(),claim:()=>invClaimAll()});
 {const _eg=ecoGame;ecoGame=function(d,key){try{if(d&&key&&d.me&&(d.hist||[]).length>=ECO_MIN_T){const I=ecoGameInfo(d,key);if(I&&I.mode!=='local')lset('bo-refg','1')}}catch(e){}return _eg.apply(this,arguments)}}
 {const _fs=frShare;frShare=function(){lset('bo-invsent',String(Date.now()));return _fs.apply(this,arguments)}}
 // 친구 초대 링크로 처음 온 사람에게 보여 줄 한 줄(frHash 안내 창)
-const invHint=()=>INV.ref&&INV.ref.st==='p'?`<br><span class="sub">연결 후 한 판 두면 환영 옥돌을 받아요 ${INV_IN}</span>`:'';
+const invHint=()=>INV.ref&&INV.ref.st==='p'?`<br><span class="sub">연결 후 한 판 두면 환영 옥돌 ${INV_IN}</span>`:'';
 // 보상 탭 '친구 초대' 칸
 function invCard(){if(!ecoSrv()||!ECO.w)return '';const w=ECO.w,n=invN(),pend=(INV.list||[]).filter(r=>r.st==='p').length,R=INV.ref;
  const fill=n<=1?0:n<=3?(n-1)/2/3:n<=5?1/3+(n-3)/2/3:2/3+(n-5)/5/3;
@@ -6508,7 +6508,7 @@ function invCard(){if(!ecoSrv()||!ECO.w)return '';const w=ECO.w,n=invN(),pend=(I
   me=`<div class="ivme"><span class="ivt"><b>초대받은 보상</b>${R.n?`<small>${esc(R.n)}님 초대</small>`:''}</span><span class="ivck${gk?' ok':''}">${gk?IC.check:''}구글 연결</span><span class="ivck${gm?' ok':''}">${gm?IC.check:''}첫 판</span><em><i class="gdot" aria-hidden="true"></i>${INV_IN}</em></div>`}
  return `<section class="card rwc rwinv" aria-labelledby="ivH"><div class="chead"><h2 id="ivH">친구 초대</h2><span>${pend?`<i class="ivp">확인 중 ${pend}명</i>`:''}<b class="num">${n}/${INV_MAX}명</b></span></div>${me}
   <ol class="ivtrack" style="--f:${(fill*100).toFixed(1)}%" aria-label="초대 ${n}명">${nodes}</ol>
-  <p class="note ivnote">초대받은 친구가 구글 연결 후 한 판 두면 인정돼요</p>
+  <p class="note ivnote">처음 온 친구가 구글 연결 후 한 판 두면 인정돼요</p>
   <button class="btn wide" data-act="frshare"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>초대 링크 보내기</button></section>`}
 function invPaint(){const c=$('#rwdBody');if(c&&c.firstElementChild){const h=invCard(),o=c.querySelector('.rwinv');
   if(!h){if(o)o.remove()}else if(!o||o.dataset.h!==h){const t=document.createElement('div');t.innerHTML=h;const el=t.firstElementChild;el.dataset.h=h;if(o)o.replaceWith(el);else{const a=c.querySelector('.rwinfo');a?a.before(el):c.appendChild(el)}}}
