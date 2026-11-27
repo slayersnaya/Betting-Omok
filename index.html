@@ -1954,7 +1954,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.79';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.80';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3922,7 +3922,8 @@ function rankEngine(SS,LT){
   const pa=!a.bot&&a.g<PLACE,pb=!b.bot&&b.g<PLACE,hb=!a.bot||!b.bot;
   // 사람 대 AI(11/27): 사람 점수 계산에 쓰는 AI 점수는 '내 점수'보다 낮게 보지 않음 → AI 점수대(최고 약 1500)보다 위에서도 이기면 제대로 오름(마스터까지 열림)
   const fl=(h,q)=>h.bot||!q.bot||q.r>=h.r?q:Object.assign({},q,{r:h.r});
-  const da=(pb&&!pa)||(hb&&a.bot)?0:gainOf(a,fl(a,b),sa,w),db_=(pa&&!pb)||(hb&&b.bot)?0:gainOf(b,fl(b,a),1-sa,w);a.r=r6(a.r+da);b.r=r6(b.r+db_);if(!(hb&&a.bot))a.g++;if(!(hb&&b.bot))b.g++;
+  // 11/27: 사람과 둔 판도 AI 점수에 반영(자연스럽게 오르내림). AI 판수(g)는 그대로 둬서 변동 폭은 보통 값
+  const da=(pb&&!pa)?0:gainOf(a,fl(a,b),sa,w),db_=(pa&&!pb)?0:gainOf(b,fl(b,a),1-sa,w);a.r=r6(a.r+da);b.r=r6(b.r+db_);if(!(hb&&a.bot))a.g++;if(!(hb&&b.bot))b.g++;
   if(sa===1){a.w++;b.l++;a.ws=(a.ws||0)+1;a.ls=0;b.ls=(b.ls||0)+1;b.ws=0}else if(sa===0){a.l++;b.w++;b.ws=(b.ws||0)+1;b.ls=0;a.ls=(a.ls||0)+1;a.ws=0}else{a.d++;b.d++;a.ws=b.ws=a.ls=b.ls=0}};
  // AI끼리 판 일정: BOT_EPOCH부터 시간 번호 h, 그 시간의 j번째 판. 첫날은 BOT_GPH0판, 그 뒤 BOT_GPH판을 한 시간에 고르게
  const H=3600e3,t0=Math.max(BOT_EPOCH,SS.start);let h=Math.round((t0-BOT_EPOCH)/H),t=t0,j=0,x=0,hook=null;
@@ -3946,7 +3947,7 @@ function rankEngine(SS,LT){
   load:z=>{M=dup(z.M);pairs=dup(z.pairs);BS=BOTS.map(b=>M.get(BOTPRE+b.id));ord=z.ord.slice();ord.forEach((i,p)=>pos[i]=p);h=z.h;t=z.t;j=z.j;x=z.x;rs=!!z.rs}}}
 // 중간 저장을 폰에도 남김(앱을 새로 열어도 시즌 처음부터 다시 계산하지 않게. 저사양 폰에서 첫 계산 300ms대 → 수십 ms).
 // 시즌·지난 시즌 티어표가 같고, 저장한 지점 앞의 판 목록이 그대로일 때만 씀(rankCalc가 확인). 아니면 처음부터 계산해서 결과는 같음
-function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v3:'+SS.n+':'+JSON.stringify(RK.sx||{})+':'+(LT?LT.size+':'+h:'-')}
+function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v4:'+SS.n+':'+JSON.stringify(RK.sx||{})+':'+(LT?LT.size+':'+h:'-')}
 function ckLoad(ck,SS,LT){try{const v=JSON.parse(lget('bo-rkck')||'null');if(!v||v.k!==ckKey(SS,LT))return;const e=v.e;
  if(e.M.some(([id,p])=>p.bot&&!BOTMAP.has(p.bot)))return;const M=new Map(e.M.map(([id,p])=>[id,p.bot?{...p,bot:BOTMAP.get(p.bot),t:Infinity}:p]));
  ck.st={LT,tc:v.tc,gi:v.gi,sig:v.sig,e:{M,pairs:new Map(e.pairs),ord:e.ord,h:e.h,t:e.t,j:e.j,x:e.x}}}catch(e){}}
