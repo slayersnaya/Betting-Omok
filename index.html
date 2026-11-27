@@ -1890,7 +1890,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.31';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.32';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6764,7 +6764,7 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
  let prevFocus=null;
  function sheet(html,onOk,cls,okT){if(document.getElementById('instSheet'))return;ls(KS,String(Date.now()));prevFocus=document.activeElement;
   const s=document.createElement('div');s.id='instSheet';if(cls)s.className=cls;s.setAttribute('role','dialog');s.setAttribute('aria-modal','true');s.setAttribute('aria-labelledby','instT');
-  s.innerHTML=`<div class="box"><div class="hd"><img src="icons/icon-192.png" alt=""><div><h2 id="instT">베팅 오목 앱으로 설치</h2><p>홈 화면에서 바로 열려요</p></div></div>${html}<div class="row"><button class="btn ghost" type="button" data-later>나중에</button>${onOk?'<button class="btn" type="button" data-ok>${okT||'설치'}</button>':'<button class="btn" type="button" data-done>확인</button>'}</div></div>`;
+  s.innerHTML=`<div class="box"><div class="hd"><img src="icons/icon-192.png" alt=""><div><h2 id="instT">베팅 오목 앱으로 설치</h2><p>홈 화면에서 바로 열려요</p></div></div>${html}<div class="row"><button class="btn ghost" type="button" data-later>나중에</button>${onOk?'<button class="btn" type="button" data-ok>'+(okT||'설치')+'</button>':'<button class="btn" type="button" data-done>확인</button>'}</div></div>`;
   const close=later=>{if(later)ls(K,String(Date.now()));s.remove();const a=document.getElementById('instArrow');if(a)a.remove();try{prevFocus&&prevFocus.focus&&prevFocus.focus()}catch(e){}};
   s.addEventListener('click',e=>{if(e.target===s)close(true)});s.querySelector('[data-later]').onclick=()=>close(true);{const d=s.querySelector('[data-done]');if(d)d.onclick=()=>close(false)}
   if(onOk)s.querySelector('[data-ok]').onclick=async()=>{close(false);await onOk()};
