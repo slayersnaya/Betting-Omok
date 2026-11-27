@@ -1582,6 +1582,7 @@ img,svg,a{-webkit-user-drag:none}
 #mvOv .mvnote{margin:2px 0 0;font-size:12.5px;color:var(--mute);white-space:nowrap}
 .mvsm{font-size:13px;color:var(--mute)}
 #mvOv .mvtest{width:100%;margin-top:8px;display:flex;flex-direction:column;gap:6px}#mvOv .mvtest small{font-size:12px;color:var(--mute);white-space:nowrap}#mvOv .mvtest span{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}#mvOv .mvtest .btn{min-height:40px;padding:0}
+#mvOv .mvver{font-size:12px;color:var(--mute);margin-top:-6px}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -1891,7 +1892,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.41';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.42';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2699,7 +2700,7 @@ function mvRender(){const ov=$('#mvOv');if(!ov)return;const fb=!!(user&&user.fir
   :`<div class="mvbox ok"><b>✓ ${esc(String(g).slice(0,40))}</b><small>새 주소에서 같은 계정으로 로그인하세요</small></div>`;
  const foot=MV.ask?`<p class="mvwarn">연결하지 않으면 옥돌·랭크 기록은<br>새 주소로 옮겨지지 않아요</p><span class="mvrow"><button class="btn ghost" data-mv="back">돌아가기</button><button class="btn" data-mv="force">그래도 옮기기</button></span>`
   :`<button class="btn mvgo" data-mv="go">새 버전 받기</button>`;
- ov.innerHTML=`<div class="mvcard" role="dialog" aria-modal="true" aria-labelledby="mvT"><img src="icons/icon-192.png" alt=""><h2 id="mvT">새 주소로 이사했어요</h2><p class="mvsub">새 버전에서 이어서 할 수 있어요</p>${acc}${foot}${sa?'<p class="mvnote">옮긴 뒤에는 이 아이콘을 지워 주세요</p>':''}${isAdmin()?'<div class="mvtest"><small>시험(관리자만): 크롬으로 따로 열리는 번호를 알려 주세요</small><span>'+[5,6,7].map(n=>`<button class="btn ghost" data-mvt="${n}">${n}</button>`).join('')+'</span></div>':''}</div>`}
+ ov.innerHTML=`<div class="mvcard" role="dialog" aria-modal="true" aria-labelledby="mvT"><img src="icons/icon-192.png" alt=""><h2 id="mvT">새 주소로 이사했어요</h2><small class="mvver">v${esc(String(window.BO_VER||""))}</small><p class="mvsub">새 버전에서 이어서 할 수 있어요</p>${acc}${foot}${sa?'<p class="mvnote">옮긴 뒤에는 이 아이콘을 지워 주세요</p>':''}${isAdmin()?'<div class="mvtest"><small>시험(관리자만): 크롬으로 따로 열리는 번호를 알려 주세요</small><span>'+[5,6,7].map(n=>`<button class="btn ghost" data-mvt="${n}">${n}</button>`).join('')+'</span></div>':''}</div>`}
 function mvGo(){const lk=user&&user.firebase&&user.provider?user.provider()||'':'';let u=MV_NEW+'?inst=1#mv='+mvPack(lk);
  try{localStorage.setItem('bo-movedout',String(Date.now()))}catch(e){}MV.go=1;
  const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
