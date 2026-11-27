@@ -1638,6 +1638,12 @@ html.xmas .pod .p1 .xpw{z-index:0;isolation:isolate}
 .cfr>.cring.cimg{object-fit:contain}
 img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertical-align:-.3em}
 .mysl img.simg,.shprev .pvs img.simg{width:22px;height:22px}
+
+#qtip{position:fixed;inset:0;z-index:96;cursor:pointer}
+#qtip .qhole{position:absolute;border-radius:50%;box-shadow:0 0 0 9999px rgba(0,0,0,.72),0 0 0 3px var(--jade) inset;animation:qpulse 1.4s ease-in-out infinite}
+@keyframes qpulse{50%{box-shadow:0 0 0 9999px rgba(0,0,0,.72),0 0 0 6px var(--jade) inset}}
+#qtip .qbub{position:absolute;max-width:calc(100vw - 20px);background:var(--card);color:var(--ink);border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;gap:2px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#qtip .qbub b{font-size:14px;white-space:nowrap}#qtip .qbub small{font-size:12px;color:var(--mute);white-space:nowrap}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -1947,7 +1953,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.75';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.76';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2384,6 +2390,14 @@ function autoPickFirst(){try{const vs=vstate();if(!vs||vs.phase!=='designate'||U
  if(vs.me&&vs.sun!==vs.me)return;if(!vs.me&&vs.sun!==vs.A)return;
  for(const d of [0,1,2,3]){const p=recommendPick(vs,d);if(p){setSel(p[0],p[1],d);if(!autoPickFirst.n){autoPickFirst.n=1;hint('세 칸을 골라 뒀어요 · 그대로 확정해도 돼요')}return}}}catch(e){}}
 if(typeof document!=='undefined')setInterval(autoPickFirst,700);
+// 튜토리얼을 마친 뒤 처음 로비에 오면: 오른쪽 위 ? 버튼만 밝게 비추고 '여기서 다시 볼 수 있어요' 한 번 안내
+function qTip(){try{if(lget('bo-qtip')!=='1'||UI.mode==='tut')return;const b=document.querySelector('.hrule'),d=document.getElementById('dlg');
+ if(!b||!b.offsetParent||(d&&!d.classList.contains('hide'))||document.getElementById('qtip'))return;const r=b.getBoundingClientRect();if(!r.width)return;lset('bo-qtip','2');
+ const o=document.createElement('div');o.id='qtip';o.setAttribute('role','dialog');o.setAttribute('aria-label','튜토리얼 다시 보기 안내');
+ const cx=r.left+r.width/2,cy=r.top+r.height/2,R=Math.max(r.width,r.height)/2+8;
+ o.innerHTML=`<i class="qhole" style="left:${cx-R}px;top:${cy-R}px;width:${2*R}px;height:${2*R}px"></i><div class="qbub" style="top:${cy+R+12}px;right:${Math.max(10,innerWidth-cx-28)}px"><b>튜토리얼은 여기서 다시 볼 수 있어요</b><small>규칙도 언제든 확인해요</small></div>`;
+ o.addEventListener('click',()=>o.remove());document.body.appendChild(o);setTimeout(()=>{if(o.isConnected)o.remove()},8000)}catch(e){}}
+if(typeof document!=='undefined')setInterval(qTip,1500);
 function aiLvKey(k){try{if(k==='beginner'&&typeof L!=='undefined'&&L.s&&L.s.ai&&!L.s.bot&&!L.s.cas&&gamesPlayed()<3)return 'starter'}catch(e){}return k}
 function aiDesignate(v){
  const lv=AI_LEVELS[aiLvKey(v.level)]||AI_LEVELS.pro,bd=v.bd.map(r=>r.slice()),rnd=()=>aiRng(v.mem),om=aiOppModel(v,lv);
@@ -3011,7 +3025,7 @@ function renderBoard(){
  const o={};
  if(vs.last&&UI.animT!==vs.last.t){const first=UI.animT===-1&&UI.mode==='online';UI.animT=vs.last.t;if(!first&&vs.phase!=='review'&&UI.mode!=='tut')startReveal(vs)}
  const rv=revealing()&&vs.last&&UI.rv.t===vs.last.t&&UI.mode!=='tut'&&vs.phase!=='review',holdView=rv&&!(vs.phase==='over'&&Date.now()>UI.rv.at+WIN_T.view);
- if(!rv){if(['bet','reveal'].includes(vs.phase)&&vs.cells)o.cells=vs.cells;if(vs.phase==='designate'&&UI.sel&&UI.sel.cells)o.preview=UI.sel.cells}
+ if(!rv){if((['bet','reveal'].includes(vs.phase)||vs.phase==='tut')&&vs.cells)o.cells=vs.cells;if(vs.phase==='designate'&&UI.sel&&UI.sel.cells)o.preview=UI.sel.cells}
  if(vs.last){o.lastCells=vs.last.cells;if(rv){o.el=(Date.now()-UI.rv.at)/1000;o.fresh=vs.last.cells;o.outCells=vs.last.cells}}
  if(vs.phase==='over'&&vs.winner){o.fives=fiveLines(vs.board,vs.winner===vs.A?1:2);const live=UI.rv&&vs.last&&UI.rv.t===vs.last.t;o.fdelay=live?(UI.rv.at+WIN_T.line-Date.now())/1000:-1;if(live){o.ldelay=(UI.rv.at+WIN_T.lift-Date.now())/1000;o.spark=vs.me?vs.winner===vs.me:true}/* ECO */try{ecoFx(o,vs,live)}catch(e){}}
  if(vs.phase==='review'){o.lastCells=null;o.tags=vs.last.cells;if(vs.end&&vs.winner){o.fives=fiveLines(vs.board,vs.winner===vs.A?1:2);o.fdelay=-1}}
@@ -4639,13 +4653,16 @@ const TUT=[
  {k:'bet',n:3,title:'몰래 나눠 걸기',opp:[2,2,2],text:ptT('합계는 내 {P}까지<br>상대 베팅은 안 보여요')},
  {k:'result',n:3,title:'몰래 나눠 걸기',text:ptT('건 {P은} 사라짐 · 매 턴 <b>+10</b>{P}')},
  {k:'info',n:4,title:'모두 걸지 않아도 돼요',text:s=>`<span class="tcar" aria-label="${ptT('예시: 10{P} 중 4{P}만 걸면 6{P이} 남고, 다음 턴에 6 더하기 10, 16{P}')}"><span><small>내 ${PTU}</small><b class="num">10</b></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span class="bt"><small>4만 걸기</small><b class="num">6 남음</b></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span class="kp"><small>다음 턴</small><b class="num">16</b></span></span>${ptT('안 건 {P은} 다음 턴으로')} <b>이월</b><br>아꼈다가 승부처에 몰아 걸기 · 이게 <b>심리전</b>`},
- {k:'bet',n:5,title:'동점이면 후 플레이어',opp:[3,3,3],oppPick:true,need:[0,3],text:'상대 3·3·3 공개 · A에 <b>3</b> 걸기'},
- {k:'result',n:5,title:'동점이면 후 플레이어',end:true}
+ {k:'info',n:5,title:'막을 칸에 몰아 걸기',text:'<b>A</b>를 상대가 가지면 상대 오목<br><span style="white-space:nowrap">막을 칸에 <b>몰아</b> 걸고, 나머지는 1씩</span><br><small>칸마다 최소 1칩은 걸어야 해요</small>',setup(s){if(!s.sv)s.sv=s.bd.map(r=>r.slice());s.bd=emptyBoard();for(let c=5;c<=8;c++)s.bd[9][c]=2;s.bd[8][7]=1;s.bd[10][6]=1;s.bd[8][9]=1;s.cells=[[9,9],[9,10],[9,11]];s.demo=[[[9,5],[9,9]]]}},
+ {k:'info',n:6,title:'동시에 오목이면',text:'<b>A</b>는 내 오목, <b>C</b>는 상대 오목이 되면<br><span style="white-space:nowrap">줄이 많은 쪽 승리 · 같으면 <b>후 플레이어</b> 승리</span><br><small>내주고도 이기는 칸이 있어요</small>',setup(s){if(!s.sv)s.sv=s.bd.map(r=>r.slice());s.bd=emptyBoard();for(let c=6;c<=9;c++){s.bd[8][c]=1;s.bd[10][c]=2}s.cells=[[8,10],[9,10],[10,10]];s.demo=[[[8,6],[8,10]],[[10,6],[10,10]]]}},
+ {k:'info',n:7,title:'상대 칩 읽기',text:'상대도 매 턴 <b>+10</b>칩을 받아요<br><span style="white-space:nowrap">이긴 칸·진 칸을 보면 남은 칩이 보여요</span><br><small>골드까지는 예상 범위를 알려 줘요</small>',setup(s){s.cells=null;s.demo=null}},
+ {k:'bet',n:8,title:'동점이면 후 플레이어',opp:[3,3,3],oppPick:true,need:[0,3],text:'상대 3·3·3 공개 · A에 <b>3</b> 걸기',setup(s){if(s.sv){s.bd=s.sv;s.sv=null}s.cells=null;s.demo=null}},
+ {k:'result',n:8,title:'동점이면 후 플레이어',end:true}
 ];
 const T={
  s:null,
  start(){this.s={step:0,bd:emptyBoard(),pts:{A:10,B:10},t:1,sun:'A',hu:'B',cells:null,last:null,hist:[]};this.enter();UI.mode='tut';UI.sel=null;UI.panelKey='';show('game');$('#cover').classList.add('hide');renderAll()},
- enter(){const s=this.s,st=TUT[s.step];s.demo=null;if(st.end)lset('bo-tut-done','1');
+ enter(){const s=this.s,st=TUT[s.step];s.demo=null;if(st.end){lset('bo-tut-done','1');if(lget('bo-qtip')!=='2')lset('bo-qtip','1')}
   if(st.setup)st.setup(s);
   if(st.k==='bet'&&st.oppPick){// 상대가 선: 내 돌 가까이 세 칸을 고름
    s.t++;s.pts.A+=10;s.sun='B';s.hu='A';const L=legalTriples(s.bd);s.cells=L.find(t=>t.some(([r,c])=>aiNear(s.bd,r,c,1)))||L[0]}
