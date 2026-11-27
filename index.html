@@ -1890,7 +1890,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.23';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.24';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6771,6 +6771,12 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
    let tried=false;try{tried=!!sessionStorage.getItem('bo-ext');if(!tried)sessionStorage.setItem('bo-ext','1')}catch(e){}
    if(!tried)setTimeout(toOut,400);
    card(isIOS?'사파리에서 열어 설치':'크롬에서 열어 설치',isIOS?'사파리로':'크롬으로',toOut)}
+  else if(isAnd&&isChrome&&hop){
+   // 크롬으로 넘어왔는데 크롬이 설치 신호를 안 주면(전에 설치 창을 닫았거나 이미 설치됨): 메뉴로 설치하는 방법을 바로 보여 줌
+   setTimeout(()=>{if(ev||document.getElementById('instSheet'))return;notInstalled().then(ok=>{if(ev)return;
+    if(!ok){card('이미 설치돼 있어요 · 홈 화면에서 열기');return}
+    card('⋮ 메뉴 → 앱 설치');whenFree(()=>{if(ev||document.getElementById('instSheet'))return;
+     sheet(`<div class="ios"><div><b>1</b>오른쪽 위 ⋮ 메뉴 누르기</div><div><b>2</b>'앱 설치' 또는 '홈 화면에 추가'</div></div>`,null)})})},4000)}
   else if(isAnd&&isChrome&&!hop){
    // 앱에서 연 링크(맞춤 탭)는 바로, 그 밖에는 설치 신호가 3초 안에 안 오면 크롬 앱으로(하루 한 번, 이사로 온 경우는 늘)
    // 기록 가져오기 같은 안내 창이 열려 있으면 닫힐 때까지 기다림(가져온 기록은 크롬과 같이 씀)
