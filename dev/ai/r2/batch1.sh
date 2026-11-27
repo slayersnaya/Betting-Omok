@@ -1,6 +1,0 @@
-./ev.sh base '{"c":{"base":"ultimate"}}'
-./ev.sh pfTie0 '{"c":{"base":"ultimate","pfTie":0}}'
-./ev.sh pfG.3 '{"c":{"base":"ultimate","pfG":0.3}}'
-./ev.sh pfG0 '{"c":{"base":"ultimate","pfG":0}}'
-./ev.sh insWo.5 '{"c":{"base":"ultimate","insWo":0.5}}'
-./ev.sh c4o '{"c":{"base":"ultimate","crit4":1,"critU":1,"crit4Opp":1}}'

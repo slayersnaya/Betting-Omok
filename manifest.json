@@ -42,6 +42,12 @@
  "categories": [
   "games"
  ],
+ "related_applications": [
+  {
+   "platform": "webapp",
+   "url": "https://betting-omok.github.io/manifest.json"
+  }
+ ],
  "icons": [
   {
    "src": "icons/icon-192.png",

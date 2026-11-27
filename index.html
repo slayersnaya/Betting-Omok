@@ -1566,6 +1566,21 @@ html{scroll-padding-top:64px}
 html,body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 img,svg,a{-webkit-user-drag:none}
+#mvOv{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:16px;background:var(--bg);overflow:auto}
+#mvOv.hide{display:none}
+#mvOv .mvcard{width:min(400px,100%);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;background:var(--card);color:var(--ink);border-radius:22px;padding:26px 18px 20px;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+#mvOv img{width:64px;height:64px;border-radius:16px}
+#mvOv h2{margin:4px 0 0;font-size:20px;white-space:nowrap}
+#mvOv .mvsub{margin:0;font-size:14px;color:var(--mute);white-space:nowrap}
+#mvOv .mvbox{width:100%;display:flex;flex-direction:column;gap:3px;margin-top:4px;padding:12px;border-radius:14px;background:color-mix(in srgb,var(--jade) 14%,transparent);color:var(--jadeink)}
+#mvOv .mvbox b{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#mvOv .mvbox small{font-size:12.5px;white-space:nowrap}
+#mvOv .mvrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-top:8px}
+#mvOv .mvrow .btn{min-height:44px;font-size:14px;white-space:nowrap;padding-left:6px;padding-right:6px}
+#mvOv .rkgoo svg{width:16px;height:16px;margin-right:6px;vertical-align:-3px}
+#mvOv .mvgo{width:100%;min-height:52px;font-size:17px;margin-top:6px}
+#mvOv .mvwarn{margin:6px 0 0;font-size:13.5px;font-weight:700;color:var(--ink)}
+#mvOv .mvnote{margin:2px 0 0;font-size:12.5px;color:var(--mute);white-space:nowrap}
+.mvsm{font-size:13px;color:var(--mute)}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -1575,8 +1590,8 @@ img,svg,a{-webkit-user-drag:none}
 <meta property="og:title" content="베팅 오목">
 <meta property="og:description" content="베팅 승자가 착수하는 2인 전략 오목">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://slayersnaya.github.io/Betting-Omok/">
-<meta property="og:image" content="https://slayersnaya.github.io/Betting-Omok/thumb.jpg">
+<meta property="og:url" content="https://betting-omok.github.io/">
+<meta property="og:image" content="https://betting-omok.github.io/thumb.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="베팅 오목 대국 화면">
@@ -1874,7 +1889,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.13';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.19';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2654,6 +2669,50 @@ const lset=(k,v)=>{mem[k]=v;try{localStorage.setItem(k,v);return true}catch(e){r
 const lrm=k=>{delete mem[k];try{localStorage.removeItem(k)}catch(e){}};
 const rhex=n=>{const a=new Uint8Array(n);crypto.getRandomValues(a);return [...a].map(x=>x.toString(16).padStart(2,'0')).join('')};
 const LS_OK=(()=>{try{localStorage.setItem('bo-t','1');localStorage.removeItem('bo-t');return true}catch(e){return false}})();
+// ===== 새 주소로 이사(slayersnaya.github.io → betting-omok.github.io) =====
+// 옛 주소: 덮개 창으로 안내 → 게스트는 먼저 계정 연결 권유 → 이 기기 기록(정해진 키만)을 주소 # 뒤에 담아 새 주소로
+// 새 주소: # 뒤 기록을 받으면 바로 지우고, 물어본 뒤에만 저장. 서버 기록(옥돌·랭크)은 같은 계정으로 로그인하면 이어짐
+const MV_HOST=(()=>{try{return sessionStorage.getItem('bo-mvhost')}catch(e){return null}})()||location.hostname;
+const MV_OLD=MV_HOST==='slayersnaya.github.io',MV_NEW=(()=>{try{return sessionStorage.getItem('bo-mvnew')}catch(e){return null}})()||'https://betting-omok.github.io/';
+const MV_KEYS=['bo-nick','bo-theme','bo-snd','bo-bgm','bo-vib','bo-big','bo-hint','bo-rvai','bo-frgame','bo-sp','bo-emomute','bo-tut-done','bo-welcomed','bo-rkintro','bo-rklg','bo-cntok','bo-emotip','bo-ecohint','bo-ai','bo-airec','bo-pz','bo-pzs','bo-pzseen','bo-tup','bo-rksnap','bo-chalst','bo-recap','bo-mailrd','bo-mailhid','bo-bkbot','bo-gdone','bo-games','bo-mygames','bo-ailearn'];
+const MV_MAX=40000;
+const mvB64=t=>btoa(unescape(encodeURIComponent(t))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const mvUnB64=t=>decodeURIComponent(escape(atob(t.replace(/-/g,'+').replace(/_/g,'/'))));
+function mvPack(lk){const d={};let n=0;for(const k of MV_KEYS){if(k==='bo-nick'&&!lk)continue;let v=null;try{v=localStorage.getItem(k)}catch(e){}if(typeof v!=='string'||!v||v.length>20000||n+v.length>MV_MAX)continue;d[k]=v;n+=v.length}
+ return mvB64(JSON.stringify({v:1,at:Date.now(),lk:lk||'',d}))}
+// 새 주소: 열자마자 # 기록을 꺼내 두고 주소창에서 지움(다른 코드가 #을 읽기 전에)
+(()=>{if(MV_OLD)return;const h=location.hash;if(!/^#mv=[A-Za-z0-9_-]+$/.test(h))return;
+ try{const o=JSON.parse(mvUnB64(h.slice(4)));if(o&&o.v===1&&o.d&&typeof o.d==='object')sessionStorage.setItem('bo-mvpend',JSON.stringify(o))}catch(e){}
+ try{history.replaceState(history.state,'',location.pathname+location.search)}catch(e){}})();
+function mvImport(o){let n=0;for(const k of MV_KEYS){const v=o.d[k];if(typeof v!=='string'||v.length>20000)continue;if(k==='bo-nick'&&(!o.lk||v.length>24))continue;try{localStorage.setItem(k,v);n++}catch(e){}}
+ try{localStorage.setItem('bo-moved',JSON.stringify({at:Date.now(),lk:o.lk==='google'||o.lk==='email'?o.lk:''}))}catch(e){}return n}
+const MV={go:0,ask:0};
+function mvGuest(){return !!(user&&user.firebase&&!user.google())}
+function mvRender(){const ov=$('#mvOv');if(!ov)return;const fb=!!(user&&user.firebase),g=fb&&user.google(),guest=fb&&!g,sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+ const acc=!fb?'':guest?`<div class="mvbox"><b>게스트로 하고 있어요</b><small>연결해야 옥돌·랭크 기록이 따라와요</small><span class="mvrow"><button class="btn rkgoo" data-mv="goo">${G_LOGO}구글로 연결</button><button class="btn ghost" data-mv="em">이메일로 연결</button></span></div>`
+  :`<div class="mvbox ok"><b>✓ ${esc(String(g).slice(0,40))}</b><small>새 주소에서 같은 계정으로 로그인하세요</small></div>`;
+ const foot=MV.ask?`<p class="mvwarn">연결하지 않으면 옥돌·랭크 기록은<br>새 주소로 옮겨지지 않아요</p><span class="mvrow"><button class="btn ghost" data-mv="back">돌아가기</button><button class="btn" data-mv="force">그래도 옮기기</button></span>`
+  :`<button class="btn mvgo" data-mv="go">새 버전 받기</button>`;
+ ov.innerHTML=`<div class="mvcard" role="dialog" aria-modal="true" aria-labelledby="mvT"><img src="icons/icon-192.png" alt=""><h2 id="mvT">새 주소로 이사했어요</h2><p class="mvsub">새 버전에서 이어서 할 수 있어요</p>${acc}${foot}${sa?'<p class="mvnote">옮긴 뒤에는 이 아이콘을 지워 주세요</p>':''}</div>`}
+function mvGo(){const lk=user&&user.firebase&&user.provider?user.provider()||'':'';let u=MV_NEW+'?inst=1#mv='+mvPack(lk);
+ try{localStorage.setItem('bo-movedout',String(Date.now()))}catch(e){}MV.go=1;
+ const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;if(sa){const w=window.open(u,'_blank');if(w)return}location.href=u}
+function mvOld(){if(!MV_OLD||$('#mvOv'))return;const ov=document.createElement('div');ov.id='mvOv';document.body.appendChild(ov);mvRender();
+ ov.addEventListener('click',e=>{const b=e.target.closest('[data-mv]');if(!b)return;const a=b.dataset.mv;
+  if(a==='goo'){googleLink().then(()=>{MV.ask=0;mvRender()})}
+  else if(a==='em'){ov.classList.add('hide');openAcct(()=>{MV.ask=0;ov.classList.remove('hide');mvRender()})}
+  else if(a==='go'){if(mvGuest()){MV.ask=1;mvRender()}else mvGo()}
+  else if(a==='back'){MV.ask=0;mvRender()}
+  else if(a==='force')mvGo()});
+ // 이메일 창을 그냥 닫으면 안내 창을 다시 보여 줌
+ setInterval(()=>{if(ov.classList.contains('hide')&&!shOpen){ov.classList.remove('hide');mvRender()}},700)}
+function mvNew(){if(MV_OLD)return;let o=null;try{o=JSON.parse(sessionStorage.getItem('bo-mvpend')||'null')}catch(e){}
+ if(o){const go=()=>{try{sessionStorage.removeItem('bo-mvpend')}catch(e){}};
+  go();dialog('<b>이전 주소의 기록을 가져올까요?</b><br><small class="mvsm">설정·AI 대국 기록 같은 이 기기 기록이에요</small>','가져오기',()=>{mvImport(o);try{sessionStorage.setItem('bo-mvdone','1')}catch(e){}location.replace(location.pathname+'?inst=1')},'안 가져오기');return}
+ let done=false;try{done=!!sessionStorage.getItem('bo-mvdone');sessionStorage.removeItem('bo-mvdone')}catch(e){}if(!done)return;
+ let m={};try{m=JSON.parse(lget('bo-moved')||'{}')||{}}catch(e){}
+ if(m.lk&&mvGuest())dialog(`<span class="rkin"><h3 id="rkinH">이사 완료</h3><p class="mvsm">예전 계정으로 로그인하면<br>옥돌·랭크 기록이 이어져요</p><span class="rklgb">${m.lk==='google'?`<button class="btn rkgoo" data-act="mvgoo">${G_LOGO}구글로 로그인</button>`:`<button class="btn" data-act="mvem">이메일로 로그인</button>`}</span></span>`,'나중에',()=>{},null),$('#dlg [data-act=dlgno]').remove(),$('#dlg [data-act=dlgok]').classList.add('ghost');
+ else toast('이사 완료 · 옛 주소 아이콘은 지워 주세요')}
 // 자리 id: 새 사용자는 비밀값에서 만들어서, 옮기기 코드(비밀값)를 알아야만 같은 자리로 이어갈 수 있게 함
 const seatOf=sec=>'s'+sha256('seat|'+sec).slice(0,16);
 let SEAT=lget('bo-seat'),SECRET=lget('bo-secret');
@@ -5286,6 +5345,8 @@ document.addEventListener('click',e=>{
  else if(a==='rkacc'){dialogClose();openAcct(()=>{goLobby();setTab('rank')})}
  else if(a==='dlgx'){dialogClose();return}
  else if(a==='cntnever'){lset('bo-cntok','1');dialogClose();UI.cntPass=true;mmStart()}
+ else if(a==='mvgoo'){dialogClose();googleLink()}
+ else if(a==='mvem'){dialogClose();openAcct()}
  else if(a==='rkgoo'){dialogClose();googleLink().then(r=>{if(r==='linked'){goLobby();setTab('rank')}})}
  else if(a==='wemail'){$('#welcome').classList.add('hide');openAcct()}
  else if(a==='emlink')accRun('link');
@@ -5426,6 +5487,7 @@ const use=n=>window.claude&&typeof window.claude.use==='function'?Promise.resolv
  db=d;user=u;room=r;if(u&&u.firebase)setTimeout(()=>{if(UI.view==="lobby")rankIntro()},2500);
  // Firebase(웹·어플) 모드: 자리 id는 로그인 id(uid). 규칙으로 '본인 문서만 쓰기'가 보장됨
  if(user&&user.firebase){try{const id=await user.id();if(id){SEAT=id;SECRET=null}}catch(e){}document.body.classList.add('fbmode');try{renderAcct()}catch(e){}profLoad().catch(()=>{})}
+ try{if(MV_OLD)mvOld();else setTimeout(mvNew,600)}catch(e){console.warn('mv',e)}
  // 프로필 이름(실명일 수 있음)은 공유 DB에 남지 않게 닉네임으로 자동 입력하지 않음
  if(user){try{canWrite=await user.can('data.write')}catch(e){}}
  const note=$('#onlineNote');
@@ -6632,6 +6694,8 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
  const ua=navigator.userAgent||'',standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
  if(standalone)return;
+ // 옛 주소(이사 안내 중)에서는 설치를 권하지 않음
+ {let h=location.hostname;try{h=sessionStorage.getItem('bo-mvhost')||h}catch(e){}if(h==='slayersnaya.github.io')return}
  const isIOS=/iPhone|iPad|iPod/i.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),isAnd=/Android/i.test(ua),isPad=/iPad/i.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
  const isKakao=/KAKAOTALK/i.test(ua),inApp=isKakao||/NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|DaumApps|everytimeApp|; wv\)/i.test(ua);
  const isSafari=isIOS&&!inApp&&/Safari/i.test(ua)&&!/CriOS|FxiOS|EdgiOS|OPiOS|Whale/i.test(ua);
@@ -6694,12 +6758,22 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
   if(want||(!hidden()&&!sheetSeen()))whenFree(()=>{if(ev)sheet('<ul><li><i></i>주소창 없이 전체 화면으로</li><li><i></i>설치는 몇 초 · 용량 거의 없음</li></ul>',doPrompt)})});
  window.addEventListener('appinstalled',hide);
  const ready=f=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',f):f();
+ // 안드로이드 크롬이 아닌 곳(앱 링크로 열린 임시 창 등)은 설치가 안 되므로 크롬 앱으로 자동으로 옮김
+ const isChrome=/Chrome\//.test(ua)&&!/SamsungBrowser|EdgA|OPR|Whale|Firefox|YaBrowser|; wv\)/.test(ua);
+ const autoOk=()=>Date.now()-(+ls('bo-inst-auto')||0)>864e5;
+ const notInstalled=()=>navigator.getInstalledRelatedApps?navigator.getInstalledRelatedApps().then(a=>!a||!a.length).catch(()=>true):Promise.resolve(true);
+ const goChrome=()=>{ls('bo-inst-auto',String(Date.now()));toOut()};
+ const CH_TXT='크롬에서 열어 설치';
  ready(()=>{
   if(inApp&&(isKakao||isAnd)){
    // 앱 안 브라우저는 설치가 안 되므로 바깥 브라우저로 자동 이동(세션마다 한 번, 실패해도 카드로 다시 시도 가능)
    let tried=false;try{tried=!!sessionStorage.getItem('bo-ext');if(!tried)sessionStorage.setItem('bo-ext','1')}catch(e){}
    if(!tried)setTimeout(toOut,400);
    card(isIOS?'사파리에서 열어 설치':'크롬에서 열어 설치',isIOS?'사파리로':'크롬으로',toOut)}
+  else if(isAnd&&isChrome&&!want){
+   // 앱에서 연 링크(맞춤 탭)는 바로, 그 밖에는 설치 신호가 3초 안에 안 오면 크롬 앱으로(하루 한 번)
+   const fromApp=/^android-app:\/\//.test(document.referrer||'');
+   setTimeout(()=>{if(ev)return;notInstalled().then(ok=>{if(!ok||ev)return;card(CH_TXT,'크롬으로',goChrome);if(autoOk())goChrome()})},fromApp?300:3000)}
   else if(inApp&&isIOS)card('··· 메뉴 → Safari로 열기 후 설치');
   else if(isSafari){card('공유 버튼 → 홈 화면에 추가');
    if(want||(!hidden()&&!sheetSeen()))whenFree(()=>{

@@ -1,5 +1,0 @@
-./pro.sh c1+rU.3 '{"base":"ultimate","crit4":1,"critU":1,"crit4Opp":1,"insWo":0.5,"resvU":0.3}'
-./pro.sh c1+rU.6 '{"base":"ultimate","crit4":1,"critU":1,"crit4Opp":1,"insWo":0.5,"resvU":0.6}'
-./pro.sh c1+lam.55 '{"base":"ultimate","crit4":1,"critU":1,"crit4Opp":1,"insWo":0.5,"lamK":0.55}'
-./pro.sh c1+lam.38 '{"base":"ultimate","crit4":1,"critU":1,"crit4Opp":1,"insWo":0.5,"lamK":0.38}'
-./pro.sh c1+rU.5D '{"base":"ultimate","crit4":1,"critU":1,"crit4Opp":1,"insWo":0.5,"resvU":0.5,"resvD":1}'
