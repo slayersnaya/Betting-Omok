@@ -1956,7 +1956,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.82';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.83';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3340,7 +3340,7 @@ function renderPanel2(){
   else if(m.ranked){const dl=rankDelta(vs),pw=G.rkSnap&&G.rkSnap.pw.n,frz=G.rkSnap&&vs.me&&G.rkSnap[oppId].g<PLACE&&G.rkSnap[vs.me].g>=PLACE;
    const took=vs.hist.reduce((a,x)=>a+x.win.filter(w=>w===me).length,0),cells=vs.hist.reduce((a,x)=>a+x.cells.length,0);
    h=overSheet(vs,{vs:'랭크 게임 · '+op,home:'leave',stats:[[took,'가져간 칸'],[cells-took,'내준 칸'],[dl==null?'–':(dl>=0?'+':'')+dl,'랭크 점수',dl==null?'':dl>=0?'up':'dn']],
-    note:rankMove(vs)+(G.rkSnap&&vs.me&&dl!=null&&!(G.rkSnap[oppId].g<PLACE&&G.rkSnap[vs.me].g>=PLACE)?streakNote(G.rkSnap[vs.me],vs.winner==null?.5:vs.winner===vs.me?1:0,G.rkSnap.pw.w):'')+(snNew(G.rkSnap)?'<p class="note" style="margin:0;text-align:center">시즌이 바뀌어 새 시즌 점수에 반영돼요</p>':'')+(vs.reason==='상대 부재'?'<p class="note" style="margin:0;text-align:center">부재승은 확인 뒤 랭크에 반영돼요(최대 10분)</p>':'')+(pw?`<p class="note" style="margin:0;text-align:center">같은 상대 ${pw+1}번째 · 반영 ${['','½','¼','없음'][Math.min(pw,3)]}</p>`:'')+(frz?'<p class="note" style="margin:0;text-align:center">상대 배치 중이에요 · 내 점수 그대로</p>':''),
+    note:rankMove(vs)+(G.rkSnap&&vs.me&&dl!=null&&!(G.rkSnap[oppId].g<PLACE&&G.rkSnap[vs.me].g>=PLACE)?streakNote(G.rkSnap[vs.me],vs.winner==null?.5:vs.winner===vs.me?1:0,G.rkSnap.pw.w):'')+(snNew(G.rkSnap)?'<p class="note" style="margin:0;text-align:center">시즌이 바뀌어 새 시즌 점수에 반영돼요</p>':'')+(vs.reason==='상대 부재'?'<p class="note" style="margin:0;text-align:center">부재승은 확인 뒤 랭크에 반영돼요(최대 10분)</p>':'')+(frz?'<p class="note" style="margin:0;text-align:center">상대 배치 중이에요 · 내 점수 그대로</p>':''),
     primary:'<button class="btn wide" data-act="remm">다시 매칭</button>'});
   }else h=overSheet(vs,{vs:op,home:'leave',primary:`<button class="btn wide" data-act="again" ${mine.again?'disabled':''}>${mine.again?'상대 기다리는 중':'한 판 더'}</button>`,status:od.again?'상대 준비 완료':''});
  }else if(vs.spect){
@@ -3764,7 +3764,7 @@ async function createRoomInner(){
 
 // ===== 랭크: 점수 계산(Elo), 티어, 랭킹 =====
 const TIERS=[{n:'브론즈',min:0,c:'#a0703c'},{n:'실버',min:900,c:'#8b97a5'},{n:'골드',min:1100,c:'#c9a227'},{n:'플래티넘',min:1300,c:'#1fa39a'},{n:'다이아',min:1500,c:'#3366CC'},{n:'마스터',min:1700,c:'#6f58a8'}];
-const PAIRW=[1,.5,.25,0];
+const PAIRW=[1,1,1,1];
 function pairWeight(x,y){const pt=((RK.pairs||new Map()).get([x,y].sort().join('|'))||[]).filter(t=>Date.now()-t<864e5);return{n:pt.length,w:PAIRW[Math.min(pt.length,3)]}}
 const CHAL={n:'챌린저',top:5,c:'#CC6600'},PLACE=5,START=1000,ONE_SIDED=10*60e3;
 // ===== 랭크 AI 상대: 이름·실력은 모든 폰에서 같게(고정 씨앗으로 만듦). 점수는 사람처럼 시즌마다 시작 점수에서 출발해 직접 둔 판으로 정해짐 =====
@@ -3962,7 +3962,7 @@ function rankEngine(SS,LT){
   load:z=>{M=dup(z.M);pairs=dup(z.pairs);BS=BOTS.map(b=>M.get(BOTPRE+b.id));ord=z.ord.slice();ord.forEach((i,p)=>pos[i]=p);h=z.h;t=z.t;j=z.j;x=z.x;rs=!!z.rs}}}
 // 중간 저장을 폰에도 남김(앱을 새로 열어도 시즌 처음부터 다시 계산하지 않게. 저사양 폰에서 첫 계산 300ms대 → 수십 ms).
 // 시즌·지난 시즌 티어표가 같고, 저장한 지점 앞의 판 목록이 그대로일 때만 씀(rankCalc가 확인). 아니면 처음부터 계산해서 결과는 같음
-function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v4:'+SS.n+':'+JSON.stringify([RK.sx||{},RK.rt||{}])+':'+(LT?LT.size+':'+h:'-')}
+function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v5:'+SS.n+':'+JSON.stringify([RK.sx||{},RK.rt||{}])+':'+(LT?LT.size+':'+h:'-')}
 function ckLoad(ck,SS,LT){try{const v=JSON.parse(lget('bo-rkck')||'null');if(!v||v.k!==ckKey(SS,LT))return;const e=v.e;
  if(e.M.some(([id,p])=>p.bot&&!BOTMAP.has(p.bot)))return;const M=new Map(e.M.map(([id,p])=>[id,p.bot?{...p,bot:BOTMAP.get(p.bot),t:Infinity}:p]));
  ck.st={LT,tc:v.tc,gi:v.gi,sig:v.sig,e:{M,pairs:new Map(e.pairs),ord:e.ord,h:e.h,t:e.t,j:e.j,x:e.x}}}catch(e){}}
@@ -4519,7 +4519,7 @@ const L={
    else if(s.phase==='over'&&s.cas)p.innerHTML=s.cas.wait?waitBox('상대 기다리는 중'):overSheet(v,{vs:esc(s.bot.nick),primary:'<button class="btn wide" data-act="fkagain">한 판 더</button>'});
    else if(s.phase==='over'&&s.bot){const dl=botDelta(s),pw=s.rk&&s.rk.pw.n,took=s.hist.reduce((a,x)=>a+x.win.filter(w=>w==='A').length,0),cells=s.hist.reduce((a,x)=>a+x.cells.length,0);
     p.innerHTML=overSheet(v,{vs:'랭크 게임 · '+esc(s.bot.nick),stats:[[took,'가져간 칸'],[cells-took,'내준 칸'],[dl==null?'–':(dl>=0?'+':'')+dl,'랭크 점수',dl==null?'':dl>=0?'up':'dn']],
-     note:(s.rk&&dl!=null?tierMove(s.rk.me,dl)+streakNote(s.rk.me,s.winner==null?.5:s.winner==='A'?1:0,s.rk.pw.w):'')+(snNew(s.rk)?'<p class="note" style="margin:0;text-align:center">시즌이 바뀌어 새 시즌 점수에 반영돼요</p>':'')+(pw?`<p class="note" style="margin:0;text-align:center">같은 상대 ${pw+1}번째 · 반영 ${['','½','¼','없음'][Math.min(pw,3)]}</p>`:''),primary:'<button class="btn wide" data-act="remm">다시 매칭</button>'})}
+     note:(s.rk&&dl!=null?tierMove(s.rk.me,dl)+streakNote(s.rk.me,s.winner==null?.5:s.winner==='A'?1:0,s.rk.pw.w):'')+(snNew(s.rk)?'<p class="note" style="margin:0;text-align:center">시즌이 바뀌어 새 시즌 점수에 반영돼요</p>':''),primary:'<button class="btn wide" data-act="remm">다시 매칭</button>'})}
    else if(s.phase==='over'){const u=s.unl,nx=u&&u.next?LEVELS.find(([k])=>k===u.next):null;
     // 열린 단계·랭크는 한 줄에 하나씩(가운데 점으로 이어 붙이면 좁은 화면에서 어색하게 끊김)
     const note=u?`<p class="unl">${IC.unlock}<span>${[nx?`${nx[1]} 단계가 열렸어요`:'',u.rank?'랭크 게임이 열렸어요':''].filter(Boolean).join('<br>')}</span></p>`:'';
