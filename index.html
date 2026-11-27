@@ -1947,7 +1947,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.68';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.69';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6400,7 +6400,7 @@ function ecoItemTap(id){const it=ecoItem(id);if(!it)return;const own=ecoHas(id),
  if(!ECO.ok){dialog(head+'<p class="edq">지갑을 불러오는 중이에요</p>','확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
  const free=isAdmin(),need=free?0:it.p-ecoBal();
  if(need>0){dialog(head+`<p class="edq">옥돌 <b class="num">${ecoFmt(need)}</b>개 더 필요해요</p>`,'확인',()=>{});{const n=document.querySelector('#dlg [data-act=dlgno]');if(n)n.remove()}return}
- dialog(head+(free?`<p class="edq">관리자 · 옥돌 없이 받기</p>`:`<p class="edq">옥돌 <b class="num">${ecoFmt(it.p)}</b>으로 살까요?</p>`),free?'받기':'사기',()=>ecoBuy(id))}
+ dialog(head+(free?`<p class="edq">관리자 · 옥돌 없이 받기</p>`:`<p class="edq">옥돌 <b class="num">${ecoFmt(it.p)}</b>으로 구매할까요?</p>`),free?'받기':'구매',()=>ecoBuy(id))}
 function ecoBuy(id){const it=ECO_BY.get(id);if(!it)return;
  const free=isAdmin();ecoWrite('buy',n=>{if(n.own.includes(id)||(!free&&n.g<it.p))return false;if(!free)n.g-=it.p;n.own.push(id);n.eq[it.c]=id}).then(ok=>{snd(ok?'buy':'error');if(ok){toast(`${it.n} · 장착했어요`);ecoLook();ecoSyncPub()}else toast('구매하지 못했어요 · 잠시 후 다시 시도해 주세요')})}
 function ecoEquip(c,id){if(!ECO_SLOTS.includes(c))return;if(id&&!ecoHas(id))return;
