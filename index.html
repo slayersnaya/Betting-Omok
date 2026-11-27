@@ -1969,7 +1969,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.90';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.91';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3862,7 +3862,7 @@ const BOT_W=.65;
 const BOT_SC=320,BOT_LF=.981;
 // 11/27 티어 개편 환산: 이 시각에 사람 점수를 예전 티어 안의 같은 위치로 한 번 옮김(예전 플래티넘 1300~1500 → 새 플래티넘 1450~1700).
 //  그 뒤 처음 랭크 게임을 하는 사람은 1000점(브론즈)에서 시작. 사람도 진 판은 BOT_LF배만 깎임(AI와 같게)
-const HUM_CONV=Date.UTC(2026,10,27,12,30),CONV_O=[0,900,1100,1300,1500,1700],CONV_N=[0,1100,1250,1450,1700,2000];
+const HUM_CONV=Date.UTC(2026,10,27,12,3),CONV_O=[0,900,1100,1300,1500,1700],CONV_N=[0,1100,1250,1450,1700,2000];
 const convR=r=>{if(r>=1700)return 2000+(r-1700)*1.5;let k=0;while(k<4&&r>=CONV_O[k+1])k++;return CONV_N[k]+Math.max(0,r-CONV_O[k])*(CONV_N[k+1]-CONV_N[k])/(CONV_O[k+1]-CONV_O[k])};
 const BOT_RESET=Date.UTC(2026,10,26,9),BOT_RRANGE=[[700,900],[850,1050],[1000,1200],[1100,1300]];
 const BOT_R0=(()=>{const m=new Map(),by=[[],[],[],[]];BOTS.forEach(b=>by[b.k].push(b));
