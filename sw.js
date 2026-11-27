@@ -1,5 +1,5 @@
-// 베팅 오목 서비스 워커 (버전 1.46)
-const C='bo-1.46';
+// 베팅 오목 서비스 워커 (버전 1.47)
+const C='bo-1.47';
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(['./','index.html','manifest.json','icons/icon-192.png']).catch(()=>{})))});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);
