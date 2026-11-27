@@ -1890,7 +1890,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.28';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.29';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2709,7 +2709,9 @@ function mvGo(){const lk=user&&user.firebase&&user.provider?user.provider()||'':
 function mvFresh(){return fetch('version.json',{cache:'no-store'}).then(r=>r.json()).then(j=>{const v=j&&j.v;if(!v||v===window.BO_VER)return false;
  let n=0;try{n=+sessionStorage.getItem('bo-mvre')||0}catch(e){}if(n>=2)return false;try{sessionStorage.setItem('bo-mvre',String(n+1))}catch(e){}
  location.replace(location.pathname+'?r='+Date.now());return true}).catch(()=>false)}
-function mvOld(){if(!MV_OLD||$('#mvOv'))return;const ov=document.createElement('div');ov.id='mvOv';document.body.appendChild(ov);mvRender();
+function mvOld(){if(!MV_OLD||$('#mvOv'))return;
+ // 대국 중에는 띄우지 않고 로비로 나오면 띄움(판이 끊기지 않게)
+ if(UI.view==='game'||UI.mode==='tut'){setTimeout(mvOld,2000);return}const ov=document.createElement('div');ov.id='mvOv';document.body.appendChild(ov);mvRender();
  ov.addEventListener('click',e=>{const b=e.target.closest('[data-mv]');if(!b)return;const a=b.dataset.mv;
   if(a==='goo'){googleLink().then(()=>{MV.ask=0;mvRender()})}
   else if(a==='em'){ov.classList.add('hide');openAcct(()=>{MV.ask=0;ov.classList.remove('hide');mvRender()})}
@@ -6781,7 +6783,9 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
   if(inApp&&(isKakao||isAnd)){
    // 앱 안 브라우저는 설치가 안 되므로 바깥 브라우저로 자동 이동(세션마다 한 번, 실패해도 카드로 다시 시도 가능)
    let tried=false;try{tried=!!sessionStorage.getItem('bo-ext');if(!tried)sessionStorage.setItem('bo-ext','1')}catch(e){}
-   if(!tried)setTimeout(toOut,400);
+   // 기록 가져오기 창이 떠 있으면 닫힌 뒤에 옮김(가져온 기록은 크롬과 같이 쓰지 않으므로 먼저 저장)
+   const wt=n=>{const d=document.getElementById('dlg');if(d&&!d.classList.contains('hide')&&/이전 주소의 기록/.test(d.textContent)&&n<120)setTimeout(()=>wt(n+1),1000);else toOut()};
+   if(!tried)setTimeout(()=>wt(0),1200);
    card(isIOS?'사파리에서 열어 설치':'크롬에서 열어 설치',isIOS?'사파리로':'크롬으로',toOut)}
   else if(isAnd&&isChrome&&hop){
    // 크롬으로 넘어왔는데 크롬이 설치 신호를 안 주면(전에 설치 창을 닫았거나 이미 설치됨): 메뉴로 설치하는 방법을 바로 보여 줌
