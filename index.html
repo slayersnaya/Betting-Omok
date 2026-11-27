@@ -1958,7 +1958,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.84';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.85';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2209,7 +2209,7 @@ const AI_LEVELS={
  pro:{name:'Hard',rand:0,noise:1,jitter:.5,bidNoise:.3,res:.3,infer:true,eval2:true,lamK:.8,top:1,see5:1,crit3:1,types:[-2,-3],aib:[0,3000,1000,500],nsK:2,br:true,desp:.5,S:6,np:14,mixT:6,tempo:.45,force:1,brP:.7,
   // 막아야 하는 턴(지면 상대 오목)은 항상 최선 대응(초보에게 점수가 더 많은데도 1,1,1로 지던 약점 보완), 대신 평소 최선 대응 비율 0.8→0.7로 낮춰 중수 상대 세기는 유지
   brCrit:1},
- ultimate:{name:'Ultimate',rand:0,noise:0,jitter:.03,bidNoise:.15,res:.3,infer:true,eval2:true,lamK:.45,top:1,see5:1,crit3:1,types:[-2,-3,-4],aib:[0,3000,1000,500],nsK:2,learn:true,
+ ultimate:{name:'Ultimate',noRest:1,nrTry:8,rand:0,noise:0,jitter:.03,bidNoise:.15,res:.3,infer:true,eval2:true,lamK:.45,top:1,see5:1,crit3:1,types:[-2,-3,-4],aib:[0,3000,1000,500],nsK:2,learn:true,
   // 2세대: 상대 점수 추적(입자 필터) + 최선 대응 + 질 수 있는 판의 보험·비축 + 비슷한 수 섞기
   br:true,desp:.5,ins:1.1,insAdd:0,insSmooth:true,resv:.6,insMax:true,mixT:3,
   // 4세대: 지정할 때 내 줄을 키우는 칸을 더 높이 치고(tempo), 다음 턴 상대의 한 턴 오목 위험을 줄이는 칸을 고름(dThreat)
@@ -2413,11 +2413,20 @@ async function admMeSave(){const v=id=>{const e=document.getElementById(id);retu
    await db.doc('mail/m'+until+'_'+r).set({to:SEAT,t:'관리자 지급',msg:'',g,it:'',from:now-60e3,until,by:SEAT,at:SRV_TS,nk:(myNick()||'').slice(0,12)});mailFetch(true)}
   toast(`바꿨어요 · 시작 ${sc}점${rs?' · 전적 초기화':''}${g?` · 우편함에 옥돌 ${ecoFmt(g)}`:''}`)}catch(e){toast('바꾸지 못했어요 · '+(e&&e.code||''))}}
 function aiLvKey(k){try{if(k==='beginner'&&typeof L!=='undefined'&&L.s&&L.s.ai&&!L.s.bot&&!L.s.cas&&gamesPlayed()<3)return 'starter'}catch(e){}return k}
-function aiDesignate(v){
+// 실험(ai111): noRest — 선일 때 1·1·1(쉬기)로 끝날 세 칸이면 그 세 칸을 빼고 다시 고름. 1=항상, 2=상대 위협(빈칸 2 이하 창)이 있을 때만
+function aiDesignate(v){const lv=AI_LEVELS[aiLvKey(v.level)]||AI_LEVELS.pro;if(!lv.noRest)return aiDesignate0(v);
+ if(lv.noRest===2){const oc=3-v.aiCol;if(!aiThrBase(v.bd,oc).some(w=>aiThrWin(v.bd,w[0],w[1],w[2],w[3],oc)<=2))return aiDesignate0(v)}
+ const excl=new Set(),key=t=>t.map(x=>x.join(',')).join('|');let first=null;
+ for(let k=0;k<(lv.nrTry||4);k++){const t=aiDesignate0(Object.assign({},v,{excl}));if(!first)first=t;
+  const mem=JSON.parse(JSON.stringify(v.mem)),b=aiBid(Object.assign({},v,{mem,cells:t}));
+  if(b[0]+b[1]+b[2]>3)return t;excl.add(key(t))}
+ return first}
+function aiDesignate0(v){
  const lv=AI_LEVELS[aiLvKey(v.level)]||AI_LEVELS.pro,bd=v.bd.map(r=>r.slice()),rnd=()=>aiRng(v.mem),om=aiOppModel(v,lv);
  const any=bd.some(r=>r.some(x=>x));
  let cand=legalTriples(bd).filter(t=>any?t.some(([r,c])=>aiNear(bd,r,c,2)):t.every(([r,c])=>Math.abs(r-9)<=1&&Math.abs(c-9)<=1));
  if(!cand.length)cand=legalTriples(bd);
+ if(v.excl&&v.excl.size){const c2=cand.filter(t=>!v.excl.has(t.map(x=>x.join(',')).join('|')));if(c2.length)cand=c2}
  
  const useL=lv.learn&&AI_LRN.on,trust=useL?aiLrTrust(v.mem):0;AI_LRN.t=v.t;
  let dPts=v.aiPts;if(lv.resvD){const th=aiThreat(bd,3-v.aiCol);if(th<=3)dPts=Math.max(3,v.aiPts-aiReserve(th,om,aiPFom(v.mem,lv),lv))}
