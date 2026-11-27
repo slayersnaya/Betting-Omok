@@ -1892,7 +1892,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.44';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.45';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2734,6 +2734,12 @@ function mvOld(){if(!MV_OLD||$('#mvOv'))return;
   else if(a==='force')mvFresh().then(re=>{if(!re)mvGo()})});
  // 이메일 창을 그냥 닫으면 안내 창을 다시 보여 줌
  setInterval(()=>{if(ov.classList.contains('hide')&&!shOpen){ov.classList.remove('hide');mvRender()}},700)}
+// 관리자 진단 줄(시험 중): 새 주소에서 화면 아래 한 줄. 설치 스크립트와 따로 돌아서 그쪽이 멈춰도 보임
+function mvDiag(){try{if(MV_OLD||!isAdmin())return;const dm=['standalone','minimal-ui','fullscreen','browser'].find(m=>matchMedia('(display-mode: '+m+')').matches)||'?';
+ const q=new URL(location.href).searchParams,d=document.createElement('div');
+ d.style.cssText='position:fixed;left:6px;right:6px;bottom:calc(70px + env(safe-area-inset-bottom));z-index:99;font:12px/1.4 monospace;background:#000d;color:#9fe;padding:6px 8px;border-radius:8px;pointer-events:none;word-break:break-all';
+ d.textContent=`v${window.BO_VER} · 모드=${dm} · inst=${q.get('inst')||'-'} · 시트=${$('#instSheet')?'뜸':'없음'} · 카드=${$('#instCard')?'뜸':'없음'} · ref=${(document.referrer||'-').slice(0,30)}`;
+ document.body.appendChild(d);setTimeout(()=>d.remove(),20000)}catch(e){}}
 function mvNew(){if(MV_OLD)return;let o=null;try{o=JSON.parse(sessionStorage.getItem('bo-mvpend')||'null')}catch(e){}
  if(o){const go=()=>{try{sessionStorage.removeItem('bo-mvpend')}catch(e){}};
   go();dialog('<b>이전 주소의 기록을 가져올까요?</b><br><small class="mvsm">설정·AI 대국 기록 같은 이 기기 기록이에요</small>','가져오기',()=>{mvImport(o);try{sessionStorage.setItem('bo-mvdone','1')}catch(e){}location.replace(location.pathname+'?inst=2')},'안 가져오기');return}
@@ -5518,7 +5524,7 @@ const use=n=>window.claude&&typeof window.claude.use==='function'?Promise.resolv
  // Firebase(웹·어플) 모드: 자리 id는 로그인 id(uid). 규칙으로 '본인 문서만 쓰기'가 보장됨
  if(user&&user.firebase){try{const id=await user.id();if(id){SEAT=id;SECRET=null}}catch(e){}document.body.classList.add('fbmode');try{renderAcct()}catch(e){}profLoad().catch(()=>{})}
  // 시험 중: 이사 안내는 관리자 계정에서만(확인되면 MV_ON으로 모두에게)
- try{if(MV_OLD){if(MV_ON||isAdmin())mvOld()}else setTimeout(mvNew,600)}catch(e){console.warn('mv',e)}
+ try{if(MV_OLD){if(MV_ON||isAdmin())mvOld()}else{setTimeout(mvNew,600);setTimeout(mvDiag,7000)}}catch(e){console.warn('mv',e)}
  // 프로필 이름(실명일 수 있음)은 공유 DB에 남지 않게 닉네임으로 자동 입력하지 않음
  if(user){try{canWrite=await user.can('data.write')}catch(e){}}
  const note=$('#onlineNote');
