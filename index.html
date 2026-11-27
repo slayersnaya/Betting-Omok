@@ -1540,8 +1540,9 @@ html{scroll-padding-top:64px}
 .stgfin{text-align:center;font-weight:800;color:var(--jadeink);margin:4px 0 0}
 .stgph .tag{margin-left:auto;display:inline-flex;align-items:center;gap:4px}.stgph .tag .gdot{width:8px;height:8px}
 .stgtie{text-align:center;margin:4px 0 0;font-size:12px;font-weight:700;color:var(--mute)}
-.stgex li{word-break:keep-all}.stgex .lab,.pzres .lab{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:5px;margin:0 2px 0 4px;font-size:11px;font-weight:800;color:#fff;background:var(--k);vertical-align:-3px}
-.stgex .lab:first-child,.pzres .nw .lab:first-of-type{margin-left:2px}
+.stgex li{word-break:keep-all}.stgex .lab,.pzres .lab{display:inline-grid;place-items:center;width:1.15em;height:1.15em;border-radius:50%;margin:0 1px;font-size:inherit;line-height:1;color:#fff;background:var(--k);vertical-align:-.2em}
+.stgex .lab{width:15px;height:15px;font-size:10px}.pzres .lab{width:16px;height:16px;font-size:10.5px}
+body.big .stgex .lab{width:17px;height:17px;font-size:11.5px;border-radius:50%}body.big .pzres .lab{width:18px;height:18px;font-size:12px;border-radius:50%}
 .stgc2{color:var(--mute)}
 .stgbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.stgbtns .btn:only-child{grid-column:1/-1}
 .stgwin{gap:4px;padding:14px 10px}.stgwin b{font-size:20px}
@@ -1953,7 +1954,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.78';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.79';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -5830,21 +5831,9 @@ const PZ={cache:null,bet:[1,1,1],pick:-1};
 function pzJudge(pz,a){if(pz.type==='pick')return a===pz.ans;if(!validBets(a,pz.P))return false;const O=fxOutcomes(pz.bd,pz.cells,1,pz.meSun);return pzGood(O,a,pz.X,pz.meSun,pz.goal)&&a[0]+a[1]+a[2]===pz.best}
 // 설명(디자인팀 3차): '왜 그 합이면 되는지' — 상대가 뚫으려면 칸마다 몇 칩이 드는지 더해 보이고, 상대 칩보다 많으면 막힘/확실
 //  선·후: 같으면 후 플레이어 돌. 내가 후면 상대는 칸마다 내 칩 +1, 내가 선이면 내 칩만큼만 걸어도 그 칸을 가져감. 판정 로직은 그대로(pzJudge)
-function pzExplain(pz){const L=G=>gcells(G).map(i=>LBL[i]).join('·'),P=PTU,ex=pz.ex||[1,1,1],ap=pz.meSun?0:1,exs=ex.join('·');
- const tie=pz.meSun?'나는 선 플레이어라 같은 칩이면 상대 돌이에요':'나는 후 플레이어라 같은 칩이면 내 돌이에요';
+function pzExplain(pz){const P=PTU;
  if(pz.type==='pick'){const c=pz.cost[pz.ans];return[`정답은 ${pz.ans+1}번이에요. 여기엔 내 오목 칸(${coord(...pz.five)})이 있고 상대 오목 칸은 없어요`,`상대는 세 칸에 1${P}씩은 걸어야 해서, 한 칸에 쓸 수 있는 건 최대 ${pz.X-2}${P}이에요`,`그래서 오목 칸에 ${pz.X-1}${P}, 나머지에 1${P}씩 걸면 확실히 이겨요 (합 ${c}${P})`,`다른 후보는 ${jo(pz.P+P,'으로')}는 확실히 이길 수 없어요`]}
- const out=[];
- if(pz.goal==='win'){const G=pz.groups[0],n=pc3(G),need=pz.X-1-(pz.meSun?0:1);
-  out.push(n===1?`${L(G)} 하나만 가져도 내 오목이에요`:`${jo(L(G),'을')} 모두 가져야 내 오목이에요`);
-  out.push(`상대는 막고 싶은 칸 하나에 최대 ${pz.X-2}${P}까지 걸 수 있어요 (나머지 두 칸엔 1${P}씩)`);
-  out.push(`${tie}. 그래서 ${L(G)}에 ${n>1?'칸마다 ':''}${jo(need+P,'이')}면 확실히 지켜요`);
-  out.push(`합 ${jo(pz.best+P,'이')} 가장 적게 드는 방법이에요 (예: ${exs})`)}
- else{const cost=G=>[0,1,2].map(i=>gcells(G).includes(i)?ex[i]+ap:1),g=pz.groups.map(G=>{const c=cost(G);return{c,t:c.reduce((a,b)=>a+b,0)}}).sort((a,b)=>a.t-b.t)[0];
-  for(const G of pz.groups){const n=pc3(G);out.push(n===1?`상대는 ${L(G)} 하나만 가져도 오목이에요`:`상대는 ${jo(L(G),'을')} 모두 가져야 오목이에요`)}
-  out.push(`${tie}. 상대는 ${pz.meSun?'내 칩만큼만 걸어도':'내 칩보다 1칩 더 걸어야'} 가져가요`);
-  out.push(`${jo(exs,'으로')} 걸면 상대가 뚫는 가장 싼 길도 ${g.t}${P}이 들어요 (${g.c.join('+')})`);out.push(`상대 칩은 ${pz.X}${P}뿐이라 뚫을 수 없어요`);
-  out.push(`합 ${jo(pz.best+P,'이')} 가장 적게 드는 방법이에요${pz.n>1?' · 나누는 방법은 여러 가지예요':''}`)}
- return out}
+ return exItems(pz).map(x=>x.replace(/^<li>|<\/li>$/g,''))}
 
 function pzState(){const day=fxDate(Date.now()),st=fxJ('bo-pz',null);return st&&st.d===day?st:null}
 function pzStreak(){const s=fxJ('bo-pzs',{n:0,last:'',best:0}),y=fxDate(Date.now()-864e5),t=fxDate(Date.now());return{n:s.last===t||s.last===y?s.n|0:0,best:s.best|0,last:s.last}}
@@ -5879,7 +5868,7 @@ function renderPz(){const box=$('#pzBody');if(!box)return;const day=fxDate(Date.
   inp+=`<button class="btn wide" data-act="fxpzgo" ${pz.type==='pick'&&PZ.pick<0?'disabled':''}>제출</button>`}
  else{const ok=st.ok,ex=pzExplain(pz),ans=pz.type==='pick'?`정답 ${pz.ans+1}번`:`정답 합 ${pz.best}${PTU} (예: ${pz.ex.join('·')})`;
   const mine=pz.type==='pick'?(Number.isInteger(st.a)?`내 답 ${st.a+1}번`:''):(Array.isArray(st.a)?`내 답 ${st.a.join('·')} (합 ${st.a.reduce((x,y)=>x+y,0)}${PTU})`:'');
-  inp=`<div class="pzres ${ok?'ok':'no'}" role="status"><b>${ok?'정답':'아쉬워요'}</b><span class="nw">${esc(mine)}</span><span class="nw">${esc(ans)}</span></div><ul class="pzex">${ex.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="note pznote">${sk.n?`${sk.n}일 연속 · `:''}최고 ${sk.best}일 · 내일 새 문제</p>`}
+  inp=`<div class="pzres ${ok?'ok':'no'}" role="status"><b>${ok?'정답':'아쉬워요'}</b><span class="nw">${esc(mine)}</span><span class="nw">${esc(ans)}</span></div><ul class="pzex stgex">${ex.map(x=>`<li>${x}</li>`).join('')}</ul><p class="note pznote">${sk.n?`${sk.n}일 연속 · `:''}최고 ${sk.best}일 · 내일 새 문제</p>`}
  box.innerHTML=`<div class="pzhead"><span class="nw">${day.slice(5).replace('-','월 ')}일</span>${PZ_STARS(pz.diff)}<span class="nw">${['','쉬움','보통','어려움'][pz.diff]}</span>${sk.n?`<span class="tag j">${sk.n}일 연속</span>`:''}</div>${pzBoardSVG(pz)}${info}<p class="pzq">${q}</p>${inp}`}
 function pzOpen(){PZ.bet=[1,1,1];PZ.pick=-1;lset('bo-pzseen',fxDate(Date.now()));renderPz();openSheet('puz');try{rwPaint()}catch(e){}}
 
@@ -6766,25 +6755,43 @@ function stgBad(pz){const bad=om=>pz.goal==='win'?pz.O[7^om]!=='me':pz.O[7^om]==
 function stgBreak(pz,b){const th=b.map(v=>pz.meSun?v:v+1),bad=m=>pz.goal==='win'?pz.O[m]!=='me':pz.O[m]==='op';let best=null;
  for(let om=0;om<8;om++){let ok=true;const ob=[0,1,2].map(i=>{if((om>>i)&1)return th[i];if(th[i]<2){ok=false;return 0}return 1});if(!ok)continue;const c=ob[0]+ob[1]+ob[2];
   if(c>pz.X||!bad(7^om))continue;if(!best||c<best.c)best={c,ob,om}}return best}
-// 상대가 om 칸을 가져가려면 드는 칩(내 베팅 b 기준). 못 만들면 null
-function stgCost(pz,b,om){const th=b.map(v=>pz.meSun?v:v+1),ob=[];for(let i=0;i<3;i++){if((om>>i)&1)ob.push(th[i]);else{if(th[i]<2)return null;ob.push(1)}}return{c:ob[0]+ob[1]+ob[2],ob}}
-// 설명에 보일 경우: 상대가 노릴 나쁜 결과 전부 중, 더 싸게 같은 결과를 내는 작은 묶음이 있는 것은 뺌(못 만드는 경우는 가장 작은 묶음만). 싼 순서, 최대 4개
-function stgShow(pz,b){const bad=om=>pz.goal==='win'?pz.O[7^om]!=='me':pz.O[7^om]==='op',B=[];for(let om=0;om<8;om++)if(bad(om))B.push({om,k:stgCost(pz,b,om)});
- const keep=B.filter(x=>!B.some(y=>y.om!==x.om&&(y.om&x.om)===y.om&&(x.k?(y.k&&y.k.c<=x.k.c):true)));
- return keep.sort((x,y)=>(x.k?x.k.c:1e9)-(y.k?y.k.c:1e9)).slice(0,4).map(x=>x.om)}
-function stgExplain(pz){const ex=pz.ex,B=stgShow(pz,ex),P=PTU,win=pz.goal==='win';
- // 사람이 풀이를 들려주듯: 상대가 노리는 길 → 같은 칩일 때 규칙 → 내줘도 되는 칸 → 정답과 이유 → 왜 더 적게는 안 되는지
- const nm=om=>{const c=stgCells(om);return c.length===1?`${stgLab(c[0])}를`:`${c.map(stgLab).join('·')}를 함께`};
- const tie=pz.meSun?'나는 <b>선 플레이어</b>라 같은 칩이면 상대 돌이에요. 상대는 내 칩만큼만 걸어도 가져가요.':'나는 <b>후 플레이어</b>라 같은 칩이면 내 돌이에요. 상대는 내 칩보다 1칩 더 걸어야 가져가요.';
- const L=[];
- L.push(`<li><b>${win?'상대가 막는 길':'상대가 이기는 길'}</b> · ${B.map(om=>`<span class="nw">${nm(om)} 가져가기</span>`).join(' 또는 ')}</li>`);
- L.push(`<li>${tie}</li>`);
- for(const om of [1,2,4]){const d=pz.det&&pz.det[7^om];if(B.includes(om)||!d||!d.fo||pz.O[7^om]==='op')continue;const c=stgCells(om)[0];
-  L.push(`<li><b>내줘도 되는 칸</b> · ${stgLab(c)} 칸은 상대가 가져가도 나도 오목이 돼요. ${d.fm>d.fo?'줄이 더 많은 내가':'줄 수가 같아 후 플레이어인 내가'} 이겨요. 그래서 ${stgLab(c)}에는 1칩이면 충분해요.</li>`)}
- const cost=B.map(om=>{const k=stgCost(pz,ex,om);return k?`<span class="nw">${nm(om)} 가져가려면 ${k.c}${P}</span>`:`<span class="nw">${nm(om)} 가져가는 데 0칩</span>`});
- L.push(`<li><b>정답 ${ex.map((v,j)=>stgLab(j)+v).join(' ')}</b> · 이렇게 걸면 상대는 ${cost.join(', ')}이 필요해요. 상대 칩은 ${pz.X}${P}뿐이라 ${B.length>1?'어느 쪽으로도 ':''}${win?'못 막아요':'못 뚫어요'}.</li>`);
- L.push(`<li>합이 ${pz.best-1}${P} 이하면 어떻게 나눠도 한 군데는 ${win?'막혀요':'뚫려요'}. 그래서 ${pz.best}${P}이 가장 적게 드는 답이에요.</li>`);
- return `<ul class="pzex stgex">${L.join('')}</ul>`}
+// ----- 해설 엔진(단계별·오늘의 묘수 공통) -----
+// om = 상대가 가져가는 칸 묶음(비트). 상대가 노릴 '나쁜 결과': 이기기 = 내 승이 아닌 것, 막기 = 상대 승
+const exBad=(pz,om)=>pz.goal==='win'?pz.O[7^om]!=='me':pz.O[7^om]==='op';
+const exTh=(pz,b)=>b.map(v=>pz.meSun?v:v+1);
+// 상대가 om 묶음을 가져가는 데 드는 칩(내 베팅 b 기준): 가져갈 칸은 th, 나머지 칸도 최소 1칩
+const exCost=(pz,b,om)=>{const th=exTh(pz,b);return th.reduce((a,t,i)=>a+((om>>i)&1?t:1),0)};
+// 따라오는 칸: 내가 선이고 1칩만 건 칸은 상대가 최소 1칩만 걸어도 같아서 상대 돌
+const exFol=(pz,b)=>exTh(pz,b).reduce((a,t,i)=>t<2?a|(1<<i):a,0);
+// 상대가 노리는 최소 길(서로 포함 관계면 작은 것만)
+function exPaths(pz){const B=[];for(let om=1;om<8;om++)if(exBad(pz,om))B.push(om);return B.filter(om=>!B.some(x=>x!==om&&(x&om)===x))}
+// 길마다 내 베팅 b 기준으로 상대가 실제로 그 결과를 내는 가장 싼 방법(따라오는 칸 포함). 못 내면 c:null
+function exPlan(pz,b){const F=exFol(pz,b);return exPaths(pz).map(p=>{const r=p|F;let best=null;
+ for(let m=r;m<8;m++)if((m&r)===r&&exBad(pz,m)){const c=exCost(pz,b,m);if(!best||c<best.c)best={m,c}}
+ return{p,fol:F&~p,m:best?best.m:r,c:best?best.c:null}})}
+// 라벨(작은 동그라미)과 뒤 조사를 한 덩어리로 묶어 줄바꿈 때 떨어지지 않게
+const exNm=(om,j='')=>`<span class="nw">${stgCells(om).map(stgLab).join('·')}${j}</span>`;
+const exOr=(ps,j)=>ps.map((p,k)=>exNm(p,k===ps.length-1?j:'')).reduce((a,x,k,A)=>k===0?x:a+(k===A.length-1?' 또는 ':', ')+x,'');
+function exItems(pz){if(!pz.O)pz.O=fxOutcomes(pz.bd,pz.cells,1,pz.meSun);if(!pz.det)pz.det=stgDetail(pz);
+ const ex=pz.ex,P=PTU,win=pz.goal==='win',plan=exPlan(pz,ex),G=[];
+ for(const x of plan){const g=x.c!=null&&G.find(y=>y.c===x.c&&y.m===x.m);if(g){g.ps.push(x.p);g.fol|=x.fol}else G.push({...x,ps:[x.p]})}
+ const all=plan.map(x=>x.p),L=[];
+ L.push(`<li><b>${win?'상대가 막는 길':'상대가 이기는 길'}</b> · ${all.length===1&&stgCells(all[0]).length>1?exNm(all[0],'를')+' 함께':exOr(all,'를')} 가져가기</li>`);
+ L.push(`<li>${pz.meSun?'나는 <b>선 플레이어</b>라 같은 칩이면 상대 돌이에요. 상대는 내 칩만큼만 걸어도 가져가요.':'나는 <b>후 플레이어</b>라 같은 칩이면 내 돌이에요. 상대는 내 칩보다 1칩 더 걸어야 가져가요.'} 대신 상대도 칸마다 1칩은 꼭 걸어야 해요.</li>`);
+ const used=new Set(all.flatMap(stgCells));
+ for(const om of [1,2,4]){const d=pz.det[7^om];if(all.includes(om)||!d||!d.fm||!d.fo||pz.O[7^om]!=='me')continue;const c=stgCells(om)[0];
+  L.push(`<li><b>내줘도 되는 칸</b> · ${exNm(om,'만')} 상대가 가져가면 나도 오목이 돼요. ${d.fm>d.fo?'줄이 더 많은 내가 이겨요.':'줄 수가 같아서 후 플레이어인 내가 이겨요.'}${ex[c]===1&&!used.has(c)?` 그래서 ${exNm(om,'에는')} 1칩만 걸어요.`:''}</li>`)}
+ const ok=G.filter(g=>g.c!=null),no=G.filter(g=>g.c==null),fol=ok.reduce((a,g)=>a|g.fol,0),S=[];
+ if(fol){const n=stgCells(fol).length;S.push(`${exNm(fol,'는')} 상대가 1칩${n>1?'씩':''}만 걸어도 같아서 상대 돌이 돼요.`)}
+ for(const g of no)S.push(`${exOr(g.ps,'를')} 노려도 ${exNm(g.m^g.ps.reduce((a,p)=>a|p,0),'까지')} 따라와서 ${esc(stgOut(pz,g.m).join(' '))}이라 소용없어요.`);
+ if(ok.length){const one=ok.length===1||ok.every(g=>g.c===ok[0].c),ps=ok.flatMap(g=>g.ps);
+  S.push(one?`${fol?'그래도 ':''}상대가 ${exOr(ps,'를')} 가져가려면${ps.length>1?' 어느 쪽이든':''} ${ok[0].c}${P}이 들어요.`
+   :`${fol?'그래도 ':''}상대가 ${ok.map(g=>`${exOr(g.ps,'를')} 가져가려면 ${g.c}${P}`).join(', ')}이 들어요.`);
+  S.push(`상대 칩은 ${pz.X}${P}뿐이라 ${ps.length>1?'어느 쪽으로도 ':''}${win?'못 막아요':'못 뚫어요'}.`)}
+ L.push(`<li><b>정답 ${ex.map((v,j)=>`<span class="nw">${stgLab(j)}${v}</span>`).join(' ')}</b> · ${S.join(' ')}</li>`);
+ L.push(`<li>여기서 1칩이라도 덜 걸면 어떻게 나눠도 상대가 한 군데는 ${win?'막을':'뚫을'} 수 있어요. 그래서 합 ${pz.best}${P}이 가장 적게 드는 답이에요.</li>`);
+ return L}
+function stgExplain(pz){return `<ul class="pzex stgex">${exItems(pz).join('')}</ul>`}
 
 // ----- 화면 -----
 const stgPips=s=>`<span class="stgpw" aria-hidden="true">${[0,1,2,3].map(j=>`<i class="${j<=s?'on':''}"></i>`).join('')}</span>`;
