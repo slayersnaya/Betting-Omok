@@ -1645,6 +1645,8 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 @keyframes qpulse{50%{box-shadow:0 0 0 9999px rgba(0,0,0,.72),0 0 0 6px var(--jade) inset}}
 #qtip .qbub{position:absolute;max-width:calc(100vw - 20px);background:var(--card);color:var(--ink);border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;gap:2px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
 #qtip .qbub b{font-size:14px;white-space:nowrap}#qtip .qbub small{font-size:12px;color:var(--mute);white-space:nowrap}
+
+.admme{display:flex;flex-direction:column;gap:10px;text-align:left}.admme label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}.admme label.ck{flex-direction:row;align-items:center;gap:8px;color:var(--ink)}.admme input[type=number]{font-size:16px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--soft);color:var(--ink)}.admme small{font-size:12px;color:var(--mute)}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -1889,7 +1891,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
    <label class="sw">상대 이모트 보기<input type="checkbox" id="setEmo"></label>
    <label class="sw">관전 허용<input type="checkbox" id="setSp"></label>
   </div>
-  <div class="acct hide" id="acct"></div><button class="btn ghost wide hide" id="admDl" data-act="admdl" style="margin-top:8px">관리자 · 모든 AI 대국 기록 받기</button><button class="btn ghost wide hide" id="admRep" data-act="fradmrep" style="margin-top:8px">관리자 · 신고 보기</button><button class="btn ghost wide hide" id="admUsers" data-act="admusers" style="margin-top:8px">관리자 · 사용자 목록</button>
+  <div class="acct hide" id="acct"></div><button class="btn ghost wide hide" id="admDl" data-act="admdl" style="margin-top:8px">관리자 · 모든 AI 대국 기록 받기</button><button class="btn ghost wide hide" id="admRep" data-act="fradmrep" style="margin-top:8px">관리자 · 신고 보기</button><button class="btn ghost wide hide" id="admUsers" data-act="admusers" style="margin-top:8px">관리자 · 사용자 목록</button><button class="btn ghost wide hide" id="admMe" data-act="admme" style="margin-top:8px">관리자 · 내 정보 바꾸기</button>
   <div class="setfoot"><a href="privacy.html" target="_blank" rel="noopener" id="privLink">개인정보처리방침</a><button class="linkbtn" data-act="delacct">계정·기록 삭제</button><span id="appVer"></span></div>
  </div>
  <div class="lsheet hide" id="sh-friend" role="dialog" aria-label="일반 게임">
@@ -1954,7 +1956,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.81';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.82';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2399,6 +2401,15 @@ function qTip(){try{if(lget('bo-qtip')!=='1'||UI.mode==='tut')return;const b=doc
  o.innerHTML=`<i class="qhole" style="left:${cx-R}px;top:${cy-R}px;width:${2*R}px;height:${2*R}px"></i><div class="qbub" style="top:${cy+R+12}px;right:${Math.max(10,innerWidth-cx-28)}px"><b>튜토리얼은 여기서 다시 볼 수 있어요</b><small>규칙도 언제든 확인해요</small></div>`;
  o.addEventListener('click',()=>o.remove());document.body.appendChild(o);setTimeout(()=>{if(o.isConnected)o.remove()},8000)}catch(e){}}
 if(typeof document!=='undefined')setInterval(qTip,1500);
+// 관리자: 내 랭크 시작 점수·전적 초기화·옥돌 받기(내게 우편)
+function admMe(){if(!isAdmin()||!db||!SEAT)return;const cur=RK.sx&&Number.isInteger(RK.sx[SEAT])?RK.sx[SEAT]:ADMIN_START;
+ dialog(`<div class="admme"><b>내 정보 바꾸기</b><label>랭크 시작 점수<input type="number" id="amS" min="0" max="3000" step="10" value="${cur}" inputmode="numeric"></label><label class="ck"><input type="checkbox" id="amR"> 지금까지 전적 지우기</label><label>옥돌 받기(우편)<input type="number" id="amG" min="0" max="${MAIL_GMAX}" step="100" value="0" inputmode="numeric"></label><small>점수는 시즌 시작 점수예요 · 이후 판 결과가 더해져요</small></div>`,'바꾸기',admMeSave,'취소')}
+async function admMeSave(){const v=id=>{const e=document.getElementById(id);return e?e.value:''};const sc=Math.max(0,Math.min(3000,parseInt(v('amS'),10)||0)),rs=!!(document.getElementById('amR')||{}).checked,g=Math.max(0,Math.min(MAIL_GMAX,parseInt(v('amG'),10)||0));
+ try{const x=await db.doc('cfg/start').get(),d=x.exists?x.data():{},S=Object.assign({},d.s||{},{[SEAT]:sc});if(rs)S['t:'+SEAT]=Math.floor(Date.now()/6e4);
+  await db.doc('cfg/start').set({s:S,at:Date.now()});
+  if(g>0){const now=Date.now(),until=now+7*864e5,r=[...crypto.getRandomValues(new Uint8Array(6))].map(x=>'abcdefghijklmnopqrstuvwxyz0123456789'[x%36]).join('');
+   await db.doc('mail/m'+until+'_'+r).set({to:SEAT,t:'관리자 지급',msg:'',g,it:'',from:now-60e3,until,by:SEAT,at:SRV_TS,nk:(myNick()||'').slice(0,12)});mailFetch(true)}
+  toast(`바꿨어요 · 시작 ${sc}점${rs?' · 전적 초기화':''}${g?` · 우편함에 옥돌 ${ecoFmt(g)}`:''}`)}catch(e){toast('바꾸지 못했어요 · '+(e&&e.code||''))}}
 function aiLvKey(k){try{if(k==='beginner'&&typeof L!=='undefined'&&L.s&&L.s.ai&&!L.s.bot&&!L.s.cas&&gamesPlayed()<3)return 'starter'}catch(e){}return k}
 function aiDesignate(v){
  const lv=AI_LEVELS[aiLvKey(v.level)]||AI_LEVELS.pro,bd=v.bd.map(r=>r.slice()),rnd=()=>aiRng(v.mem),om=aiOppModel(v,lv);
@@ -3467,7 +3478,7 @@ function adminClean(){if(!db||!isAdmin()||adminClean.done)return;adminClean.done
  (async()=>{let n=0;for(const lv of ['beginner','mid','pro']){try{const qs=await db.collection('aigames').where('level','==',lv).limit(100).get();
    for(const x of qs.docs){const d=x.data()||{};if(d.rk)continue;try{await db.doc('aigames/'+x.id).delete();n++}catch(e){}}}catch(e){}}
   lset(k,String(Date.now()));if(n)toast(`예전 연습판 기록 ${n}건 정리`)})()}
-function renderAcct(){try{adminClean()}catch(e){}try{nickCheck()}catch(e){}const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!isAdmin());{const ar=$('#admRep');if(ar)ar.classList.toggle('hide',!isAdmin())}{const au=$('#admUsers');if(au)au.classList.toggle('hide',!isAdmin())}try{seenBeat()}catch(e){}try{frStart();frRender()}catch(e){}const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
+function renderAcct(){try{adminClean()}catch(e){}try{nickCheck()}catch(e){}const ad=$('#admDl');if(ad)ad.classList.toggle('hide',!isAdmin());{const ar=$('#admRep');if(ar)ar.classList.toggle('hide',!isAdmin())}{const au=$('#admUsers');if(au)au.classList.toggle('hide',!isAdmin())}{const am=$('#admMe');if(am)am.classList.toggle('hide',!isAdmin())}try{seenBeat()}catch(e){}try{frStart();frRender()}catch(e){}const a=$('#acct');if(!a)return;if(!(user&&user.firebase)){a.classList.add('hide');return}a.classList.remove('hide');
  const g=user.google&&user.google(),pv=user.provider?user.provider():(g?'google':null);a.innerHTML=g?`<div class="at"><b>${pv==='email'?'이메일':'구글'} 계정 연결됨</b><span>${esc(g)}</span></div>`:`<div class="at"><b>게스트로 플레이 중</b><span>기록을 지키려면 계정을 연결해요</span></div><button class="btn small" data-act="acc">연결</button>`}
 // ===== 웹(Firebase): 앱을 지웠다 다시 깔아도 구글 계정으로 기록 복원. 닉네임·AI 전적은 본인만 읽는 prof/{uid}, 학습 집계는 ailearn/{uid} =====
 let profT=0;
@@ -3838,7 +3849,7 @@ const stx=(SS,id,lt)=>SS.n===1&&RK.sx&&Number.isInteger(RK.sx[id])?RK.sx[id]:sta
 function startSub(){if(!db||RK.sxSub)return;RK.sxSub=1;
  db.doc('cfg/start').onSnapshot(x=>{const d=x.exists?x.data():null,o={},rt={};if(d&&d.s&&typeof d.s==='object')for(const [k,v] of Object.entries(d.s)){if(okSeat(k)&&Number.isInteger(v)&&v>=0&&v<=3000)o[k]=v;else if(k.startsWith('t:')&&okSeat(k.slice(2))&&Number.isInteger(v)&&v>0)rt[k.slice(2)]=v}
   if(JSON.stringify([o,rt])!==JSON.stringify([RK.sx||{},RK.rt||{}])){RK.sx=o;RK.rt=rt;RK.ck=null;clearTimeout(RK.tm);RK.tm=setTimeout(()=>{rankCompute();renderRank()},300)}
-  if(isAdmin()&&SEAT&&(o[SEAT]!==ADMIN_START||rt[SEAT]!==ADMIN_RT)&&!RK.sxW){RK.sxW=1;db.doc('cfg/start').set({s:Object.assign({},d&&d.s||{},{[SEAT]:ADMIN_START,['t:'+SEAT]:ADMIN_RT}),at:Date.now()}).catch(e=>{RK.sxW=0;console.warn('cfg start',e&&e.code)})}},()=>{})}
+  if(isAdmin()&&SEAT&&o[SEAT]==null&&!RK.sxW){RK.sxW=1;db.doc('cfg/start').set({s:Object.assign({},d&&d.s||{},{[SEAT]:ADMIN_START,['t:'+SEAT]:ADMIN_RT}),at:Date.now()}).catch(e=>{RK.sxW=0;console.warn('cfg start',e&&e.code)})}},()=>{})}
 function seasonOf(now){const s2=Date.UTC(2027,2,1)-KST;if(now<s2)return{n:1,start:SEASON1,end:s2};
  const d=new Date(now+KST);let y=d.getUTCFullYear(),m=d.getUTCMonth(),sm=m>=2?m-((m-2)%3):11;if(m<2)y--;
  return{n:2+((y-2027)*12+sm-2)/3,start:Date.UTC(y,sm,1)-KST,end:Date.UTC(y,sm+3,1)-KST}}
@@ -5479,6 +5490,7 @@ document.addEventListener('click',e=>{
  else if(a==='archexp'){const a2=archList();if(!a2.length){toast('저장할 대국이 없어요');return}try{const blob=new Blob([JSON.stringify({v:1,app:'betting-omok',at:Date.now(),games:a2})],{type:'application/json'}),u=URL.createObjectURL(blob),x=document.createElement('a');x.href=u;x.download='betting-omok-games.json';document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);toast('대국 기록 파일이 저장됐어요')}catch(e){toast('저장하지 못했어요')}}
  else if(a==='admdl'){aiGameDownload()}
  else if(a==='admusers')admUsers();
+ else if(a==='admme')admMe();
  else if(a==='admflt'){ADM.flt=b.dataset.k;admRender()}
  else if(a==='reload'){location.reload()}
  else if(a==='delacct'){closeSheet();dialog('계정과 기록을 모두 삭제해요.<br>닉네임 · AI 전적 · 학습 통계<br>AI 대국 기록 · 친구 · 대화<br>이 기기 기록<br>랭크·일반 게임의 판 기록은<br>상대 기록이기도 해서 지워지지 않아요.<br>삭제하면 되돌릴 수 없어요.','삭제',()=>deleteMyData(),'취소')}
