@@ -1890,7 +1890,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.37';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.38';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2725,7 +2725,7 @@ function mvOld(){if(!MV_OLD||$('#mvOv'))return;
  setInterval(()=>{if(ov.classList.contains('hide')&&!shOpen){ov.classList.remove('hide');mvRender()}},700)}
 function mvNew(){if(MV_OLD)return;let o=null;try{o=JSON.parse(sessionStorage.getItem('bo-mvpend')||'null')}catch(e){}
  if(o){const go=()=>{try{sessionStorage.removeItem('bo-mvpend')}catch(e){}};
-  go();dialog('<b>이전 주소의 기록을 가져올까요?</b><br><small class="mvsm">설정·AI 대국 기록 같은 이 기기 기록이에요</small>','가져오기',()=>{mvImport(o);try{sessionStorage.setItem('bo-mvdone','1')}catch(e){}location.replace(location.pathname+'?inst=1')},'안 가져오기');return}
+  go();dialog('<b>이전 주소의 기록을 가져올까요?</b><br><small class="mvsm">설정·AI 대국 기록 같은 이 기기 기록이에요</small>','가져오기',()=>{mvImport(o);try{sessionStorage.setItem('bo-mvdone','1')}catch(e){}location.replace(location.pathname+'?inst=2')},'안 가져오기');return}
  let done=false;try{done=!!sessionStorage.getItem('bo-mvdone');sessionStorage.removeItem('bo-mvdone')}catch(e){}if(!done)return;
  let m={};try{m=JSON.parse(lget('bo-moved')||'{}')||{}}catch(e){}
  if(m.lk&&mvGuest())dialog(`<span class="rkin"><h3 id="rkinH">이사 완료</h3><p class="mvsm">예전 계정으로 로그인하면<br>옥돌·랭크 기록이 이어져요</p><span class="rklgb">${m.lk==='google'?`<button class="btn rkgoo" data-act="mvgoo">${G_LOGO}구글로 로그인</button>`:`<button class="btn" data-act="mvem">이메일로 로그인</button>`}</span></span>`,'나중에',()=>{},null),$('#dlg [data-act=dlgno]').remove(),$('#dlg [data-act=dlgok]').classList.add('ghost');
@@ -6800,9 +6800,12 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
    // 크롬으로 보냈는데도 설치 신호가 없으면(앱 안 임시 창에 그대로 열렸거나, 전에 설치 창을 닫음): 닫았던 기록과 상관없이 방법을 크게 보여 줌
    setTimeout(()=>{if(ev||document.getElementById('instSheet'))return;notInstalled().then(ok=>{if(ev)return;
     if(!ok){card('이미 설치돼 있어요 · 홈 화면에서 열기');return}
-    const fin=()=>{try{const u=new URL(location.href);u.searchParams.set('inst','2');location.href='intent://'+u.toString().replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;launchFlags=0x18000000;end'}catch(e){}};
+    // 크롬 앱 안 임시 창에서는 설치가 안 됨 → 삼성 인터넷(별도 앱)으로 열어 설치. 기기 기록은 주소에 담아 같이 넘김
+    const fin=()=>{try{const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('inst','1');
+      try{let lk='';try{lk=user&&user.provider?user.provider()||'':''}catch(e){}if(typeof mvPack==='function')u.searchParams.set('mvq',mvPack(lk,2500))}catch(e){}
+      location.href='intent://'+u.toString().replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.sec.android.app.sbrowser;S.browser_fallback_url='+encodeURIComponent(location.href)+';end'}catch(e){}};
     const w=n=>{const d=document.getElementById('dlg');if(ev||document.getElementById('instSheet'))return;if(d&&!d.classList.contains('hide')&&n<60){setTimeout(()=>w(n+1),1500);return}
-     sheet(`<div class="ios"><div><b>1</b>오른쪽 위 ⋮ 메뉴 누르기</div><div><b>2</b>'Chrome에서 열기' 또는 '앱 설치'</div></div>`,fin,'','크롬으로')};w(0)})},4000)}
+     sheet(`<ul><li><i></i>삼성 인터넷에서 열어 설치해요</li><li><i></i>열리면 구글로 한 번 더 로그인</li></ul>`,fin,'','설치하러 가기')};w(0)})},4000)}
   else if(isAnd&&isChrome&&!hop){
    // 앱에서 연 링크(맞춤 탭)는 바로, 그 밖에는 설치 신호가 3초 안에 안 오면 크롬 앱으로(하루 한 번, 이사로 온 경우는 늘)
    // 기록 가져오기 같은 안내 창이 열려 있으면 닫힐 때까지 기다림(가져온 기록은 크롬과 같이 씀)
