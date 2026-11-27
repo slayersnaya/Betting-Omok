@@ -1892,7 +1892,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.48';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.49';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2699,12 +2699,13 @@ function mvRender(){const ov=$('#mvOv');if(!ov)return;const fb=!!(user&&user.fir
  const acc=!fb?'':guest?`<div class="mvbox"><b>게스트로 하고 있어요</b><small>연결해야 옥돌·랭크 기록이 따라와요</small><span class="mvrow"><button class="btn rkgoo" data-mv="goo">${G_LOGO}구글로 연결</button><button class="btn ghost" data-mv="em">이메일로 연결</button></span></div>`
   :`<div class="mvbox ok"><b>✓ ${esc(String(g).slice(0,40))}</b><small>새 주소에서 같은 계정으로 로그인하세요</small></div>`;
  const foot=MV.ask?`<p class="mvwarn">연결하지 않으면 옥돌·랭크 기록은<br>새 주소로 옮겨지지 않아요</p><span class="mvrow"><button class="btn ghost" data-mv="back">돌아가기</button><button class="btn" data-mv="force">그래도 옮기기</button></span>`
-  :`<button class="btn mvgo" data-mv="go">새 버전 받기</button>`;
+  :`<button class="btn mvgo" data-mv="go">새 버전 받기</button>${MV.sent?'<p class="mvwarn">화면 위에서 알림을 내려<br>\'베팅 오목 받기\'를 눌러 주세요</p>':MV.deny?'<p class="mvwarn">알림을 허용하지 않아 열 수 없어요<br>⋮ 메뉴 → \'Chrome에서 열기\'로 옮겨 주세요</p>':sa&&/Android/i.test(navigator.userAgent)?'<p class="mvnote">알림이 오면 눌러서 새 앱을 여세요</p>':''}`;
  ov.innerHTML=`<div class="mvcard" role="dialog" aria-modal="true" aria-labelledby="mvT"><img src="icons/icon-192.png" alt=""><h2 id="mvT">새 주소로 이사했어요</h2><small class="mvver">v${esc(String(window.BO_VER||""))}</small><p class="mvsub">새 버전에서 이어서 할 수 있어요</p>${acc}${foot}${sa?'<p class="mvnote">옮긴 뒤에는 이 아이콘을 지워 주세요</p>':''}${isAdmin()?'<div class="mvtest"><small>시험(관리자만): 크롬으로 따로 열리는 번호를 알려 주세요</small><span>'+[5,8].map(n=>`<button class="btn ghost" data-mvt="${n}">${n===8?'8 알림으로':n}</button>`).join('')+'</span></div>':''}</div>`}
 function mvGo(){const lk=user&&user.firebase&&user.provider?user.provider()||'':'';let u=MV_NEW+'?inst=1#mv='+mvPack(lk);
  try{localStorage.setItem('bo-movedout',String(Date.now()))}catch(e){}MV.go=1;
  const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
  // 안드로이드 설치 앱: 앱 안 임시 창이 아니라 크롬 앱으로 바로 엶(설치는 크롬에서만 됨). # 은 못 넘기므로 작은 기록만 주소에 담음
+ if(sa&&/Android/i.test(navigator.userAgent)&&'Notification' in window&&navigator.serviceWorker){mvNoti(MV_NEW+'?inst=2&mvq='+mvPack(lk,2500));return}
  if(sa&&/Android/i.test(navigator.userAgent)){const v=MV_NEW+'?inst=2&mvq='+mvPack(lk,2500);const pk=/SM-|Samsung/i.test(navigator.userAgent)?'com.sec.android.app.sbrowser':'com.android.chrome';location.href='intent://'+v.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package='+pk+';launchFlags=0x18000000;S.browser_fallback_url='+encodeURIComponent(u)+';end';return}
  if(sa){const w=window.open(u,'_blank');if(w)return}location.href=u}
 // 옛 주소: 안내 창이 낡은 버전이면(브라우저 캐시) 새로 고침 버튼을 기다리지 않고 바로 최신으로 다시 엶(한 번만)
@@ -2723,6 +2724,9 @@ function mvTry(n){const u=MV_NEW+'?inst=2&mvq='+mvPack('google',2500)+'&t='+n,e=
  else if(n===6)location.href='kakaotalk://web/openExternal?url='+e;
  else if(n===7)location.href='intent://'+hp+'&tc=1#Intent;scheme=https;package=com.sec.android.app.sbrowser;end';
  else location.href='intent://'+hp+'#Intent;scheme=https;package=com.sec.android.app.sbrowser;end'}
+// 안드로이드 설치 앱: 앱 안에서 연 링크는 크롬이 앱 안 임시 창으로만 열어 설치가 안 됨 → 알림을 눌러 열면 크롬 본체로 열림(실기기 확인)
+function mvNoti(u){Notification.requestPermission().then(p=>{if(p!=='granted'){MV.deny=1;mvRender();return}
+ navigator.serviceWorker.ready.then(r=>r.showNotification('베팅 오목 받기',{body:'여기를 눌러 새 앱을 설치하세요',icon:'icons/icon-192.png',tag:'bo-mv',requireInteraction:true,data:{url:u}})).then(()=>{MV.sent=1;mvRender()}).catch(()=>{MV.deny=1;mvRender()})})}
 function mvOld(){if(!MV_OLD||$('#mvOv'))return;
  // 대국 중에는 띄우지 않고 로비로 나오면 띄움(판이 끊기지 않게)
  if(UI.view==='game'||UI.mode==='tut'){setTimeout(mvOld,2000);return}
