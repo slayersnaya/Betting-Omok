@@ -365,7 +365,7 @@ service cloud.firestore {
     function seasonNow() { return request.time.toMillis() < 1803567600000 ? 1
       : 2 + math.floor((request.time.toMillis() - 1803567600000) / 7889400000); }
     function ecoPrice() { return {'t1':800,'t2':800,'t3':800,'n1':1200,'n2':1200,'n3':1200,'f1':1500,'f2':1500,'f3':1500,
-      's1':1200,'s2':1200,'s3':1200,'w1':2500,'w2':2500,'b1':3000,'b2':3000,'x1':3500,'x2':3500}; }
+      's1':1200,'s2':1200,'s3':1200,'w1':2500,'w2':2500,'b1':3000,'b2':3000,'b3':2500,'t4':800,'x1':3500,'x2':3500}; }
     function ecoAch() { return {'a_link':50,'a_place':50,'a_ai1':50,'a_ai2':80,'a_ai3':120,'a_ai4':300}; }
     // 남에게 보이는 장착 문자열("t1.n2.f1"): 짧고, 모두 내 지갑에 있는 것(바뀔 때만 확인)
     function eqPub(v) { return v is string && v.size() <= 64 && v.matches('^[a-z0-9_.]*$')

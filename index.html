@@ -1583,6 +1583,18 @@ img,svg,a{-webkit-user-drag:none}
 .mvsm{font-size:13px;color:var(--mute)}
 #mvOv .mvtest{width:100%;margin-top:8px;display:flex;flex-direction:column;gap:6px}#mvOv .mvtest small{font-size:12px;color:var(--mute);white-space:nowrap}#mvOv .mvtest span{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}#mvOv .mvtest .btn{min-height:40px;padding:0}
 #mvOv .mvver{font-size:12px;color:var(--mute);margin-top:-6px}
+
+/* ===== 크리스마스(12/26까지): 눈·초록/빨강 포인트·로고 산타 모자 · 아이템 눈꽃 판 ===== */
+#board.bt-b3 #wTop stop:nth-child(1){stop-color:#f1f7fb}#board.bt-b3 #wTop stop:nth-child(2){stop-color:#dde9f1}#board.bt-b3 #wTop stop:nth-child(3){stop-color:#c6d8e6}
+#board.bt-b3 #wVig stop{stop-color:#2c4a5e}#board.bt-b3 rect[fill="#8a5a22"]{fill:#3b6480}
+html.xmas,html.xmas[data-theme]{--jade:#1f8a50;--pri:#1f8a50}
+html.xmas .ltop{box-shadow:inset 0 3px 0 #c8323c}
+#snow{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+#snow i{position:absolute;top:-12px;border-radius:50%;background:#fff;animation:snowF linear infinite}
+@keyframes snowF{to{transform:translate3d(var(--dx,20px),105vh,0)}}
+@media (prefers-reduced-motion:reduce){#snow{display:none}}
+.wsub{color:var(--mute);font-size:13px}
+.etile{position:relative}.etile .xm{position:absolute;top:4px;left:6px;font-size:10px;font-weight:800;color:#fff;background:#c8323c;border-radius:6px;padding:1px 5px;z-index:1}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -1788,7 +1800,7 @@ img,svg,a{-webkit-user-drag:none}
 </div>
 <div id="coin" class="hide" role="dialog" aria-label="선 플레이어 정하기"><div class="cstage"><div class="coin" id="coinEl"><div class="face f1"><span class="cst st k"></span><b id="cn1"></b></div><div class="face f2"><span class="cst st w"></span><b id="cn2"></b></div></div><p class="ctext" id="ctext"></p><p class="csub" id="csub"></p></div></div>
 <div id="cover" class="hide"></div>
-<div id="welcome" class="hide" role="dialog" aria-modal="true" aria-labelledby="wlT"><div class="wcard"><svg class="wart" id="wart" viewBox="0 0 240 132" aria-hidden="true"></svg><div><h2 id="wlT">처음 오셨네요</h2><p><span data-ptu>몰래 건 {P으로} 돌을 놓는 오목</span><br><span>1분이면 배워요</span></p><button class="btn wide" data-act="wtut">튜토리얼 시작</button><button class="btn ghost wide" data-act="wskip">바로 둘래요</button><button class="btn ghost wide wgl" data-act="wglink">구글로 기록 불러오기</button><button class="linkbtn wgl" data-act="wemail" style="display:block;margin:2px auto 0">이메일로 불러오기</button></div></div></div>
+<div id="welcome" class="hide" role="dialog" aria-modal="true" aria-labelledby="wlT"><div class="wcard"><svg class="wart" id="wart" viewBox="0 0 240 132" aria-hidden="true"></svg><div><h2 id="wlT">처음 오셨네요</h2><p><span data-ptu>세 칸에 {P을} 몰래 걸고</span><br><span>더 건 쪽이 돌을 놓는 오목</span><br><small class="wsub">1분이면 배워요</small></p><button class="btn wide" data-act="wtut">튜토리얼 시작</button><button class="btn ghost wide" data-act="wskip">바로 둘래요</button><button class="btn ghost wide wgl" data-act="wglink">구글로 기록 불러오기</button><button class="linkbtn wgl" data-act="wemail" style="display:block;margin:2px auto 0">이메일로 불러오기</button></div></div></div>
 <!-- 시트는 화면(로비·대국) 밖에 둠: 대국 화면에서도 닉네임 등을 열 수 있게 -->
  <div class="shbg hide" data-act="shclose" id="shbg"></div>
  <div class="lsheet hide" id="sh-acc" role="dialog" aria-label="계정 연결">
@@ -1892,7 +1904,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.49';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.50';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2136,6 +2148,8 @@ function replay(gid,meta,docs){
 const AI_LEVELS={
  // 난이도 회의(11/26, 실사용 '너무 쉽다' 반영): 한 단계씩 올림. AI끼리 다음 단계가 이기는 비율 초보→중수 약 88%, 중수→고수 약 85%, 고수→Ultimate 90%+
  beginner:{name:'Easy',rand:.15,noise:.25,infer:false,lamK:.06,top:2,see5:1},
+ // 처음 3판(AI 대국 Easy)만: 훨씬 느슨하게 둬서 첫 승을 빨리 맛보게
+ starter:{name:'Easy',rand:.55,noise:.6,infer:false,lamK:.02,top:4,see5:0},
  mid:{name:'Normal',rand:.05,noise:.15,infer:false,eval2:true,lamK:.13,top:1,see5:1},
  // 고수: Ultimate 엔진을 약하게(표본·입자 적게, 흔들기, 보험·비축 끔, 점수 더 아낌, 최선 대응 베팅은 80%만)
  pro:{name:'Hard',rand:0,noise:1,jitter:.5,bidNoise:.3,res:.3,infer:true,eval2:true,lamK:.8,top:1,see5:1,crit3:1,types:[-2,-3],aib:[0,3000,1000,500],nsK:2,br:true,desp:.5,S:6,np:14,mixT:6,tempo:.45,force:1,brP:.7,
@@ -2305,8 +2319,19 @@ function aiDesThreat(bd,cells,V,v,lv,om,base,spend){
   if(lv.dOwn&&m===7){for(let i=0;i<3;i++){const [r,c]=cells[i];bd[r][c]=v.aiCol}let to=9;for(const w of W){const e=aiThrWin(bd,w[0],w[1],w[2],w[3],v.aiCol);if(e<to)to=e}for(const [r,c] of cells)bd[r][c]=0;if(to<=2)out[7]+=lv.dOwn*(3-to)*1000}}
  return out}
 // AI가 선일 때 세 칸 고르기
+// ===== 크리스마스 분위기(한국 시간 12월 26일까지 자동) =====
+const XMAS_END=Date.UTC(2026,11,26,15);
+function xmasOn(){return Date.now()<XMAS_END}
+(function xmasInit(){if(!xmasOn())return;document.documentElement.classList.add('xmas');
+ const go=()=>{if(document.getElementById('snow'))return;const sn=document.createElement('div');sn.id='snow';sn.setAttribute('aria-hidden','true');
+  let h='';for(let i=0;i<26;i++){const z=(3+Math.random()*5).toFixed(1);h+=`<i style="left:${(Math.random()*100).toFixed(1)}%;width:${z}px;height:${z}px;opacity:${(.35+Math.random()*.5).toFixed(2)};animation-duration:${(8+Math.random()*10).toFixed(1)}s;animation-delay:-${(Math.random()*18).toFixed(1)}s;--dx:${(Math.random()*60-30).toFixed(0)}px"></i>`}
+  sn.innerHTML=h;document.body.appendChild(sn);
+  // 로고에 산타 모자(로고 그림 안에 그려 넣음)
+  document.querySelectorAll('svg.logo').forEach(g=>{if(g.querySelector('.xhat'))return;g.insertAdjacentHTML('beforeend','<g class="xhat"><path d="M3 15 C6 5 14 1 23 4 L20 9 C15 6 10 9 9 15Z" fill="#c8323c"/><circle cx="23" cy="4.5" r="2.6" fill="#fff"/><rect x="1.5" y="13.5" width="10" height="3.6" rx="1.8" fill="#fff"/></g>')})};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go()})();
+function aiLvKey(k){try{if(k==='beginner'&&typeof L!=='undefined'&&L.s&&L.s.ai&&!L.s.bot&&!L.s.cas&&gamesPlayed()<3)return 'starter'}catch(e){}return k}
 function aiDesignate(v){
- const lv=AI_LEVELS[v.level]||AI_LEVELS.pro,bd=v.bd.map(r=>r.slice()),rnd=()=>aiRng(v.mem),om=aiOppModel(v,lv);
+ const lv=AI_LEVELS[aiLvKey(v.level)]||AI_LEVELS.pro,bd=v.bd.map(r=>r.slice()),rnd=()=>aiRng(v.mem),om=aiOppModel(v,lv);
  const any=bd.some(r=>r.some(x=>x));
  let cand=legalTriples(bd).filter(t=>any?t.some(([r,c])=>aiNear(bd,r,c,2)):t.every(([r,c])=>Math.abs(r-9)<=1&&Math.abs(c-9)<=1));
  if(!cand.length)cand=legalTriples(bd);
@@ -2554,7 +2579,7 @@ function aiReserve(th,om,om2,lv){const Bo=om2.oppEst+lv.resvU*Math.max(0,om.oppM
  const need=th===1?Bo-2:th===2?Math.ceil((Bo-3)/2):Math.ceil((Bo-3)/3*(lv.resv3||1));return Math.max(0,Math.round((need+2-10)*lv.resv))}
 // 입찰(사람보다 먼저 봉인). 사람 입찰·점수는 받지 않음
 function aiBid0(v){
- const lv=AI_LEVELS[v.level]||AI_LEVELS.pro,bd=v.bd.map(r=>r.slice()),rnd=()=>aiRng(v.mem),om=aiOppModel(v,lv);
+ const lv=AI_LEVELS[aiLvKey(v.level)]||AI_LEVELS.pro,bd=v.bd.map(r=>r.slice()),rnd=()=>aiRng(v.mem),om=aiOppModel(v,lv);
  const V=lv.eval2?aiOutcomes2(bd,v.cells,v.aiCol,v.aiSun,!v.aiSun,lv):aiOutcomes(bd,v.cells,v.aiCol,!v.aiSun,lv.see5,rnd);
  // bidRand: 이 확률로 '대충 나눠 거는' 초보식 베팅(단계 사이 간격을 고르게)
  if(lv.rand>=.7||(lv.bidRand&&rnd()<lv.bidRand)){const b=[1,1,1];let left=Math.floor((v.aiPts-3)*(.2+rnd()*.5));const imp=[0,1,2].map(i=>V[7]-V[7^(1<<i)]);const hot=imp.indexOf(Math.max(...imp));
@@ -6058,7 +6083,7 @@ const ECO_ITEMS=[
  {id:'f1',c:'f',n:'매듭 테두리',p:1500},{id:'f2',c:'f',n:'물결 테두리',p:1500},{id:'f3',c:'f',n:'팔각 테두리',p:1500},
  {id:'s1',c:'s',n:'매화 인장',p:1200},{id:'s2',c:'s',n:'별 인장',p:1200},{id:'s3',c:'s',n:'구름 인장',p:1200},
  {id:'w1',c:'w',n:'자개 돌',p:2500},{id:'w2',c:'w',n:'비취 돌',p:2500},
- {id:'b1',c:'b',n:'청자 판',p:3000},{id:'b2',c:'b',n:'흰 비자 판',p:3000},
+ {id:'b1',c:'b',n:'청자 판',p:3000},{id:'b2',c:'b',n:'흰 비자 판',p:3000},{id:'b3',c:'b',n:'눈꽃 판',p:2500,xm:1},  {id:'t4',c:'t',n:'산타의 선물',p:800,xm:1},
  {id:'x1',c:'x',n:'꽃잎 흩날림',p:3500},{id:'x2',c:'x',n:'먹물 획',p:3500}];
 // 유료 상품 자리(앱 출시 후, 서버 결제 확인이 생긴 뒤): {id,c,n,won} 꼴로 넣으면 상점 상품 맨 아래 '응원 상품' 칸이 생김.
 // 권리는 서버만 쓰는 ent/{uid}에 둘 예정(옥돌과 서로 바꾸지 않음). 지금은 비어 있어 화면에 나오지 않음
@@ -6243,14 +6268,14 @@ function ecoSealSvg(id,cls){const d=ECO_SEAL[id];return d?`<svg class="${cls||''
 function ecoSealIc(seat){try{if(UI.mode!=='online')return IC.wax;const s=cosOf(seat).s;return s?ecoSealSvg(s):IC.wax}catch(e){return IC.wax}}
 function ecoMySeal(){try{const s=ecoEqOf('s');return `<span class="mysl${s?'':' df'}" aria-hidden="true">${s?ecoSealSvg(s):IC.wax}</span>`}catch(e){return ''}}
 // 내 화면: 돌 무늬·판 테마
-function ecoLook(){const w=ecoEqOf('w'),b=ecoEqOf('b');ECO_SK=w&&/^w\d$/.test(w)?'_'+w:'';window.ECO_SK=ECO_SK;const bd=$('#board');if(bd){bd.classList.remove('bt-b1','bt-b2');if(b)bd.classList.add('bt-'+b)}
+function ecoLook(){const w=ecoEqOf('w'),b=ecoEqOf('b');ECO_SK=w&&/^w\d$/.test(w)?'_'+w:'';window.ECO_SK=ECO_SK;const bd=$('#board');if(bd){bd.classList.remove('bt-b1','bt-b2','bt-b3');if(b)bd.classList.add('bt-'+b)}
  if(UI.view==='game'){UI.panelKey='';try{renderAll()}catch(e){}}}
 // 대국 판(renderBoard 훅): 돌 무늬는 흑(A)·백(B) 각자 자기 것, 판 테마는 한 판에 하나 —
 //  장착한 사람 것. 둘 다 장착했으면 대국 번호(gid)로 한 사람을 골라 두 화면이 같은 판을 봄(판마다 반반, 방장·선후와 무관)
 //  온라인 = 자리 id · AI/봇 대국 = 내 돌(A)만 내 무늬, AI 돌은 기본 · 그 밖(한 폰·튜토리얼·복기) = 예전처럼 내 무늬·내 판
 function ecoSkOf(seat){const w=seat?cosOf(seat).w:'';return w&&/^w\d$/.test(w)?'_'+w:''}
 function ecoBoardPick(a,b,gid){if(!a||!b)return a||b||'';let h=0;for(const ch of String(gid||''))h=(h*31+ch.charCodeAt(0))>>>0;return h%2?b:a}
-function ecoBoardTheme(b){const bd=$('#board');if(!bd)return;const k=b&&/^b\d$/.test(b)?'bt-'+b:'';for(const c of ['bt-b1','bt-b2'])bd.classList.toggle(c,c===k)}
+function ecoBoardTheme(b){const bd=$('#board');if(!bd)return;const k=b&&/^b\d$/.test(b)?'bt-'+b:'';for(const c of ['bt-b1','bt-b2','bt-b3'])bd.classList.toggle(c,c===k)}
 function ecoBoardLook(o,vs){if(!vs)return;
  if(UI.mode==='online'&&G.gid&&vs.A&&vs.B){o.skB=ecoSkOf(vs.A);o.skW=ecoSkOf(vs.B);ecoBoardTheme(ecoBoardPick(cosOf(vs.A).b,cosOf(vs.B).b,G.gid));return}
  if(UI.mode==='local'&&L.s&&L.s.ai){o.skB=ecoSkOf(SEAT);o.skW='';ecoBoardTheme(ecoEqOf('b'));return}
@@ -6275,16 +6300,16 @@ function ecoArt(it,big){const c=it.c,id=it.id,me=ecoEqOf;
  if(c==='f'){let t=null;try{t=tierOf(rkP(SEAT))}catch(e){}return `<span class="art af"><span class="cfr" style="--z:${big?56:40}px">${emblem(t,big?56:40)}${ecoRing(id)}</span></span>`}
  if(c==='s')return `<span class="art as" style="color:${ECO_SEALC[id]||'var(--pri)'}">${ecoSealSvg(id,'sl')}</span>`;
  if(c==='w')return `<span class="art aw"><svg viewBox="0 0 80 44" aria-hidden="true"><rect width="80" height="44" rx="8" fill="#DDB06A"/><path d="M0 22H80M26 0V44M54 0V44" stroke="#3A2510" stroke-opacity=".6"/><use href="#sB_${id}" x="26" y="22"/><use href="#sW_${id}" x="54" y="22"/></svg></span>`;
- if(c==='b'){const P=id==='b1'?['#dfe9e0','#b9d2c4','#2f5d50']:['#F6E8C6','#E6CC95','#8a5a22'];return `<span class="art ab"><svg viewBox="0 0 80 44" aria-hidden="true"><defs><linearGradient id="ab${id}${big?'L':''}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${P[0]}"/><stop offset="1" stop-color="${P[1]}"/></linearGradient></defs><rect width="80" height="44" rx="8" fill="url(#ab${id}${big?'L':''})"/><path d="M0 11H80M0 22H80M0 33H80M14 0V44M28 0V44M42 0V44M56 0V44M70 0V44" stroke="#3A2510" stroke-opacity=".7" stroke-width=".8"/><use href="#sB${ECO_SK}" transform="translate(28 22) scale(.62)"/><use href="#sW${ECO_SK}" transform="translate(42 22) scale(.62)"/></svg></span>`}
+ if(c==='b'){const P=id==='b1'?['#dfe9e0','#b9d2c4','#2f5d50']:id==='b3'?['#eef5fa','#c9dbe8','#3b6480']:['#F6E8C6','#E6CC95','#8a5a22'];return `<span class="art ab"><svg viewBox="0 0 80 44" aria-hidden="true"><defs><linearGradient id="ab${id}${big?'L':''}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${P[0]}"/><stop offset="1" stop-color="${P[1]}"/></linearGradient></defs><rect width="80" height="44" rx="8" fill="url(#ab${id}${big?'L':''})"/><path d="M0 11H80M0 22H80M0 33H80M14 0V44M28 0V44M42 0V44M56 0V44M70 0V44" stroke="#3A2510" stroke-opacity=".7" stroke-width=".8"/><use href="#sB${ECO_SK}" transform="translate(28 22) scale(.62)"/><use href="#sW${ECO_SK}" transform="translate(42 22) scale(.62)"/></svg></span>`}
  if(c==='x'){const dots=id==='x1'?[[-22,-12,'#f29ab8'],[18,-14,'#fbd3e0'],[-16,12,'#99CC00'],[24,10,'#e8789a'],[2,-17,'#fff']]:[[-20,-10,'#16130f'],[20,-12,'#16130f'],[-12,12,'#16130f'],[22,12,'#16130f']];
   return `<span class="art ax"><svg viewBox="0 0 80 44" aria-hidden="true"><rect width="80" height="44" rx="8" fill="#DDB06A"/>${[10,25,40,55,70].map(x=>`<use href="#sB" transform="translate(${x} 22) scale(.42)"/>`).join('')}<line x1="10" y1="22" x2="70" y2="22" stroke="${id==='x1'?'#f29ab8':'#16130f'}" stroke-opacity="${id==='x1'?1:.8}" stroke-width="${id==='x1'?2.4:6}" stroke-linecap="round"/>${id==='x2'?'<line x1="10" y1="22" x2="70" y2="22" stroke="#009999" stroke-width="1.6" stroke-linecap="round"/>':''}${dots.map(([dx,dy,c2],i)=>id==='x1'?`<ellipse cx="${40+dx}" cy="${22+dy}" rx="3.6" ry="2" transform="rotate(${i*40} ${40+dx} ${22+dy})" fill="${c2}"/>`:`<circle cx="${40+dx}" cy="${22+dy}" r="${i%2?1.8:2.8}" fill="${c2}" fill-opacity=".8"/>`).join('')}</svg></span>`}
  return ''}
 function ecoPrev(){const e=ECO.w?ECO.w.eq:{};let t=null;try{t=tierOf(rkP(SEAT))}catch(e){}const nk=esc(myNick()||'닉네임'),sk=ECO_SK;
- const bP=e.b==='b1'?['#dfe9e0','#b9d2c4']:e.b==='b2'?['#F6E8C6','#E6CC95']:['#E9C688','#CC9A52'];
+ const bP=e.b==='b1'?['#dfe9e0','#b9d2c4']:e.b==='b2'?['#F6E8C6','#E6CC95']:e.b==='b3'?['#eef5fa','#c9dbe8']:['#E9C688','#CC9A52'];
  return `<div class="shprev"><span class="pvemb">${cosFrame(SEAT,emblem(t,46),46)}</span><span class="pvt"><b>${cosName(SEAT,nk)}</b>${cosTitle(SEAT)||'<small class="ctt none">칭호 없음</small>'}</span>
   <span class="pvb"><svg viewBox="0 0 64 36" aria-hidden="true"><defs><linearGradient id="pvbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bP[0]}"/><stop offset="1" stop-color="${bP[1]}"/></linearGradient></defs><rect width="64" height="36" rx="7" fill="url(#pvbg)"/><path d="M0 18H64M21 0V36M43 0V36" stroke="#3A2510" stroke-opacity=".6"/><use href="#sB${sk}" transform="translate(21 18) scale(.72)"/><use href="#sW${sk}" transform="translate(43 18) scale(.72)"/></svg><span class="pvs" style="color:${ECO_SEALC[e.s]||'var(--pri)'}">${e.s?ecoSealSvg(e.s):IC.wax}</span></span></div>`}
 function ecoTile(it){const own=ecoHas(it.id),on=ecoEqOf(it.c)===it.id;
- return `<button class="etile${on?' on':''}${it.c==='t'?' tt':''}" data-act="ecoitem" data-id="${esc(it.id)}" aria-label="${esc(it.n)} · ${on?'장착 중':own?'보유':'옥돌 '+ecoFmt(it.p)}">${ecoArt(it)}${it.c==='t'?'':`<b>${esc(it.n)}</b>`}<span class="ep">${on?'장착 중':own?'보유':`<i class="gdot"></i>${ecoFmt(it.p)}`}</span></button>`}
+ return `<button class="etile${on?' on':''}${it.c==='t'?' tt':''}" data-act="ecoitem" data-id="${esc(it.id)}" aria-label="${esc(it.n)} · ${on?'장착 중':own?'보유':'옥돌 '+ecoFmt(it.p)}">${it.xm?'<span class="xm">한정</span>':''}${ecoArt(it)}${it.c==='t'?'':`<b>${esc(it.n)}</b>`}<span class="ep">${on?'장착 중':own?'보유':`<i class="gdot"></i>${ecoFmt(it.p)}`}</span></button>`}
 // 첫 화면 = 분류 버튼(상품 수·보유 수 / 보관함은 보유 수·장착 중), 누르면 그 분류 목록. 분류당 상품이 20~30개로 늘어도 한 분류씩만 보임
 const ecoCatItems=c=>ECO_ITEMS.filter(x=>x.c===c),ecoMine=c=>ECO.w?ECO.w.own.map(ecoItem).filter(x=>x&&x.c===c):[];
 function ecoInvTile(c,it,cur){const id=it?it.id:'',on=cur===id,n=it?(it.rw?it.n.replace(/ 테두리$/,''):it.n):'기본';
