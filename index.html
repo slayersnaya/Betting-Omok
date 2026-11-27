@@ -1890,7 +1890,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.32';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.33';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -2703,7 +2703,7 @@ function mvGo(){const lk=user&&user.firebase&&user.provider?user.provider()||'':
  try{localStorage.setItem('bo-movedout',String(Date.now()))}catch(e){}MV.go=1;
  const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
  // 안드로이드 설치 앱: 앱 안 임시 창이 아니라 크롬 앱으로 바로 엶(설치는 크롬에서만 됨). # 은 못 넘기므로 작은 기록만 주소에 담음
- if(sa&&/Android/i.test(navigator.userAgent)){const v=MV_NEW+'?inst=2&mvq='+mvPack(lk,2500);location.href='intent://'+v.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(u)+';end';return}
+ if(sa&&/Android/i.test(navigator.userAgent)){const v=MV_NEW+'?inst=2&mvq='+mvPack(lk,2500);location.href='intent://'+v.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;launchFlags=0x18000000;S.browser_fallback_url='+encodeURIComponent(u)+';end';return}
  if(sa){const w=window.open(u,'_blank');if(w)return}location.href=u}
 // 옛 주소: 안내 창이 낡은 버전이면(브라우저 캐시) 새로 고침 버튼을 기다리지 않고 바로 최신으로 다시 엶(한 번만)
 function mvFresh(){return fetch('version.json',{cache:'no-store'}).then(r=>r.json()).then(j=>{const v=j&&j.v;if(!v||v===window.BO_VER)return false;
@@ -6793,7 +6793,7 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
    // 크롬으로 보냈는데도 설치 신호가 없으면(앱 안 임시 창에 그대로 열렸거나, 전에 설치 창을 닫음): 닫았던 기록과 상관없이 방법을 크게 보여 줌
    setTimeout(()=>{if(ev||document.getElementById('instSheet'))return;notInstalled().then(ok=>{if(ev)return;
     if(!ok){card('이미 설치돼 있어요 · 홈 화면에서 열기');return}
-    const fin=()=>{try{const u=new URL(location.href);u.searchParams.set('inst','2');location.href='intent://'+u.toString().replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;end'}catch(e){}};
+    const fin=()=>{try{const u=new URL(location.href);u.searchParams.set('inst','2');location.href='intent://'+u.toString().replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;launchFlags=0x18000000;end'}catch(e){}};
     const w=n=>{const d=document.getElementById('dlg');if(ev||document.getElementById('instSheet'))return;if(d&&!d.classList.contains('hide')&&n<60){setTimeout(()=>w(n+1),1500);return}
      sheet(`<div class="ios"><div><b>1</b>오른쪽 위 ⋮ 메뉴 누르기</div><div><b>2</b>'Chrome에서 열기' 또는 '앱 설치'</div></div>`,fin,'','크롬으로')};w(0)})},4000)}
   else if(isAnd&&isChrome&&!hop){
