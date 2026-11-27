@@ -1947,7 +1947,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.72';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.73';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6755,6 +6755,8 @@ function stgShow(pz,b){const bad=om=>pz.goal==='win'?pz.O[7^om]!=='me':pz.O[7^om
  const keep=B.filter(x=>!B.some(y=>y.om!==x.om&&(y.om&x.om)===y.om&&(x.k?(y.k&&y.k.c<=x.k.c):true)));
  return keep.sort((x,y)=>(x.k?x.k.c:1e9)-(y.k?y.k.c:1e9)).slice(0,4).map(x=>x.om)}
 function stgExplain(pz){const ex=pz.ex,B=stgShow(pz,ex),rows=B.map(om=>{const k=stgCost(pz,ex,om),th=ex.map(v=>pz.meSun?v:v+1),fz=[0,1,2].filter(i=>!((om>>i)&1)&&th[i]<2);return `<li>${stgLine(pz,om)} <span class="nw stgc2">· ${k?`필요 ${k.ob.join('+')} = ${k.c}${PTU}`:`${fz.map(stgLab).join('')} 늘 상대 돌`}</span></li>`});
+ // 상대가 오목 칸을 가져가도 내가 이기는 경우(둘 다 오목 → 후 플레이어 등)는 따로 한 줄로 알려 줌: '왜 그 칸에 1만 걸어도 되지?'에 답
+ for(const om of [1,2,4]){const d=pz.det&&pz.det[7^om];if(B.includes(om)||!d||!d.fo||pz.O[7^om]==='op')continue;rows.push(`<li>${stgLine(pz,om)} <span class="nw stgc2">· 이 칸은 내줘도 돼요</span></li>`)}
  const how=`<li><span class="nw">상대가 칸을 가지려면</span> <span class="nw">${pz.meSun?'내 칩만큼(같으면 상대 돌)':'내 칩+1(같으면 내 돌)'}</span></li>`;
  return `<ul class="pzex stgex">${how}${rows.join('')}<li><span class="nw">정답 ${ex.map((v,j)=>stgLab(j)+v).join(' ')}</span> <span class="nw">· 상대 ${pz.X}${PTU} → 모두 막힘</span></li><li><span class="nw">합 ${pz.best-1}${PTU} 이하는</span> <span class="nw">어떻게 나눠도 뚫려요</span></li></ul>`}
 // ----- 화면 -----
