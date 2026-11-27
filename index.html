@@ -1647,6 +1647,8 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 #qtip .qbub b{font-size:14px;white-space:nowrap}#qtip .qbub small{font-size:12px;color:var(--mute);white-space:nowrap}
 
 .admme{display:flex;flex-direction:column;gap:10px;text-align:left}.admme label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}.admme label.ck{flex-direction:row;align-items:center;gap:8px;color:var(--ink)}.admme input[type=number]{font-size:16px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--soft);color:var(--ink)}.admme small{font-size:12px;color:var(--mute)}
+
+.gtop.gtight .gmid .steps{display:none}.gtop.gtight2 .gmid .tn{display:none}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css" media="print" onload="this.media='all'">
@@ -1956,7 +1958,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.83';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.84';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6000,7 +6002,10 @@ function emoPick(on){const pk=$('#emoPick');if(!pk)return;const b=$('#emoBtn');i
 // 버튼 모양(EMO2): 아이콘 = 내 돌 색 이모트 캐릭터('안녕'), 좁아서 가운데 글이 잘리면 '이모트' 글자만 숨김, 첫 대국 때 한 번 말풍선
 function emoLook(b,c){const col=emoCol(c.vs,c.me),ic=b.querySelector('.emic');if(ic&&ic.dataset.c!==String(col)){ic.dataset.c=String(col);ic.innerHTML=emoSVG(0,col)}
  const gm=$('#gmid'),top=b.closest('.gtop'),k=innerWidth+'|'+(gm?gm.textContent:'')+'|'+[...b.parentElement.children].map(x=>x.classList.contains('hide')?0:1).join('')+(document.body.classList.contains('big')?'b':'');
- if(b.dataset.fk!==k){b.dataset.fk=k;b.classList.remove('tight');if(gm&&top&&(gm.scrollWidth>gm.clientWidth+1||top.scrollWidth>top.clientWidth+1))b.classList.add('tight')}
+ if(b.dataset.fk!==k){b.dataset.fk=k;b.classList.remove('tight');if(top)top.classList.remove('gtight','gtight2');
+  // 가운데 글(턴·단계)이 오른쪽 버튼과 겹치면: ① 이모트 글자 숨김 → ② 진행 막대 숨김 → ③ 턴 글자도 숨김
+  const ov=()=>{if(!gm||!top)return false;const r=top.querySelector('.right');if(!r)return false;const a=gm.getBoundingClientRect(),c=r.getBoundingClientRect();return gm.scrollWidth>gm.clientWidth+1||top.scrollWidth>top.clientWidth+1||a.right>c.left-4};
+  if(ov())b.classList.add('tight');if(ov())top.classList.add('gtight');if(ov())top.classList.add('gtight2')}
  const pk=$('#emoPick');if(pk&&!pk.classList.contains('hide'))emoTipOff(1);else emoTip(b)}
 function emoTip(b){if(emoTip.on||lget('bo-emotip')||UI.mode==='tut'||!b.getClientRects().length)return;
  if(!$('#coin').classList.contains('hide')||!$('#dlg').classList.contains('hide')||revealing()||document.querySelector('.modal:not(.hide),#tup'))return;
