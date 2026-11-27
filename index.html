@@ -1892,7 +1892,7 @@ img,svg,a{-webkit-user-drag:none}
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.42';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.43';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6798,6 +6798,12 @@ setTimeout(()=>{try{stgTile()}catch(e){}},0);
  const goChrome=()=>{ls('bo-inst-auto',String(Date.now()));toOut()};
  const CH_TXT='크롬에서 열어 설치';
  ready(()=>{
+  // 관리자 진단 줄(시험 중): 설치가 왜 안 뜨는지 화면 아래에 한 줄로
+  let instInfo='?';notInstalled().then(ok=>{instInfo=ok?'미설치':'설치됨'}).catch(()=>{instInfo='모름'});
+  setTimeout(()=>{try{if(typeof isAdmin!=='function'||!isAdmin())return;const d=document.createElement('div');d.id='instDiag';
+   d.style.cssText='position:fixed;left:6px;right:6px;bottom:calc(70px + env(safe-area-inset-bottom));z-index:99;font:12px/1.4 monospace;background:#000c;color:#9fe;padding:6px 8px;border-radius:8px;pointer-events:none';
+   d.textContent=`v${window.BO_VER} · inst=${want?(hop?2:1):0} · 크롬=${isChrome?'Y':'N'} · 안드=${isAnd?'Y':'N'} · 신호=${ev?'옴':'없음'} · 앱=${instInfo} · 시트=${document.getElementById('instSheet')?'뜸':'없음'} · 숨김=${hidden()?'Y':'N'}`;
+   document.body.appendChild(d);setTimeout(()=>d.remove(),15000)}catch(e){}},7000);
   if(inApp&&(isKakao||isAnd)){
    // 앱 안 브라우저는 설치가 안 되므로 바깥 브라우저로 자동 이동(세션마다 한 번, 실패해도 카드로 다시 시도 가능)
    let tried=false;try{tried=!!sessionStorage.getItem('bo-ext');if(!tried)sessionStorage.setItem('bo-ext','1')}catch(e){}
