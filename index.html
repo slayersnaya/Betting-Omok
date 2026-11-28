@@ -1979,7 +1979,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.98';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.99';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6377,7 +6377,16 @@ function ecoRk(){const n=(RK.docs||[]).length+(RK.bdocs||[]).length;if(n===ECO.r
  for(const d of [...(RK.docs||[]),...(RK.bdocs||[])]){if(!d||typeof d.by!=='string'||typeof d.ended!=='number')continue;if((t.get(d.by)||0)>d.ended)continue;t.set(d.by,d.ended);m.set(d.by,typeof d.eq==='string'?d.eq:'')}
  ECO.rkEq=m;return m}
 // 이 자리의 장착(나는 지갑, 다른 사람은 대국 접속 → 친구 접속 → 최근 랭크 결과 순)
-function cosOf(seat){try{if(!seat)return{};if(seat===SEAT)return ECO.w?ECO.w.eq:{};if(typeof seat!=='string'||seat.startsWith(BOTPRE))return{};
+// AI 꾸미기(11/28): AI마다 고정된 무작위(아이디 기준)로 칭호·닉네임 장식·문양 테두리·인장을 장착. 실력이 높은 AI일수록 꾸민 비율이 높음.
+//  판에 보이는 돌 무늬·판 테마·완성 연출은 안 씀(대국 화면은 그대로). 크리스마스 상품은 크리스마스 기간에만
+const BOTCOS=new Map();
+function botCos(seat){const id=seat.slice(BOTPRE.length),b=BOTMAP.get(id);if(!b)return{};if(BOTCOS.has(id))return BOTCOS.get(id);
+ const h=k=>{let x=2166136261;for(const c of id+'|'+k){x^=c.charCodeAt(0);x=Math.imul(x,16777619)}return (x>>>0)/4294967296},xm=xmasOn(),e={};
+ if(h('own')<[.3,.45,.6,.75][b.k|0]){
+  for(const [c,pr] of [['t',.55],['f',.5],['n',.35],['s',.4]])if(h(c)<pr){const L=ECO_ITEMS.filter(x=>x.c===c&&(!x.xm||xm)),it=L[Math.floor(h(c+'i')*L.length)];if(it)e[c]=it.id}
+  if(!Object.keys(e).length){const L=ECO_ITEMS.filter(x=>x.c==='t'&&(!x.xm||xm));e.t=L[Math.floor(h('ti')*L.length)].id}}
+ BOTCOS.set(id,e);return e}
+function cosOf(seat){try{if(!seat)return{};if(seat===SEAT)return ECO.w?ECO.w.eq:{};if(typeof seat!=='string')return{};if(seat.startsWith(BOTPRE))return botCos(seat);
  if(G.peq&&seat in G.peq)return ecoParse(G.peq[seat]);const f=FR.ons&&FR.ons.get(seat);if(f&&typeof f.eq==='string')return ecoParse(f.eq);return ecoParse(ecoRk().get(seat))}catch(e){return{}}}
 function cosName(seat,txt,eq){const e=eq||cosOf(seat),n=e.n,cls=n?(n.startsWith('zn')?'zd':n):'';return cls?`<span class="cn cn-${cls}">${txt}</span>`:txt}
 function cosTitle(seat,eq){const e=eq||cosOf(seat),it=ecoItem(e.t);return it&&it.c==='t'?`<small class="ctt${it.rw?' rw':''}">${esc(it.n)}</small>`:''}
