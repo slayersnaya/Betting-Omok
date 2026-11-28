@@ -1982,7 +1982,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.104';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.105';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6811,26 +6811,37 @@ const STG_DATA={"E":["khlhpi|gjhjigijkjmemj|hhiijj|hb|6|7|6|fdj","fkipjijllipk|d
 const STG_LV=[{k:'E',n:'Easy'},{k:'N',n:'Normal'},{k:'H',n:'Hard'},{k:'G',n:'Ultimate'}];
 const STG_AMT=[5,10,20,30],STG_BIG=[50,100,250,600],STG_OPEN=10,STG_GAP=11500,STG_N=40;
 // 11/28: 단계마다 40문제(21~40번 추가). 20번째·40번째는 큰 보상
-const stgAmt=(s,c)=>c===20||c===STG_N?STG_BIG[s]:STG_AMT[s];
+// 11/28: 2주마다 문제 세트가 바뀜(2026-11-23 0시 KST부터 14일마다). 서로 다른 문제 6세트: 0은 이 파일 안(STG_DATA), 1~5는 stg/{n}.json.
+//  7번째 세트부터는 6세트를 판 돌리기·뒤집기(8가지)로 바꿔 씀 → 세트 k = 원본 k%6, 모양 floor(k/6)%8
+//  새 세트는 진행도 0부터, 옥돌은 절반(규칙 firestore.rules의 stgPer·stgAmt와 같아야 함)
+const STG_EP=Date.UTC(2026,10,22,15),STG_PER=14*864e5,STG_SETS=6,STG_AMT2=[3,5,10,15],STG_BIG2=[25,50,125,300];
+var STG_FORCE=null; // 시험용
+const stgSet=()=>typeof STG_FORCE==='number'?STG_FORCE:Math.max(0,Math.floor((Date.now()-STG_EP)/STG_PER)),stgAmtA=()=>stgSet()?STG_AMT2:STG_AMT,stgBigA=()=>stgSet()?STG_BIG2:STG_BIG;
+const stgAmt=(s,c)=>c===20||c===STG_N?stgBigA()[s]:stgAmtA()[s];
+const stgTf=(t,r,c)=>[[r,c],[r,18-c],[18-r,18-c],[c,r],[c,18-r],[18-r,c],[18-c,r],[18-c,18-r]][t];
+const stgLeft=()=>Math.max(1,Math.ceil((STG_EP+(stgSet()+1)*STG_PER-Date.now())/864e5));
+const STG_SETD=new Map();let STG_LOADK=-1;
+function stgD(){const k=stgSet()%STG_SETS;if(!k)return STG_DATA;if(STG_SETD.has(k))return STG_SETD.get(k);
+ if(STG_LOADK!==k){STG_LOADK=k;fetch(`stg/${k}.json`,{cache:'force-cache'}).then(r=>r.ok?r.json():null).then(d=>{if(d&&d.E&&d.G){STG_SETD.set(k,d);STG.cache.clear();try{stgRender();stgTile()}catch(e){}}else STG_LOADK=-1},()=>{STG_LOADK=-1})}return null}
 const STG={v:'list',s:0,i:0,bet:[1,1,1],res:null,cache:new Map(),busy:false,tm:0,fail:0};
 const STG_IC='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h5v-5h5v-5h5V5h3"/><path d="M3 20V9M21 5v15"/></svg>';
 const STG_LOCK='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
 const STG_OK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4 4 9-9.5"/></svg>';
 const STG_BACK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
 // 문제 한 개 풀기(판·세 칸·정답 계산은 게임 판정 그대로). 결과는 기억
-function stgPz(s,i){const key=s+':'+i;if(STG.cache.has(key))return STG.cache.get(key);const L=STG_LV[s],row=L&&STG_DATA[L.k][i];if(!row)return null;
- const [k,w,cs,fl,X,P,best,vw]=row.split('|'),dp=t=>{const a=[];for(let j=0;j+1<t.length;j+=2)a.push([t.charCodeAt(j)-97,t.charCodeAt(j+1)-97]);return a};
+function stgPz(s,i){const key=stgSet()+':'+s+':'+i;if(STG.cache.has(key))return STG.cache.get(key);const D=stgD(),L=STG_LV[s],row=D&&L&&D[L.k][i];if(!row)return null;
+ const tf=Math.floor(stgSet()/STG_SETS)%8,[k,w,cs,fl,X,P,best,vw]=row.split('|'),dp=t=>{const a=[];for(let j=0;j+1<t.length;j+=2)a.push(stgTf(tf,t.charCodeAt(j)-97,t.charCodeAt(j+1)-97));return a};
  const bd=emptyBoard();dp(k).forEach(([r,c])=>bd[r][c]=1);dp(w).forEach(([r,c])=>bd[r][c]=2);
- const cells=dp(cs),meSun=fl[0]==='s',goal=fl[1]==='w'?'win':'block',O=fxOutcomes(bd,cells,1,meSun),sol=pzSolve(O,+P,+X,meSun,goal);
- const pz={type:'bet',stg:1,s,i,goal,bd,cells,meSun,P:+P,X:+X,O,best:sol?sol.best:+best,n:sol?sol.n:0,ex:sol?sol.ex:[1,1,1],view:[...vw].map(ch=>ch.charCodeAt(0)-97)};
+ const cells=dp(cs).sort((p,q)=>p[0]-q[0]||p[1]-q[1]),meSun=fl[0]==='s',goal=fl[1]==='w'?'win':'block',O=fxOutcomes(bd,cells,1,meSun),sol=pzSolve(O,+P,+X,meSun,goal);
+ const pz={type:'bet',stg:1,s,i,goal,bd,cells,meSun,P:+P,X:+X,O,best:sol?sol.best:+best,n:sol?sol.n:0,ex:sol?sol.ex:[1,1,1],view:(()=>{const [a,b,n]=[...vw].map(ch=>ch.charCodeAt(0)-97),q=[[a,b],[a+n-1,b+n-1]].map(([r,c])=>stgTf(tf,r,c));return[Math.min(q[0][0],q[1][0]),Math.min(q[0][1],q[1][1]),n]})()};
  pz.det=stgDetail(pz);pz.simul=pz.det.some(x=>x.fm&&x.fo);STG.cache.set(key,pz);return pz}
 // 8가지 결과(내가 가져간 칸 마스크)마다 오목 줄 수·새 6목(무효) 여부
 function stgDetail(pz){const out=[],ov0=overLines(pz.bd,1).length,ow0=overLines(pz.bd,2).length;for(let m=0;m<8;m++){const b=pz.bd.map(r=>r.slice()),su=[0,1,2].map(i=>((m>>i)&1)===(pz.meSun?1:0)?99:0),hu=su.map(v=>v?0:99);
   settle(b,pz.cells,su,hu,pz.meSun?1:2,pz.meSun?2:1);out.push({fm:fiveLines(b,1).length,fo:fiveLines(b,2).length,vm:overLines(b,1).length>ov0,vo:overLines(b,2).length>ow0})}return out}
 // ----- 진행(서버 지갑 + 이 기기) -----
-const stgKey=()=>'bo-stg:'+(SEAT||'local');
+const stgKey=()=>'bo-stg:'+(stgSet()?stgSet()+':':'')+(SEAT||'local');
 function stgLoc(){try{const v=JSON.parse(lget(stgKey())||'null');if(Array.isArray(v)&&v.length===4)return v.map(x=>Math.max(0,Math.min(STG_N,x|0)))}catch(e){}return[0,0,0,0]}
-const stgSrv=()=>{const a=ECO.w&&Array.isArray(ECO.w.sp)&&ECO.w.sp.length===4?ECO.w.sp:null;return a?a.map(x=>Math.max(0,Math.min(STG_N,x|0))):[0,0,0,0]};
+const stgSrv=()=>{const a=ECO.w&&(ECO.w.sk|0)===stgSet()&&Array.isArray(ECO.w.sp)&&ECO.w.sp.length===4?ECO.w.sp:null;return a?a.map(x=>Math.max(0,Math.min(STG_N,x|0))):[0,0,0,0]};
 const stgCnt=()=>{const a=stgLoc(),b=stgSrv();return a.map((x,j)=>Math.max(x,b[j]))};
 const stgOpen=(s,c)=>s===0||(c||stgCnt())[s-1]>=STG_OPEN;
 const stgPend=()=>{const a=stgCnt(),b=stgSrv();return a.reduce((t,x,j)=>t+Math.max(0,x-b[j]),0)};
@@ -6840,7 +6851,7 @@ function stgSync(){clearTimeout(STG.tm);if(STG.busy||!ECO.ok||!ECO.w)return;cons
  if(s>0&&srv[s-1]<STG_OPEN)return; // 앞 단계가 지갑에 10문제 미만이면 규칙상 못 씀(정상 진행에서는 생기지 않음)
  const wait=ecoSrv()?STG_GAP-(Date.now()-Math.max(ECO.lastW||0,ECO.wAt||0)):0;if(wait>0){STG.tm=setTimeout(stgSync,wait+60);return}
  STG.busy=true;const c=srv[s]+1,amt=stgAmt(s,c);
- ecoWrite('stg',n=>{const sp=Array.isArray(n.sp)&&n.sp.length===4?n.sp.slice():[0,0,0,0];if(sp[s]+1!==c)return false;sp[s]=c;n.sp=sp;n.g+=amt}).then(ok=>{STG.busy=false;
+ ecoWrite('stg',n=>{const k=stgSet(),sp=(n.sk|0)===k&&Array.isArray(n.sp)&&n.sp.length===4?n.sp.slice():[0,0,0,0];if(sp[s]+1!==c)return false;sp[s]=c;n.sp=sp;n.sk=k;n.g+=amt}).then(ok=>{STG.busy=false;
   if(ok){STG.fail=0;stgPaintAll()}else STG.fail++;STG.tm=setTimeout(stgSync,ok?300:Math.min(120e3,STG_GAP*STG.fail))},()=>{STG.busy=false})}
 // ----- 판 그림: 세 칸과 그 둘레 돌이 모두 보이게(문제마다 정한 범위) -----
 function stgBoardSVG(pz){const [a,b,n]=pz.view,K=30,W=K*(n-1)+K*1.2,x=c=>K*.6+(c-b)*K,y=r=>K*.6+(r-a)*K;
@@ -6908,13 +6919,13 @@ const stgPips=s=>`<span class="stgpw" aria-hidden="true">${[0,1,2,3].map(j=>`<i 
 function stgTitle(){const t=$('#stgT'),bk=$('#stgBk');if(!t)return;const L=STG_LV[STG.s];t.textContent=STG.v==='list'?'단계별 묘수 풀이':STG.v==='map'?L.n:`${L.n} ${STG.i+1}`;t.classList.toggle('god',STG.v!=='list'&&STG.s===3);if(bk)bk.classList.toggle('hide',STG.v==='list')}
 function stgList(){const c=stgCnt(),pend=stgPend(),adm=isAdmin();
  return `<div class="stgl">${STG_LV.map((L,s)=>{const n=c[s],op=stgOpen(s,c),done=n>=STG_N;
-  const sub=!op?`<span class="stgr">${STG_LOCK}<span>${STG_LV[s-1].n} ${STG_OPEN}문제 깨면 열려요</span></span>`:done?`<span class="stgr ok">${STG_OK}<span>완료</span></span>`:`<span class="stgr"><i class="gdot" aria-hidden="true"></i><span>문제당 ${STG_AMT[s]} · 20·40번째 ${STG_BIG[s]}</span></span>`;
+  const sub=!op?`<span class="stgr">${STG_LOCK}<span>${STG_LV[s-1].n} ${STG_OPEN}문제 깨면 열려요</span></span>`:done?`<span class="stgr ok">${STG_OK}<span>완료</span></span>`:`<span class="stgr"><i class="gdot" aria-hidden="true"></i><span>문제당 ${stgAmtA()[s]} · 20·40번째 ${stgBigA()[s]}</span></span>`;
   return `<button class="stgc${op?'':' lock'}${done?' done':''}${s===3?' god':''}" data-act="stgmap" data-s="${s}"${op||adm?'':' aria-disabled="true"'} aria-label="${L.n} ${n}/${STG_N}${op?'':' 잠겨 있어요'}${done?' 완료':''}"><span class="stgn"><b>${L.n}</b>${stgPips(s)}</span><span class="stgp num">${n}<small>/${STG_N}</small></span><span class="stgbar" aria-hidden="true"><i style="width:${n/STG_N*100}%"></i></span>${sub}</button>`}).join('')}</div>${pend&&ecoSrv()?`<p class="note stgsync">옥돌 반영 중 · ${pend}문제</p>`:''}`}
 function stgMap(){const s=STG.s,c=stgCnt(),n=c[s],adm=isAdmin();
  const cells=Array.from({length:STG_N},(_,i)=>{const st=i<n?'done':i===n?'cur':'lock',open=st!=='lock'||adm,big=i===19||i===STG_N-1;
   return `<button class="stgq ${st}${big?' big':''}" data-act="stgpz" data-i="${i}"${open?'':' aria-disabled="true"'} aria-label="${i+1}번${st==='done'?' 완료':st==='cur'?' 지금 문제':' 잠겨 있어요'}${big?` · 옥돌 ${STG_BIG[s]}`:''}"><span class="num">${i+1}</span>${st==='done'?`<i class="ck">${STG_OK}</i>`:''}${big&&st!=='done'?'<i class="gdot" aria-hidden="true"></i>':''}</button>`}).join('');
  const nx=n<STG_N?`<button class="btn wide" data-act="stgpz" data-i="${n}">${n+1}번 풀기</button>`:`<p class="stgfin">${STG_LV[s].n} 완료</p>`;
- return `<div class="stgmh"><span class="stgp num">${n}<small>/${STG_N}</small></span><span class="stgbar" aria-hidden="true"><i style="width:${n/STG_N*100}%"></i></span><span class="stgbig"><i class="gdot" aria-hidden="true"></i><span>문제당 ${STG_AMT[s]} · 20·40번째 ${STG_BIG[s]}</span></span></div><div class="stgg">${cells}</div>${nx}`}
+ return `<div class="stgmh"><span class="stgp num">${n}<small>/${STG_N}</small></span><span class="stgbar" aria-hidden="true"><i style="width:${n/STG_N*100}%"></i></span><span class="stgbig"><i class="gdot" aria-hidden="true"></i><span>문제당 ${stgAmtA()[s]} · 20·40번째 ${stgBigA()[s]}</span></span></div><div class="stgg">${cells}</div>${nx}`}
 function stgPzView(){const pz=stgPz(STG.s,STG.i);if(!pz)return '<p class="sub">문제를 불러오지 못했어요</p>';const r=STG.res,c=stgCnt(),solved=STG.i<c[STG.s];
  const q=pz.goal==='win'?(pz.simul?'가장 적게 써서 확실히 이기기':'가장 적게 써서 확실히 오목 만들기'):(pz.simul?'가장 적게 써서 상대 승리 확실히 막기':'가장 적게 써서 상대 오목 확실히 막기');
  const tie=pz.meSun?'같으면 상대 돌':'같으면 내 돌';
@@ -6930,7 +6941,8 @@ function stgPzView(){const pz=stgPz(STG.s,STG.i);if(!pz)return '<p class="sub">�
   let why='';if(r&&!r.ok){const k=r.why;why=`<div class="pzres no" role="status" tabindex="-1"><b>아쉬워요</b>${k?`<span class="nw">상대 ${k.ob.map((v,j)=>stgLab(j)+v).join(' ')} 걸면</span><span class="stgwl">${stgLine(pz,k.om)}</span>`:'<span class="nw">확실해요 · 더 적은 합으로도 가능해요</span>'}</div>`}
   body=why+bets+`<button class="btn wide" data-act="stggo"${sum>pz.P?' disabled':''}>${r&&!r.ok?'다시 제출':'제출'}</button>`}
  return head+stgBoardSVG(pz)+info+`<p class="pzq">${q}</p>`+body}
-function stgRender(){const box=$('#stgBody');if(!box)return;stgTitle();box.dataset.v=STG.v;box.innerHTML=STG.v==='list'?stgList():STG.v==='map'?stgMap():stgPzView()}
+function stgRender(){const box=$('#stgBody');if(!box)return;stgTitle();box.dataset.v=STG.v;if(!stgD()){box.innerHTML='<p class="sub" style="text-align:center;padding:24px 0">새 문제를 불러오는 중이에요</p>';return}
+ box.innerHTML=(STG.v==='list'?`<p class="note" style="text-align:center;margin:0 0 10px">2주마다 새 문제로 바뀌어요 · ${stgLeft()}일 남았어요</p>`+stgList():STG.v==='map'?stgMap():stgPzView())}
 function stgPaintAll(){try{stgTile()}catch(e){}if(shOpen==='stg'&&STG.v==='list')stgRender()}
 function stgTile(){const t=$('#stgTile');if(!t)return;const c=stgCnt(),s=[0,1,2,3].find(j=>c[j]<STG_N&&stgOpen(j,c)),all=c.every(x=>x>=STG_N);
  const sub=all?'모두 완료':s===undefined?`${stgAll()} / ${STG_N*4}`:`${STG_LV[s].n} ${c[s]} / ${STG_N}`;const e=t.querySelector('.tsub');if(e&&e.textContent!==sub)e.textContent=sub;let mb=t.querySelector('.stgmini');if(!mb){mb=document.createElement('span');mb.className='stgmini';mb.setAttribute('aria-hidden','true');t.appendChild(mb)}const mh=c.map((n,j)=>`<i class="${j===3?'g':''}" style="--p:${n/STG_N*100}%"></i>`).join('');if(mb.innerHTML!==mh)mb.innerHTML=mh;t.setAttribute('aria-label',`단계별 묘수 풀이, ${sub}`)}
@@ -6956,11 +6968,11 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act^=stg]'
 Object.assign(SND_ACT,{stg:'open',stgmap:'page',stgpz:'page',stgback:'close'});SND_SKIP.add('stggo');
 // 지갑 쓰기 시각(규칙의 10초 간격 맞추기) · 지갑을 다시 읽어도 sp 유지
 {const _w=ecoWrite;ecoWrite=function(kind,mut){return _w(kind,mut).then(ok=>{if(ok)ECO.lastW=Date.now();return ok})}}
-{const _n=ecoNorm;ecoNorm=function(d){const o=_n(d);try{const t=d&&d.at,ms=t&&typeof t.toMillis==='function'?t.toMillis():typeof t==='number'?t:0;if(ms)ECO.wAt=ms}catch(e){}if(d&&Array.isArray(d.sp)&&d.sp.length===4&&d.sp.every(v=>Number.isInteger(v)&&v>=0&&v<=STG_N))o.sp=d.sp.slice();return o}}
+{const _n=ecoNorm;ecoNorm=function(d){const o=_n(d);try{const t=d&&d.at,ms=t&&typeof t.toMillis==='function'?t.toMillis():typeof t==='number'?t:0;if(ms)ECO.wAt=ms}catch(e){}if(d&&Array.isArray(d.sp)&&d.sp.length===4&&d.sp.every(v=>Number.isInteger(v)&&v>=0&&v<=STG_N))o.sp=d.sp.slice();if(d&&Number.isInteger(d.sk)&&d.sk>=0)o.sk=d.sk;return o}}
 // 방금 만든 지갑(서버 시각을 모름)은 지금 쓴 것으로 봄
 {const _a=ecoAfterLoad;ecoAfterLoad=function(){if(!ECO.wAt)ECO.lastW=Math.max(ECO.lastW||0,Date.now());return _a.apply(this,arguments)}}
 // 보상 탭 '보상 기준'에 한 줄
-{const _ep=ecoPaint;ecoPaint=function(){const r=_ep.apply(this,arguments);try{const d=$('#rwdBody .rwinfo details');if(d&&!d.querySelector('.stgrw')){const n=d.querySelector('p.note');const h=`<div class="eh stgrw"><h3>단계별 묘수 풀이</h3></div><div class="etab"><span>문제마다</span><b>${STG_AMT.join(' · ')}</b><span>20·40번째</span><b>${STG_BIG.join(' · ')}</b></div>`;if(n)n.insertAdjacentHTML('beforebegin',h);else d.insertAdjacentHTML('beforeend',h)}}catch(e){}try{stgTile()}catch(e){}return r}}
+{const _ep=ecoPaint;ecoPaint=function(){const r=_ep.apply(this,arguments);try{const d=$('#rwdBody .rwinfo details');if(d&&!d.querySelector('.stgrw')){const n=d.querySelector('p.note');const h=`<div class="eh stgrw"><h3>단계별 묘수 풀이</h3></div><div class="etab"><span>문제마다</span><b>${stgAmtA().join(' · ')}</b><span>20·40번째</span><b>${stgBigA().join(' · ')}</b></div>`;if(n)n.insertAdjacentHTML('beforebegin',h);else d.insertAdjacentHTML('beforeend',h)}}catch(e){}try{stgTile()}catch(e){}return r}}
 setInterval(()=>{try{if(stgPend())stgSync()}catch(e){}},5000);
 setTimeout(()=>{try{stgTile()}catch(e){}},0);
 // ===== STG END =====

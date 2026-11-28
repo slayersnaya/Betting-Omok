@@ -371,7 +371,7 @@ service cloud.firestore {
     function eqPub(v) { return v is string && v.size() <= 64 && v.matches('^[a-z0-9_.]*$')
       && (v == '' || get(walPath(me())).data.own.hasAll(v.split('[.]'))); }
     function slotOk(e, k, re) { return !(k in e) || e[k] == '' || e[k].matches(re); }
-    function walShape(n) { return n.keys().hasOnly(['g','d','dc','dq','own','eq','cl','k','at','ck','nc','am','ad','mr','sp'])
+    function walShape(n) { return n.keys().hasOnly(['g','d','dc','dq','own','eq','cl','k','at','ck','nc','am','ad','mr','sp','sk'])
       && (!('am' in n) || n.am is int) && (!('ad' in n) || (n.ad is list && n.ad.size() <= 31))
       && (!('nc' in n) || (n.nc is int && n.nc >= 0 && n.nc <= 9999))
       && (!('ck' in n) || (n.ck is int && n.ck >= 0 && n.ck <= 6))
@@ -435,17 +435,22 @@ service cloud.firestore {
     // 단계별 묘수 풀이: sp = [Easy, Normal, Hard, Godlike] 깬 문제 수(0~40). 한 번 쓰기에 한 단계만 +1, 앞 단계 10문제 이상이어야 다음 단계,
     //  옥돌은 문제당 5·10·20·30, 20번째는 50·100·250·600. 지갑의 마지막 쓰기(at)에서 10초가 지나야 함(관리자는 간격·열림 조건 없음)
     //  못 지키는 것(서버 없음): 정말 풀었는지 → 위조해도 단계마다 20문제·전체 옥돌 2,235가 끝, 한 문제에 10초 이상
+    //  11/28: 2주마다 문제 세트가 바뀜. sk = 세트 번호(2026-11-23 0시 KST부터 14일마다 +1). 새 세트로 처음 쓸 때 sp는 0부터 다시,
+    //  세트 1부터는 옥돌 절반(문제당 3·5·10·15, 20·40번째 25·50·125·300)
     function spOf(d) { return d.get('sp', [0, 0, 0, 0]); }
-    function stgAmt(i, c) { return c == 20 || c == 40 ? [50, 100, 250, 600][i] : [5, 10, 20, 30][i]; }
+    function stgPer() { return math.floor((request.time.toMillis() - 1795359600000) / 1209600000); }
+    function stgAmt(i, c, k) { return k == 0 ? (c == 20 || c == 40 ? [50, 100, 250, 600][i] : [5, 10, 20, 30][i])
+      : (c == 20 || c == 40 ? [25, 50, 125, 300][i] : [3, 5, 10, 15][i]); }
     function stgAt(o, n, i) {
-      let a = spOf(o);
+      let a = o.get('sk', 0) == n.get('sk', 0) ? spOf(o) : [0, 0, 0, 0];
       let b = n.sp;
       return b[i] == a[i] + 1 && b[i] <= 40
         && (i == 0 || b[0] == a[0]) && (i == 1 || b[1] == a[1]) && (i == 2 || b[2] == a[2]) && (i == 3 || b[3] == a[3])
         && (i == 0 || a[i - 1] >= 10 || isAdmin())
-        && n.g == o.g + stgAmt(i, b[i]); }
+        && n.g == o.g + stgAmt(i, b[i], n.get('sk', 0)); }
     function walStg(o, n) {
       return n.sp is list && n.sp.size() == 4 && n.sp[0] is int && n.sp[1] is int && n.sp[2] is int && n.sp[3] is int
+        && n.get('sk', 0) == stgPer() && n.get('sk', 0) >= o.get('sk', 0)
         && (stgAt(o, n, 0) || stgAt(o, n, 1) || stgAt(o, n, 2) || stgAt(o, n, 3))
         && (request.time > o.at + duration.value(10, 's') || isAdmin())
         && n.own == o.own && n.cl == o.cl && n.eq == o.eq && sameDay(o, n); }
@@ -539,7 +544,7 @@ service cloud.firestore {
       allow create: if signedIn() && uid == me() && walShape(request.resource.data) && request.resource.data.k == 'new'
         && request.resource.data.g == 0 && request.resource.data.dc == 0 && request.resource.data.dq == []
         && request.resource.data.own == [] && request.resource.data.cl == [] && request.resource.data.eq == {}
-        && !('sp' in request.resource.data);
+        && !('sp' in request.resource.data) && !('sk' in request.resource.data);
       allow update: if signedIn() && uid == me() && walShape(request.resource.data)
         && ((request.resource.data.k == 'earn' && walEarn(resource.data, request.resource.data))
             || (request.resource.data.k == 'claim' && walClaim(resource.data, request.resource.data))
@@ -552,7 +557,7 @@ service cloud.firestore {
             || (request.resource.data.k == 'nick' && walNick(resource.data, request.resource.data))
             || (request.resource.data.k == 'stg' && walStg(resource.data, request.resource.data)))
         && (request.resource.data.k == 'mail' || request.resource.data.get('mr', []) == resource.data.get('mr', []))
-        && (request.resource.data.k == 'stg' || spOf(request.resource.data) == spOf(resource.data))
+        && (request.resource.data.k == 'stg' || (spOf(request.resource.data) == spOf(resource.data) && request.resource.data.get('sk', 0) == resource.data.get('sk', 0)))
         && (request.resource.data.k == 'nick' || request.resource.data.get('nc', 0) == resource.data.get('nc', 0))
         && (request.resource.data.k == 'att' || (request.resource.data.get('am', 0) == resource.data.get('am', 0) && request.resource.data.get('ad', []) == resource.data.get('ad', [])))
         && request.resource.data.get('ck', 0) == resource.data.get('ck', 0);
