@@ -432,15 +432,15 @@ service cloud.firestore {
       let it = n.own[n.own.size() - 1];
       return n.own == o.own.concat([it]) && !(it in o.own) && it in ecoPrice()
         && (o.g - n.g == ecoPrice()[it] || (isAdmin() && n.g == o.g)) && n.cl == o.cl && sameDay(o, n); }
-    // 단계별 묘수 풀이: sp = [Easy, Normal, Hard, Godlike] 깬 문제 수(0~20). 한 번 쓰기에 한 단계만 +1, 앞 단계 10문제 이상이어야 다음 단계,
+    // 단계별 묘수 풀이: sp = [Easy, Normal, Hard, Godlike] 깬 문제 수(0~40). 한 번 쓰기에 한 단계만 +1, 앞 단계 10문제 이상이어야 다음 단계,
     //  옥돌은 문제당 5·10·20·30, 20번째는 50·100·250·600. 지갑의 마지막 쓰기(at)에서 10초가 지나야 함(관리자는 간격·열림 조건 없음)
     //  못 지키는 것(서버 없음): 정말 풀었는지 → 위조해도 단계마다 20문제·전체 옥돌 2,235가 끝, 한 문제에 10초 이상
     function spOf(d) { return d.get('sp', [0, 0, 0, 0]); }
-    function stgAmt(i, c) { return c == 20 ? [50, 100, 250, 600][i] : [5, 10, 20, 30][i]; }
+    function stgAmt(i, c) { return c == 20 || c == 40 ? [50, 100, 250, 600][i] : [5, 10, 20, 30][i]; }
     function stgAt(o, n, i) {
       let a = spOf(o);
       let b = n.sp;
-      return b[i] == a[i] + 1 && b[i] <= 20
+      return b[i] == a[i] + 1 && b[i] <= 40
         && (i == 0 || b[0] == a[0]) && (i == 1 || b[1] == a[1]) && (i == 2 || b[2] == a[2]) && (i == 3 || b[3] == a[3])
         && (i == 0 || a[i - 1] >= 10 || isAdmin())
         && n.g == o.g + stgAmt(i, b[i]); }
