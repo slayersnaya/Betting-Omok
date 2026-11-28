@@ -1971,7 +1971,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.96';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.97';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3883,7 +3883,7 @@ const KST=324e5,SEASON1=Date.UTC(2026,10,25,15);
 const RESET=[1000,1000,1100,1250,1450,1700,1700,1700],SOFT0=1000,SNAP_WAIT=20*60e3,SNAP_MAX=14000; // RESET[지난 티어 0브론즈~5마스터, 6그랜드마스터, 7챌린저]
 const startOf=(SS,lt)=>SS.n===1?START:lt==null?SOFT0:RESET[lt];
 // 시즌 1 시작 점수 예외: 관리자가 cfg/start {s:{자리:점수}}에 적은 계정만(모든 폰이 같은 문서를 읽음). 관리자 계정은 1250에서 시작
-const ADMIN_START=1300,ADMIN_RT=29929465; // 11/27 관리자 전적 초기화: 이 시각(분) 전 판은 관리자 점수에 안 셈
+const ADMIN_START=1300,ADMIN_RT=29929465,ADMIN_WL=[16,1]; // ADMIN_WL: 1300점 시작을 1000점 시작처럼 보이게, 관리자 시즌 1 전적 표시에만 더하는 승·패 수(점수 계산에는 안 씀) // 11/27 관리자 전적 초기화: 이 시각(분) 전 판은 관리자 점수에 안 셈
 const stx=(SS,id,lt)=>SS.n===1&&RK.sx&&Number.isInteger(RK.sx[id])?RK.sx[id]:startOf(SS,lt);
 function startSub(){if(!db||RK.sxSub)return;RK.sxSub=1;
  db.doc('cfg/start').onSnapshot(x=>{const d=x.exists?x.data():null,o={},rt={};if(d&&d.s&&typeof d.s==='object')for(const [k,v] of Object.entries(d.s)){if(okSeat(k)&&Number.isInteger(v)&&v>=0&&v<=3000)o[k]=v;else if(k.startsWith('t:')&&okSeat(k.slice(2))&&Number.isInteger(v)&&v>0)rt[k.slice(2)]=v}
@@ -3951,7 +3951,8 @@ function rankCalc(SS,LT,docs,bdocs,ck,at){
  for(;gi<games.length;gi++){if(!saved&&games[gi].t>=tc)save(gi);E.game(games[gi])}
  if(!saved&&tc<=upto)save(games.length);
  E.adv(upto+1);
- const M=E.M;return {E,M,pairs:E.pairs,pend,list:[...M.values()].filter(p=>p.bot||p.g>=PLACE).sort((x,y)=>y.r-x.r||x.seat.localeCompare(y.seat))};
+ const M=E.M;if(SS.n===1&&RK.sx)for(const id in RK.sx){const p=M.get(id);if(p&&!p.bot&&!p.wlx){p.wlx=1;p.w+=ADMIN_WL[0];p.l+=ADMIN_WL[1];p.g+=ADMIN_WL[0]+ADMIN_WL[1]}}
+ return {E,M,pairs:E.pairs,pend,list:[...M.values()].filter(p=>p.bot||p.g>=PLACE).sort((x,y)=>y.r-x.r||x.seat.localeCompare(y.seat))};
 }
 // 한 시즌 점수 엔진: 사람이 낀 판(game)을 시간순으로 넣으면, 그 사이의 AI끼리 판을 알아서 둠(adv). 시뮬레이션도 이 엔진을 그대로 씀
 function rankEngine(SS,LT){BOT_LF=lfOf(SS);
