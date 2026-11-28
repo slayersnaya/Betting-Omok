@@ -783,10 +783,13 @@ input,select,textarea{font-size:16px}
 .pod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:8px;margin:6px 0 10px}
 .pod .pc{display:flex;flex-direction:column;align-items:center;min-width:0;text-align:center}
 .pod .pc .emb{filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
-.stk{display:inline-flex;align-items:center;gap:1px;margin-right:5px;padding:1px 6px;border-radius:999px;font-size:11.5px;font-weight:800;line-height:1.5;vertical-align:1px;font-variant-numeric:tabular-nums}
-.stk.w1{color:#e8892a;padding:0}.stk.w2{color:#fff;background:#e07a1f}.stk.w3{color:#fff;background:linear-gradient(90deg,#e0451f,#f08a1c)}
-.stk.w4{color:#fff;background:linear-gradient(90deg,#c81e3a,#f2a51c);box-shadow:0 0 8px rgba(242,140,28,.6);animation:stkG 2.4s ease-in-out infinite}
-@keyframes stkG{50%{box-shadow:0 0 14px rgba(242,140,28,.9)}}
+.stk{display:inline-flex;align-items:center;gap:2px;margin-right:5px;padding:1px 7px 1px 5px;border-radius:999px;font-size:11.5px;font-weight:800;line-height:1.55;vertical-align:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stk>i{font-style:normal;font-size:12px;line-height:1}
+.stk.w1{color:#e8892a;padding:0}
+.stk.w2{color:#fff;background:#e07a1f}
+.stk.w3{color:#fff;background:linear-gradient(90deg,#d42a2a,#ff6a1a);box-shadow:0 0 0 1.5px #ffcf6b inset}
+.stk.w4{color:#ffe58a;background:linear-gradient(90deg,#6a1b9a,#c2185b);box-shadow:0 0 0 1.5px #f5c542 inset,0 0 10px rgba(245,197,66,.7);animation:stkG 2s ease-in-out infinite}
+@keyframes stkG{50%{box-shadow:0 0 0 1.5px #f5c542 inset,0 0 16px rgba(245,197,66,1)}}
 .stk.l1{color:#7fa3c4;padding:0}.stk.l2{color:#fff;background:#5f88ad}
 .pod .pst{margin-top:3px;line-height:1}.pod .pst .stk{margin:0}
 @media (prefers-reduced-motion:reduce){.stk.w4{animation:none}}
@@ -1979,7 +1982,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.99';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.100';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -6396,8 +6399,9 @@ function ecoPbar(vs,id){const st=`<span class="st ${id===vs.A?'k':'w'}"></span>`
  if(!seat)return `${st}<div class="pi"><div class="pn"><b>${nm}</b>`;const e=cosOf(seat);return `${cosFrame(seat,st,28,e)}<div class="pi"><div class="pn"><b>${cosName(seat,nm,e)}</b>${cosTitle(seat,e)}`}
 // 랭킹 줄 이름(renderRank 훅)
 // 순위표 연승·연패 표시(11/28): 3연승부터 🔥, 5·10·20연승마다 더 화려하게 / 3연패부터 🧊
-function stkB(p){const w=p.ws|0,l=p.ls|0;if(w>=3){const c=w>=20?'w4':w>=10?'w3':w>=5?'w2':'w1';return `<span class="stk ${c}" title="${w}연승" aria-label="${w}연승">🔥${w}</span>`}
- if(l>=3)return `<span class="stk ${l>=5?'l2':'l1'}" title="${l}연패" aria-label="${l}연패">🧊${l}</span>`;return ''}
+function stkB(p){const w=p.ws|0,l=p.ls|0;
+ if(w>=3){const [c,ic,tx]=w>=20?['w4','👑',`${w}연승`]:w>=10?['w3','💥',`${w}연승`]:w>=5?['w2','🔥',`${w}연승`]:['w1','🔥',String(w)];return `<span class="stk ${c}" title="${w}연승" aria-label="${w}연승"><i>${ic}</i>${tx}</span>`}
+ if(l>=3)return `<span class="stk ${l>=5?'l2':'l1'}" title="${l}연패" aria-label="${l}연패"><i>🧊</i>${l>=5?l+'연패':l}</span>`;return ''}
 function ecoRkNk(p){const e=cosOf(p.seat),t=cosTitle(p.seat,e),nm=cosName(p.seat,esc(rkNick(p)),e)+(p.seat===SEAT?' (나)':'');return t?`<span class="nk hasT"><span>${nm}</span>${t}</span>`:`<span class="nk">${nm}</span>`}
 // ----- 그림: 테두리 링 · 인장 · 돌 · 판 · 완성 연출 -----
 function ecoRing(id){const it=ecoItem(id);if(!it)return '';let g='';
