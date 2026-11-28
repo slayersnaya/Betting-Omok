@@ -1982,7 +1982,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.100';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.101';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3007,7 +3007,9 @@ function oppStatus(vs,id){
 function oppOff(id){if(UI.mode!=='online'||!G.room||!id)return false;G.offSince=G.offSince||{};if(G.online.has(id)){delete G.offSince[id];return false}if(!G.offSince[id])G.offSince[id]=Date.now();return Date.now()-G.offSince[id]>8000}
 // 관리자만: 랭크 게임 AI 상대의 실제 모델(연승으로 Ultimate가 붙은 경우 원래 모델도)
 const lvName=k=>(AI_LEVELS[k]&&AI_LEVELS[k].name)||k;
-function botModelTag(s){if(!s||!s.bot||!s.ai)return'';const base=(BOTMAP.get(s.bot.id)||{}).lv;return ' · '+lvName(s.ai)+(base&&base!==s.ai?` (원래 ${lvName(base)})`:'')}
+// 관리자 표시용 AI 모델 약자: 첫 글자(E·N·H·U), 원래 모델과 다르면 H(U)처럼
+const lvL=k=>String(lvName(k)||'?')[0].toUpperCase(),botModelS=s=>{const base=(BOTMAP.get(s.bot.id)||{}).lv;return lvL(s.ai)+(base&&base!==s.ai?`(${lvL(base)})`:'')};
+function botModelTag(s){if(!s||!s.bot||!s.ai)return'';return ' · '+botModelS(s)}
 function renderPlayers(){
  const vs=vstate(),ob=$('#oppbar'),mb=$('#mebar'),gm=$('#gmid');if(!ob)return;
  if(!vs||!vs.A){ob.innerHTML=mb.innerHTML=gm.innerHTML='';return}
@@ -3019,10 +3021,13 @@ function renderPlayers(){
   let tags=live&&!rv?`<span class="tag${isSun?' j':''}">${isSun?'선':'후'}<span class="tl"> 플레이어</span></span>`:'';
   if(!mine){const os=rv?'':oppStatus(vs,id);if(os&&os[0]&&os[0].split(' ')[0]==='j'&&vs.phase==='bet'){const sk=(UI.mode==='online'?G.gid:L.s&&L.s.id)+':'+vs.t;if(UI.oppSealK!==sk){UI.oppSealK=sk;if(UI.view==='game')snd('oppSeal')}}tags+=`<span class="tag${os&&os[0]?' '+os[0]:''}${os?'':' hide'}" id="oppTag"${os&&os[0].includes('sealtag')?' data-act="peek" role="button" aria-label="AI 봉인 코드"':''}>${os?os[1]:''}</span>`}
   // 관리자만: 랭크 게임 AI 상대의 실제 모델 표시(연승·연패로 바뀐 경우 원래 모델도)
-  if(!mine&&UI.mode==='local'&&L.s&&L.s.bot&&L.s.ai&&isAdmin()){const base=(BOTMAP.get(L.s.bot.id)||{}).lv;tags=`<span class="tag j" id="admModel">${lvName(L.s.ai)}${base&&base!==L.s.ai?' · 원래 '+lvName(base):''}</span>`+tags}
+  if(!mine&&UI.mode==='local'&&L.s&&L.s.bot&&L.s.ai&&isAdmin()){const base=(BOTMAP.get(L.s.bot.id)||{}).lv;tags=`<span class="tag j" id="admModel">${botModelS(L.s)}</span>`+tags}
   if(off)tags+='<span class="tag w">연결 끊김</span>';
   // 랭크 게임 관전: 두 사람의 티어 문양·티어·순위(배치 중이면 '배치 중')
   if(vs.spect&&!vs.me&&G.meta&&G.meta.ranked&&UI.mode==='online'){const k=rkByNick(vs.names&&vs.names[id]);if(k)tags=`<span class="tag rkt">${k.pl?'':emblem(k.t,16)}${k.t.n}${k.rank?` · ${k.rank}위`:''}</span>`+tags}
+  // 내 랭크 게임(사람·AI 상대): 관전 때처럼 두 사람의 티어·순위
+  else if(!vs.spect){const rkOn=UI.mode==='online'&&G.meta&&G.meta.ranked,rkAi=UI.mode==='local'&&L.s&&L.s.bot&&!L.s.cas;
+   if(rkOn||rkAi){const st=mine?SEAT:rkAi?BOTPRE+L.s.bot.id:id,k=rkBySeat(st);if(k)tags=`<span class="tag rkt" title="${k.t.n}${k.rank?` ${k.rank}위`:''}">${k.pl?'배치 중':emblem(k.t,16)+(k.rank?k.rank+'위':'')}</span>`+tags}}
   if(timed&&w)tags+=`<span class="tag w">시간 초과 ${w}/3</span>`;
   // 내 점수는 늘 보임, 상대 점수는 대국이 끝난 뒤에만
   const late=over&&UI.rv&&vs.last&&UI.rv.t===vs.last.t&&Date.now()<UI.rv.at+2800;
@@ -4322,6 +4327,7 @@ function renderRank(){
 }
 // 내 줄은 지금 닉네임으로(서버 기록에 닉네임이 아직 없어도)
 const rkNick=p=>(p.seat===SEAT?myNick():p.nick)||'플레이어';
+function rkBySeat(st){if(!st||!RK.loaded||!RK.list)return null;const i=RK.list.findIndex(p=>p.seat===st);if(i>=0){const p=RK.list[i];return{p,t:tierOf(p),rank:i+1}}return{p:null,t:{n:'배치 중',k:''},rank:0,pl:true}}
 function rkByNick(n){if(!n||!RK.loaded||!RK.list)return null;const i=RK.list.findIndex(p=>rkNick(p)===n);if(i>=0){const p=RK.list[i];return{p,t:tierOf(p),rank:i+1}}return{p:null,t:{n:'배치 중',k:''},rank:0,pl:true}}
 const CROWN='<svg class="crown" viewBox="0 0 26 18" aria-hidden="true"><path d="M2 15 1 4l6.5 5L13 1l5.5 8L25 4l-1 11z" fill="#F2C94C" stroke="#a8851b" stroke-width="1"/><rect x="2" y="15" width="22" height="2.6" rx="1" fill="#e2bd45"/></svg>';
 // 티어표. pts면 '같은 점수끼리 대결해요(배치 뒤, 연승·연패 없이)' 이기면·지면 점수를 함께 보여 줌
