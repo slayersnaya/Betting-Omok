@@ -783,6 +783,14 @@ input,select,textarea{font-size:16px}
 .pod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:8px;margin:6px 0 10px}
 .pod .pc{display:flex;flex-direction:column;align-items:center;min-width:0;text-align:center}
 .pod .pc .emb{filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
+.stk{display:inline-flex;align-items:center;gap:1px;margin-right:5px;padding:1px 6px;border-radius:999px;font-size:11.5px;font-weight:800;line-height:1.5;vertical-align:1px;font-variant-numeric:tabular-nums}
+.stk.w1{color:#e8892a;padding:0}.stk.w2{color:#fff;background:#e07a1f}.stk.w3{color:#fff;background:linear-gradient(90deg,#e0451f,#f08a1c)}
+.stk.w4{color:#fff;background:linear-gradient(90deg,#c81e3a,#f2a51c);box-shadow:0 0 8px rgba(242,140,28,.6);animation:stkG 2.4s ease-in-out infinite}
+@keyframes stkG{50%{box-shadow:0 0 14px rgba(242,140,28,.9)}}
+.stk.l1{color:#7fa3c4;padding:0}.stk.l2{color:#fff;background:#5f88ad}
+.pod .pst{margin-top:3px;line-height:1}.pod .pst .stk{margin:0}
+@media (prefers-reduced-motion:reduce){.stk.w4{animation:none}}
+
 /* 테두리(1.6~1.75배)가 칸 안에 들어오게 위아래 자리 확보(11/27) */
 .pod .cfr,.pfh .cfr,.pvemb .cfr{margin:calc(var(--z)*.36) calc(var(--z)*.2)}
 .pod .crown{width:26px;height:18px;margin-bottom:2px}
@@ -1971,7 +1979,7 @@ img.simg{object-fit:contain;display:inline-block;width:1.4em;height:1.4em;vertic
 <div id="dlg" class="hide"></div>
 <div id="toast" role="status"></div>
 
-<script>window.BO_VER='1.97';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
+<script>window.BO_VER='1.98';window.BO_FIREBASE_CONFIG={"apiKey": "AIzaSyDvsab_8P_Bf_Sr4OZrvFQDF7TPfKoTQck", "authDomain": "betting-omok-5e0c2.firebaseapp.com", "projectId": "betting-omok-5e0c2", "storageBucket": "betting-omok-5e0c2.firebasestorage.app", "messagingSenderId": "1058641815494", "appId": "1:1058641815494:web:c32dccf8188df54b69b4c7"};(()=>{let res;const p=new Promise(r=>res=r);window.__BO_FB={resolve:res};window.claude={use:n=>p.then(x=>x[n]||null)}})();</script>
 <script>// 베팅 오목 — Firebase 연결 어댑터(웹·어플 버전 전용, claude.ai 아티팩트에는 넣지 않음)
 // window.claude.use('db'|'user'|'room')를 같은 모양으로 Firebase(익명 로그인 + Firestore)에 연결한다.
 (async()=>{
@@ -3883,7 +3891,7 @@ const KST=324e5,SEASON1=Date.UTC(2026,10,25,15);
 const RESET=[1000,1000,1100,1250,1450,1700,1700,1700],SOFT0=1000,SNAP_WAIT=20*60e3,SNAP_MAX=14000; // RESET[지난 티어 0브론즈~5마스터, 6그랜드마스터, 7챌린저]
 const startOf=(SS,lt)=>SS.n===1?START:lt==null?SOFT0:RESET[lt];
 // 시즌 1 시작 점수 예외: 관리자가 cfg/start {s:{자리:점수}}에 적은 계정만(모든 폰이 같은 문서를 읽음). 관리자 계정은 1250에서 시작
-const ADMIN_START=1300,ADMIN_RT=29929465,ADMIN_WL=[16,1]; // ADMIN_WL: 1300점 시작을 1000점 시작처럼 보이게, 관리자 시즌 1 전적 표시에만 더하는 승·패 수(점수 계산에는 안 씀) // 11/27 관리자 전적 초기화: 이 시각(분) 전 판은 관리자 점수에 안 셈
+const ADMIN_START=1300,ADMIN_RT=29929465,ADMIN_WL=[16,1],ADMIN_WSX=14,ADMIN_WS_T=Date.UTC(2026,10,28,2,55); // ADMIN_WL: 1300점 시작을 1000점 시작처럼 보이게, 관리자 시즌 1 전적 표시에만 더하는 승·패 수(점수 계산에는 안 씀) // 11/27 관리자 전적 초기화: 이 시각(분) 전 판은 관리자 점수에 안 셈
 const stx=(SS,id,lt)=>SS.n===1&&RK.sx&&Number.isInteger(RK.sx[id])?RK.sx[id]:startOf(SS,lt);
 function startSub(){if(!db||RK.sxSub)return;RK.sxSub=1;
  db.doc('cfg/start').onSnapshot(x=>{const d=x.exists?x.data():null,o={},rt={};if(d&&d.s&&typeof d.s==='object')for(const [k,v] of Object.entries(d.s)){if(okSeat(k)&&Number.isInteger(v)&&v>=0&&v<=3000)o[k]=v;else if(k.startsWith('t:')&&okSeat(k.slice(2))&&Number.isInteger(v)&&v>0)rt[k.slice(2)]=v}
@@ -3951,7 +3959,7 @@ function rankCalc(SS,LT,docs,bdocs,ck,at){
  for(;gi<games.length;gi++){if(!saved&&games[gi].t>=tc)save(gi);E.game(games[gi])}
  if(!saved&&tc<=upto)save(games.length);
  E.adv(upto+1);
- const M=E.M;if(SS.n===1&&RK.sx)for(const id in RK.sx){const p=M.get(id);if(p&&!p.bot&&!p.wlx){p.wlx=1;p.w+=ADMIN_WL[0];p.l+=ADMIN_WL[1];p.g+=ADMIN_WL[0]+ADMIN_WL[1]}}
+ const M=E.M;if(SS.n===1&&RK.sx)for(const id in RK.sx){const p=M.get(id);if(p&&!p.bot&&!p.wlx){p.wlx=1;p.w+=ADMIN_WL[0];p.l+=ADMIN_WL[1];p.g+=ADMIN_WL[0]+ADMIN_WL[1];if(p.ws>0&&(p.bk||0)<ADMIN_WS_T)p.ws+=ADMIN_WSX}}
  return {E,M,pairs:E.pairs,pend,list:[...M.values()].filter(p=>p.bot||p.g>=PLACE).sort((x,y)=>y.r-x.r||x.seat.localeCompare(y.seat))};
 }
 // 한 시즌 점수 엔진: 사람이 낀 판(game)을 시간순으로 넣으면, 그 사이의 AI끼리 판을 알아서 둠(adv). 시뮬레이션도 이 엔진을 그대로 씀
@@ -3997,14 +4005,16 @@ function rankEngine(SS,LT){BOT_LF=lfOf(SS);
    // 전적 초기화한 자리: 초기화 전 판은 그 자리 점수·전적에 안 셈(상대 쪽은 그대로 반영)
    const rz=id=>RK.rt&&RK.rt[id]&&y.t<RK.rt[id]*6e4,za=rz(y.A),zb=rz(y.B);if(za&&zb)return;
    const kp=p=>({r:p.r,g:p.g,w:p.w,l:p.l,d:p.d,ws:p.ws,ls:p.ls}),ka=za?kp(a):null,kb=zb?kp(b):null;
-   play(a,b,sa,PAIRW[Math.min(pt.length,3)]);if(ka)Object.assign(a,ka);if(kb)Object.assign(b,kb)};
+   play(a,b,sa,PAIRW[Math.min(pt.length,3)]);if(ka)Object.assign(a,ka);if(kb)Object.assign(b,kb);
+   // bk: 연승이 마지막으로 끊긴 시각(지거나 비긴 판)
+   if(!za&&sa!==1)a.bk=y.t;if(!zb&&sa!==0)b.bk=y.t};
  const dup=m=>new Map([...m].map(([k,v])=>[k,Array.isArray(v)?v.slice():{...v}]));
  return {get M(){return M},get pairs(){return pairs},P,adv,game,onBot:f=>{hook=f},
   save:()=>({M:dup(M),pairs:dup(pairs),ord:ord.slice(),h,t,j,x,rs,hc}),
   load:z=>{M=dup(z.M);pairs=dup(z.pairs);BS=BOTS.map(b=>M.get(BOTPRE+b.id));ord=z.ord.slice();ord.forEach((i,p)=>pos[i]=p);h=z.h;t=z.t;j=z.j;x=z.x;rs=!!z.rs;hc=!!z.hc}}}
 // 중간 저장을 폰에도 남김(앱을 새로 열어도 시즌 처음부터 다시 계산하지 않게. 저사양 폰에서 첫 계산 300ms대 → 수십 ms).
 // 시즌·지난 시즌 티어표가 같고, 저장한 지점 앞의 판 목록이 그대로일 때만 씀(rankCalc가 확인). 아니면 처음부터 계산해서 결과는 같음
-function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v8:'+SS.n+':'+JSON.stringify([RK.sx||{},RK.rt||{}])+':'+(LT?LT.size+':'+h:'-')}
+function ckKey(SS,LT){let h=0;if(LT)for(const [k,v] of LT){for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))|0;h=(h*7+v)|0}return 'v9:'+SS.n+':'+JSON.stringify([RK.sx||{},RK.rt||{}])+':'+(LT?LT.size+':'+h:'-')}
 function ckLoad(ck,SS,LT){try{const v=JSON.parse(lget('bo-rkck')||'null');if(!v||v.k!==ckKey(SS,LT))return;const e=v.e;
  if(e.M.some(([id,p])=>p.bot&&!BOTMAP.has(p.bot)))return;const M=new Map(e.M.map(([id,p])=>[id,p.bot?{...p,bot:BOTMAP.get(p.bot),t:Infinity}:p]));
  ck.st={LT,tc:v.tc,gi:v.gi,sig:v.sig,e:{M,pairs:new Map(e.pairs),ord:e.ord,h:e.h,t:e.t,j:e.j,x:e.x,rs:!!e.rs,hc:!!e.hc}}}catch(e){}}
@@ -4299,8 +4309,8 @@ function renderRank(){
  const now=Date.now(),act=lobbyRooms.filter(r=>r.ranked&&(r.status!=='done'||!gDone(r.id))&&(r.host===SEAT||r.guest===SEAT)&&r.guest&&now-(r.created||0)<24*3600e3&&!gDone(r.id))[0];
  $('#rkResume').innerHTML=act?`<div class="card resume"><div class="rt"><b>진행 중인 랭크 게임</b><span>vs ${esc(act.host===SEAT?act.guestNick:act.hostNick)} · ${ago(act.created)}</span></div><button class="go" data-act="enter" data-g="${esc(act.id)}" aria-label="이어하기"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>`:'';
  renderMM();
- const top=RK.list.slice(0,50),row=(p,i)=>{const tt=tierOf(p);return `<div class="rkrow${p.seat===SEAT?' me':''}${i<3?' r'+(i+1):''}" data-act="prof" data-u="${esc(p.seat)}" role="button" tabindex="0" aria-label="${esc(rkNick(p))} 프로필"><span class="n">${i<3?`<i>${i+1}</i>`:i+1}</span>${cosFrame(p.seat,emblem(tt,22),22)}${ecoRkNk(p)}<span class="sc">${tt.n} · ${Math.round(p.r)}</span></div>`};
- const off=UI.ready&&!db,pod=top.length>=3?`<div class="pod">${[1,0,2].map(i=>{const p=top[i],tt=tierOf(p),nk=esc(rkNick(p));return `<div class="pc p${i+1}${p.seat===SEAT?' me':''}" data-act="prof" data-u="${esc(p.seat)}" role="button" tabindex="0" aria-label="${i+1}위 ${nk} ${tt.n} ${Math.round(p.r)}점">${i===0&&tt!==CHAL?CROWN:''}<span class="xpw">${cosFrame(p.seat,emblem(tt,i===0?58:46),i===0?58:46)}</span><div class="pn" aria-hidden="true">${cosName(p.seat,nk)}${p.seat===SEAT?' (나)':''}</div><div class="ps" aria-hidden="true">${tt.n} · ${Math.round(p.r)}</div><div class="base" aria-hidden="true">${i+1}</div></div>`}).join('')}</div>`:'';
+ const top=RK.list.slice(0,50),row=(p,i)=>{const tt=tierOf(p);return `<div class="rkrow${p.seat===SEAT?' me':''}${i<3?' r'+(i+1):''}" data-act="prof" data-u="${esc(p.seat)}" role="button" tabindex="0" aria-label="${esc(rkNick(p))} 프로필"><span class="n">${i<3?`<i>${i+1}</i>`:i+1}</span>${cosFrame(p.seat,emblem(tt,22),22)}${ecoRkNk(p)}<span class="sc">${stkB(p)}${tt.n} · ${Math.round(p.r)}</span></div>`};
+ const off=UI.ready&&!db,pod=top.length>=3?`<div class="pod">${[1,0,2].map(i=>{const p=top[i],tt=tierOf(p),nk=esc(rkNick(p));return `<div class="pc p${i+1}${p.seat===SEAT?' me':''}" data-act="prof" data-u="${esc(p.seat)}" role="button" tabindex="0" aria-label="${i+1}위 ${nk} ${tt.n} ${Math.round(p.r)}점">${i===0&&tt!==CHAL?CROWN:''}<span class="xpw">${cosFrame(p.seat,emblem(tt,i===0?58:46),i===0?58:46)}</span><div class="pn" aria-hidden="true">${cosName(p.seat,nk)}${p.seat===SEAT?' (나)':''}</div><div class="ps" aria-hidden="true">${tt.n} · ${Math.round(p.r)}</div>${stkB(p)?`<div class="pst">${stkB(p)}</div>`:''}<div class="base" aria-hidden="true">${i+1}</div></div>`}).join('')}</div>`:'';
  {const pe=$('#rkPod');if(pe)pe.innerHTML=off||!RK.loaded?'':pod}
  {const lim=UI.rkAll?50:10,more=$('#rkMore');$('#rkBoard').innerHTML=off?'<p class="sub">오프라인</p>':RK.loaded?(top.length?top.slice(0,lim).map(row).slice(pod?3:0).join('')+(idx>=lim?`<div class="rkrow gap" aria-hidden="true"><span class="n">⋮</span></div>`+row(me,idx):''):'<p class="sub">랭크 게임 5판 후 등록돼요</p>'):'<p class="sub">불러오는 중</p>';
   if(more){const on=!off&&RK.loaded&&top.length>10;more.classList.toggle('hide',!on);more.textContent=UI.rkAll?'접기':`11~${top.length}위 보기`;more.setAttribute('aria-expanded',UI.rkAll?'true':'false')}}
@@ -6376,6 +6386,9 @@ function cosFrame(seat,inner,sz,eq){const e=eq||cosOf(seat),f=e.f;if(!f||!ecoIte
 function ecoPbar(vs,id){const st=`<span class="st ${id===vs.A?'k':'w'}"></span>`,nm=esc(vs.names[id]||'');let seat=null;try{if(UI.mode==='online'&&!vs.spect)seat=id;else if(UI.mode==='online')seat=id;else if(UI.mode==='local'&&L.s&&L.s.ai&&id==='A')seat=SEAT}catch(e){}
  if(!seat)return `${st}<div class="pi"><div class="pn"><b>${nm}</b>`;const e=cosOf(seat);return `${cosFrame(seat,st,28,e)}<div class="pi"><div class="pn"><b>${cosName(seat,nm,e)}</b>${cosTitle(seat,e)}`}
 // 랭킹 줄 이름(renderRank 훅)
+// 순위표 연승·연패 표시(11/28): 3연승부터 🔥, 5·10·20연승마다 더 화려하게 / 3연패부터 🧊
+function stkB(p){const w=p.ws|0,l=p.ls|0;if(w>=3){const c=w>=20?'w4':w>=10?'w3':w>=5?'w2':'w1';return `<span class="stk ${c}" title="${w}연승" aria-label="${w}연승">🔥${w}</span>`}
+ if(l>=3)return `<span class="stk ${l>=5?'l2':'l1'}" title="${l}연패" aria-label="${l}연패">🧊${l}</span>`;return ''}
 function ecoRkNk(p){const e=cosOf(p.seat),t=cosTitle(p.seat,e),nm=cosName(p.seat,esc(rkNick(p)),e)+(p.seat===SEAT?' (나)':'');return t?`<span class="nk hasT"><span>${nm}</span>${t}</span>`:`<span class="nk">${nm}</span>`}
 // ----- 그림: 테두리 링 · 인장 · 돌 · 판 · 완성 연출 -----
 function ecoRing(id){const it=ecoItem(id);if(!it)return '';let g='';
